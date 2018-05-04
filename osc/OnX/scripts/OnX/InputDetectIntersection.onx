@@ -1,0 +1,15 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_InputDetectIntersection">
+    <label>DetectIntersection</label>
+    <input name="what" label="What" type="option" items="scene\nstaticScene\ndynamicScene" />
+    <input name="stop_at_first" label="Stop at first" type="option" items="true\nfalse"/>
+
+    <ok exec="DLD">OnX viewer_detect_intersections @current@ @[OnX_InputDetectIntersection_input_stop_at_first.value]@ @[OnX_InputDetectIntersection_input_what.value]@</ok>
+
+<!--
+    <help file="$ONXROOT/scripts/Help/InputDetectIntersection.help"/>
+-->
+  </widget>
+
+</OnX>

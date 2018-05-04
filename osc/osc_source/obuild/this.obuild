@@ -1,0 +1,135 @@
+<obuild>
+  <package name="osc_source" version="17.0">
+
+    <repository>:pserver:@@user@@@cvsserver.lal.in2p3.fr:/projects/cvs</repository>
+
+    <release>
+      <copy_file platform="UNIX">
+        <from>release/UNIX/setup.csh</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="UNIX">
+        <from>release/UNIX/setup.sh</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="UNIX">
+        <from>release/UNIX/aida-setup.csh</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="UNIX">
+        <from>release/UNIX/aida-setup.sh</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="UNIX">
+        <from>release/UNIX/install</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="UNIX">
+        <from>release/UNIX/README</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="UNIX">
+        <from>release/UNIX/check_install</from>
+        <to>.</to>
+      </copy_file>
+      <copy_dir platform="UNIX">
+        <from>release/UNIX/desktop</from>
+        <to>.</to>
+      </copy_dir>
+
+      <copy_file>
+        <from>release/License</from>
+        <to>.</to>
+      </copy_file>
+
+      <copy_file platform="Windows_NT">
+        <from>release/Windows_NT/setup.bat</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="Windows_NT">
+        <from>release/Windows_NT/aida-setup.bat</from>
+        <to>.</to>
+      </copy_file>
+      <!-- in case working from CYGWIN with the WIndows_NT version : -->
+      <copy_file platform="Windows_NT">
+        <from>release/Windows_NT/setup.csh</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="Windows_NT">
+        <from>release/Windows_NT/setup.sh</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="Windows_NT">
+        <from>release/Windows_NT/aida-setup.csh</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="Windows_NT">
+        <from>release/Windows_NT/aida-setup.sh</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="Windows_NT">
+        <from>release/UNIX/install</from>
+        <to>.</to>
+      </copy_file>
+
+      <copy_file platform="Windows_NT">
+        <from>release/Windows_NT/README</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="Windows_NT">
+        <from>release/Windows_NT/check_install.bat</from>
+        <to>.</to>
+      </copy_file>
+      <copy_dir platform="Windows_NT">
+        <from>release/Windows_NT/desktop</from>
+        <to>.</to>
+      </copy_dir>
+
+      <!-- Python-setup not needed for osc_batch kits !  -->
+      <copy_file platform="UNIX">
+        <from>release/UNIX/Python-setup.csh</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="UNIX">
+        <from>release/UNIX/Python-setup.sh</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="Windows_NT">
+        <from>release/Windows_NT/Python-setup.bat</from>
+        <to>.</to>
+      </copy_file>
+
+      <!-- Qt-setup not needed for osc_batch kits !  -->
+      <copy_file platform="UNIX">
+        <from>release/UNIX/Qt-setup.csh</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="UNIX">
+        <from>release/UNIX/Qt-setup.sh</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="Windows_NT">
+        <from>release/Windows_NT/Qt-setup.bat</from>
+        <to>.</to>
+      </copy_file>
+
+      <!-- Geant4-setup not needed for osc_batch kits !  -->
+      <copy_file platform="UNIX">
+        <from>release/UNIX/Geant4-setup.csh</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="UNIX">
+        <from>release/UNIX/Geant4-setup.sh</from>
+        <to>.</to>
+      </copy_file>
+      <copy_file platform="Windows_NT">
+        <from>release/Windows_NT/Geant4-setup.bat</from>
+        <to>.</to>
+      </copy_file>
+
+    </release>
+
+  </package>
+</obuild>
+
+

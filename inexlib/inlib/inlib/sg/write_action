@@ -1,0 +1,51 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file inlib.license for terms.
+
+#ifndef inlib_sg_write_action
+#define inlib_sg_write_action
+
+#include "matrix_action"
+#include "primitive_visitor"
+
+namespace inlib {
+namespace sg {
+  class node;
+}}
+namespace inlib {
+namespace io {
+  class iwbuf;
+}}
+
+namespace inlib {
+namespace sg {
+
+class write_action : public matrix_action,public primitive_visitor {
+protected:
+  virtual bool project(float& a_x,float& a_y,float& a_z,float& a_w) {
+    return project_point(a_x,a_y,a_z,a_w);
+  }
+public:
+  virtual io::iwbuf& buffer() = 0;
+  virtual bool beg_node(const node&) = 0;
+  virtual bool end_node(const node&) = 0;
+
+  virtual bool switch_do_all_children() {return true;}
+public:
+  write_action(std::ostream& a_out,unsigned int a_ww,unsigned int a_wh)
+  :matrix_action(a_out,a_ww,a_wh){}
+  virtual ~write_action(){}
+protected:
+  write_action(const write_action& a_from)
+  :matrix_action(a_from)
+  ,primitive_visitor(a_from)
+  {}
+  write_action& operator=(const write_action& a_from){
+    matrix_action::operator=(a_from);
+    primitive_visitor::operator=(a_from);
+    return *this;
+  }
+};
+
+}}
+
+#endif

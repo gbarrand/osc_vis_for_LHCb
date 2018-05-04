@@ -1,0 +1,19 @@
+  The "Page layout editor" dialog box permits to customize the current page.
+
+  Choose an "Action". Give input to the corresponding "input fields"
+ and click on "Ok" or "Apply" to execute the action. "Cancel" discards 
+ the panel. Note that this dialog box is a non blocking one (modeless), 
+ you can put it aside and continue to work with the main panel or other
+ dislog boxes.
+
+  The "Set color" action permits to set the background color
+ of the current region. The input field is "Color".
+
+  "Set grid" permits to create a grid of regions. The input field
+ is "Grid (r x c)". The format should be "rxc".
+
+  "Connect region" permits to establish a multiviewing between two regions ;
+ that is to say to have two regions seeing the same scene.
+ The input fied is "Connect". You give the region index "i" that the
+ current region will connect on. The scene of "i" will then be
+ seen within the current region.

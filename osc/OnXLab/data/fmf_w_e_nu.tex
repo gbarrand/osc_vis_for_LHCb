@@ -1,0 +1,28 @@
+%
+% Inspired from the template.tex file of the feynMF package.
+%
+% Usage :
+%   OS> feynmf <file>.tex
+%       produces a <file>.dvi file
+% or run Metafont manually :
+%   OS> latex <file>.tex
+%   OS> mf '\mode:=localfont; input fmftempl'
+%   OS> latex <file>
+%
+
+\documentclass{article}
+\usepackage{feynmf}%%%{feynmp}
+\unitlength=1mm
+\begin{document}
+\begin{fmffile}{fmftempl}
+\begin{fmfchar*}(50,50)
+   \fmfleft{Wp}
+   \fmfright{ep,nue} \fmflabel{$e^+$}{ep} \fmflabel{$\nu_e$}{nue}
+   \fmf{wiggly,label=$W^+$}{Wp,v}
+   \fmf{plain_arrow}{ep,v}
+   \fmf{plain_arrow}{v,nue}
+   \fmfdot{v}
+   \fmfposition
+\end{fmfchar*}
+\end{fmffile}
+\end{document}

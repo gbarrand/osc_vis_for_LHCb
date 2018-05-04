@@ -1,0 +1,28 @@
+<OnX>
+
+  <widget class="Window">
+    <geometry>400x400</geometry>
+    <title>Plotter</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>30</sizeOfFixed>
+
+      <widget class="PlanePageViewer">
+        <create exec="DLD">OnX ui_set_current_widget @this@</create>
+        <create exec="DLD">OnX page_create_regions @this@ SoPlotterRegion 1 1 0</create>
+        <create exec="DLD">OnX page_title_visible @this@ false</create>
+        <rectangularCollect exec="DLD">OnX page_rectangular_collect @this@</rectangularCollect>
+        <rectangularCollect exec="DLD">OnXExas plotter_rectangular_collect @this@</rectangularCollect>
+      </widget>
+
+      <widget class="PushButton">
+        <label>Quit</label>
+        <activate exec="DLD">OnX ui_exit</activate>
+      </widget>
+
+    </widget>
+  </widget>
+</OnX>

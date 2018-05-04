@@ -1,0 +1,93 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+. ${ourex_mgr}/build_header
+
+build_pack=plugin_OnXGtk
+plugin=OnXGtk
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+if [ ${build_compile} = "yes" ] ; then
+
+ccflags="${ccflags} -I../include"
+
+cppflags="${cppflags} -I${inlib_mgr}/.."
+cppflags="${cppflags} -I${exlib_mgr}/.."
+
+cppflags="${cppflags} -I../include"
+cppflags="${cppflags} -I../../Slash"
+cppflags="${cppflags} -I../../Lib/include"
+
+cfiles="${cfiles} ../source/Core/gl2ps.c"
+cfiles="${cfiles} ../source/Gtk/gtkwarningdialog.c"
+cfiles="${cfiles} ../source/Gtk/gtkcommandline.c"
+
+cxxfiles="${cxxfiles} ../source/Gtk/GtkCyclic.cxx"
+cxxfiles="${cxxfiles} ../source/Gtk/GtkTools.cxx"
+cxxfiles="${cxxfiles} ../source/Gtk/proxy.cxx"
+cxxfiles="${cxxfiles} ../source/Gtk/GtkUI.cxx"
+
+# related to Inventor gtk :
+cxxfiles="${cxxfiles} ../source/Gtk/gtkpageviewer.cxx"
+
+# plugin :
+cxxfiles="${cxxfiles} ../source/Gtk/LoadGtk.cxx"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+libs="${libs} -L${build_path} -lOnXCore -lOnXInventor"
+libs="${libs} -L../../Lib/mgr/${build_dir} -lLibUtils"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+use_CoinGtk=yes
+use_gtkglarea=yes
+use_HEPVis=yes
+use_CoinGL=yes
+use_expat=yes
+use_GL=yes
+use_gtk=yes
+use_GLX=yes
+use_X11=yes
+use_png=yes
+use_jpeg=yes
+use_freetype=yes
+use_zlib=yes
+
+. ${exlib_mgr}/use_CoinGtk
+. ${exlib_mgr}/use_gtkglarea
+. ${exlib_mgr}/use_HEPVis
+. ${exlib_mgr}/use_CoinGL
+. ${exlib_mgr}/use_expat
+. ${exlib_mgr}/use_GL
+. ${exlib_mgr}/use_gtk
+. ${exlib_mgr}/use_X11
+. ${exlib_mgr}/use_png
+. ${exlib_mgr}/use_jpeg
+. ${exlib_mgr}/use_freetype
+. ${exlib_mgr}/use_zlib
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+. ${inlib_mgr}/build_compile
+
+fi # end build_compile
+ 
+if [ ${build_plugin} = "yes" ] ; then . ${inlib_mgr}/build_plugin; fi
+
+. ${inlib_mgr}/build_clean

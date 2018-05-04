@@ -1,0 +1,26 @@
+#!/bin/sh -f
+
+bin_path=`dirname $0`
+
+save_dir=`pwd`
+cd ${bin_path}
+
+platform=
+if [ "`uname | grep CYGWIN`" != "" ] ; then
+#if [ ${build_visual} = "yes" ] ; then
+  cppflags="/nologo /DWIN32 /MD /O2 /W3 /EHsc /GR" 
+  cl.exe ${cppflags} /I.. ../apps/platform.cpp
+  platform=`./platform.exe`
+  platform=`echo ${platform} | sed -e 's: :\\\ :g'`
+  /bin/rm -f ./platform.obj ./platform.exe ./platform.exe.manifest
+else
+  c++ -o inlib_platform -I.. ../apps/platform.cpp
+  platform=`./inlib_platform`
+  /bin/rm -f ./inlib_platform
+fi
+
+#if [ "${platform}" = "" ] ; then platform=none;fi
+
+cd ${save_dir}
+
+echo ${platform}

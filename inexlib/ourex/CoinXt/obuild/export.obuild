@@ -1,0 +1,12 @@
+
+<!-- Used by other packages that uses CoinXt (for example HEPVis). -->
+
+<obuild>
+
+  <use name="CoinXt">
+    <cxx_include>include</cxx_include>
+    <lib>CoinXt</lib>
+    <path>../../CoinXt</path>
+  </use>
+
+</obuild>

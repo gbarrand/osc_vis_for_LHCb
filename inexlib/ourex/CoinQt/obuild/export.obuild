@@ -1,0 +1,13 @@
+
+<!-- Used by other packages that uses CoinQt (for example HEPVis). -->
+
+<obuild>
+
+  <use name="CoinQt">
+    <cxx_include>include</cxx_include>
+    <cxx_macro platform="Windows_NT" name="SOQT_DLL"/>
+    <lib>CoinQt</lib>
+    <path>../../CoinQt</path>
+  </use>
+
+</obuild>

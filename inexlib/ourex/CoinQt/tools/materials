@@ -1,0 +1,26 @@
+#!/bin/sh -f
+
+from=$2
+to=$3
+
+dirname=`dirname $1`
+basename=`basename $1`
+
+todir=`echo $dirname | sed -e "s|${from}|${to}|g"`
+toname=`echo $basename | sed -e "s|\.|_|g"`.h
+xxx=`echo $basename | sed -e "s|\.||g"`
+XXX=`echo $xxx | tr '[:lower:]' '[:upper:]'`
+
+#echo $todir
+#echo $toname
+#echo $xxx
+#echo $XXX
+#exit
+
+cat material.head > tmp
+awk -f material.awk $1 >>tmp
+cat material.tail >>tmp
+sed -e "s|xxx|${xxx}|g" tmp | sed -e "s|XXX|${XXX}|g" > tmp1
+/bin/mv tmp1 ${todir}/${toname}
+
+/bin/rm -f tmp

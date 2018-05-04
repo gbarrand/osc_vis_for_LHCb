@@ -1,0 +1,113 @@
+<widget class="Dialog" name="OnX_InputAxis_dialog">
+  <title>Axis Editor</title>
+  <geometry>300x200</geometry>
+  <show>no</show>
+  <widget class="VBox">
+    <expand>first</expand>
+    <sizeOfFixed>30</sizeOfFixed>
+    <widget class="TabStack" name="OnX_InputAxisTab_dialog">
+
+      <widget class="VContainer">
+        <tabLabel>X axis</tabLabel>
+        <widget class="ToggleButton" name="OnX_InputAxis_x_automated">
+          <label>Automated</label>
+        </widget>
+        <widget class="HBox">
+          <widget class="Label">
+            <label>Minimum</label>
+          </widget>
+          <widget class="Entry" name="OnX_InputAxis_X_minimumValue">
+            <value>0</value>
+          </widget>
+        </widget>
+        <widget class="HBox">
+          <widget class="Label">
+            <label>Maximum</label>
+          </widget>
+          <widget class="Entry" name="OnX_InputAxis_X_maximumValue">
+            <value>10</value>
+          </widget>
+        </widget>
+        <widget class="ToggleButton" name="OnX_InputAxis_X_logScale">
+          <label>x log</label>
+        </widget>
+      </widget>
+
+      <widget class="VContainer">
+        <tabLabel>Y axis</tabLabel>
+        <widget class="ToggleButton" name="OnX_InputAxis_y_automated">
+          <label>Automated</label>
+        </widget>
+        <widget class="HBox">
+          <widget class="Label">
+            <label>Minimum</label>
+          </widget>
+          <widget class="Entry" name="OnX_InputAxis_Y_minimumValue">
+            <value>0</value>
+          </widget>
+        </widget>
+        <widget class="HBox">
+          <widget class="Label">
+            <label>Maximum</label>
+          </widget>
+          <widget class="Entry" name="OnX_InputAxis_Y_maximumValue">
+            <value>10</value>
+          </widget>
+        </widget>
+        <widget class="ToggleButton" name="OnX_InputAxis_Y_logScale">
+          <label>y log</label>
+        </widget>
+      </widget>
+
+      <widget class="VContainer">
+        <tabLabel>Z axis</tabLabel>
+        <widget class="ToggleButton" name="OnX_InputAxis_z_automated">
+          <label>Automated</label>
+        </widget>
+        <widget class="HBox">
+          <widget class="Label">
+            <label>Minimum</label>
+          </widget>
+          <widget class="Entry" name="OnX_InputAxis_Z_minimumValue">
+            <value>0</value>
+          </widget>
+        </widget>
+        <widget class="HBox">
+          <widget class="Label">
+            <label>Maximum</label>
+          </widget>
+          <widget class="Entry" name="OnX_InputAxis_Z_maximumValue">
+            <value>10</value>
+          </widget>
+        </widget>
+        <widget class="ToggleButton" name="OnX_InputAxis_Z_logScale">
+          <label>z log</label>
+        </widget>
+      </widget>
+    </widget>
+
+    <widget class="HContainer">
+      <widget class="PushButton">
+        <label>Ok</label>
+        <activate exec="DLD">OnX OnX_InputAxis_ok @current@</activate>
+        <activate exec="DLD">OnX ui_hide OnX_InputAxis_dialog</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Apply</label>
+        <activate exec="DLD">OnX OnX_InputAxis_ok @current@</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Cancel</label>
+        <activate exec="DLD">OnX ui_hide OnX_InputAxis_dialog</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Update</label>
+        <activate exec="DLD">OnX OnX_InputAxis_update @current@</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Help</label>
+        <activate exec="DLD">OnX ui_help_file $ONXROOT/scripts/Help/InputAxis.help</activate>
+      </widget>
+    </widget>
+  </widget>
+</widget>

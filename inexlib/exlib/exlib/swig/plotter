@@ -1,0 +1,45 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file exlib.license for terms.
+
+#ifndef exlib_swig_plotter
+#define exlib_swig_plotter
+
+#include "session"
+
+#include "../sg/plots"
+
+#include <inlib/sg/group>
+
+#include <inlib/histo/h1d>
+#include <inlib/histo/h2d>
+
+namespace exlib {
+namespace EXLIB_SWIG_XANY {
+
+class plotter {
+public:
+  plotter(session& a_session,
+          unsigned int a_cols = 1,unsigned int a_rows = 1,
+          int a_x = 0,int a_y = 0,
+          unsigned int a_width = 500,unsigned int a_height = 500);
+  virtual ~plotter();
+protected:
+  plotter(const plotter& a_from);
+  plotter& operator=(const plotter& a_from);
+public:
+  bool has_window() const;
+  bool show();
+  unsigned int width() const;
+  unsigned int height() const;
+  inlib::sg::group& sg();
+  const inlib::sg::group& sg() const;
+public:
+  sg::plots& plots();
+  const sg::plots& plots() const;
+  inlib::sg::plottable* plot(const inlib::histo::h1d& a_histo);
+  inlib::sg::plottable* plot(const inlib::histo::h2d& a_histo);
+};
+
+}}
+
+#endif

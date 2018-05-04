@@ -1,0 +1,51 @@
+#!/bin/sh -f
+
+#//////////////////////////////////////
+# use by OnX/applications/OnX/apps.onx
+#//////////////////////////////////////
+
+if test $# -eq 2 ; then
+
+darwin_app=$1
+onx_file=$2
+
+#echo ${onx_file}
+#echo ${darwin_app}
+
+if ! test -e "${onx_file}" ; then 
+  echo "file ${onx_file} does not exist."
+  exit
+fi
+
+if ! test -e "${darwin_app}" ; then 
+  echo "file ${darwin_app} does not exist."
+  exit
+fi
+
+/bin/rm -R -f /tmp/OnX_tmp_0 /tmp/OnX_tmp_1
+
+cat > /tmp/OnX_tmp_0 <<END
+<plist>
+  <dict>
+    <key>LSEnvironment</key>
+    <dict>
+      <key>ONX_FILE</key>
+      <string>@@onx_file@@</string>
+    </dict>
+  </dict>
+</plist>
+END
+
+sed -e "s|@@onx_file@@|${onx_file}|g" /tmp/OnX_tmp_0 > /tmp/OnX_tmp_1
+
+/bin/mv /tmp/OnX_tmp_1 "${darwin_app}"/Contents/Info.plist
+
+touch "${darwin_app}"
+
+#open -n "${darwin_app}"
+
+/bin/rm -R -f /tmp/OnX_tmp_0 /tmp/OnX_tmp_1
+
+else
+echo "$# arguments given. Two expected. Give a .app and the onx file to load."
+fi

@@ -1,0 +1,113 @@
+#!/bin/sh -f
+
+#set -x
+
+if [ "${OSC_HOME_DIR}" = "" ] ; then
+  echo "You have to 'source setup' OpenScientist."
+  exit
+fi
+
+if [ $# -eq 0 ] ; then
+  find . -maxdepth 1 -name '*.cpp' -exec ./build {} \;
+  exit
+fi
+
+exa=$1
+
+exa=`echo ${exa} | sed -e 's:.cpp::g'`
+exa=`echo ${exa} | sed -e 's:./::g'`
+
+win_exa=`echo ${exa} | sed -e 's:win_::g'`
+if [ ${win_exa} != ${exa} ] ; then
+  exit
+fi
+
+cppflags=
+libs=
+exe=
+darwin_app=no
+
+xt_exa=`echo ${exa} | sed -e 's:xt_::g'`
+if [ ${xt_exa} != ${exa} ] ; then
+  if [ ! -x "${OSC_HOME_DIR}"/bin/osc-coin-xt-config ] ; then
+    echo "osc-coin-xt-config program not found."
+    exit
+  fi
+  echo "build ${exa}..."
+  cppflags="-I. `osc-coin-xt-config --cppflags`"
+  libs="`osc-coin-xt-config --libs`"
+  exe=iv_example_${exa}
+  eval c++ -o ${exe} ${cppflags} ${exa}.cpp ${files} ${libs}
+fi
+
+gtk_exa=`echo ${exa} | sed -e 's:gtk_::g'`
+if [ ${gtk_exa} != ${exa} ] ; then
+  if [ ! -x "${OSC_HOME_DIR}"/bin/osc-coin-gtk-config ] ; then
+    echo "osc-coin-gtk-config program not found."
+    exit
+  fi
+  echo "build ${exa}..."
+  cppflags="-I. `osc-coin-gtk-config --cppflags`"
+  libs="`osc-coin-gtk-config --libs`"
+  exe=iv_example_${exa}
+  eval c++ -o ${exe} ${cppflags} ${exa}.cpp ${files} ${libs}
+fi
+
+qt_exa=`echo ${exa} | sed -e 's:qt_::g'`
+if [ ${qt_exa} != ${exa} ] ; then
+  if [ ! -x "${OSC_HOME_DIR}"/bin/osc-coin-qt-config ] ; then
+    echo "osc-coin-qt-config program not found."
+    exit
+  fi
+  echo "build ${exa}..."
+  cppflags="-I. `osc-coin-qt-config --cppflags`"
+  libs="`osc-coin-qt-config --libs`"
+  exe=iv_example_${exa}
+  eval c++ -o ${exe} ${cppflags} ${exa}.cpp ${files} ${libs}
+  if [ `uname` = Darwin ] ; then
+    ./build_Darwin_app ${exe}
+    /bin/rm -f ${exe}
+  fi
+fi
+
+hepvis_exa=`echo ${exa} | sed -e 's:hepvis_::g'`
+if [ ${hepvis_exa} != ${exa} ] ; then
+  if [ ! -x "${OSC_HOME_DIR}"/bin/hepvis-config ] ; then
+    echo "hepvis-config program not found."
+    exit
+  fi
+  if [ -x "${OSC_HOME_DIR}"/bin/osc-coin-xt-config ] ; then
+    echo "build ${exa} for Xt..."
+    cppflags="-DHEPVisXt -I. `osc-coin-xt-config --cppflags`"
+    libs="`osc-coin-xt-config --libs`"
+    cppflags="${cppflags} -I. `hepvis-config --cppflags`"
+    libs="${libs} `hepvis-config --libs`"
+    exe=iv_example_xt_${exa}
+    eval c++ -o ${exe} ${cppflags} ${exa}.cpp ${files} ${libs}
+  fi
+  if [ -x "${OSC_HOME_DIR}"/bin/osc-coin-gtk-config ] ; then
+    echo "build ${exa} for gtk..."
+    cppflags="-DHEPVisGtk -I. `osc-coin-gtk-config --cppflags`"
+    libs="`osc-coin-gtk-config --libs`"
+    cppflags="${cppflags} -I. `hepvis-config --cppflags`"
+    libs="${libs} `hepvis-config --libs`"
+    exe=iv_example_gtk_${exa}
+    eval c++ -o ${exe} ${cppflags} ${exa}.cpp ${files} ${libs}
+  fi
+  if [ -x "${OSC_HOME_DIR}"/bin/osc-coin-qt-config ] ; then
+    echo "build ${exa} for Qt..."
+    cppflags="-DHEPVisQt -I. `osc-coin-qt-config --cppflags`"
+    libs="`osc-coin-qt-config --libs`"
+    cppflags="${cppflags} -I. `hepvis-config --cppflags`"
+    libs="${libs} `hepvis-config --libs`"
+    if [ `uname` = Darwin ] ; then
+     cppflags="${cppflags} -Wl,-headerpad_max_install_names -Wl,-headerpad,800"
+    fi
+    exe=iv_example_qt_${exa}
+    eval c++ -o ${exe} ${cppflags} ${exa}.cpp ${files} ${libs}
+    if [ `uname` = Darwin ] ; then
+      ./build_Darwin_app ${exe}
+      /bin/rm -f ${exe}
+    fi
+  fi
+fi

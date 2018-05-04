@@ -1,0 +1,47 @@
+#!/bin/sh -f
+
+build_what=../../UseAIDA/examples/cpp/slac/Histogram.cpp
+
+build_args=
+while test $# -ge 1 ; do
+  case $1 in
+    -*) build_args="${build_args} $1";;
+     *) build_what="$1";;
+  esac
+  shift
+done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+build_pack=exa_aida
+
+. ${ourex_mgr}/build_header
+
+if [ ${build_app} = "yes" ] ; then
+
+  cppflags="${cppflags} -I../../AIDA/v3r2p1"
+
+  libs="${libs} -L${build_path} -lBatchLabAIDA"
+
+  libs="${libs} -L../../Minuit/mgr/${build_dir} -losc_Minuit"
+  libs="${libs} -L../../Lib/mgr/${build_dir} -lLibUtils"
+  libs="${libs} -L${ourex_mgr}/../zlib/${build_dir} -lourex_zlib"
+
+  if [ `uname` = "Linux" ] ; then libs="${libs} -ldl"; fi
+
+  cppflags="${cppflags} -I../../UseAIDA/examples/cpp/slac/lib"
+
+  app_exe="`basename ${build_what}`"
+  # remove suffix :
+  app_exe="`echo ${app_exe} | sed -e 's|\.|/|g'`"
+  app_exe="`dirname ${app_exe}`"
+
+  objs=
+  app_src=${build_what}
+  . ${inlib_mgr}/build_app
+
+fi
+
+. ${inlib_mgr}/build_clean

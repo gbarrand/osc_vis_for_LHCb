@@ -1,0 +1,22 @@
+<plist>
+  <dict>
+    <key>CFBundleDocumentTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleTypeExtensions</key>
+        <array>
+          <string>aida</string>
+          <string>hdf5</string>
+          <string>root</string>
+          <string>hbook</string>
+          <string>fs</string>
+          <string>ascii</string>
+        </array>
+        <key>CFBundleTypeRole</key>
+        <string>Viewer</string>  <!-- Editor, Viewer, None, Shell -->
+      </dict>
+    </array>
+    <key>CFBundleIconFile</key>
+    <string>osc-plot</string>
+  </dict>
+</plist>

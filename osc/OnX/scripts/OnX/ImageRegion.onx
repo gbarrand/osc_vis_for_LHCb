@@ -1,0 +1,14 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_ImageRegion">
+    <label>Imge region editor</label>
+
+    <input name="fileName" label="File" type="combo" items="$HEPVISROOT/data/LaJoconde.gif\n$HEPVISROOT/data/Panoramix.jpg\n$HEPVISROOT/data/stars.fit\n$HEPVISROOT/data/Dirac.gif"/>
+    <input name="format" label="Format" type="option" default="guessed" items="guessed\ngif\njpeg\nfits"/>
+
+    <ok exec="DLD">OnX viewer_read_scene @current@ @[OnX_ImageRegion_input_fileName.value]@ @[OnX_ImageRegion_input_format.value]@ nil</ok>
+
+    <help file="$ONXROOT/scripts/Help/ImageRegion.help"/>
+  </widget>
+
+</OnX>

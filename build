@@ -1,0 +1,24 @@
+#!/bin/sh -f
+
+build_release=no
+
+build_args=
+while test $# -ge 1 ; do
+  case $1 in
+    -release) build_release=yes;;
+           *) build_args="${build_args} $1";;
+  esac
+  shift
+done
+
+save_dir="`pwd`"
+
+cd ./osc/osc_vis/mgr
+
+if [ ${build_release} = yes ] ; then
+  ./build_release ${build_args}
+else
+  ./build ${build_args}
+fi
+
+cd ${save_dir}

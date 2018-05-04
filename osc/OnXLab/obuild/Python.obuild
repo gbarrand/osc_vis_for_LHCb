@@ -1,0 +1,60 @@
+
+<obuild>
+
+  <!-- not this : -->
+  <reference package="foreign" path="../../foreign" file="Python.obuild"/>  
+
+  <!-- this : -->
+  <dll name="OnXLab_SWIG_Python">
+    <group>Python</group>
+    <check_foreign>Python</check_foreign>
+
+    <file>../source/Python/OnXLab_SWIG_Python.cxx</file>
+
+    <!-- not this : -->
+
+    <cxx_include copy="c_include" from="Python"/>
+    <lib copy="lib" from="Python"/>
+
+    <cxx_include>${obuild_OnXLab_path}</cxx_include>
+
+    <cxx_include copy="cxx_include" from="Lib"/>
+    <cxx_include copy="cxx_include" from="OnX"/>
+    <cxx_include copy="cxx_include" from="BatchLab"/>
+
+    <cxx_include copy="cxx_include" from="inlib"/>
+    <cxx_include copy="cxx_include" from="Slash"/>
+    <cxx_include copy="cxx_include" from="AIDA"/>
+    <cxx_include copy="cxx_include" from="amanip"/>
+    <cxx_include copy="cxx_include" from="Minuit"/>
+    <cxx_include copy="cxx_include" from="exlib"/>
+
+    <lib copy="lib" from="Minuit"/>
+
+    <lib copy="lib" from="OnX"/>
+
+    <lib copy="lib" from="expat"/>
+    <lib copy="lib_LibUtils" from="Lib"/>
+
+    <!-- (stat) data part to plot. -->
+
+    <cxx_macro name="EXLIB_USE_NATIVE_ZLIB"/>
+
+    <!-- graphics. -->
+    <lib copy="lib_HEPVisPlotter" from="HEPVis"/>
+    <lib copy="lib_HEPVisDetector" from="HEPVis"/>
+    <lib copy="lib_HEPVisGeometry" from="HEPVis"/>
+    <lib copy="lib_HEPVisUtils" from="HEPVis"/>
+    <lib copy="lib" from="jpeg"/>
+    <lib copy="lib" from="dvi2bitmap"/>
+    <lib copy="lib" from="freetype2"/>
+    <lib copy="lib" from="png"/>
+    <lib copy="lib" from="zip"/>
+    <lib copy="lib" from="zlib"/>
+    <lib copy="lib" from="CoinGL"/>
+
+    <python_module name="OnXLab_SWIG_Python"/>
+  </dll>
+
+</obuild>
+

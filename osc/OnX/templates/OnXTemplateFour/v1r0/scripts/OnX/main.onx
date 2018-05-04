@@ -1,0 +1,15 @@
+<OnX>
+  <widget class="Window">
+    <geometry>500x500+0+0</geometry>
+    <title>OnXTemplateFour/Main</title>
+    <destroy exec="DLD">OnX ui_exit</destroy>
+    <widget class="MenuBar">
+      <reference file="File.onx"/>
+      <reference file="Scene.onx"/>
+      <reference file="Help.onx"/>
+    </widget>
+    <widget class="PageViewer" name="Viewer">
+      <create exec="DLD">OnXTemplateFour OnXTemplateFour_init Viewer</create>
+    </widget>
+  </widget>
+</OnX>

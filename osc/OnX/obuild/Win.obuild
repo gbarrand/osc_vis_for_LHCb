@@ -1,0 +1,73 @@
+
+<!-- to build Windows related components. -->
+
+<obuild>
+
+  <!-- not this : -->
+
+  <reference package="CoinWin" path="../../CoinWin" file="obuild/export.obuild"/>  
+  
+  <!-- this : -->
+
+  <library name="OnXWinCore">
+    <group>Win</group>
+
+    <file>../source/Core/gl2ps.c</file>
+
+    <file>../source/Win/WinTools.cxx</file>
+    <file>../source/Win/WinTk.cxx</file>
+    <file>../source/Win/Composite.cxx</file>
+    <file>../source/Win/WinCyclic.cxx</file>
+    <file>../source/Win/WinSoViewers.cxx</file>
+    <file>../source/Win/WinPageViewer.cxx</file> <!-- Inventor /Win -->
+    <file>../source/Win/proxy.cxx</file>
+    <file>../source/Win/WinUI.cxx</file>
+
+    <!-- not this : -->
+
+    <c_include>${obuild_OnX_path}/include</c_include>
+    <c_include>${obuild_OnX_path}/source/Win</c_include>
+    <cxx_include>${obuild_OnX_path}/include</cxx_include>
+
+    <!-- Inventor / Win : -->
+    <cxx_include copy="cxx_include" from="CoinWin"/>
+    <cxx_macro copy="cxx_macro" from="CoinWin"/>
+
+    <!-- Windows : -->
+
+    <!-- Inventor : -->
+    <cxx_include copy="cxx_include" from="HEPVis"/>
+    <cxx_include copy="cxx_include" from="CoinGL"/>
+    <cxx_macro copy="cxx_macro" from="CoinGL"/>
+
+    <!-- OnXCore : -->
+    <cxx_include copy="cxx_include" from="OnXCore"/>
+
+    <lib platform="Windows_NT" copy="lib" from="CoinWin"/>
+    <lib platform="Windows_NT" verbatim="yes">comdlg32.lib comctl32.lib</lib>
+    <lib platform="Windows_NT">OnXInventor</lib>
+    <lib platform="Windows_NT" copy="lib" from="OnXInventor"/>
+    <lib platform="Windows_NT">OnXCore</lib>
+    <lib platform="Windows_NT" copy="lib" from="expat"/>
+    <lib platform="Windows_NT" copy="lib" from="zlib"/>
+    <lib platform="Windows_NT" copy="lib_LibUtils" from="Lib"/>
+
+  </library>
+
+  <dll name="OnXWin">
+    <group>Win</group>
+
+    <file>../source/Win/LoadWin.cxx</file>
+
+    <!-- not this : -->
+    <cxx_include copy="cxx_include" from="OnXWinCore"/>
+
+    <lib>OnXWinCore</lib>
+    <lib>OnXCore</lib>
+    <lib copy="lib" from="expat"/>
+    <lib copy="lib" from="zlib"/>
+    <lib copy="lib_LibUtils" from="Lib"/>
+
+  </dll>
+
+</obuild>

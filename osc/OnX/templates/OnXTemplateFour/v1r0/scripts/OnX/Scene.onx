@@ -1,0 +1,13 @@
+<widget class="CascadeButton">
+  <label>Scene</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Visualize a Cube</label>
+      <activate exec="DLD">OnXTemplateFour OnXTemplateFour_inventor_cube Viewer</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Erase scene</label>
+      <activate exec="DLD">OnX viewer_clear Viewer staticScene</activate>
+    </widget>
+  </widget>
+</widget>

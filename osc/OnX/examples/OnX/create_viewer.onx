@@ -1,0 +1,48 @@
+<OnX>
+  <widget class="Window">
+    <geometry>400x400</geometry>
+    <title>Create SoExaminerViewer</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <create exec="DLD">OnX session_set_parameter num 0</create>
+
+    <widget class="VBox">
+      <expand>second</expand>
+      <sizeOfFixed>90</sizeOfFixed>
+
+      <widget class="VContainer">
+        <widget class="PushButton">
+          <label>Create exam viewer</label>
+          <activate exec="DLD">OnX session_set_parameter num @calc@num+1@{num}@</activate>
+          <activate exec="DLD">OnX ui_create_component Viewer_ @cat@ @{num}@ SoExaminerViewer container</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Create page viewer</label>
+          <activate exec="DLD">OnX session_set_parameter num @calc@num+1@{num}@</activate>
+          <activate exec="DLD">OnX ui_create_component Viewer_ @cat@ @{num}@ PageViewer container</activate>
+        </widget>
+
+        <widget class="PushButton">
+          <label>Clone current tab</label>
+          <activate exec="DLD">OnX session_set_parameter num @calc@num+1@{num}@</activate>
+          <activate exec="DLD">OnX ui_copy_component Viewer_ @cat@ @{num}@ @[container.selection]@ container</activate>
+          <activate exec="DLD">OnX ui_set_parameter container.selection Viewer_ @cat@ @{num}@</activate>
+        </widget>
+
+        <widget class="PushButton">
+          <label>Quit</label>
+          <activate exec="DLD">OnX ui_exit</activate>
+        </widget>
+
+      </widget>
+
+<!--
+      <widget class="VContainer" name="container"/>
+-->
+      <widget class="TabStack" name="container"/>
+
+    </widget>
+
+  </widget>
+</OnX>

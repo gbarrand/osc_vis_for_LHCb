@@ -1,0 +1,550 @@
+<obuild>
+
+  <package name="OnX" version="v17r14p0">
+
+    <repository>:pserver:@@user@@@cvsserver.lal.in2p3.fr:/projects/cvs</repository>
+
+    <!-- not this : -->
+
+    <reference package="Lib" path="../../Lib" file="obuild/export.obuild"/>
+
+    <use name="CoinPython">
+      <cxx_include/>
+      <path>../../CoinPython</path>
+    </use>
+
+    <use name="inlib">
+      <cxx_include/>
+      <path>../../inlib</path>
+    </use>
+ 
+    <use name="exlib">
+      <cxx_include/>
+      <path>../../exlib</path>
+    </use>
+
+    <use name="Slash">
+      <cxx_include/>
+      <path>../../Slash</path>
+    </use>
+
+    <!-- this : -->
+
+    <version>
+      <file>include/OnX/Version.h</file>
+      <cpp_macro>ONX_VERSION_VRP</cpp_macro>
+      <doxyfile>Doxygen/Doxyfile</doxyfile>
+    </version>
+  
+    <library name="OnXCore">
+      <wrap>
+         <in>../scripts/OnX/Session.onx</in>
+         <out>../include/OnX/Core/Session_onx.h</out>
+      </wrap>
+
+      <file>../source/Core/Printer.cxx</file>
+      <file>../source/Core/UI_Manager.cxx</file>
+      <file>../source/Core/Session.cxx</file>
+      <file>../source/Core/WidgetClass.cxx</file>
+      <file>../source/Core/Widget.cxx</file>
+      <file>../source/Core/WidgetFactory.cxx</file>
+      <file>../source/Core/Action.cxx</file>
+      <file>../source/Core/atat.cxx</file>
+      <file>../source/Core/BaseUI.cxx</file>
+      <file>../source/Core/BaseCyclic.cxx</file>
+      <file>../source/Core/Main.cxx</file>
+
+      <file>../source/Core/Term.cxx</file>
+      <file>../source/Core/Getline.c</file> <!-- in Lib ? -->
+
+      <c_include>${obuild_OnX_path}/include</c_include> <!-- for Getline.c -->
+      <cxx_include>${obuild_OnX_path}/include</cxx_include>
+
+
+      <!-- not this : -->
+
+      <cxx_include copy="cxx_include" from="Lib"/>
+      <cxx_include copy="cxx_include" from="exlib"/>
+      <cxx_include copy="cxx_include" from="inlib"/>
+      <cxx_include copy="cxx_include" from="Slash"/>
+      <cxx_include copy="c_include" from="expat"/>
+
+      <cxx_macro name="EXLIB_USE_NATIVE_EXPAT"/>
+
+      <lib platform="Windows_NT" copy="lib" from="expat"/>
+      <lib platform="Windows_NT" copy="lib" from="zlib"/>
+      <lib platform="Windows_NT" copy="lib_LibUtils" from="Lib"/>
+
+      <!-- For Getline -->
+      <lib platform="Windows_NT" verbatim="yes">user32.lib</lib>
+
+      //BaseUI uses socket.
+      <lib platform="Windows_NT" copy="lib" from="socket"/>
+    </library>
+
+    <application name="OnX_new_app">
+      <wrap>
+        <in>../scripts/Help/osc_new_app.help</in>
+        <out>../applications/osc_new_app_help.h</out>
+      </wrap>
+      <file>../applications/OnX_new_app.cxx</file>
+      <cxx_include copy="cxx_include" from="Lib"/>
+      <cxx_include copy="cxx_include" from="inlib"/>
+      <cxx_include copy="cxx_include" from="Slash"/>
+      <lib copy="lib_LibUtils" from="Lib"/>
+      <lib platform="Linux" verbatim="yes">-ldl</lib>
+      <lib platform="UNIX" verbatim="yes">-lm</lib>
+      <copy>osc-new-app</copy>
+    </application>
+
+    <application name="OnX_onx">
+      <wrap>
+         <in>../scripts/Help/osc_gui_viewer.help</in>
+         <out>../applications/osc_gui_viewer_help.h</out>
+      </wrap>
+
+      <file>../applications/OnX_onx.cxx</file>
+
+      <cxx_include>${obuild_OnX_path}/include</cxx_include> <!-- Version -->
+      <cxx_include copy="cxx_include" from="inlib"/>
+      <cxx_include copy="cxx_include" from="Slash"/>
+
+      <lib>OnXCore</lib>
+      <lib copy="lib" from="expat"/>
+      <lib copy="lib" from="zip"/>
+      <lib copy="lib" from="zlib"/>
+      <lib copy="lib_LibUtils" from="Lib"/>
+      <lib platform="Linux" verbatim="yes">-ldl</lib>
+      <lib platform="UNIX" verbatim="yes">-lm</lib>
+
+      <copy>osc-gui-viewer</copy>
+      <save> 
+        <subs_path>
+          <from>../..</from>
+          <to>@@top@@</to>
+        </subs_path>
+      </save> 
+    </application>
+
+    <application name="OnX_viewer">
+      <wrap>
+         <in>../applications/iv_viewer.onx</in>
+         <out>../applications/iv_viewer_onx.h</out>
+      </wrap>
+
+      <file>../applications/OnX_viewer.cxx</file>
+
+      <!-- not this : -->
+      <cxx_include copy="cxx_include" from="inlib"/>
+      <cxx_include copy="cxx_include" from="Slash"/>
+
+      <lib>OnXCore</lib>
+      <lib copy="lib" from="expat"/>
+      <lib copy="lib" from="zip"/>
+      <lib copy="lib" from="zlib"/>
+      <lib copy="lib_LibUtils" from="Lib"/>
+      <lib platform="Linux" verbatim="yes">-ldl</lib>
+      <lib platform="UNIX" verbatim="yes">-lm</lib>
+      <copy>osc-viewer</copy>
+    </application>
+
+    <application name="OnX_onx_config">
+      <file>../applications/OnX_onx_config.cxx</file>
+
+      <!-- Version.h -->
+      <cxx_include>${obuild_OnX_path}/include</cxx_include>
+      <cxx_include copy="cxx_include" from="inlib"/>
+      <cxx_include copy="cxx_include" from="Slash"/>
+
+      <copy>onx-config</copy>
+      <copy>osc-config</copy>
+    </application>
+
+
+    <!-- Graphics drivers : -->
+
+    <!-- Inventor -->
+    <reference file="Inventor.obuild"/>
+
+    <!-- GUI drivers : -->
+
+    <!-- terminal/Getline -->
+    <application name="OnX_test_GetLine">
+      <not_in_main_build/>
+      <file>../tests/OnX_test_GetLine.cxx</file>
+      <file>../source/Core/Getline.c</file>
+      <!-- not this : -->
+      <c_include>${obuild_OnX_path}/include</c_include>
+      <cxx_include>${obuild_OnX_path}/include</cxx_include>
+      <lib platform="Windows_NT" verbatim="yes">user32.lib</lib>
+    </application>
+
+    <reference file="templates.obuild"/>
+
+    <dont_produce_sh group="Win"/>
+    <dont_produce_bat group="Xt"/>
+    <dont_produce_bat group="NextStep"/>
+    <dont_produce_bat group="iPhone"/>
+
+    <reference file="Xt.obuild"/>
+    <reference file="Win.obuild"/>
+    <reference file="NextStep.obuild"/>
+    <reference file="Qt.obuild"/>
+    <reference file="gtk.obuild"/>
+    <reference file="net.obuild"/>
+    <reference file="iPhone.obuild"/>
+
+    <!-- OnX callbacks : over LibUtils, HEPVis and Inventor OpenGL (no GUI) -->
+
+    <dll name="OnX">
+      <file>../source/Callbacks/AccessorAccessor.cxx</file>
+      <file>../source/Callbacks/SceneGraphAccessor.cxx</file>
+      <file>../source/Callbacks/SoNodeAccessor.cxx</file>
+
+      <file>../source/Callbacks/Deprecated.cxx</file>
+
+      <file>../source/Callbacks/SessionCallbacks.cxx</file>
+      <file>../source/Callbacks/Callbacks.cxx</file>
+      <file>../source/Callbacks/EditExec.cxx</file>
+      <file>../source/Callbacks/SceneHandler.cxx</file>
+      <file>../source/Callbacks/Viewer.cxx</file>
+      <file>../source/Callbacks/IB.cxx</file>
+
+      <!-- with Inventor -->
+      <file>../source/Callbacks/Page.cxx</file>
+      <file>../source/Callbacks/Region.cxx</file>
+      <file>../source/Callbacks/Plotter.cxx</file>
+
+      <file>../source/Callbacks/InputFont.cxx</file>
+      <file>../source/Callbacks/InputPlotter.cxx</file>
+      <file>../source/Callbacks/InputAxis.cxx</file>
+
+
+      <!-- not this : -->
+
+      <cxx_include copy="c_include" from="expat"/>
+      <cxx_include copy="cxx_include" from="Lib"/>
+      <cxx_include copy="cxx_include" from="exlib"/>
+      <cxx_include copy="cxx_include" from="inlib"/>
+      <cxx_include copy="cxx_include" from="Slash"/>
+
+      <cxx_include copy="cxx_include" from="HEPVis"/>
+
+      <cxx_include copy="cxx_include" from="CoinGL"/>
+      <cxx_macro copy="cxx_macro" from="CoinGL"/>
+
+      <c_include copy="c_include" from="OpenGL"/>
+      <c_options copy="c_options" from="OpenGL"/>
+      <c_macro copy="c_macro" from="OpenGL"/>
+
+      <cxx_include copy="c_include" from="OpenGL"/>
+      <cxx_options copy="c_options" from="OpenGL"/>
+      <cxx_macro copy="c_macro" from="OpenGL"/>
+
+      <lib copy="lib" from="expat"/>
+      <lib copy="lib" from="zip"/>
+      <lib copy="lib" from="zlib"/>
+      <lib copy="lib_LibUtils" from="Lib"/>
+
+      <lib copy="lib_HEPVisPlotter" from="HEPVis"/>
+      <lib copy="lib_HEPVisDetector" from="HEPVis"/>
+      <lib copy="lib_HEPVisGeometry" from="HEPVis"/>
+      <lib copy="lib_HEPVisUtils" from="HEPVis"/>
+
+      <lib copy="lib" from="jpeg"/>
+      <lib copy="lib" from="dvi2bitmap"/>
+      <lib copy="lib" from="freetype2"/>
+
+      <lib copy="lib" from="png"/>
+      <lib copy="lib" from="zlib"/>
+
+      <lib copy="lib" from="CoinGL"/>
+      <lib copy="lib" from="OpenGL"/>
+
+      <lib platform="Windows_NT" copy="lib" from="socket"/>
+    </dll>
+
+    <dll name="OnXExas">
+      <file>../examples/Callbacks/Included.cxx</file>
+      <file>../examples/Callbacks/SDL.cxx</file>
+      <file>../examples/Callbacks/Shape.cxx</file>
+      <file>../examples/Callbacks/Tree.cxx</file>
+
+      <!-- not this : -->
+      <cxx_include>${obuild_OnX_path}/examples/cpp</cxx_include>
+
+      <cxx_include copy="cxx_include" from="exlib"/>
+      <cxx_include copy="c_include" from="expat"/>
+      <cxx_include copy="cxx_include" from="inlib"/>
+      <cxx_include copy="cxx_include" from="Slash"/>
+
+      <cxx_include copy="cxx_include" from="HEPVis"/>
+      <cxx_include copy="cxx_include" from="CoinGL"/>
+      <cxx_macro copy="cxx_macro" from="CoinGL"/>
+      <c_include copy="c_include" from="OpenGL"/>
+      <c_options copy="c_options" from="OpenGL"/>
+      <c_macro copy="c_macro" from="OpenGL"/>
+      <cxx_include copy="c_include" from="OpenGL"/>
+      <cxx_options copy="c_options" from="OpenGL"/>
+      <cxx_macro copy="c_macro" from="OpenGL"/>
+
+      <cxx_macro name="EXLIB_USE_NATIVE_EXPAT"/>
+
+      <lib copy="lib" from="expat"/>
+      <lib copy="lib" from="zip"/>
+      <lib copy="lib" from="zlib"/>
+
+      <lib copy="lib_HEPVisPlotter" from="HEPVis"/>
+      <lib copy="lib_HEPVisDetector" from="HEPVis"/>
+      <lib copy="lib_HEPVisGeometry" from="HEPVis"/>
+      <lib copy="lib_HEPVisUtils" from="HEPVis"/>
+      <lib copy="lib" from="jpeg"/>
+      <lib copy="lib" from="dvi2bitmap"/>
+      <lib copy="lib" from="freetype2"/>
+      <lib copy="lib" from="png"/>
+      <lib copy="lib" from="zlib"/>
+      <lib copy="lib" from="CoinGL"/>
+      <lib copy="lib" from="OpenGL"/>
+
+    </dll>
+
+    <dll name="OnXTests">
+      <file>../tests/onx_tests/Tests.cxx</file>
+      <file>../tests/onx_tests/Inventor.cxx</file>
+      <file>../tests/onx_tests/TestTree.cxx</file>
+
+      <!-- not this : -->
+
+      <cxx_include copy="cxx_include" from="Lib"/>
+      <cxx_include copy="cxx_include" from="exlib"/>
+      <cxx_include copy="c_include" from="expat"/>
+      <cxx_include copy="cxx_include" from="inlib"/>
+      <cxx_include copy="cxx_include" from="Slash"/>
+
+      <cxx_include copy="cxx_include" from="HEPVis"/>
+
+      <cxx_include copy="cxx_include" from="CoinGL"/>
+      <cxx_macro copy="cxx_macro" from="CoinGL"/>
+
+      <c_include copy="c_include" from="OpenGL"/>
+      <c_options copy="c_options" from="OpenGL"/>
+      <c_macro copy="c_macro" from="OpenGL"/>
+
+      <cxx_include copy="c_include" from="OpenGL"/>
+      <cxx_options copy="c_options" from="OpenGL"/>
+      <cxx_macro copy="c_macro" from="OpenGL"/>
+
+      <cxx_macro name="EXLIB_USE_NATIVE_EXPAT"/>
+
+      <lib copy="lib" from="expat"/>
+      <lib copy="lib" from="zip"/>
+      <lib copy="lib" from="zlib"/>
+      <lib copy="lib_LibUtils" from="Lib"/>
+
+      <lib copy="lib_HEPVisPlotter" from="HEPVis"/>
+      <lib copy="lib_HEPVisDetector" from="HEPVis"/>
+      <lib copy="lib_HEPVisGeometry" from="HEPVis"/>
+      <lib copy="lib_HEPVisUtils" from="HEPVis"/>
+
+      <lib copy="lib" from="jpeg"/>
+      <lib copy="lib" from="dvi2bitmap"/>
+      <lib copy="lib" from="freetype2"/>
+
+      <lib copy="lib" from="png"/>
+      <lib copy="lib" from="zlib"/>
+
+      <lib copy="lib" from="CoinGL"/>
+      <lib copy="lib" from="OpenGL"/>
+
+    </dll>
+
+    <!-- IMPORTANT for onx-config : -->
+    <!--  Dummies dlls in order to capture the 
+         compilation includes and the linked libraries 
+         needed to build various flavours of OnX callbacks.
+          Compilation and link infos are saved in the 
+           bin_obuild/OnX_config_[lib,opengl,inventor].save file. -->
+    <dll name="OnX_config_Lib">
+      <file>../source/Callbacks/config_Lib.cxx</file>
+      <!-- not this : -->
+      <cxx_include copy="cxx_include" from="Lib"/>
+      <cxx_include copy="cxx_include" from="exlib"/>
+      <cxx_include copy="cxx_include" from="inlib"/>
+      <cxx_include copy="cxx_include" from="Slash"/>
+      <cxx_include copy="c_include" from="expat"/>
+      <cxx_macro name="EXLIB_USE_NATIVE_EXPAT"/>
+      <lib copy="lib_LibUtils" from="Lib"/>
+      <save> 
+        <subs_path>
+          <from>../..</from>
+          <to>@@top@@</to>
+        </subs_path>
+      </save> 
+    </dll>
+    <dll name="OnX_config_OpenGL">
+      <file>../source/Callbacks/config_OpenGL.cxx</file>
+      <!-- not this : -->
+      <cxx_include copy="cxx_include" from="Lib"/>
+      <cxx_include copy="cxx_include" from="exlib"/>
+      <cxx_include copy="cxx_include" from="inlib"/>
+      <cxx_include copy="cxx_include" from="Slash"/>
+      <lib copy="lib_LibUtils" from="Lib"/>
+      <cxx_include copy="c_include" from="OpenGL"/>
+      <cxx_options copy="c_options" from="OpenGL"/>
+      <cxx_macro copy="c_macro" from="OpenGL"/>
+      <lib copy="lib" from="OpenGL"/>
+      <save> 
+        <subs_path>
+          <from>../..</from>
+          <to>@@top@@</to>
+        </subs_path>
+      </save> 
+    </dll>
+    <dll name="OnX_config_Inventor">
+      <file>../source/Callbacks/config_Inventor.cxx</file>
+      <!-- not this : -->
+      <cxx_include copy="cxx_include" from="Lib"/>
+      <cxx_include copy="cxx_include" from="exlib"/>
+      <cxx_include copy="cxx_include" from="inlib"/>
+      <cxx_include copy="cxx_include" from="Slash"/>
+      <lib copy="lib_LibUtils" from="Lib"/>
+
+      <cxx_include copy="cxx_include" from="HEPVis"/>
+      <cxx_include copy="cxx_include" from="CoinGL"/>
+      <cxx_macro copy="cxx_macro" from="CoinGL"/>
+      <cxx_include copy="c_include" from="OpenGL"/>
+      <cxx_options copy="c_options" from="OpenGL"/>
+      <cxx_macro copy="c_macro" from="OpenGL"/>
+      <lib copy="lib_HEPVisGUI" from="HEPVis"/>
+      <lib copy="lib_HEPVisPlotter" from="HEPVis"/>
+      <lib copy="lib_HEPVisDetector" from="HEPVis"/>
+      <lib copy="lib_HEPVisGeometry" from="HEPVis"/>
+      <lib copy="lib_HEPVisUtils" from="HEPVis"/>
+
+      <lib copy="lib" from="jpeg"/>
+      <lib copy="lib" from="dvi2bitmap"/>
+      <lib copy="lib" from="freetype2"/>
+
+      <lib copy="lib" from="png"/>
+      <lib copy="lib" from="zip"/>
+      <lib copy="lib" from="zlib"/>
+
+      <lib copy="lib" from="CoinGL"/>
+      <lib copy="lib" from="OpenGL"/>
+      <save> 
+        <subs_path>
+          <from>../..</from>
+          <to>@@top@@</to>
+        </subs_path>
+      </save> 
+    </dll>
+
+    <!-- Scripting drivers : -->
+
+    <reference file="KUIP.obuild"/>
+    <reference file="Python.obuild"/>
+<!--
+    <reference file="Java.obuild"/>
+-->
+
+    <release>
+
+      <copy_dir>
+        <from>scripts/Help</from>
+        <to>Resources/OnX/scripts/.</to>
+      </copy_dir>
+      <copy_dir>
+        <from>scripts/Inventor</from>
+        <to>Resources/OnX/scripts/.</to>
+      </copy_dir>
+      <copy_dir>
+        <from>scripts/OnX</from>
+        <to>Resources/OnX/scripts/.</to>
+      </copy_dir>
+      <copy_dir>
+        <from>scripts/Python</from>
+        <to>Resources/OnX/scripts/.</to>
+      </copy_dir>
+      <copy_dir>
+        <from>scripts/Xt</from>
+        <to>Resources/OnX/scripts/.</to>
+      </copy_dir>
+      <copy_dir>
+        <from>scripts/gtk</from>
+        <to>Resources/OnX/scripts/.</to>
+      </copy_dir>
+      <copy_dir>
+        <from>scripts/images</from>
+        <to>Resources/OnX/scripts/.</to>
+      </copy_dir>
+      <copy_dir>
+        <from>source/NextStep/OnX.nib</from>
+        <to>Resources/OnX/scripts/.</to>
+      </copy_dir>
+
+      <copy_dir>
+        <from>examples</from>
+        <to>Resources/OnX/.</to>
+      </copy_dir>
+      <copy_dir>
+        <from>include</from>
+        <to>Resources/OnX/.</to>
+      </copy_dir>
+      <copy_dir>
+        <from>templates</from>
+        <to>Resources/OnX/.</to>
+      </copy_dir>
+
+      <copy_dir>
+        <from>applications/odev</from>
+        <to>Resources/OnX/applications/.</to>
+      </copy_dir>
+      <copy_dir>
+        <from>tests/onx_tests</from>
+        <to>Resources/OnX/tests/.</to>
+      </copy_dir>
+
+      <copy_dir platform="Darwin">
+        <warn>no</warn>
+        <from>${@@dir_bin_variable@@}/osc-gui-viewer-xt.app</from>
+        <to>darwin_app/.</to>
+      </copy_dir>
+      <copy_dir platform="Darwin">
+        <warn>no</warn>
+        <from>${@@dir_bin_variable@@}/osc-gui-viewer-qt.app</from>
+        <to>darwin_app/.</to>
+      </copy_dir>
+      <copy_dir platform="Darwin">
+        <warn>no</warn>
+        <from>${@@dir_bin_variable@@}/osc-gui-viewer-gtk.app</from>
+        <to>darwin_app/.</to>
+      </copy_dir>
+      <copy_dir platform="Darwin">
+        <from>${@@dir_bin_variable@@}/osc-gui-viewer.app</from>
+        <to>darwin_app/.</to>
+      </copy_dir>
+      <copy_dir platform="Darwin">
+        <from>${@@dir_bin_variable@@}/osc-viewer.app</from>
+        <to>darwin_app/.</to>
+      </copy_dir>
+      <copy_dir platform="Darwin">
+        <warn>no</warn>
+        <from>${@@dir_bin_variable@@}/osc-viewer-qt.app</from>
+        <to>darwin_app/.</to>
+      </copy_dir>
+      <copy_dir platform="Darwin">
+        <warn>no</warn>
+        <from>${@@dir_bin_variable@@}/osc-viewer-xt.app</from>
+        <to>darwin_app/.</to>
+      </copy_dir>
+      <copy_dir platform="Darwin">
+        <warn>no</warn>
+        <from>${@@dir_bin_variable@@}/osc-viewer-gtk.app</from>
+        <to>darwin_app/.</to>
+      </copy_dir>
+
+    </release>
+
+  </package>
+
+</obuild>

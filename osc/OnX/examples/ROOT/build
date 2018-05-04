@@ -1,0 +1,58 @@
+#!/bin/sh -f
+
+#set -x
+
+if [ $# -eq 0 ] ; then
+  find . -maxdepth 1 -name '*.cpp' -exec ./build {} \;
+  exit
+fi
+
+exa=$1
+
+exa=`echo ${exa} | sed -e 's:.cpp::g'`
+exa=`echo ${exa} | sed -e 's:./::g'`
+
+echo "build ${exa}..."
+
+cppflags="-O"
+if [ `uname` = Linux ] ; then
+  cppflags="${cppflags} -fPIC"
+fi
+
+libs=""
+
+use_CERN_ROOT=no
+use_osc_vis=no
+
+if [ ${exa} = "root_only" ] ; then
+  use_CERN_ROOT=yes
+fi
+if [ ${exa} = "onx_and_root" ] ; then
+  use_CERN_ROOT=yes
+  use_osc_vis=yes
+fi
+if [ ${exa} = "onx_and_root_16" ] ; then
+  use_CERN_ROOT=yes
+  use_osc_vis=yes
+fi
+
+if [ ${use_CERN_ROOT} = "yes" ] ; then
+  if [ "${ROOTSYS}" = "" ] ; then
+    echo "You have to 'source setup' CERN-ROOT."
+    exit
+  fi
+  cppflags="${cppflags} `root-config --cflags`"
+  libs="${libs} `root-config --libs`"
+fi
+
+if [ ${use_osc_vis} = "yes" ] ; then
+  if [ "${OSC_HOME_DIR}" = "" ] ; then
+    echo "You have to 'source setup' an osc_vis kit."
+    exit
+  fi
+  cppflags="${cppflags} -I. `osc-config --iv_cppflags`"
+  libs="${libs} `osc-config --iv_libs`"
+  libs="${libs} `osc-config --core_libs`"
+fi
+
+eval c++ ${cppflags} -o osc_example_${exa} ${exa}.cpp ${libs}

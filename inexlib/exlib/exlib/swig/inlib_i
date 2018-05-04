@@ -1,0 +1,35 @@
+
+#include <inlib/random>
+#include <inlib/nostream>
+#include <inlib/system>
+#include <inlib/file>
+
+//#include <inlib/all>
+#include <inlib/histo/h1d>
+#include <inlib/histo/h2d>
+#include <inlib/histo/h3d>
+#include <inlib/histo/p1d>
+#include <inlib/histo/p2d>
+
+#include <inlib/waxml/file>
+#include <inlib/vec2>
+#include <inlib/colorf>
+#include <inlib/rcmp>
+
+#include <inlib/sg/sfs>
+#include <inlib/sg/mf>
+#include <inlib/sg/strings>
+#include <inlib/sg/style_color>
+#include <inlib/sg/style_colormap>
+#include <inlib/sg/colormap>
+#include <inlib/sg/style>
+#include <inlib/sg/text_style>
+#include <inlib/sg/line_style>
+
+#include <inlib/sg/node>
+#include <inlib/sg/write_action>
+
+#include <inlib/sg/group>
+
+// for lua :
+#include <inlib/get_cout>

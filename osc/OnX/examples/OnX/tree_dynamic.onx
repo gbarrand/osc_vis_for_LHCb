@@ -1,0 +1,48 @@
+<OnX>
+  <widget class="Window">
+    <geometry>300x350</geometry>
+    <title>Tree widget</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>90</sizeOfFixed>
+
+      <widget class="VPaned">
+        <splitPosition>200</splitPosition>
+        <widget class="ScrolledTree" name="tree_widget">
+          <create exec="DLD">OnXExas tree_initialize</create>
+
+          <select exec="DLD">OnX ui_set_parameter text_widget.value @this.value@</select>
+          <select exec="DLD">OnX ui_echo select leaf</select>
+
+          <selectBranch exec="DLD">OnX ui_set_parameter text_widget.value select @cat_space@ branch @cat_space@  @this.value@</selectBranch>
+          <selectBranch exec="DLD">OnX ui_echo select branch</selectBranch>
+
+
+          <!-- WARNING : Xt : execute in background if other opens are done.
+               If not, the second callback will use a ListTreeItem which
+               does not exist anymore and then... a crash. -->
+          <open exec="DLD" background="yes">OnXExas tree_open_branch</open>
+          <open exec="DLD">OnX ui_set_parameter text_widget.value open branch</open>
+          <open exec="DLD">OnX ui_echo open branch</open>
+
+          <close exec="DLD" background="yes">OnXExas tree_close_branch</close>
+          <close exec="DLD">OnX ui_set_parameter text_widget.value close branch</close>
+          <close exec="DLD">OnX ui_echo close branch</close>
+        </widget>
+
+        <widget class="ScrolledText" name="text_widget"/>
+
+      </widget>
+
+
+      <widget class="PushButton">
+        <label>Quit</label>
+        <activate exec="DLD">OnX ui_exit</activate>
+      </widget>
+
+    </widget>
+  </widget>
+</OnX>

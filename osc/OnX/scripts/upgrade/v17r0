@@ -1,0 +1,87 @@
+#replace\nBronx_AIDA_quiet_cxx\nLab_AIDA_quiet_cxx
+#replace\nbronxel\nlabel
+#replace\nBronxel\nLabel
+#replace\nBRONXEL\nLABEL
+#replace\navaibronxle\navailable
+#replace\nBronx::amanip\nLab::amanip
+#replace\nCallbacks/AIDA.h\nHelper/AIDA.h
+#replace\nLab/\nBatchLab/
+#replace\nLab::\nBatchLab::
+#replace\nLab_AIDA_quiet\nBatchLab_AIDA_quiet
+#replace\nBatchBatchLab_AIDA_quiet\nBatchLab_AIDA_quiet
+#replace\nhprint_quiet_cxx();\n 
+#replace\n<Bronx/Callbacks/hprint.h>\n<BatchLab/Cor/amanip.h>
+#replace\n<BatchLab/Cor/amanip.h>\n<BatchLab/Core/amanip.h>
+#replace\nhprint\nBatchLab::amanip::hprint
+#replace\n<Bronx/Callbacks/Vector.h>\n"VectorHelpers.h"
+#replace\n<Bronx/Callbacks/Bronx.h>\n"Helpers.h"
+#replace\nVector\nArray
+#replace\nBigArray\nBigVector
+#replace\nRioTArrayD\nRioTVectorD
+#replace\nfVector\nfArray
+#replace\nIVector\nIArray
+#replace\nvector_set_dims\nvector_get_cut
+#replace\n/Callbacks/\n/Helpers/
+#replace\n/Helper/\n/Helpers/
+# Python :
+#replace\nui_SoPage(ui)\nui.currentPage()
+#replace\nsopage_currentRegion(soPage)\nsoPage.currentRegion()
+#replace\nsession_setColor\nsession.setColor
+#replace\nui_setTreeItems\nui.setTreeItems
+#replace\nui_currentViewer\nui.currentViewer
+#replace\nOnX_SWIG\nOnX
+#replace\nOS> python\nOS> <start python>
+#replace\nOnX.Sb\nInventor.Sb
+#replace\nOnX.So\nInventor.So
+#replace\nOnX.FALSE\nInventor.FALSE
+#replace\nOnX.TRUE\nInventor.TRUE
+#replace\npush_back\nxxx
+#replace\ninfosVisible\ninfosRegionVisible
+#replace\ngetAttValue\nattributeValue
+#replace\ngetPropertyValue\npropertyValue
+#replace\naddAttributes\nsetAttributes
+#replace\nsetAttValue\nsetAttributeValue
+# AIDA py :
+#replace\nfrom AIDA import AIDA_createAnalysisFactory\nimport AIDA
+#replace\nAIDA_createAnalysisFactory\nAIDA.createAnalysisFactory
+#replace\ncreateDefault\ncreate
+#replace\ncreateVariableBins1D\ncreateHistogram1D
+#replace\ncreateVariableBins2D\ncreateHistogram2D
+#replace\ncreateVariableBins3D\ncreateHistogram3D
+#replace\ncreateCopy2D\ncreateCopy
+#replace\ncreateCopy3D\ncreateCopy
+#replace\nadd2D\nadd
+#replace\nsub2D\nsubtract
+#replace\nmul2D\nmultiply
+#replace\ndiv2D\ndivide
+#replace\nadd3D\nadd
+#replace\nsub3D\nsubtract
+#replace\nmul3D\nmultiply
+#replace\ndiv3D\ndivide
+#replace\nproject2D\nproject
+#replace\nproject3D\nproject
+#replace\nplotFunction\nplot
+#replace\naddFunction\nadd
+#replace\naddCloud\nadd
+#replace\nfitFunction\nfit
+#replace\nfrom random import Random\nimport random
+#replace\nRandom()\nrandom.Random()
+#replace\nfrom aidaaux import random_breit_wigner\nimport aidaaux
+#replace\nrandom_breit_wigner(\naidaaux.random_breit_wigner(
+#replace\nTo be executed from the Python shell\nFrom the Python shell
+#replace\n);\n)
+#replace\nhttp://informatique.web.lal.in2p3.fr/developpement/OpenScientist\nhttp://OpenScientist.lal.in2p3.fr/download
+#replace\nfrom OnX import sys_import;sys_import(\nimport OnX;OnX.x(
+# Hippo :
+#replace\nHippo_DataUpdate\nHippo_DataCurrent
+# Slash :
+#include\n$ONXROOT/scripts/upgrade/slash.upgrade
+#replace\nIBaseObject\nIObject
+#replace\nIBaseTree\nITree
+#replace\nIComponent\nNativeWidget
+#replace\ngetComponent\nnativeWidget
+#replace\nTypeManager\nAccessorManager
+#replace\ntypeManager\naccessorManager
+#replace\nInventorType\nInventorAccessor
+#replace\nBaseType\nBaseAccessor
+replace\nRootSvc\nRox

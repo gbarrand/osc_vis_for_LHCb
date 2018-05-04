@@ -1,0 +1,20 @@
+OnX ui_do_nothing ////////////////////////////////////////////
+OnX ui_do_nothing //Create a new menu in the default menu bar :
+OnX ui_do_nothing ////////////////////////////////////////////
+OnX ui_create_component onx_exa_casc CascadeButton menu_bar
+OnX ui_set_parameter onx_exa_casc.label MyMenu
+OnX ui_create_component onx_exa_menu Menu onx_exa_casc
+
+OnX ui_do_nothing ////////////////////////////////////////////
+OnX ui_do_nothing // Create a first item in the menu :
+OnX ui_do_nothing ////////////////////////////////////////////
+OnX ui_create_component onx_exa_item_1 MenuItem onx_exa_menu
+OnX ui_set_parameter onx_exa_item_1.label Item @cat_space@ 1
+OnX ui_setCallback onx_exa_item_1 activate DLD OnX ui_echo Item 1
+
+OnX ui_do_nothing ////////////////////////////////////////////
+OnX ui_do_nothing // Create a second item in the menu :
+OnX ui_do_nothing ////////////////////////////////////////////
+OnX ui_create_component onx_exa_item_2 MenuItem onx_exa_menu
+OnX ui_set_parameter onx_exa_item_2.label Item @cat_space@ 2
+OnX ui_setCallback onx_exa_item_2 activate DLD OnX ui_echo Item 2

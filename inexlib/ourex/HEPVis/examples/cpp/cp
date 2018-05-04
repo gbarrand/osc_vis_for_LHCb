@@ -1,0 +1,19 @@
+#!/bin/sh -f
+
+cp ../../applications/exa_polyhedron.cxx .
+cp ../../applications/Polyhedron.cxx hepvis_polyhedron.cpp
+
+cp ../../applications/MenuBar.ic .
+cp ../../applications/DetectorTreeKit.cxx hepvis_detector_tree_kit.cpp
+
+cp ../../applications/TextTTF.cxx hepvis_ttf.cpp
+
+cp ../../applications/TextHershey.cxx hepvis_hershey.cpp
+
+cp ../../applications/SetRegion.icc .
+cp ../../applications/Plotters.cxx hepvis_plotters.cpp
+
+cp ../../../CoinXt/tests/CoinXt_test_cube.cpp xt_so_cube.cpp
+cp ../../../CoinWin/tests/CoinWin_test_cube.cpp win_so_cube.cpp
+cp ../../../CoinGtk/tests/CoinGtk_test_cube.cpp gtk_so_cube.cpp
+cp ../../../CoinQt/tests/CoinQt_test_cube.cpp qt_so_cube.cpp

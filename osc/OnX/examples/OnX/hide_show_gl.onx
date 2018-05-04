@@ -1,0 +1,35 @@
+<OnX>
+
+  <widget class="Window">
+    <geometry>100x90</geometry>
+    <title>hide show OpenGLArea</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VContainer">
+      <widget class="PushButton">
+        <label>Show</label>
+        <activate exec="DLD">OnX ui_show gl_area</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Hide</label>
+        <activate exec="DLD">OnX ui_hide gl_area</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Quit</label>
+        <activate exec="DLD">OnX ui_exit</activate>
+      </widget>
+    </widget>
+  </widget>
+
+  <widget class="Window">
+    <geometry>400x400</geometry>
+    <title>OpenGLArea</title>
+    <show>no</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+    <widget class="OpenGLArea" name="gl_area">
+      <paint exec="DLD">OnXExas opengl_cube_paint</paint>
+      <event exec="DLD">OnXExas opengl_event</event>
+    </widget>
+  </widget>
+</OnX>

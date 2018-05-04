@@ -1,0 +1,30 @@
+<OnX>
+  <widget class="Window">
+    <geometry>450x500</geometry>
+<!--
+  Available options :
+    all (default)
+    none
+
+    close_button
+    iconify_button
+    min_max_button
+    resize_handle
+    border
+    caption
+    system_menu   
+
+  By default we take all options (if the toolkit permits it), then we remove
+ with a list of no_[option].
+  If having none, we start with nothing and add with a list of
+ [decoration].
+-->
+    <decoration>no_iconify_button\nno_min_max_button\nno_resize_handle</decoration>
+<!--    
+    <decoration>none</decoration>
+-->
+    <title>Test decorations</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+  </widget>
+</OnX>

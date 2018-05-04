@@ -1,0 +1,27 @@
+#!/bin/sh -f
+
+/bin/rm -R -f ../osc_O2R
+/bin/mkdir -p ../osc_O2R
+
+cp README_A2R         ../osc_O2R/README
+cp A2R.h              ../osc_O2R/.
+cp H2R.h              ../osc_O2R/.
+cp O2R.h              ../osc_O2R/.
+cp A2R_Def.h          ../osc_O2R/.
+cp H2R_Def.h          ../osc_O2R/.
+cp O2R_Def.h          ../osc_O2R/.
+cp O2R_LinkDef.h      ../osc_O2R/.
+cp build_O2R          ../osc_O2R/.
+cp A2R_write.C        ../osc_O2R/.
+cp A2R_read.C         ../osc_O2R/.
+cp O2R_read.C         ../osc_O2R/.
+
+cp ../cpp/osc/A2R.cpp ../osc_O2R/.
+
+cp ../ROOT/jec.C      ../osc_O2R/.
+cp ../ROOT/jec_ROOT.C ../osc_O2R/.
+cp ../cpp/osc/jec.cpp ../osc_O2R/.
+
+cd ..
+zip -qr osc_O2R.zip osc_O2R
+cd ROOT

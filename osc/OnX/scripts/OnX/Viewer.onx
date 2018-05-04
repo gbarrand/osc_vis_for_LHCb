@@ -1,0 +1,61 @@
+<widget class="CascadeButton" name="OnX_menu_Viewer">
+  <label>Viewer</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>view all</label>
+      <activate exec="DLD">OnX viewer_view_all @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Viewing on</label>
+      <activate exec="DLD">OnX viewer_set_viewing @current@ true</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Viewing off</label>
+      <activate exec="DLD">OnX viewer_set_viewing @current@ false</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Decorations on</label>
+      <activate exec="DLD">OnX viewer_set_decoration @current@ true</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Decorations off</label>
+      <activate exec="DLD">OnX viewer_set_decoration @current@ false</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Animation on</label>
+      <activate exec="DLD">OnX viewer_set_animation @current@ true</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Animation off</label>
+      <activate exec="DLD">OnX viewer_set_animation @current@ false</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Stop animating</label>
+      <activate exec="DLD">OnX viewer_stop_animating @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Auto clipping on</label>
+      <activate exec="DLD">OnX viewer_set_auto_clipping @current@ true</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Auto clipping off</label>
+      <activate exec="DLD">OnX viewer_set_auto_clipping @current@ false</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Feedback visibility on</label>
+      <activate exec="DLD">OnX viewer_set_feedback_visibility @current@ true</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Feedback visibility off</label>
+      <activate exec="DLD">OnX viewer_set_feedback_visibility @current@ false</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Smoothing on</label>
+      <activate exec="DLD">OnX viewer_set_smoothing @current@ true</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Smoothing off</label>
+      <activate exec="DLD">OnX viewer_set_smoothing @current@ false</activate>
+    </widget>
+  </widget>
+</widget>

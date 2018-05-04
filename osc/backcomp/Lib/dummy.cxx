@@ -1,0 +1,2 @@
+
+void LibZip_dummy() {}

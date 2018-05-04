@@ -1,0 +1,38 @@
+// Include file in order to set some menu bar on the
+// viewer of the examples. Windows only for the moment.
+
+
+#define HEPVis_menuBar_def \
+static int ID_PS = 1001;\
+static int ID_EXIT = 1002;\
+static WNDPROC oldProc = 0;\
+LRESULT CALLBACK proc(HWND aWindow,UINT aMessage,WPARAM aWParam,LPARAM aLParam){\
+  switch (aMessage) {\
+  case WM_COMMAND:{\
+    if(aWParam==ID_PS) {\
+      SoGL2PSAction* action = \
+        (SoGL2PSAction*)examinerViewer->getGLRenderAction();\
+      action->enableFileWriting();\
+      examinerViewer->render();\
+      action->disableFileWriting();\
+    } else if(aWParam==ID_EXIT) {\
+      ::PostQuitMessage(0);\
+    }\
+  }return 0;\
+  default:\
+    return (::oldProc(aWindow,aMessage,aWParam,aLParam));\
+  }\
+}
+
+#define HEPVis_menuBar_set \
+  HMENU menuBar = CreateMenu();\
+  HMENU casc = CreatePopupMenu();\
+  ::AppendMenu(menuBar,MF_POPUP,(UINT)casc,"File");\
+  ::AppendMenu(casc,MF_STRING,ID_PS,"PS");\
+  ::AppendMenu(casc,MF_STRING,ID_EXIT,"Exit");\
+  HWND win = examinerViewer->getShellWidget();\
+  ::SetWindowLong(win,GWL_ID,(LONG)menuBar);\
+  oldProc = (WNDPROC)::GetWindowLong(win,GWL_WNDPROC);\
+  ::SetWindowLong(win,GWL_WNDPROC,(LONG)proc);
+
+

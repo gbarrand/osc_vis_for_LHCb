@@ -1,0 +1,170 @@
+
+<!-- 
+////////////////////////////////////////////////
+// This is a obuild / OpenScientist integration 
+// of code of Coin 2.0.0a
+////////////////////////////////////////////////
+-->
+  
+<obuild>
+
+  <package name="CoinGL" version="v1r250p7">
+
+    <repository>:pserver:@@user@@@cvsserver.lal.in2p3.fr:/projects/cvs</repository>
+
+    <!-- not this : -->
+
+    <reference package="foreign" path="../../foreign" file="OpenGL.obuild"/>  
+
+    <reference package="foreign" path="../../foreign" file="pthread.obuild"/>  
+
+    <!-- fow Windows_NT (see config_win32.h -->
+    <use name="zlib">
+      <c_include>include</c_include>
+      <lib>osc_zlib</lib>
+      <path>../../zlib</path>
+    </use>
+
+    <use name="zip">
+      <c_include>include</c_include>
+      <lib>osc_zip</lib>
+      <path>../../zip</path>
+    </use>
+
+    <!-- this : -->
+
+    <library name="osc_Coin">
+      <declspec_way/> <!-- Used only for Windows_NT to build DLL. -->
+
+      <file>../src/tidbits.c</file>
+      <files>../src/threads/*.c</files>
+      <files>../src/threads/*.cpp</files>
+      <files>../src/glue/*.c</files>
+      <files>../src/glue/*.cpp</files>
+      <files>../src/actions/*.cpp</files>
+      <files>../src/base/*.c</files>
+      <files>../src/base/*.cpp</files>
+      <files>../src/upgraders/*.cpp</files>
+      <files>../src/bundles/*.cpp</files>
+      <files>../src/caches/*.cpp</files>
+      <files>../src/details/*.cpp</files>
+      <files>../src/draggers/*.cpp</files>
+      <files>../src/elements/*.cpp</files>
+      <files>../src/elements/GL/*.cpp</files>
+      <files>../src/engines/*.cpp</files>
+      <file>../src/engines/evaluator.c</file>
+      <file>../src/engines/evaluator_tab.c</file>
+      <files>../src/errors/*.c</files>
+      <files>../src/errors/*.cpp</files>
+      <files>../src/events/*.cpp</files>
+      <files>../src/fields/*.cpp</files>
+      <files>../src/manips/*.cpp</files>
+      <files>../src/lists/*.cpp</files>
+      <files>../src/nodekits/*.cpp</files>
+      <files>../src/nodes/*.cpp</files>
+      <files>../src/projectors/*.cpp</files>
+      <files>../src/sensors/*.cpp</files>
+      <files>../src/misc/*.c</files>
+      <files>../src/misc/*.cpp</files>
+      <files>../src/3ds/*.cpp</files>
+      <files>../src/hardcopy/*.cpp</files>
+      <files>../src/shapenodes/*.cpp</files>
+      <files>../src/fonts/*.c</files>
+      <files>../src/fonts/*.cpp</files>
+      <files>../src/collision/*.cpp</files>
+      <files>../src/io/*.c</files>
+      <files>../src/io/*.cpp</files>
+      <files>../src/vrml97/*.cpp</files>
+  
+      <!-- 2.5.0 -->
+      <files>../src/geo/*.cpp</files>
+      <files>../src/shaders/*.cpp</files>
+      <files>../src/shadows/*.cpp</files>
+
+      <c_include>${obuild_CoinGL_path}/src</c_include>
+      <c_include>${obuild_CoinGL_path}</c_include>
+      <c_include>${obuild_CoinGL_path}/include</c_include>
+      <c_include>${obuild_CoinGL_path}/include/Inventor/annex</c_include>
+  
+      <!-- Darwin, Linux : from Coin_2_4_4 build system on a Panther. -->
+  
+      <c_macro name="HAVE_CONFIG_H"/>
+      <c_macro name="COIN_INTERNAL"/>
+      <c_macro name="COIN_DEBUG">0</c_macro>
+      <c_macro platform="UNIX" name="_REENTRANT"/>
+      <c_macro platform="UNIX" name="PIC"/>
+
+<!--  <c_macro platform="UNIX" name="COIN_THREADSAFE"/> -->
+
+      <c_macro platform="Windows_NT" name="COIN_MAKE_DLL"/>
+
+      <!-- for glue/zlib.c -->
+      <c_include  platform="Windows_NT" copy="c_include" from="zlib"/>
+  
+      <c_options platform="UNIX">-fPIC -fno-exceptions -fno-builtin -finline-functions</c_options>
+      <c_options platform="UNIX"> -Wno-unused -Wno-multichar -Wreturn-type -Wchar-subscripts -Wparentheses</c_options>
+      <c_options platform="Darwin">-no-cpp-precomp -fno-common</c_options>
+
+      <!-- Darwin : G.Barrand : 
+                    put the below to rm warnings in dl.c and gl_agl.c -->
+      <c_options platform="Darwin">-w</c_options>
+  
+      <cxx_options platform="UNIX">-Woverloaded-virtual</cxx_options>
+
+      <!-- not this : -->
+
+      <c_include copy="c_include" from="OpenGL"/>
+      <c_options copy="c_options" from="OpenGL"/>
+      <c_macro copy="c_macro" from="OpenGL"/>
+
+      <cxx_options copy="c_options"/>
+      <cxx_macro copy="c_macro"/>
+      <cxx_include copy="c_include"/>
+
+      <lib platform="Windows_NT" copy="lib" from="OpenGL"/>
+      <lib platform="Windows_NT" copy="lib" from="pthread"/>
+      <lib platform="Windows_NT" copy="lib" from="zlib"/>
+    </library>
+  
+    <application name="CoinGL_coin_config">
+      <file>../applications/CoinGL_coin_config.cxx</file>
+
+      <cxx_macro platform="Windows_NT" name="COIN_DLL"/>
+
+      <!-- to get version : -->
+      <cxx_include>${obuild_CoinGL_path}/include</cxx_include>
+
+      <copy>osc-coin-gl-config</copy>
+    </application>
+  
+    <!-- IMPORTANT for osc-coin-gl-config : -->
+    <application name="CoinGL_config_save">
+      <file>../applications/config_save.cxx</file>
+
+      <cxx_macro platform="Windows_NT" name="COIN_DLL"/>
+
+      <!-- not this : -->
+      <cxx_include>${obuild_CoinGL_path}/include</cxx_include>
+
+      <cxx_include copy="c_include" from="OpenGL"/>
+      <cxx_options copy="c_options" from="OpenGL"/>
+      <cxx_macro copy="c_macro" from="OpenGL"/>
+
+      <lib>osc_Coin</lib>
+      <lib copy="lib" from="OpenGL"/>
+      <lib copy="lib" from="pthread"/>
+      <lib platform="Windows_NT" copy="lib" from="zlib"/>
+
+      <save/> 
+    </application>
+
+    <release>
+      <copy_dir>
+        <from>include</from>
+        <to>Resources/CoinGL/.</to>
+      </copy_dir>
+    </release>
+
+  </package>
+
+</obuild>

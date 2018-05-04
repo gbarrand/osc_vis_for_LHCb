@@ -1,0 +1,242 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+# get build_path :
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+build_pack=osc_vis
+version=17.0
+
+. ${ourex_mgr}/build_header
+
+build_distrib=yes
+if [ "${build_distrib}" = "yes" ] ; then
+
+  if [ ${build_verbose} = yes ] ; then
+    echo "osc_vis/mgr/build : build distrib ..."
+  fi
+
+  /bin/rm -R -f ${build_path}/distrib
+
+  head=${build_path}/distrib/${build_pack}/${version}
+  /bin/mkdir -p ${head}/bin
+  /bin/mkdir -p ${head}/lib
+  /bin/mkdir -p ${head}/Resources
+
+  #/////////////////////////////////////////////
+  #/// copy osc_batch material : ///////////////
+  #/////////////////////////////////////////////
+  . ../../osc_batch/mgr/build_cp2distrib
+
+  #/////////////////////////////////////////////
+  #/// packing : ///////////////////////////////
+  #/////////////////////////////////////////////
+  /bin/cp ../../osc_source/release/UNIX/Python-setup.csh ${head}/.
+  /bin/cp ../../osc_source/release/UNIX/Python-setup.sh  ${head}/.
+  /bin/cp ../../osc_source/release/UNIX/run_osc_plot ${head}/.
+  /bin/cp -R ${exlib_mgr}/configs ${head}/.
+
+  #/////////////////////////////////////////////
+  #/// Resources : /////////////////////////////
+  #/////////////////////////////////////////////
+
+  to_res="${head}/Resources/OnX"
+  /bin/mkdir -p ${head}/Resources/OnX
+  /bin/cp -R ../../OnX/examples                ${to_res}/.
+  /bin/cp -R ../../OnX/include                 ${to_res}/.
+  /bin/cp -R ../../OnX/templates               ${to_res}/.
+ #/bin/cp -R ../../OnX/source/NextStep/OnX.nib ${to_res}/.
+
+  to_res="${head}/Resources/OnX/scripts"
+  /bin/mkdir -p ${to_res}
+  packs=
+  packs="${packs} Help Inventor OnX Python Xt gtk images"
+  for pack in ${packs} ; do
+    /bin/cp -R ../../OnX/scripts/${pack} ${to_res}/.
+  done
+
+  to_res="${head}/Resources/OnXLab"
+  /bin/mkdir -p ${to_res}
+  /bin/cp -R ../../OnXLab/scripts ${to_res}/.
+
+  to_res="${head}/Resources/OnXLab/examples"
+  /bin/mkdir -p ${to_res}
+  packs=
+  packs="${packs} OnX Python Callbacks KUIP"
+  for pack in ${packs} ; do
+    /bin/cp -R ../../OnXLab/examples/${pack} ${to_res}/.
+  done
+
+  to_res="${head}/Resources/HEPVis"
+  /bin/mkdir -p ${to_res}
+  packs=
+  packs="${packs} include fonts scripts"
+ #packs="${packs} examples"
+  for pack in ${packs} ; do
+    /bin/cp -R ${ourex_mgr}/../HEPVis/${pack} ${to_res}/.
+  done
+
+  to_res="${head}/Resources"
+  packs=
+  packs="${packs} CoinGL CoinXt CoinGtk CoinQt"
+  for pack in ${packs} ; do
+    /bin/mkdir -p ${to_res}/${pack}
+    /bin/cp -R ${ourex_mgr}/../${pack}/include ${to_res}/${pack}/.
+  done
+
+  # exlib/xml/parser used in Panoramix :
+  to_res="${head}/Resources/exlib/exlib/xml"
+  /bin/mkdir -p ${to_res}
+  /bin/cp ${exlib_mgr}/../exlib/xml/parser ${to_res}/.
+
+  to_res="${head}/Resources/exlib/mgr"
+  /bin/mkdir -p ${to_res}
+  /bin/cp ${exlib_mgr}/use_Qt     ${to_res}/.
+  /bin/cp ${exlib_mgr}/use_Python ${to_res}/.
+
+  to_res="${head}/Resources/exlib/exlib/py"
+  /bin/mkdir -p ${to_res}
+  /bin/cp ${exlib_mgr}/../exlib/py/inlib.py ${to_res}/.
+
+  to_res="${head}/Resources/inlib/mgr"
+  /bin/mkdir -p ${to_res}
+  /bin/cp ${inlib_mgr}/build_ld_library_path ${to_res}/.
+  /bin/cp ${inlib_mgr}/build_pythonpath ${to_res}/.
+  /bin/cp ${inlib_mgr}/build_header ${to_res}/.
+  /bin/cp ${inlib_mgr}/guess_compiler ${to_res}/.
+  /bin/cp ${inlib_mgr}/use_cc  ${to_res}/.
+  /bin/cp ${inlib_mgr}/use_cpp ${to_res}/.
+  /bin/cp ${inlib_mgr}/use_sys ${to_res}/.
+
+  to_res="${head}/Resources"
+  /bin/mkdir -p ${to_res}
+  /bin/cp -R ../../backcomp ${to_res}/.
+
+  #/////////////////////////////////////////////
+  #/// apps : //////////////////////////////////
+  #/////////////////////////////////////////////
+  /bin/cp ../../OnX/mgr/${build_dir}/osc-gui-viewer ${head}/bin/.
+  /bin/cp ../../OnXLab/mgr/${build_dir}/aida-config ${head}/bin/.
+  /bin/cp ../../OnXLab/mgr/${build_dir}/osc-plot    ${head}/bin/.
+
+  #/////////////////////////////////////////////
+  #/// plugins : ///////////////////////////////
+  #/////////////////////////////////////////////
+  packs=
+  packs="${packs} OnX OnXLab"
+  for pack in ${packs} ; do
+    find ../../${pack}/mgr/${build_dir} -name "*.${pgex}" -exec /bin/cp {} ${head}/bin/. \;
+  done
+  if [ "${pgex}" = "${shex}" ] ; then
+    find ${head}/bin -name "lib*.${shex}" -exec /bin/rm -f {} \;
+  fi
+
+
+  #/////////////////////////////////////////////
+  #/// osc libs : //////////////////////////////
+  #/////////////////////////////////////////////
+  packs=
+  packs="${packs} OnX OnXLab backcomp"
+  for pack in ${packs} ; do
+    find ../../${pack}/mgr/${build_dir} -name "lib*.${shex}" -exec /bin/cp {} ${head}/lib/. \;
+  done
+
+  #/////////////////////////////////////////////
+  #/// ourex libs : ////////////////////////////
+  #/////////////////////////////////////////////
+  packs=
+  packs="${packs} CoinGL HEPVis KUIP"
+  packs="${packs} CoinXt gtkglarea CoinGtk CoinQt"
+  packs="${packs} freetype expat jpeg png zip zlib"
+  if [ `uname` = Darwin ] ; then
+    packs="${packs} CoinNextStep"
+  fi
+  for pack in ${packs} ; do
+    sh_lib=${ourex_mgr}/../${pack}/${build_dir}/libourex_${pack}.${shex}
+    if [ -f ${sh_lib} ] ; then
+      /bin/cp ${sh_lib} ${head}/lib/.
+    else
+      echo "osc_vis/mgr/build : ${sh_lib} not found."
+    fi
+  done
+
+  #/////////////////////////////////////////////
+  #/// python  plugins : ///////////////////////
+  #/////////////////////////////////////////////
+
+  /bin/cp ${exlib_mgr}/${build_dir}/inlib_swig_py.${pgpy} ${head}/bin/.
+
+  packs=
+  packs="${packs} OnX OnXLab"
+  for pack in ${packs} ; do
+    find ../../${pack}/mgr/${build_dir} -name "*.${pgpy}" -exec /bin/cp {} ${head}/bin/. \;
+  done
+
+  packs=
+  packs="${packs} CoinPython HEPVisPython"
+  for pack in ${packs} ; do
+    find ${ourex_mgr}/../${pack}/${build_dir} -name "*.${pgpy}" -exec /bin/cp {} ${head}/bin/. \;
+  done
+
+  to_res="${head}/Resources/CoinPython"
+  /bin/mkdir -p ${to_res}
+  /bin/cp -R ${ourex_mgr}/../CoinPython/scripts ${to_res}/.
+
+  #/////////////////////////////////////////////
+  #/// darwin .app : ///////////////////////////
+  #/////////////////////////////////////////////
+  if [ `uname` = Darwin ] ; then
+    to="${head}/darwin_app"
+    /bin/mkdir -p ${to}
+    /bin/cp -R ${ourex_mgr}/../CoinNextStep/${build_dir}/test_cube.app ${to}/.
+
+  fi
+
+  #/////////////////////////////////////////////
+  #/// save files : ////////////////////////////
+  #/////////////////////////////////////////////
+  save=${head}/bin/OnXLab_exa_config.save
+  /bin/rm -f ${save}
+  echo "obuild_cxx_command=${cpp_compiler}"  >> ${save}
+  echo 'obuild_cxx_options='                 >> ${save}
+  echo 'obuild_cxx_macros='                  >> ${save}
+  echo 'obuild_cxx_includes=-I"@@top@@/AIDA/v3r2p1/src/cpp"'   >> ${save}
+
+  save_libs="-lOnXLabAIDA -lOnXCore -lLibUtils -losc_Minuit"
+  save_libs="${save_libs} -lourex_HEPVis -lourex_CoinGL"
+  save_libs="${save_libs} -lourex_expat -lourex_jpeg -lourex_freetype"
+  save_libs="${save_libs} -lourex_png -lourex_zip  -lourex_zlib"
+
+  if [ `uname` = Darwin ] ; then
+    save_libs="${save_libs} -framework OpenGL -framework AGL"
+    save_libs="${save_libs} -framework ApplicationServices -lpthread"
+  elif [ `uname` = Linux ] ; then
+    save_libs="${save_libs} -ldl"
+    save_libs="${save_libs} -L/usr/X11R6/${lib} -lGLU -lGL" 
+    save_libs="${save_libs} -L/usr/X11R6/${lib} -lXi -lXext -lXpm -lX11"
+  fi
+  echo "obuild_linked_libraries=${save_libs}" >> ${save}
+
+  #/////////////////////////////////////////////
+  #/////////////////////////////////////////////
+  #/////////////////////////////////////////////
+
+  platform=`${inlib_mgr}/build_platform`
+  #echo ${platform}
+  if [ "${platform}" = "" ] ; then
+    echo "osc_vid/mgr/build : can't guess platform."
+  else
+    save_dir=`pwd`
+    cd ${build_path}/distrib
+    zip -qr ${build_pack}-${version}-${platform}.zip ./${build_pack}
+    cd ${save_dir}
+
+  fi
+
+fi

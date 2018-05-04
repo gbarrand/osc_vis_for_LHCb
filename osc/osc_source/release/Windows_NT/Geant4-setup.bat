@@ -1,0 +1,16 @@
+@ECHO off 
+
+SET G4ANALYSIS_USE=1
+
+FOR /F "usebackq delims=;" %%s IN (`aida-config --include`) DO SET G4ANALYSIS_AIDA_CONFIG_CFLAGS=%%s
+FOR /F "usebackq delims=;" %%s IN (`aida-config --lib`) DO SET G4ANALYSIS_AIDA_CONFIG_LIBS=%%s
+
+SET G4VIS_NONE=1
+
+SET G4UI_NONE=1
+
+IF DEFINED G4LIB_USE_GRANULAR SET G4LIB_USE_GRANULAR=
+
+SET G4LIB_BUILD_SHARED=1
+
+@ECHO on

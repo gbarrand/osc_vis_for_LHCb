@@ -1,0 +1,43 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file inlib.license for terms.
+
+#ifndef inlib_buffer
+#define inlib_buffer
+
+#include "platform"
+
+#include <cstring>
+#include <cstddef>
+
+namespace inlib {
+
+template <class T>
+inline unsigned int write_buffer(T a_value,char* a_buffer) {
+  size_t n = sizeof(T);
+  //NOTE : a_buffer must be allocated to n.
+  if(is_little_endian()) {
+    ::memcpy(a_buffer,&a_value,n);
+  } else {
+    char* pos = (char*)&a_value;
+    for(unsigned int i=0;i<n;i++,pos++) a_buffer[n-1-i] = *pos;
+  }
+  return n;
+}
+
+template <class T>
+inline unsigned int read_buffer(const char* a_buffer,T& a_value) {
+  size_t n = sizeof(T);
+  //NOTE : a_buffer must be allocated to n.
+  if(is_little_endian()) {
+    ::memcpy(&a_value,a_buffer,n);
+  } else {
+    char* pos = (char*)&a_value;
+    for(unsigned int i=0;i<n;i++,pos++) *pos = a_buffer[n-1-i];
+  }
+  return n;
+}
+
+}
+
+#endif
+

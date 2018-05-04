@@ -1,0 +1,34 @@
+<widget class="Dialog" name="OnX_Callback_editor">
+  <geometry>200x200+100+100</geometry>
+  <title>Callback Editor</title>
+  <widget class="VContainer">
+    <widget class="Label" name="OnX_IB_CallbackEditorAction">
+      <label></label>
+    </widget>
+    <widget class="HBox">
+      <widget class="Label">
+        <label>Language : </label>
+      </widget>
+      <widget class="OptionMenu" name="OnX_IB_CallbackEditorLanguage">
+      </widget>
+    </widget>
+    <widget class="ScrolledText" name="OnX_IB_CallbackEditorArgs">
+    </widget>
+    <widget class="HContainer">
+      <widget class="PushButton">
+        <label>Cancel</label>
+        <activate exec="DLD">OnX OnX_IB_CallbackRemove</activate>
+        <activate exec="DLD">OnX ui_hide OnX_Callback_editor</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Apply</label>
+        <activate exec="DLD">OnX OnX_IB_CallbackEditorApply</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Ok</label>
+        <activate exec="DLD">OnX OnX_IB_CallbackEditorApply</activate>
+        <activate exec="DLD">OnX ui_hide OnX_Callback_editor</activate>
+      </widget>
+    </widget>
+  </widget>
+</widget>

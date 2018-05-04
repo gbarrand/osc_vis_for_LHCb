@@ -1,0 +1,33 @@
+<!-- First MenuItem assumes a tab_stack widget -->
+
+<!-- GUI PDM.  -->
+<widget class="CascadeButton">
+  <label>GUI</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Clone current in tab stack</label>
+      <activate exec="DLD">OnX set_variable tmp @current_name@ @cat@ _</activate>
+      <activate exec="DLD">OnX set_variable tmp @name@@{tmp}@</activate>
+      <activate exec="DLD">OnX ui_copy_component @{tmp}@ @current_name@ tab_stack</activate>
+      <activate exec="DLD">OnX ui_set_parameter tab_stack.selection @{tmp}@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Clone current in a panel</label>
+      <activate exec="DLD">OnX ui_load @empty@ $ONXROOT/scripts/OnX/ViewerWindow.onx</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Delete current widget</label>
+      <variable name="GUI_script">OnX ui_destroy_widget @current@</variable>
+      <activate exec="DLD">OnX ui_execute_script_if " @cat@ @current_name@ @cat@ "!=" @cat@ Viewer @cat@ " DLD @{GUI_script}@</activate>
+    </widget>
+    <widget class="MenuSeparator"/>
+    <reference file="Viewer.onx"/>
+    <reference file="Page.onx"/>
+    <reference file="Region.onx"/>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>Write viewers of tab stack...</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/InputTabStackWrite.onx OnX_InputTabStackWrite_dialog</activate>
+    </widget>
+  </widget>
+</widget>

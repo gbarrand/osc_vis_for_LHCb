@@ -1,0 +1,58 @@
+<widget class="VContainer" name="OnXLab_CloudExplorer_histo_box"> 
+
+      <widget class="Label">
+        <label>Histogram booking</label>
+      </widget>
+
+      <widget class="HBox"> 
+        <expand>second</expand>
+        <sizeOfFixed>50</sizeOfFixed>
+        <widget class="Label">
+          <label>Xbins</label>
+        </widget>
+        <widget class="Entry" name="OnXLab_CloudExplorer_xnumber">
+          <activate exec="DLD">OnXLab OnXLab_CloudExplorer_represent</activate>
+        </widget>
+      </widget>
+
+      <widget class="HBox"> 
+        <expand>second</expand>
+        <sizeOfFixed>150</sizeOfFixed>
+        <widget class="HBox"> 
+          <expand>second</expand>
+          <sizeOfFixed>50</sizeOfFixed>
+          <widget class="Label">
+            <label>Xmin</label>
+          </widget>
+          <widget class="Entry" name="OnXLab_CloudExplorer_xmin">
+            <activate exec="DLD">OnXLab OnXLab_CloudExplorer_represent</activate>
+          </widget>
+        </widget>
+        <widget class="HScrollBar" name="OnXLab_CloudExplorer_xmin_scale">
+          <drag exec="DLD">OnXLab OnXLab_CloudExplorer_xmin_scale</drag>
+          <increment exec="DLD">OnXLab OnXLab_CloudExplorer_xmin_scale</increment>
+          <decrement exec="DLD">OnXLab OnXLab_CloudExplorer_xmin_scale</decrement>
+        </widget>
+      </widget>
+
+      <widget class="HBox"> 
+        <expand>second</expand>
+        <sizeOfFixed>150</sizeOfFixed>
+        <widget class="HBox"> 
+          <expand>second</expand>
+          <sizeOfFixed>50</sizeOfFixed>
+          <widget class="Label">
+            <label>Xmax</label>
+          </widget>
+          <widget class="Entry" name="OnXLab_CloudExplorer_xmax">
+            <activate exec="DLD">OnXLab OnXLab_CloudExplorer_represent</activate>
+          </widget>
+        </widget>
+        <widget class="HScrollBar" name="OnXLab_CloudExplorer_xmax_scale">
+          <drag exec="DLD">OnXLab OnXLab_CloudExplorer_xmax_scale</drag>
+          <increment exec="DLD">OnXLab OnXLab_CloudExplorer_xmax_scale</increment>
+          <decrement exec="DLD">OnXLab OnXLab_CloudExplorer_xmax_scale</decrement>
+        </widget>
+      </widget>
+
+</widget> <!-- histo booking box -->

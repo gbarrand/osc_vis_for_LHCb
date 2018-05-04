@@ -1,0 +1,18 @@
+
+  When selecting a AIDA::ICloud in the main tree widget
+ the cloud explorer paletter is mapped and its fields
+ are updated according the choosed cloud.
+
+  Click on the "Infos" button to have a sumup of the content
+ of the cloud.
+
+  Choose a coordinate or a "Rep/histo" to histogram and
+ plot the choosed coordinate. When done someone can play
+ with the histo booking parameters with the "Histogram booking"
+ input area.
+
+  Click "Rep/points" to plot the cloud as a cloud of points
+ for 2D and 3D clouds. For 1D one [index, cood] is plot.
+ If done, the "Histogram booking" area is invalidate.
+
+  "Cancel" unmaps the palette.

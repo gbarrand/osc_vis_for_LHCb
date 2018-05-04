@@ -1,0 +1,26 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_Input_offscreen">
+    <label>offscreen options</label>
+
+    <input name="FILE" label="File" type="text" default="" />
+
+    <input name="width" label="width" type="combo" items="scale*window\n500\n1000" default="scale*window"/>
+    <input name="height" label="height" type="combo" items="scale*window\n500\n1000" default="scale*window"/>
+
+    <input name="scale" label="scale" type="combo" items="1\n2\n4\n8" default="1"/>
+
+    <input name="no_tiling" label="no_tiling" type="option" items="false\ntrue" default="false"/>
+
+    <!-- the scene graph must have an SoCamera ! -->
+    <input name="what" label="what" type="combo" items="viewerSceneGraph\nviewerAllSceneGraph\npage\nregion\nregionTopSeparator" default="regionTopSeparator"/>
+
+    <!-- Ouch ! -->
+    <ok exec="DLD">OnX set_variable OnX_Input_offscreen_options scale @cat@ = @cat@ @[OnX_Input_offscreen_input_scale.value]@ @cat@ ; @cat@ width @cat@ = @cat@ @[OnX_Input_offscreen_input_width.value]@ @cat@ ; @cat@ height @cat@ = @cat@ @[OnX_Input_offscreen_input_height.value]@ @cat@ ; @cat@ what @cat@ = @cat@ @[OnX_Input_offscreen_input_what.value]@ @cat@ ; @cat@ no_tiling @cat@ = @cat@ @[OnX_Input_offscreen_input_no_tiling.value]@</ok>
+
+    <ok exec="DLD">OnX widget_write @current@ @[OnX_Input_offscreen_input_FILE.value]@ offscreen @{OnX_Input_offscreen_options}@</ok>
+
+    <help file="$ONXROOT/scripts/Help/Input_offscreen.help"/>
+  </widget>
+
+</OnX>

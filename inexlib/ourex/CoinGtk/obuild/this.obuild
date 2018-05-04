@@ -1,0 +1,177 @@
+
+<obuild>
+
+  <package name="CoinGtk" version="v1r50p11">
+
+    <repository>:pserver:@@user@@@cvsserver.lal.in2p3.fr:/projects/cvs</repository>
+
+    <!-- not this : -->
+
+    <reference package="CoinGL" path="../../CoinGL" file="obuild/export.obuild"/>  
+    <reference package="foreign" path="../../foreign" file="gtk2.obuild"/>  
+
+    <reference package="gtkglarea" path="../../gtkglarea" file="obuild/export.obuild"/>  
+
+    <reference package="foreign" path="../../foreign" file="GLX.obuild"/>  
+    <reference package="foreign" path="../../foreign" file="X11.obuild"/>  
+
+    <!-- this : -->
+
+    <library name="CoinGtk">
+      <group>gtk</group>
+      <check_foreign>gtk</check_foreign>
+
+      <files>../src/Inventor/Gtk/*.cpp</files>
+      <files>../src/Inventor/Gtk/devices/*.cpp</files>
+      <files>../src/Inventor/Gtk/viewers/*.cpp</files>
+      <files>../src/Inventor/Gtk/widgets/*.cpp</files>
+
+      <!-- to rm warning with 4.2.x : 
+        warning: deprecated conversion from string constant to char* 
+      -->
+      <cxx_options platform="Darwin">-w</cxx_options> <!-- SnowLeopard -->
+      <cxx_options platform="Linux">-w</cxx_options>
+
+      <cxx_include>${obuild_CoinGtk_path}/include</cxx_include>
+      <cxx_include>${obuild_CoinGtk_path}/src</cxx_include>
+      <cxx_include>${obuild_CoinGtk_path}/data</cxx_include>
+  
+      <cxx_macro name="HAVE_CONFIG_H"/>
+      <cxx_macro name="SOGTK_INTERNAL"/>
+      <cxx_macro name="SOGTK_DEBUG">0</cxx_macro>
+
+      <cxx_macro platform="Windows_NT" name="SOGTK_MAKE_DLL"/>
+  
+      <!-- not this : -->
+
+      <cxx_include copy="c_include" from="gtk"/>
+      <cxx_include copy="c_include" from="gtkgl"/>
+      <cxx_include copy="c_include" from="CoinGL"/>
+      <cxx_options copy="c_options" from="CoinGL"/>
+      <cxx_macro copy="c_macro" from="CoinGL"/>
+
+      <lib platform="Windows_NT" copy="lib" from="CoinGL"/>
+      <lib platform="Windows_NT" copy="lib" from="gtkgl"/>
+      <lib platform="Windows_NT" copy="lib" from="gtk"/>
+
+    </library>
+  
+    <application name="CoinGtk_test_glarea">
+      <group>gtk</group>
+      <check_foreign>gtk</check_foreign>
+
+      <file>../tests/CoinGtk_test_glarea.cpp</file>
+  
+      <cxx_include copy="c_include" from="gtk"/>
+      <cxx_include copy="c_include" from="gtkgl"/>
+
+      <cxx_include copy="c_include" from="OpenGL"/>
+      <cxx_options copy="c_options" from="OpenGL"/>
+      <cxx_macro copy="c_macro" from="OpenGL"/>
+
+      <!-- To suppress the OpenGL warnings : 
+          see notes in foreign/GLX.obuild -->
+      <cxx_linker_options platform="Darwin">-bind_at_load -multiply_defined suppress</cxx_linker_options>
+
+      <lib copy="lib" from="gtkgl"/>
+      <lib copy="lib" from="gtk"/>
+      <lib copy="lib" from="GLX"/>
+      <lib copy="lib" from="X11"/>
+      <lib copy="lib" from="OpenGL"/>
+
+    </application>
+  
+    <template name="CoinGtk_test_T">
+      <group>gtk</group>
+      <check_foreign>gtk</check_foreign>
+
+      <file>../tests/@@name@@.cpp</file>
+  
+      <cxx_include copy="cxx_include" from="library CoinGtk"/>
+
+      <cxx_macro platform="Windows_NT" name="SOGTK_DLL"/>
+      <cxx_macro copy="c_macro" from="CoinGL"/>
+
+      <!-- To suppress the OpenGL warnings : 
+          see notes in foreign/GLX.obuild -->
+      <cxx_linker_options platform="Darwin">-bind_at_load -multiply_defined suppress</cxx_linker_options>
+
+      <lib>CoinGtk</lib>
+      <lib copy="lib" from="CoinGL"/>
+      <lib copy="lib" from="gtkgl"/>
+      <lib copy="lib" from="gtk"/>
+      <lib copy="lib" from="GLX"/>
+      <lib copy="lib" from="X11"/>
+      <lib copy="lib" from="OpenGL"/>
+
+    </template>
+  
+    <darwin_app name="CoinGtk_test_cube">
+      <group>gtk</group>
+      <check_foreign>gtk</check_foreign>
+    </darwin_app>
+    <darwin_app name="CoinGtk_test_gui">
+      <group>gtk</group>
+      <check_foreign>gtk</check_foreign>
+    </darwin_app>
+
+    <application template="CoinGtk_test_T" name="CoinGtk_test_cube"/>
+    <application template="CoinGtk_test_T" name="CoinGtk_test_gui"/>
+
+    <application name="CoinGtk_coin_config">
+      <group>gtk</group>
+      <check_foreign>gtk</check_foreign>
+
+      <file>../applications/CoinGtk_coin_config.cxx</file>
+
+      <cxx_include>${obuild_CoinGtk_path}/include</cxx_include>
+
+      <cxx_macro platform="Windows_NT" name="SOGTK_DLL"/>
+      <cxx_macro copy="c_macro" from="CoinGL"/>
+
+      <copy>osc-coin-gtk-config</copy>
+    </application>
+  
+    <!-- IMPORTANT for osc-coin-gtk-config : -->
+    <application name="CoinGtk_config_save">
+      <group>gtk</group>
+      <check_foreign>gtk</check_foreign>
+
+      <file>../applications/config_save.cxx</file>
+
+      <cxx_include>${obuild_CoinGtk_path}/include</cxx_include>
+      <cxx_include copy="c_include" from="gtk"/>
+      <cxx_include copy="c_include" from="CoinGL"/>
+
+      <cxx_macro platform="Windows_NT" name="SOGTK_DLL"/>
+      <cxx_macro copy="c_macro" from="CoinGL"/>
+
+      <!-- To suppress the OpenGL warnings : 
+          see notes in foreign/GLX.obuild -->
+      <cxx_linker_options platform="Darwin">-bind_at_load -multiply_defined suppress</cxx_linker_options>
+
+      <lib>CoinGtk</lib>
+      <lib copy="lib" from="CoinGL"/>
+      <lib copy="lib" from="gtkgl"/>
+      <lib copy="lib" from="gtk"/>
+      <lib copy="lib" from="GLX"/>
+      <lib copy="lib" from="X11"/>
+
+      <save> 
+        <subs_path>
+          <from>../..</from>
+          <to>@@top@@</to>
+        </subs_path>
+      </save> 
+    </application>
+
+    <release>
+      <copy_dir>
+        <from>include</from>
+        <to>Resources/CoinGtk/.</to>
+      </copy_dir>
+    </release>
+
+  </package>
+
+</obuild>

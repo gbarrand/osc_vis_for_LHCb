@@ -1,0 +1,874 @@
+
+#include <Slash/Tools/Session.h>
+
+#include <BatchLab/Core/MemoryTuple.h>
+#include <BatchLab/Core/Cloud.h>
+#include <BatchLab/Core/DataPointSet.h>
+#include <BatchLab/Core/Function.h>
+#include <BatchLab/Core/FFactory.h>
+
+std::string BatchLab::AIDA_ML::buildName(inlib::xml::tree& aItemML,Slash::Core::ISession& aSession){
+  std::string name;
+  if(!aItemML.attribute_value("name",name)) { 
+    unsigned int count = 0;
+    if(!Slash::parameter(aSession,s_name_counter(),count)) {
+      aSession.setParameter(s_name_counter(),"0");
+    }
+    inlib::sprintf(name,256,"BatchLab_XML_Object_%d",count);
+    //aSession.out() << "debug : count : " << name << std::endl;
+    Slash::set_parameter(aSession,s_name_counter(),count+1);
+    aItemML.set_attribute_value("name",name);
+  }
+  return name;
+}
+
+exlib::raxml_out BatchLab::AIDA_ML::read_histo(inlib::xml::tree& a_tree,
+                     std::ostream& a_out,
+                     bool a_verbose,
+  		     int aDimension,bool aIsProfile,void* a_tag){
+  Slash::Core::ISession& session = *((Slash::Core::ISession*)a_tag);
+  std::string xmlName = buildName(a_tree,session);
+
+  if(a_verbose) {
+    a_out << "BatchLab::XML::read_histo :" 
+          << " name " << inlib::sout(xmlName)
+          << "..." << std::endl;
+  }
+
+  exlib::raxml_out ro = 
+    exlib::raxml::read_histo(a_tree,
+                             a_out,a_verbose,
+                             aDimension,aIsProfile);
+  if(!ro.object()) {
+    a_out << "BatchLab::XML::read_histo :" 
+          << " exlib::raxml::read_histo failed."
+          << std::endl;
+    return exlib::raxml_out();
+  }
+
+  if(a_verbose) {
+    a_out << "BatchLab::XML::read_histo :" 
+          << " raxml get :"
+          << " class = " << inlib::sout(ro.cls())
+          << " path = " << inlib::sout(ro.path())
+          << " name = " << inlib::sout(ro.name())
+          << "."
+          << std::endl;
+  }
+
+  Slash::Store::IObject* object = 0;
+  if(aIsProfile) {
+    // Create a BatchLab::Profile :
+    if(aDimension==1) {
+      inlib::histo::p1d* hcl = (inlib::histo::p1d*)ro.object();
+      object = new BatchLab::Profile1D(a_out,xmlName,*hcl);
+      //delete hcl; //done by ~ro
+    } else if(aDimension==2) {
+      inlib::histo::p2d* hcl = (inlib::histo::p2d*)ro.object();
+      object = new BatchLab::Profile2D(a_out,xmlName,*hcl);
+      //delete hcl; //done by ~ro
+    }
+  } else {
+    // Create a BatchLab::Histogram :
+    if(aDimension==1) {
+      inlib::histo::h1d* hcl = (inlib::histo::h1d*)ro.object();
+      object = new BatchLab::Histogram1D(a_out,xmlName,*hcl);
+      //delete hcl; //done by ~ro
+    } else if(aDimension==2) {
+      inlib::histo::h2d* hcl = (inlib::histo::h2d*)ro.object();
+      object = new BatchLab::Histogram2D(a_out,xmlName,*hcl);
+      //delete hcl; //done by ~ro
+    } else if(aDimension==3) {
+      inlib::histo::h3d* hcl = (inlib::histo::h3d*)ro.object();
+      object = new BatchLab::Histogram3D(a_out,xmlName,*hcl);
+      //delete hcl; //done by ~ro
+    }
+  }
+  if(!object) {
+    if(ro.object()) {
+      a_out << "BatchLab::XML::read_histo :" 
+            << " WARNING : read an unknown histogram of class "
+            << inlib::sout(ro.cls()) << "."
+            << " As we don't know how to delete it"
+            << " then we don't delete it and then we have a memory leak here."
+            << std::endl;
+    }
+  }
+
+  if(a_verbose) {
+    a_out << "BatchLab::XML::read_histo :" 
+          << " name " << inlib::sout(xmlName)
+          << " done." << std::endl;
+  }
+
+  inlib::base_handle* hdl = new inlib::handle<Slash::Store::IObject>(object);
+  //return exlib::raxml_out((Slash::Store::IObject*)object,
+  return exlib::raxml_out(hdl,"Slash::Store::IObject",ro.path(),xmlName);
+}
+
+exlib::raxml_out BatchLab::AIDA_ML::read_histo1d(inlib::xml::tree& a_tree,
+                          std::ostream& a_out,bool a_verbose,void* a_tag) {
+  return read_histo(a_tree,a_out,a_verbose,1,false,a_tag);
+}
+exlib::raxml_out BatchLab::AIDA_ML::read_histo2d(inlib::xml::tree& a_tree,
+                         std::ostream& a_out,bool a_verbose,void* a_tag) {
+  return read_histo(a_tree,a_out,a_verbose,2,false,a_tag);
+}
+exlib::raxml_out BatchLab::AIDA_ML::read_histo3d(inlib::xml::tree& a_tree,
+                         std::ostream& a_out,bool a_verbose,void* a_tag) {
+  return read_histo(a_tree,a_out,a_verbose,3,false,a_tag);
+}
+
+bool BatchLab::AIDA_ML::readTupleColumns(inlib::xml::tree& a_tree,
+                             bool& aFound,std::string& aBooking,
+                             std::ostream&){
+  aFound = false;
+
+  const std::string& tagName = a_tree.tag_name();
+
+  std::string svalue;
+
+  aBooking = "";
+  if(tagName=="columns") {
+    inlib::xml::looper _for(a_tree);
+    while(inlib::xml::element* _elem = _for.next_element()) {
+      if(_elem->name()=="column") {
+        if(aBooking.size()) aBooking += ",";
+        if(!_elem->attribute_value("type",svalue)) {
+          aBooking = "";
+          return false;
+        }
+        aBooking += svalue + " ";
+        if(!_elem->attribute_value("name",svalue)) {
+          aBooking = "";
+          return false;
+        }
+        aBooking += svalue;
+        if(_elem->attribute_value("booking",svalue)) {
+          aBooking += " = " + svalue;
+        } else if(_elem->attribute_value("default",svalue)) {
+          aBooking += " = " + svalue;
+        }
+      }
+    }
+    aFound = true;
+  } 
+
+  return true;
+}
+
+
+bool BatchLab::AIDA_ML::readTupleRows(inlib::xml::tree& a_tree,AIDA::ITuple& aTuple,bool& aFound,std::ostream& a_out){
+  aFound = false;
+
+  const std::string& tagName = a_tree.tag_name();
+
+  if(tagName=="annotation") { //FIXME
+
+    return true;
+ 
+  } else if(tagName=="columns") {
+
+    return true;
+
+  } else if(tagName=="rows") {
+
+    // Sub items :
+    inlib::xml::looper _for(a_tree);
+    while(inlib::xml::tree* _tree = _for.next_tree()) {
+      if(!readTupleRows(*_tree,aTuple,aFound,a_out)) return false;
+    }
+    aFound = true;
+
+    return true;
+
+  } else if(tagName=="row") {
+ 
+    std::vector<int> ituples;
+    std::vector<int> inot_tuples;
+    int coln = aTuple.columns();
+    for(int index=0;index<coln;index++) {
+      std::string type = aTuple.columnType(index);
+      if(type=="ITuple") {
+        ituples.push_back(index);
+      } else {
+        inot_tuples.push_back(index);
+      }
+    }
+
+    std::string svalue;
+    int icol = 0;
+   {inlib::xml::looper _for(a_tree);
+    while(inlib::xml::element* _elem = _for.next_element()) {
+      if(_elem->name()=="entry") {
+        if(!_elem->attribute_value("value",svalue)) {
+          a_out << "BatchLab::XML::readTupleRows :" 
+                << " can't get \"value\" attribute." << std::endl;
+          return false;
+        }
+        if(!amanip::fill(a_out,aTuple,inot_tuples[icol],svalue)) {
+          a_out << "BatchLab::XML::readTupleRows :" 
+                << " can't fill tuple column." << std::endl;
+          return false;
+        }
+        icol++;
+      }
+    }}
+
+    // Sub items (entryITuple) :
+    icol = 0;
+   {inlib::xml::looper _for(a_tree);
+    while(inlib::xml::tree* _tree = _for.next_tree()) {
+      const std::string& tagName = _tree->tag_name();
+      if(  (tagName=="entryITuple")  || //aida.dtd spec.
+           (tagName=="entryTuple")   ){ //backward comp.
+        AIDA::ITuple* tuple = aTuple.getTuple(ituples[icol]);
+        if(!tuple) {
+          a_out << "BatchLab::XML::readTupleRows :" 
+                << " can't get template tuple for column " 
+                << inlib::sout(ituples[icol]) << "."
+                << std::endl;
+          return false;
+        }
+       // Read rows of tuple :
+       {inlib::xml::looper _for2(*_tree);
+        while(inlib::xml::tree* _tree2 = _for2.next_tree()) {
+          bool found;
+          if(!readTupleRows(*_tree2,*tuple,found,a_out)) return false;
+        }}
+        icol++;
+      }
+    }}
+
+    if(!aTuple.addRow()) {
+      a_out << "BatchLab::XML::readTupleRows :" 
+            << " can't add row to tuple." << std::endl;
+      return false;
+    }
+
+    return true;
+
+  }
+
+  a_out << "BatchLab::XML::readTupleRows :" 
+        << " unknown item class " << inlib::sout(tagName) << std::endl;
+
+  return false;
+}
+
+bool BatchLab::AIDA_ML::readCloudData(inlib::xml::tree& a_tree,BatchLab::Cloud1D& aCloud,bool a_verbose,std::ostream& a_out){
+  const std::string& tagName = a_tree.tag_name();
+
+  std::string svalue;
+
+  if(tagName=="annotation") { //FIXME
+
+    return true;
+ 
+  } else if(tagName=="entries1d") {
+ 
+    inlib::xml::looper _for(a_tree);
+    while(inlib::xml::element* _elem = _for.next_element()) {
+      if(_elem->name()=="entry1d") {
+        double x;
+        if(!_elem->attribute_value("valueX",svalue)) return false;
+        if(!inlib::to<double>(svalue,x)) return false;
+        double w = 1;
+        if(_elem->attribute_value("weight",svalue)) {
+          if(!inlib::to<double>(svalue,w)) return false;
+        }
+        if(!aCloud.fill(x,w)) return false;
+      }
+    }
+    return true;
+
+  } else if(tagName=="histogram1d") {
+
+    exlib::raxml_out ro = read_histo1d(a_tree,a_out,a_verbose,0);
+    Slash::Store::IObject* object = (Slash::Store::IObject*)ro.object();
+    if(!object) return false;
+    std::string spath = ro.path();
+    if(BatchLab::Histogram1D* h = INLIB_CAST(*object,BatchLab::Histogram1D)) {
+      aCloud.setHistogram(h);
+    }
+    return true;
+
+  }
+
+  return false;
+}
+
+bool BatchLab::AIDA_ML::readCloudData(inlib::xml::tree& a_tree,BatchLab::Cloud2D& aCloud,bool a_verbose,std::ostream& a_out){
+  const std::string& tagName = a_tree.tag_name();
+
+  std::string svalue;
+
+  if(tagName=="annotation") { //FIXME
+
+    return true;
+ 
+  } else if(tagName=="entries2d") {
+ 
+    inlib::xml::looper _for(a_tree);
+    while(inlib::xml::element* _elem = _for.next_element()) {
+      if(_elem->name()=="entry2d") {
+        double x;
+        if(!_elem->attribute_value("valueX",svalue)) return false;
+        if(!inlib::to<double>(svalue,x)) return false;
+        double y;
+        if(!_elem->attribute_value("valueY",svalue)) return false;
+        if(!inlib::to<double>(svalue,y)) return false;
+        double w = 1;
+        if(_elem->attribute_value("weight",svalue)) {
+          if(!inlib::to<double>(svalue,w)) return false;
+        }
+        if(!aCloud.fill(x,y,w)) return false;
+      }
+    }
+    return true;
+
+  } else if(tagName=="histogram2d") {
+
+    exlib::raxml_out ro = read_histo2d(a_tree,a_out,a_verbose,0);
+    Slash::Store::IObject* object = (Slash::Store::IObject*)ro.object();
+    if(!object) return false;
+    std::string spath = ro.path();
+    if(BatchLab::Histogram2D* h = INLIB_CAST(*object,BatchLab::Histogram2D)) {
+      aCloud.setHistogram(h);
+    }
+    return true;
+
+  }
+
+  return false;
+}
+
+bool BatchLab::AIDA_ML::readCloudData(inlib::xml::tree& a_tree,BatchLab::Cloud3D& aCloud,bool a_verbose,std::ostream& a_out){
+  const std::string& tagName = a_tree.tag_name();
+
+  std::string svalue;
+
+  if(tagName=="annotation") { //FIXME
+
+    return true;
+ 
+  } else if(tagName=="entries3d") {
+ 
+    inlib::xml::looper _for(a_tree);
+    while(inlib::xml::element* _elem = _for.next_element()) {
+      if(_elem->name()=="entry3d") {
+        double x;
+        if(!_elem->attribute_value("valueX",svalue)) return false;
+        if(!inlib::to<double>(svalue,x)) return false;
+        double y;
+        if(!_elem->attribute_value("valueY",svalue)) return false;
+        if(!inlib::to<double>(svalue,y)) return false;
+        double z;
+        if(!_elem->attribute_value("valueZ",svalue)) return false;
+        if(!inlib::to<double>(svalue,z)) return false;
+        double w = 1;
+        if(_elem->attribute_value("weight",svalue)) {
+          if(!inlib::to<double>(svalue,w)) return false;
+        }
+        if(!aCloud.fill(x,y,z,w)) return false;
+      }
+    }
+    return true;
+
+  } else if(tagName=="histogram3d") {
+
+    exlib::raxml_out ro = read_histo3d(a_tree,a_out,a_verbose,0);
+    Slash::Store::IObject* object = (Slash::Store::IObject*)ro.object();
+    if(!object) return false;
+    std::string spath = ro.path();
+    if(BatchLab::Histogram3D* h = INLIB_CAST(*object,BatchLab::Histogram3D)) {
+      aCloud.setHistogram(h);
+    }
+    return true;
+
+  }
+
+  return false;
+}
+
+bool BatchLab::AIDA_ML::readDataPointSetData(inlib::xml::tree& a_tree,AIDA::IDataPointSet& aObject,std::ostream&){
+  const std::string& tagName = a_tree.tag_name();
+
+  std::string svalue;
+
+  if(tagName=="annotation") { //FIXME
+
+    return true;
+ 
+  } else if(tagName=="dataPoint") {
+ 
+    AIDA::IDataPoint* point = aObject.addPoint();
+    if(!point) return false;
+
+    int coordinate = 0;
+    inlib::xml::looper _for(a_tree);
+    while(inlib::xml::element* _elem = _for.next_element()) {
+      if(_elem->name()=="measurement") {
+        if(coordinate>=aObject.dimension()) return false;
+        double value;
+        if(!_elem->attribute_value("value",svalue)) return false;
+        if(!inlib::to<double>(svalue,value)) return false;
+        double errorPlus = 0;
+        if(_elem->attribute_value("errorPlus",svalue)) {
+          if(!inlib::to<double>(svalue,errorPlus)) return false;
+        }
+        double errorMinus = 0;
+        if(_elem->attribute_value("errorMinus",svalue)) {
+          if(!inlib::to<double>(svalue,errorMinus)) return false;
+        }
+
+        AIDA::IMeasurement* measurement = point->coordinate(coordinate);
+        if(!measurement) return false;
+        measurement->setValue(value);
+        measurement->setErrorPlus(errorPlus);
+        measurement->setErrorMinus(errorMinus);
+
+        coordinate++;
+      }
+    }
+    return true;
+
+  }
+
+  return false;
+}
+
+/*
+class FunctionBooking {
+public:
+  std::string fArgument;
+  std::vector< std::pair<double,double> > fRanges;
+  std::vector< std::pair<std::string,double> > fParameters;
+};
+*/
+
+bool BatchLab::AIDA_ML::readFunctionBooking(inlib::xml::tree& a_tree,FunctionBooking& aBooking,std::ostream& a_out){
+  const std::string& tagName = a_tree.tag_name();
+
+  std::string svalue;
+
+  if(tagName=="annotation") { //FIXME
+
+    return true;
+ 
+  } else if(tagName=="arguments") {
+
+    inlib::xml::looper _for(a_tree);
+    while(inlib::xml::tree* _tree = _for.next_tree()) {
+      if(!readFunctionBooking(*_tree,aBooking,a_out)) return false;
+    }
+    return true;
+  
+  } else if(tagName=="argument") {
+
+    if(!a_tree.attribute_value("name",aBooking.fArgument)) return false;
+
+    inlib::xml::looper _for(a_tree);
+    while(inlib::xml::element* _elem = _for.next_element()) {
+      if(_elem->name()=="range") {
+        double mn = 0;        
+        if(_elem->attribute_value("min",svalue)) {
+          if(!inlib::to<double>(svalue,mn)) return false;
+        }
+        double mx = 0;        
+        if(_elem->attribute_value("max",svalue)) {
+          if(!inlib::to<double>(svalue,mx)) return false;
+        }
+        aBooking.fRanges.push_back(std::pair<double,double>(mn,mx));
+      }
+    }
+    return true;
+
+  } else if(tagName=="parameters") {
+ 
+    inlib::xml::looper _for(a_tree);
+    while(inlib::xml::element* _elem = _for.next_element()) {
+      if(_elem->name()=="parameter") {
+        std::string name;
+        if(!_elem->attribute_value("name",name)) return false;
+        double value;
+        if(!_elem->attribute_value("value",svalue)) return false;
+        if(!inlib::to<double>(svalue,value)) return false;
+        aBooking.fParameters.push_back
+          (std::pair<std::string,double>(name,value));
+      }
+    }
+    return true;
+
+  }
+
+  return false;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+exlib::raxml_out BatchLab::AIDA_ML::read_profil1d(inlib::xml::tree& a_tree,
+                         std::ostream& a_out,bool a_verbose,void* a_tag) {
+  return read_histo(a_tree,a_out,a_verbose,1,true,a_tag);
+}
+exlib::raxml_out BatchLab::AIDA_ML::read_profil2d(inlib::xml::tree& a_tree,
+                         std::ostream& a_out,bool a_verbose,void* a_tag) {
+  return read_histo(a_tree,a_out,a_verbose,2,true,a_tag);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+exlib::raxml_out BatchLab::AIDA_ML::read_tuple(inlib::xml::tree& a_tree,std::ostream& a_out,bool a_verbose,void* a_tag){
+  Slash::Core::ISession& session = *((Slash::Core::ISession*)a_tag);
+  std::string xmlName = buildName(a_tree,session);
+
+  if(a_verbose) {
+    a_out << "BatchLab::XML::read_tuple :" 
+          << " name " << inlib::sout(xmlName)
+          << "..." << std::endl;
+  }
+
+  std::string spath;
+  a_tree.attribute_value("path",spath);
+
+  std::string stitle;
+  a_tree.attribute_value("title",stitle);
+
+  //FIXME annotation
+
+  // Booking parameters :
+  std::string booking;
+
+  // Jump in subitems to find columns items :
+  bool found = false;
+ {inlib::xml::looper _for(a_tree);
+  while(inlib::xml::tree* _tree = _for.next_tree()) {
+    if(!readTupleColumns(*_tree,found,booking,a_out)) 
+      return exlib::raxml_out();
+    if(found) break;
+  }}
+  if(!found) {
+    a_out << "BatchLab::XML::read_tuple :" 
+          << " for tuple name " << inlib::sout(xmlName)
+          << " unable to read columns..." << std::endl;
+    return exlib::raxml_out();
+  }
+
+  // Create a BatchLab::MemoryTuple :
+  BatchLab::MemoryTuple* object =  
+    new BatchLab::MemoryTuple(a_out,xmlName,stitle,booking);
+  if(object->columns()<=0) {
+    a_out << "BatchLab::XML::read_tuple :" 
+          << " for tuple name " << inlib::sout(xmlName)
+          << " unable to create a BatchLab::MemoryTuple." << std::endl;
+    delete object;
+    object = 0;
+    return exlib::raxml_out();
+  }
+  
+  // Get rows in sub items :
+  found = false;
+  inlib::xml::looper _for(a_tree);
+  while(inlib::xml::tree* _tree = _for.next_tree()) {
+    if(!readTupleRows(*_tree,*object,found,a_out)) {
+      a_out << "BatchLab::XML::read_tuple :" 
+            << " for tuple name " << inlib::sout(xmlName)
+            << " unable to read rows." << std::endl;
+      delete object;
+      object = 0;
+      return exlib::raxml_out();
+    }
+    if(found) break;
+  }
+  
+  if(a_verbose) {
+    a_out << "BatchLab::XML::read_tuple :" 
+          << " name " << inlib::sout(xmlName)
+          << " done." << std::endl;
+  }
+  
+  inlib::base_handle* hdl = new inlib::handle<Slash::Store::IObject>(object);
+  //return exlib::raxml_out((Slash::Store::IObject*)object,
+  return exlib::raxml_out(hdl,"Slash::Store::IObject",spath,xmlName);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+exlib::raxml_out BatchLab::AIDA_ML::read_cloud(inlib::xml::tree& a_tree,
+                            std::ostream& a_out,bool a_verbose,
+			    int a_dim,void* a_tag){
+  Slash::Core::ISession& session = *((Slash::Core::ISession*)a_tag);
+  std::string xmlName = buildName(a_tree,session);
+
+  if(a_verbose) {
+    a_out << "BatchLab::XML::read_cloud :" 
+          << " name " << inlib::sout(xmlName)
+          << "..." << std::endl;
+  }
+
+  std::string spath;
+  a_tree.attribute_value("path",spath);
+
+  std::string stitle;
+  a_tree.attribute_value("title",stitle);
+
+  std::string svalue;
+  int ival;
+
+  // Booking parameters :
+  int maxEntries = -1; //UNLIMITED
+  if(a_tree.attribute_value("maxEntries",svalue)) {
+    if(!inlib::to<int>(svalue,ival)) return exlib::raxml_out();
+    maxEntries = ival;
+  }
+
+  // Create a BatchLab::Cloud :
+  Slash::Store::IObject* object = 0;
+  if(a_dim==1) {
+
+    BatchLab::Cloud1D* cloud = 
+      new BatchLab::Cloud1D(a_out,xmlName,stitle,maxEntries);
+    object = cloud;
+
+    // Data sub items :
+    inlib::xml::looper _for(a_tree);
+    while(inlib::xml::tree* _tree = _for.next_tree()) {
+      if(!readCloudData(*_tree,*cloud,a_verbose,a_out)) {
+        delete cloud;
+        return exlib::raxml_out();
+      }
+    }
+  
+  } else if(a_dim==2) {
+
+    BatchLab::Cloud2D* cloud = 
+      new BatchLab::Cloud2D(a_out,xmlName,stitle,maxEntries);
+    object = cloud;
+
+    // Data sub items :
+    inlib::xml::looper _for(a_tree);
+    while(inlib::xml::tree* _tree = _for.next_tree()) {
+      if(!readCloudData(*_tree,*cloud,a_verbose,a_out)) {
+        delete cloud;
+        return exlib::raxml_out();
+      }
+    }
+  
+  } else if(a_dim==3) {
+
+    BatchLab::Cloud3D* cloud = 
+      new BatchLab::Cloud3D(a_out,xmlName,stitle,maxEntries);
+    object = cloud;
+
+    // Data sub items :
+    inlib::xml::looper _for(a_tree);
+    while(inlib::xml::tree* _tree = _for.next_tree()) {
+      if(!readCloudData(*_tree,*cloud,a_verbose,a_out)) {
+        delete cloud;
+        return exlib::raxml_out();
+      }
+    }
+  
+  }
+
+  if(a_verbose) {
+    a_out << "BatchLab::XML::read_cloud :" 
+          << " name " << inlib::sout(xmlName)
+          << " done." << std::endl;
+  }
+
+  inlib::base_handle* hdl = new inlib::handle<Slash::Store::IObject>(object);
+  //return exlib::raxml_out((Slash::Store::IObject*)object,
+  return exlib::raxml_out(hdl,"Slash::Store::IObject",spath,xmlName);
+}
+
+exlib::raxml_out BatchLab::AIDA_ML::read_cloud1d(inlib::xml::tree& a_tree,
+                          std::ostream& a_out,bool a_verbose,void* a_tag) {
+  return read_cloud(a_tree,a_out,a_verbose,1,a_tag);
+}
+exlib::raxml_out BatchLab::AIDA_ML::read_cloud2d(inlib::xml::tree& a_tree,
+                         std::ostream& a_out,bool a_verbose,void* a_tag) {
+  return read_cloud(a_tree,a_out,a_verbose,2,a_tag);
+}
+exlib::raxml_out BatchLab::AIDA_ML::read_cloud3d(inlib::xml::tree& a_tree,
+                         std::ostream& a_out,bool a_verbose,void* a_tag) {
+  return read_cloud(a_tree,a_out,a_verbose,3,a_tag);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+exlib::raxml_out BatchLab::AIDA_ML::read_dps(inlib::xml::tree& a_tree,std::ostream& a_out,bool a_verbose,void* a_tag){
+  Slash::Core::ISession& session = *((Slash::Core::ISession*)a_tag);
+  std::string xmlName = buildName(a_tree,session);
+
+  if(a_verbose) {
+    a_out << "BatchLab::XML::read_DataPointSet :" 
+          << " name " << inlib::sout(xmlName)
+          << "..." << std::endl;
+  }
+
+  std::string spath;
+  a_tree.attribute_value("path",spath);
+
+  std::string stitle;
+  a_tree.attribute_value("title",stitle);
+
+  std::string svalue;
+  int ival;
+
+  // Booking parameters :
+  int dimension = 0;
+  if(!a_tree.attribute_value("dimension",svalue)) 
+    return exlib::raxml_out();
+  if(!inlib::to<int>(svalue,ival)) return exlib::raxml_out();
+  dimension = ival;
+
+  // Create a BatchLab::DataPointSet :
+  BatchLab::DataPointSet* object = 
+    new BatchLab::DataPointSet(a_out,xmlName,stitle,dimension);
+
+  // Data sub items :
+  inlib::xml::looper _for(a_tree);
+  while(inlib::xml::tree* _tree = _for.next_tree()) {
+    if(!readDataPointSetData(*_tree,*object,a_out)) {
+      delete object;
+      return exlib::raxml_out();
+    }
+  }
+  
+  if(a_verbose) {
+    a_out << "BatchLab::XML::dataPointSet :" 
+          << " name " << inlib::sout(xmlName)
+          << " done." << std::endl;
+  }
+
+  inlib::base_handle* hdl = new inlib::handle<Slash::Store::IObject>(object);
+  //return exlib::raxml_out((Slash::Store::IObject*)object,
+  return exlib::raxml_out(hdl,"Slash::Store::IObject",spath,xmlName);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+exlib::raxml_out BatchLab::AIDA_ML::read_function(inlib::xml::tree& a_tree,std::ostream& a_out,bool a_verbose,void* a_tag){
+  Slash::Core::ISession& session = *((Slash::Core::ISession*)a_tag);
+  std::string xmlName = buildName(a_tree,session);
+
+  if(a_verbose) {
+    a_out << "BatchLab::XML::read_function :" 
+          << " name " << inlib::sout(xmlName)
+          << "..." << std::endl;
+  }
+
+  std::string spath;
+  a_tree.attribute_value("path",spath);
+
+  std::string stitle;
+  a_tree.attribute_value("title",stitle);
+
+  // Booking parameters :
+  /*FIXME
+  bool isNormalized = false;
+  if(a_tree.attribute_value("isNormalized",svalue)) {
+    if(!inlib::to(svalue,isNormalized)) return exlib::raxml_out();
+    }*/
+
+  std::string codelet;
+  if(!a_tree.element_value("codelet",codelet)) {
+    a_out << "BatchLab::XML::read_Function :" 
+          << " for " << inlib::sout(xmlName)
+          << ", no codelet found." << std::endl;
+    return exlib::raxml_out();
+  }
+
+  FunctionBooking booking;
+  inlib::xml::looper _for(a_tree);
+  while(inlib::xml::tree* _tree = _for.next_tree()) {
+    if(!readFunctionBooking(*_tree,booking,a_out)) {
+      a_out << "BatchLab::XML::read_Function :" 
+            << " for " << inlib::sout(xmlName)
+            << ", cant' read booking." << std::endl;
+      return exlib::raxml_out();
+    }
+  }
+  
+  inlib::strip(codelet);
+  BatchLab::BaseFunction* object = 
+    BatchLab::FFactory::create(session,xmlName,stitle,codelet);
+  if(!object) {
+    a_out << "BatchLab::XML::read_Function :" 
+          << " can't create function with codelet " 
+          << inlib::sout(codelet) << "."
+          << std::endl;
+    return exlib::raxml_out();
+  }
+
+  std::vector<std::string> params = object->parameterNames();
+  if(params.size()!=booking.fParameters.size()) {
+    a_out << "BatchLab::XML::read_Function :" 
+          << " for function " << inlib::sout(xmlName)
+          << " parameter number mismatch."
+          << " " << (unsigned int)params.size() << " expected." 
+          << " " << (unsigned int)booking.fParameters.size() << " given."
+          << std::endl;
+    delete object;
+    return exlib::raxml_out();
+  }
+
+  // Find list of parameters values :
+  std::vector<double> values;
+  for(unsigned int index=0;index<params.size();index++) {
+    bool found = false;
+    for(unsigned int i=0;i<booking.fParameters.size();i++) {
+      if(booking.fParameters[i].first==params[index]) {
+        values.push_back(booking.fParameters[i].second);
+        found = true;
+        break;
+      }
+    }
+    if(!found) {
+      a_out << "BatchLab::XML::read_Function :" 
+            << " for function " << inlib::sout(xmlName)
+            << " parameter " << inlib::sout(params[index]) << " not found."
+            << std::endl;
+      delete object;
+      return exlib::raxml_out();
+    }
+  }
+
+  object->setParameters(values);
+
+  if(a_verbose) {
+    a_out << "BatchLab::XML::read_function :" 
+          << " name " << inlib::sout(xmlName)
+          << " done." << std::endl;
+  }
+
+  inlib::base_handle* hdl = new inlib::handle<Slash::Store::IObject>(object);
+  //return exlib::raxml_out((Slash::Store::IObject*)object,
+  return exlib::raxml_out(hdl,"Slash::Store::IObject",spath,xmlName);
+}
+
+void BatchLab::AIDA_ML::addDefaultReaders(){
+  add_reader("histogram1d",read_histo1d);
+  add_reader("histogram2d",read_histo2d);
+  add_reader("histogram3d",read_histo3d);
+  add_reader("profile1d",read_profil1d);
+  add_reader("profile2d",read_profil2d);
+  add_reader("cloud1d",read_cloud1d);
+  add_reader("cloud2d",read_cloud2d);
+  add_reader("cloud3d",read_cloud3d);
+  add_reader("tuple",read_tuple);
+  add_reader("dataPointSet",read_dps);
+  add_reader("function",read_function);
+}
+

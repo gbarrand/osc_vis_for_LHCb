@@ -1,0 +1,42 @@
+<widget class="Dialog" name="OnX_IB_selectDecorations">
+  <geometry>300x300+300+300</geometry>
+  <decoration>no_close_button\nno_system_menu</decoration>
+  <title>Select decorations</title>
+  <widget class="VContainer">
+    <widget class="Label">
+      <label>Select decoration for current window</label>
+    </widget>
+    <widget class="ToggleButton" name="OnX_IB_ToggleCloseButton">
+      <label>Close button</label>
+    </widget>
+    <widget class="ToggleButton" name="OnX_IB_ToggleIconifyButton">
+      <label>Iconify button</label>
+    </widget>
+    <widget class="ToggleButton" name="OnX_IB_ToggleSystemMenuButton">
+      <label>System menu</label>
+    </widget>
+    <widget class="ToggleButton" name="OnX_IB_ToggleMinMaxButton">
+      <label>Min_max button</label>
+    </widget>
+    <widget class="ToggleButton" name="OnX_IB_ToggleResizeButton">
+      <label>Resize handle</label>
+    </widget>
+    <widget class="ToggleButton" name="OnX_IB_ToggleBorderButton">
+      <label>Border</label>
+    </widget>
+    <widget class="ToggleButton" name="OnX_IB_ToggleCaptionButton">
+      <label>Caption</label>
+    </widget>
+    <widget class="HBox">
+      <expand>both</expand>
+      <widget class="PushButton" name="cancel">
+        <label>Cancel</label>
+      </widget>
+      <widget class="PushButton" name="ok">
+        <label>Set</label>
+        <activate exec="DLD">OnX OnX_IB_DecorationEditorApply</activate>
+        <activate exec="DLD">OnX ui_hide OnX_IB_selectDecorations</activate>
+      </widget>
+    </widget>
+  </widget>
+</widget>

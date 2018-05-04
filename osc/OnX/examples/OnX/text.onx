@@ -1,0 +1,35 @@
+<OnX>
+  <widget class="Window">
+    <geometry>300x200</geometry>
+    <title>Text widget</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>90</sizeOfFixed>
+
+      <widget class="ScrolledText" name="consoleText">
+<!--  <widget class="ScrolledText" name="text_widget"> -->
+        <value>item 1\nitem 2\nitem 3\nitem 4\nitem 5\nitem 6\nitem 7\nitem 8\n</value>
+      </widget>
+
+      <widget class="VContainer">
+        <widget class="Entry" name="entry"/>
+        <widget class="PushButton">
+          <label>Add text</label>
+          <create exec="DLD">OnX session_set_parameter index 0</create>
+          <activate exec="DLD">OnX session_set_parameter index @calc@index+1@{index}@</activate>
+          <activate exec="DLD">OnX session_set_parameter line line_ @{index}@</activate>
+          <activate exec="DLD">OnX ui_echo @{line}@</activate>
+
+        </widget>
+        <widget class="PushButton">
+          <label>Quit</label>
+          <activate exec="DLD">OnX ui_exit</activate>
+        </widget>
+      </widget>
+
+    </widget>
+  </widget>
+</OnX>

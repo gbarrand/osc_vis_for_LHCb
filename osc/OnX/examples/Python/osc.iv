@@ -1,0 +1,24 @@
+#Inventor V2.0 ascii
+
+DEF sceneGraph Separator {
+  SoMaterial {
+    diffuseColor 0.5 0.5 0.5
+  }
+  SoTransform {
+    translation 0.8 -1.5 0
+    scaleFactor 0.4 0.4 0.4
+  }	
+  SoRotationXYZ  {
+    axis X
+    angle 0.5
+  }	
+  SoRotationXYZ  {
+    axis Y
+    angle 0.5
+  }	
+  SoText3 {
+    string "OSC"
+    parts ALL
+    justification CENTER 
+ }
+}

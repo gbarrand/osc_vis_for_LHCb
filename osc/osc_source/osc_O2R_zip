@@ -1,0 +1,40 @@
+#!/bin/sh -f
+
+dir_pwd="`pwd`"
+
+vers=`cat version`
+
+zip_file=osc_O2R_${vers}.zip
+/bin/rm -f ../../${zip_file}
+
+/bin/rm -R -f ./osc_O2R
+/bin/mkdir -p ./osc_O2R
+
+from=../UseAIDA/examples
+
+cp ${from}/ROOT/README_A2R         ./osc_O2R/README
+cp ${from}/ROOT/A2R.h              ./osc_O2R/.
+cp ${from}/ROOT/H2R.h              ./osc_O2R/.
+cp ${from}/ROOT/O2R.h              ./osc_O2R/.
+cp ${from}/ROOT/A2R_Def.h          ./osc_O2R/.
+cp ${from}/ROOT/H2R_Def.h          ./osc_O2R/.
+cp ${from}/ROOT/O2R_Def.h          ./osc_O2R/.
+cp ${from}/ROOT/O2R_LinkDef.h      ./osc_O2R/.
+cp ${from}/ROOT/build_O2R          ./osc_O2R/.
+cp ${from}/ROOT/A2R_write.C        ./osc_O2R/.
+cp ${from}/ROOT/A2R_read.C         ./osc_O2R/.
+cp ${from}/ROOT/O2R_read.C         ./osc_O2R/.
+
+cp ${from}/cpp/osc/A2R.cpp ./osc_O2R/.
+
+cp ${from}/ROOT/jec.C      ./osc_O2R/.
+cp ${from}/ROOT/jec_ROOT.C ./osc_O2R/.
+cp ${from}/cpp/osc/jec.cpp ./osc_O2R/.
+
+zip -qr ${zip_file} osc_O2R
+
+/bin/mv ${zip_file} ../../.
+
+/bin/rm -R -f ./osc_O2R
+
+cd ${dir_pwd}

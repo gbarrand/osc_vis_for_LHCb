@@ -1,0 +1,39 @@
+#Inventor V1.0 ascii
+
+DEF sceneGraph Separator {
+  DEF frame_scale SoScale {
+     scaleFactor 1 1 1
+  }
+
+  Material {diffuseColor 0 0 1}
+  DEF dragger Translate2Dragger {}
+  Transform {
+    translation 0 0 0 = USE dragger.translation
+  }
+  # XY grid :
+  DEF array Array {
+    numElements1 20
+    numElements2 20
+    Coordinate3 {
+      point [ 0.0  0.0  0.0,
+              1.0  0.0  0.0,
+              1.0  1.0  0.0,
+              0.0  1.0  0.0]
+    }
+    IndexedLineSet {
+      coordIndex [ 0, 1, 2, 3, 0, -1 ]
+    }
+  }
+  # ZX grid :
+  SoSeparator {
+    Material {diffuseColor 0 1 0}
+    RotationXYZ {axis X angle 1.57079}
+    USE array
+  }
+  # YZ grid :
+  SoSeparator {
+    Material {diffuseColor 1 0 0}
+    RotationXYZ {axis Y angle -1.57079}
+    USE array
+  } 
+}

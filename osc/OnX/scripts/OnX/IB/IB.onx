@@ -1,0 +1,33 @@
+<widget class="Window" name="OnX_IB_main">
+  <geometry>700x550+550+0</geometry>
+  <decoration>no_close_button\nno_system_menu</decoration>
+  <title>Component manager</title>
+  <create exec="DLD">OnX OnX_IB_initialize</create>
+  <widget class="VBox">
+    <expand>first</expand>
+    <sizeOfFixed>30</sizeOfFixed>
+    <widget class="HPaned">
+      <splitPosition>350</splitPosition>
+      <widget class="ScrolledTree" name="OnX_IB_mainTree">
+        <select exec="DLD">OnX OnX_IB_treeSelect</select>
+        <selectBranch exec="DLD">OnX OnX_IB_treeSelect</selectBranch>
+      </widget>
+      <reference file="ComponentPanel.onx"/>
+    </widget>
+    <widget class="HContainer">
+      <widget class="PushButton">
+        <label>Save UI</label>
+        <variable name="OnX_IB_save_ui.script">OnX OnX_IB_Save @this.value@</variable>
+        <activate exec="DLD">OnX ui_set_fileChooser $ONXROOT/examples *.onx save DLD @{OnX_IB_save_ui.script}@</activate>
+        <activate exec="DLD">OnX ui_show fileChooser</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Help</label>
+      </widget>
+      <widget class="PushButton" name="OnX_IB_exit">
+        <label>Exit</label>
+        <activate exec="DLD">OnX ui_exit</activate>
+      </widget>
+    </widget>
+  </widget>
+</widget>

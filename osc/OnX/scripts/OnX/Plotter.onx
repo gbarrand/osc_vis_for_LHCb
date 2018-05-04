@@ -1,0 +1,131 @@
+<widget class="CascadeButton" name="OnX_Plotter_casc">
+  <label>SoPlotter</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Create a plotting region in current page</label>
+      <activate exec="DLD">OnX page_create_regions @current@ SoPlotterRegion 1 1 0</activate>
+    </widget>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>Remove bins plottables</label>
+      <activate exec="DLD">OnX viewer_clear @current@ SbPlottableBins1D</activate>
+      <activate exec="DLD">OnX viewer_clear @current@ SbPlottableBins2D</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Remove points plottables</label>
+      <activate exec="DLD">OnX viewer_clear @current@ SbPlottablePoints2D</activate>
+      <activate exec="DLD">OnX viewer_clear @current@ SbPlottablePoints3D</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Remove functions plottables</label>
+      <activate exec="DLD">OnX viewer_clear @current@ SbPlottableFunction1D</activate>
+      <activate exec="DLD">OnX viewer_clear @current@ SbPlottableFunction2D</activate>
+    </widget>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>Plotter editor...</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/InputPlotter/InputPlotter.onx OnX_InputPlotter_dialog</activate>
+      <!-- FIXME : have a show callback on the InputPlotter_dialog -->
+      <activate exec="DLD">OnX OnX_InputPlotter_update @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Axis editor...</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/InputAxis.onx OnX_InputAxis_dialog</activate>
+      <activate exec="DLD">OnX OnX_InputAxis_update @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Font...</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/InputFont.onx OnX_InputFont_dialog</activate>
+    </widget>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>Tick model HPLOT</label>
+      <activate exec="DLD">OnX plotter_set_tick_modeling @current@ hplot</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Tick model hippo</label>
+      <activate exec="DLD">OnX plotter_set_tick_modeling @current@ hippo</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Title region on/off</label>
+      <activate exec="DLD">OnX region_toggleParameter titleRegionVisible</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Infos region on/off</label>
+      <activate exec="DLD">OnX region_toggleParameter infosRegionVisible</activate>
+    </widget>
+
+    <widget class="MenuItem">
+      <label>Wall on/off</label>
+      <activate exec="DLD">OnX region_toggleParameter plotter.wallStyle.visible</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Grid on/off</label>
+      <activate exec="DLD">OnX region_toggleParameter plotter.gridStyle.visible</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>InnerFrame on/off</label>
+      <activate exec="DLD">OnX region_toggleParameter plotter.innerFrameStyle.visible</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Color mapping on/off</label>
+      <activate exec="DLD">OnX region_toggleParameter plotter.colorMappingVisible</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Right ticks on/off</label>
+      <activate exec="DLD">OnX region_toggleParameter plotter.rightAxisVisible</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Top ticks on/off</label>
+      <activate exec="DLD">OnX region_toggleParameter plotter.topAxisVisible</activate>
+    </widget>
+    <reference file="PlotterStyle.onx"/>
+<!--
+    <widget class="CascadeButton" name="OnX_Plotter_casc">
+      <label>Shape</label>
+      <widget class="Menu">
+        <widget class="MenuItem">
+          <label>Shape automated on/off</label>
+          <activate exec="DLD">OnX region_toggleParameter plotter.shapeAutomated</activate>
+        </widget>
+        <widget class="MenuItem">
+          <label>XY</label>
+          <activate exec="DLD">OnX region_setParameter plotter.shape XY</activate>
+        </widget>
+        <widget class="MenuItem">
+          <label>XYZ</label>
+          <activate exec="DLD">OnX region_setParameter plotter.shape XYZ</activate>
+        </widget>
+        <widget class="MenuItem">
+          <label>Lego (auto FALSE+XYZ)</label>
+          <activate exec="DLD">OnX region_setParameter plotter.shapeAutomated FALSE</activate>
+          <activate exec="DLD">OnX region_setParameter plotter.shape XYZ</activate>
+          <activate exec="DLD">OnX region_setParameter plotter.wallStyle.visible FALSE</activate>
+        </widget>
+      </widget>
+    </widget>
+-->
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>Refresh</label>
+      <activate exec="DLD">OnX page_refresh @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Rebuild</label>
+      <activate exec="DLD">OnX plotter_rebuild @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Print plotted objects infos</label>
+      <activate exec="DLD">OnX plotter_dump @current@</activate>
+    </widget>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>Pick dump table mode</label>
+      <activate exec="DLD">OnX session_setParameter AccessorManager.dumpMode table</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Pick dump raw mode</label>
+      <activate exec="DLD">OnX session_setParameter AccessorManager.dumpMode raw</activate>
+    </widget>
+  </widget>
+</widget>

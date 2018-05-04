@@ -1,0 +1,11 @@
+
+class SetRegionCallback : public virtual SbSetRegionCallback {
+public:
+  SetRegionCallback(SoGuiExaminerViewer* aViewer):fViewer(aViewer){}
+  virtual void setCamera(SoCamera* aCamera) {
+    fViewer->setCamera(aCamera);
+  }
+private:
+  SoGuiExaminerViewer* fViewer;
+};
+

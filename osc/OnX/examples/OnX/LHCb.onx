@@ -1,0 +1,67 @@
+<OnX>
+
+  <widget class="Window">
+    <geometry>400x400</geometry>
+    <title>LHCb</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <create exec="DLD">OnX set_variable ONX_HOME @env@OSC_HOME_DIR@ @cat@ /Resources/OnX</create>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>90</sizeOfFixed>
+
+      <widget class="PageViewer" name="Viewer">
+        <create exec="DLD">OnX viewer_set_background_color @this@ 0.4 0.2 0.2</create>
+        <create exec="DLD">OnX page_set_title @this@ OnX</create>
+        <create exec="DLD">OnX page_title_visible @this@ false</create>
+
+        <create exec="DLD">OnX page_delete_regions @this@</create>
+        <create exec="DLD">OnX page_create_region @this@ SoDisplayRegion 0 0 1 0.9</create>
+        <create exec="DLD">OnX region_set_background_color @this@ 0.3 0.2 0.2</create>
+
+        <create exec="DLD">OnX page_create_region @this@ SoTextRegion 0 0.9 1 0.1 false</create>
+        <create exec="DLD">OnX page_create_region @this@ SoImageRegion 0.01 0.01 0.1 0.1 false</create>
+
+<!--
+        <create exec="DLD">OnX viewer_read_scene @this@ @net@LHCb_magnet.hiv@ iv staticScene</create>
+        <create exec="DLD">OnX region_set_parameter Viewer@2 image.fileName @net@logo_LHCb.gif@</create>
+-->
+        <create exec="DLD">OnX viewer_read_scene @this@ @{ONX_HOME}@ @cat@ /examples/OnX/LHCb_magnet.hiv iv staticScene</create>
+        <create exec="DLD">OnX region_set_parameter Viewer@2 image.fileName @{ONX_HOME}@ @cat@ /examples/OnX/logo_LHCb.gif</create>
+        <create exec="DLD">OnX viewer_view_all @this@</create>
+
+        <!-- To be able to have some feedback on picking. -->
+        <create exec="DLD">OnX declare_accessors</create>
+        <collect exec="DLD">OnX viewer_collect @this@</collect>
+        <rectangularCollect exec="DLD">OnX viewer_rectangular_collect @this@</rectangularCollect>
+
+      </widget>
+
+      <widget class="VContainer">
+        <widget class="PushButton">
+          <label>Next event</label>
+          <create exec="DLD">OnX session_set_parameter event 0</create>
+          <activate exec="DLD">OnX session_set_parameter event @calc@event+1@{event}@</activate>
+          <activate exec="DLD">OnX session_set_parameter txt ["Run 0 Event @{event}@ @cat@ "]</activate>
+          <activate exec="DLD">OnX region_set_parameter Viewer@1 text @{txt}@</activate>
+        </widget>
+
+        <widget class="PushButton">
+          <label>Print</label>
+<!--
+          <activate exec="DLD">OnX region_set_parameter Viewer@1 text @directory@current@</activate>
+-->
+          <activate exec="DLD">OnX widget_write Viewer lhcb.ps gl2ps DEFAULTS</activate>
+        </widget>
+
+        <widget class="PushButton">
+          <label>Quit</label>
+          <activate exec="DLD">OnX ui_exit</activate>
+        </widget>
+
+      </widget>
+    </widget>
+  </widget>
+</OnX>

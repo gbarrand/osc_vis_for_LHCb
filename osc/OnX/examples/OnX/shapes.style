@@ -1,0 +1,82 @@
+<styles>
+
+  <style name="OnX_Shape_Cube">
+    <modeling>solid</modeling>
+    <color>red</color>
+    <highlightColor>green</highlightColor>
+    <transparency>0.4</transparency>
+    <cut>box 10 10 10 translation 10 10 0</cut>
+  </style>
+  
+  <!-- Example of style using a wildcard -->
+  <style name="OnX_Shape_Ho*">
+<!--
+    <modeling>solid</modeling>
+-->
+    <modeling>wire_frame</modeling>
+    <color>blue</color>
+  </style>
+  
+  <style name="OnX_Shape_Sphere">
+    <modeling>texts</modeling>
+    <color>blue</color>
+  </style>
+
+  <style name="OnX_Shape_Sphere_big">
+    <modeling>solid</modeling>
+    <color>red</color>
+  </style>
+
+  <style name="OnX_Shape_Track1">
+    <modeling>wire_frame</modeling>
+    <lineWidth>0</lineWidth>
+    <color>yellow</color>
+    <linePattern>solid</linePattern>
+    <lineWidth>5</lineWidth>
+  </style>
+
+  <style name="OnX_Shape_Track2">
+    <modeling>wire_frame</modeling>
+    <lineWidth>0</lineWidth>
+    <color>red</color>
+    <linePattern>dotted</linePattern>
+  </style>
+
+  <style name="OnX_Shape_Track3">
+    <modeling>wire_frame</modeling>
+    <lineWidth>0</lineWidth>
+    <color>cyan</color>
+    <linePattern>dash_dotted</linePattern>
+  </style>
+
+  <style name="OnX_Shape_Track4">
+    <modeling>wire_frame</modeling>
+    <lineWidth>0</lineWidth>
+    <color>cyan</color>
+    <linePattern>dash_dotted</linePattern>
+  </style>
+
+  <style name="OnX_Shape_Track5">
+    <modeling>wire_frame</modeling>
+    <lineWidth>0</lineWidth>
+    <color>green</color>
+    <linePattern>dashed</linePattern>
+  </style>
+
+
+</styles>
+
+<!-- 
+  WARNING : shape cut does not apply on the standard Inventor shapes.
+    They work on SoPolyhedron shapes only.
+
+  other properties are :
+    lineWidth
+    linePattern
+    markerSize
+    markerStyle
+    font
+    fontSize
+    fillStyle
+    multiNodeLimit
+-->

@@ -1,0 +1,33 @@
+
+  This dialog box permits to produce output file of the
+ viewers in a tab stack (named "tab_stack" by default).
+
+  The files produced have name of the form :
+    <prefix><viewer name>.<format>
+
+  If choosing "jpeg", have the quality percentage in the options area.
+
+  If choosing "gl2[ps,pdf,svg]", choose DEFAULTS or have a dot colon
+ separated string with items :
+    NONE
+    DEFAULTS
+    <boolean_option>=[true,false]
+ with <boolean_option> being :
+   DRAW_BACKGROUND
+   SIMPLE_LINE_OFFSET
+   SILENT
+   BEST_ROOT
+   OCCLUSION_CULL
+   NO_TEXT
+   LANDSCAPE
+   NO_PS3_SHADING
+   NO_PIXMAP
+   USE_CURRENT_VIEWPORT
+   COMPRESS
+   NO_BLENDING
+   TIGHT_BOUNDING_BOX
+  
+  For example :
+    NONE;OCCLUSION_CULL=true;BEST_ROOT=true;SILENT=true;DRAW_BACKGROUND=true
+ (which corresponds to DEFAULTS).
+

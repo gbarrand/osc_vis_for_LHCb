@@ -1,0 +1,13 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file exlib.license for terms.
+
+#ifndef exlib_hdf5_h
+#define exlib_hdf5_h
+
+#ifdef EXLIB_USE_NATIVE_HDF5
+#include <hdf5.h>
+#else
+#include <ourex_hdf5.h>
+#endif
+
+#endif

@@ -1,0 +1,7 @@
+#!/bin/sh -f
+
+find ../include/Inventor -name "So*.h" -exec ./moc_h {} \;
+find ../include/Inventor -name "Qt*.h" -exec ./moc_h {} \;
+
+find ../src/Inventor -name "*.cpp" -exec ./moc_cpp {} \;
+

@@ -1,0 +1,39 @@
+#!/bin/sh -f 
+
+dir_pwd="`pwd`"
+
+vers=`cat version`
+
+zip_file=osc_obuild_source_${vers}.zip
+
+cd ..
+cp ${dir_pwd}/osc_obuild_README README
+
+cd ..
+/bin/rm -f ${zip_file}
+
+packs=""
+
+# FIXME : handle the below list through a this.obuild.
+
+packs="${packs} OpenScientist/README"
+packs="${packs} OpenScientist/obuild"
+packs="${packs} OpenScientist/foreign"
+packs="${packs} OpenScientist/inlib"
+packs="${packs} OpenScientist/exlib"
+packs="${packs} OpenScientist/expat"
+packs="${packs} OpenScientist/osc_source"
+packs="${packs} OpenScientist/osc_obuild"
+
+for pack in ${packs}
+do 
+  if [ ! -e ${pack} ] ; then
+    echo "${pack} not found."
+    exit
+  fi
+done
+
+zip -q -r ${zip_file} ${packs}
+
+cd ${dir_pwd}
+

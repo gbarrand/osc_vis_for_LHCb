@@ -1,0 +1,23 @@
+<widget class="CascadeButton">
+  <label>Help</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Viewer controls</label>
+      <activate exec="DLD">OnX ui_help_file $ONXROOT/scripts/Help/Viewer.help</activate>
+    </widget>
+    <reference file="../../examples/OnX/Examples.onx"/>
+    <widget class="MenuItem">
+      <label>DLD</label>
+      <activate exec="DLD">OnX ui_help_file $ONXROOT/scripts/Help/DLD.help</activate>
+    </widget>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>Show / hide executed scripts</label>
+      <activate exec="DLD">OnX session_toggle_verbose</activate>
+    </widget>
+    <widget class="ToggleMenuItem">
+      <label>Help on console / dialog</label>
+      <activate exec="DLD">OnX session_toggle_helpOutput</activate>
+    </widget>
+  </widget>
+</widget>

@@ -1,0 +1,115 @@
+<widget class="CascadeButton" name="OnX_menu_Test">
+  <label>Test</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Test @cat@</label>
+      <activate exec="DLD">OnX dump_args hello @cat@ _ @cat@ world</activate>
+      <activate exec="DLD">OnX dump_args @cat@</activate>
+      <activate exec="DLD">OnX dump_args hello @cat@</activate>
+      <activate exec="DLD">OnX dump_args @cat@ hello</activate>
+      <activate exec="DLD">OnX dump_args hello @cat_space@ world</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Test output</label>
+      <activate exec="DLD">OnX ui_echo UI.echo 1</activate>
+      <activate exec="DLD">OnX std_printf printf 1</activate>
+      <activate exec="DLD">OnX std_cout cout 1</activate>
+      <activate exec="DLD">OnX session_flush</activate>
+      <activate exec="DLD">OnX ui_echo UI.echo 2</activate>
+      <activate exec="DLD">OnX std_printf printf 2</activate>
+      <activate exec="DLD">OnX std_cout cout 2</activate>
+      <activate exec="DLD">OnX session_flush</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Set tree</label>
+      <activate exec="DLD">OnX tree_set_with_file mainTree.items $ONXROOT/scripts/OnX/Tree.xml</activate>
+    </widget>
+    <widget class="ToggleMenuItem" name="toggle_1">
+      <label>Toggle</label>
+      <accelerator>Ctrl+a</accelerator>
+      <activate exec="DLD">OnX ui_echo callbackValue(): @this.value@</activate>
+      <activate exec="DLD">OnX ui_echo parameterValue(toggle_1.set) : @toggle_1.set@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Set toggle</label>
+      <activate exec="DLD">OnX ui_toggleParameter toggle_1.set</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Warning dialog</label>
+      <activate exec="DLD">OnX ui_warn Hello</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Ask string dialog</label>
+      <activate exec="DLD">OnX ui_ask Enter something</activate>
+    </widget>
+    <widget class="CascadeButton">
+      <label>Sub menu</label>
+      <cascading exec="DLD">OnX ui_echo Sub menu cascade</cascading>
+      <widget class="Menu">
+        <widget class="MenuItem" name="OnX_menu_test_1">
+          <label>Sub 1</label>
+          <activate exec="Python">ui.setParameter('OnX_menu_test_1.label','Sub 2')</activate>
+        </widget>
+      </widget>
+    </widget>
+    <widget class="MenuItem" name="OnX_menu_test_2">
+      <label>Change label</label>
+      <activate exec="DLD">OnX ui_setParameter OnX_menu_test_2.label xxx</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Add a menu</label>
+      <activate exec="DLD">OnX dld_exec_file $ONXROOT/tests/onx_tests/add_menu.dld</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Test input dialog</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/tests/onx_tests/TestInput.onx OnX_TestInput_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Test ProgressBar</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/tests/onx_tests/TestProgress.onx OnX_TestProgress_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Test TabStack</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/tests/onx_tests/TestTabStack.onx OnX_TestTabStack_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Test panel of buttons</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/tests/onx_tests/TestButtons.onx OnX_TestButtons_window</activate>
+    </widget>
+
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>Python&gt; OnX_exa_loop.start()</label>
+      <activate exec="Python">import OnX_exa_loop;OnX_exa_loop.start()</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Python&gt; OnX_exa_loop.start_timer()</label>
+      <activate exec="Python">import OnX_exa_loop;OnX_exa_loop.start_timer()</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Python&gt; Stop OnX_exa_loop</label>
+      <activate exec="Python">OnX_exa_loop.stop = 1</activate>
+    </widget>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>Test accelerator</label>
+      <accelerator>Ctrl+w</accelerator>
+      <activate exec="DLD">OnX ui_echo test accelerator</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Show OnX_winow_1</label>
+      <activate exec="DLD">OnX ui_show OnX_window_1</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Hide OnX_winow_1</label>
+      <activate exec="DLD">OnX ui_hide OnX_window_1</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Calc</label>
+      <activate exec="DLD">OnX ui_echo 2*x 2 expected 4</activate>
+      <activate exec="DLD">OnX lib_calc 2*x 2</activate>
+      <activate exec="DLD">OnX ui_echo sqrt(x) 4 expected 2</activate>
+      <activate exec="DLD">OnX lib_calc sqrt(x) 4</activate>
+    </widget>
+  </widget>
+</widget>

@@ -1,0 +1,56 @@
+<OnX>
+  <widget class="Window">
+    <geometry>300x250</geometry>
+    <title>Tree widget</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>90</sizeOfFixed>
+
+      <widget class="VBox">
+        <expand>second</expand>
+        <sizeOfFixed>30</sizeOfFixed>
+        <widget class="ComboBox" name="combo_widget">
+<!--      <background>red</background> -->
+          <items>item 1\nitem 2\nitem 3</items>
+          <default>xxx</default>
+          <valueChanged exec="DLD">OnX ui_set_parameter text_widget.value @this.value@</valueChanged>
+        </widget>
+
+        <widget class="ScrolledText" name="text_widget"/>
+
+      </widget>
+
+
+      <widget class="VContainer">
+        <widget class="PushButton">
+<!--
+          <background>black</background>
+          <foreground>white</foreground>
+-->
+          <label>Dump value</label>
+   -      <activate exec="DLD">OnX ui_set_parameter text_widget.value @[combo_widget.value]@</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Set value to hello</label>
+   -      <activate exec="DLD">OnX ui_set_parameter combo_widget.value hello</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Set items</label>
+          <activate exec="DLD">OnX ui_set_parameter combo_widget.items line_1\nline_2\nline_3\nline_4</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Dump items</label>
+   -      <activate exec="DLD">OnX ui_set_parameter text_widget.value @[combo_widget.items]@</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Quit</label>
+          <activate exec="DLD">OnX ui_exit</activate>
+        </widget>
+      </widget>
+
+    </widget>
+  </widget>
+</OnX>

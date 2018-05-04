@@ -1,0 +1,32 @@
+
+<!-- Used by other packages that uses CoinGL. -->
+
+<obuild>
+
+  <reference package="foreign" path="../../foreign" file="OpenGL.obuild"/>  
+
+  <reference package="foreign" path="../../foreign" file="pthread.obuild"/>  
+
+  <use name="CoinGL">
+    <c_include>include</c_include>
+    <cxx_include>include</cxx_include>
+
+    <c_macro platform="Windows_NT" name="COIN_DLL"/>
+    <cxx_macro platform="Windows_NT" name="COIN_DLL"/>
+
+    <c_include copy="c_include" from="OpenGL"/>
+    <c_options copy="c_options" from="OpenGL"/>
+    <c_macro copy="c_macro" from="OpenGL"/>
+
+    <cxx_include copy="c_include" from="OpenGL"/>
+    <cxx_options copy="c_options" from="OpenGL"/>
+    <cxx_macro copy="c_macro" from="OpenGL"/>
+
+    <lib>osc_Coin</lib>
+    <lib copy="lib" from="OpenGL"/>
+    <lib copy="lib" from="pthread"/>
+
+    <path>../../CoinGL</path>
+  </use>
+
+</obuild>

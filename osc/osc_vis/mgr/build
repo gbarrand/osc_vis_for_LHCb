@@ -1,0 +1,110 @@
+#!/bin/sh -f
+
+build_group=
+build_clean_all=no
+
+build_args=
+while test $# -ge 1 ; do
+  case $1 in
+        -gtk) build_group=gtk;;
+         -Xt) build_group=Xt;;
+         -Xm) build_group=Xt;;
+         -Qt) build_group=Qt;;
+   -NextStep) build_group=NextStep;;
+     -Python) build_group=Python;;
+         -py) build_group=Python;;
+     -group*) build_group="${1:7}";;
+  -clean_all) build_clean_all=yes;;
+           *) build_args="${build_args} $1";;
+  esac
+  shift
+done
+
+# get build_path :
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+. ${ourex_mgr}/build_header
+
+#/////////////////////////////////////////////
+#/////////////////////////////////////////////
+#/////////////////////////////////////////////
+if [ ${build_clean_all} = yes ] ; then
+  ${inlib_mgr}/find_rm ../../.. "${build_dir}"
+  exit
+fi
+#/////////////////////////////////////////////
+#/////////////////////////////////////////////
+#/////////////////////////////////////////////
+
+save_dir="`pwd`"
+
+if [ "${build_group}" = "" ] ; then
+
+  cd ${inlib_mgr}
+  ./build ../apps/config.cpp
+  cd ${save_dir}
+
+  packs=
+  packs="${packs} amanip Slash Rio Lib Minuit BatchLab"
+  packs="${packs} OnX OnXLab backcomp"
+
+  for pack in ${packs} ; do
+    cd ../../${pack}/mgr
+    ./build ${build_args}
+    cd ${save_dir}
+  done
+
+elif [ "${build_group}" = Python ] ; then
+
+  packs="CoinPython HEPVisPython"
+  for pack in ${packs} ; do
+    cd ../../../inexlib/ourex/${pack}
+    ./build ${build_args}
+    cd ${save_dir}
+  done
+
+  cd ${exlib_mgr}
+  ./build -no_screen ../exlib/py/inlib_swig_py.cpp
+  cd ${save_dir}
+
+  packs="OnX OnXLab"
+
+  for pack in ${packs} ; do
+    cd ../../${pack}/mgr
+    ./build ${build_args} -group="${build_group}"
+    cd ${save_dir}
+  done
+
+else # NextStep,Xt,gtk,Qt
+
+  packs="OnX"
+
+  for pack in ${packs} ; do
+    cd ../../${pack}/mgr
+    ./build ${build_args} -group="${build_group}"
+    cd ${save_dir}
+  done
+
+fi
+
+cd ${save_dir}
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+if [ "${build_group}" = Python ] ; then
+
+  # HEPVisPython is not indirectly reached by other build scripts.
+  use_HEPVisPython=yes
+  . ${exlib_mgr}/use_HEPVisPython
+
+fi
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+

@@ -1,0 +1,103 @@
+<OnX>
+
+  <!-- common aliases to shortcup DLD scripting -->
+  <reference file="$ONXROOT/scripts/OnX/aliases.onx"/>
+  <create exec="DLD">OnX echo test echo alias</create>
+
+  <create exec="DLD">OnX OnX_declare_accessors</create>
+  <create exec="DLD">OnX session_set_output @{session.output}@</create>
+
+  <destroy exec="Session">OnX session_echo OnX_Finalize.</destroy>
+  <widget class="Window">
+    <destroy exec="DLD">OnX ui_exit</destroy>
+    <geometry>850x660+0+0</geometry>
+    <title>OnX/Main</title>
+    <widget class="MenuBar" name="menuBar">
+      <reference file="$ONXROOT/scripts/OnX/File.onx"/>
+      <reference file="Examples.onx"/>
+      <reference file="Test.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/Scene.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/Camera.onx"/>
+      <reference file="GUI.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/Plotter.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/Viewers.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/Help.onx"/>
+    </widget>
+    <reference file="$ONXROOT/scripts/OnX/ToolBar.onx"/>
+    <widget class="VPaned">
+      <splitPosition>450</splitPosition>
+      <widget class="HPaned">
+        <splitPosition>200</splitPosition>
+        <widget class="VBox">
+          <expand>second</expand>
+          <sizeOfFixed>30</sizeOfFixed>
+          <widget class="OptionMenu" name="main_option_menu">
+            <label>Tree actions</label>
+            <items>Load a tree from file\nManagers\nStyles\nEcho selection\nTest open</items>
+            <default>Load a tree from file</default>
+
+            <!-- map label / actions -->
+            <variable name="Main_tree_options">
+              Load a tree from file\nOnX tree_set_with_file mainTree.items Tree.xml\n
+              Managers\nOnX tree_set mainTree.items @session@manager_names@\n
+              Styles\nOnX tree_set mainTree.items @manager@StyleManager@styles@\n
+              Echo selection\nOnX ui_echo @[mainTree.selection]@\n
+              Test open\nOnXTests OnX_TestTree_initialize
+            </variable>
+
+            <valueChanged exec="DLD">OnX ui_execute_script DLD @next@this.value@{Main_tree_options}@strip_key@</valueChanged>
+   
+          </widget>
+          <widget class="ScrolledTree" name="mainTree">
+            <select exec="DLD">OnX ui_echo @this.value@</select>
+            <select exec="DLD">OnX ui_echo select leaf @this.value@</select>
+            <selectBranch exec="DLD">OnX ui_echo select branch @this.value@</selectBranch>
+            <open exec="DLD">OnX ui_echo echo_open</open>
+            <close exec="DLD">OnX ui_echo echo_close</close>
+          </widget>
+        </widget>
+        <reference file="Pages.onx"/>
+      </widget>
+      <reference file="$ONXROOT/scripts/OnX/CommandBox.onx"/>
+    </widget>
+    <reference file="$ONXROOT/scripts/OnX/Dialogs.onx"/>
+  </widget>
+  <widget class="Window" name="OnX_window_1">
+    <close exec="DLD">OnX ui_echo close OnX_window_1</close>
+    <destroy exec="DLD">OnX ui_echo destroy OnX_window_1</destroy>
+    <show>no</show>
+  </widget>
+
+<!--
+  <widget class="Window" name="commands_window">
+    <geometry>600x250+0+0</geometry>
+    <title>Commands</title>   
+    <show>no</show>
+    <decoration>no_close_button</decoration>
+    <widget class="VBox"> 
+      <expand>first</expand>
+      <sizeOfFixed>30</sizeOfFixed>
+      <widget class="ScrolledText" name="consoleText"/>
+      <widget class="VBox"> 
+        <widget class="HBox"> 
+          <expand>second</expand>
+          <sizeOfFixed>80</sizeOfFixed>
+          <widget class="OptionMenu" name="consolePrompt">
+            <label>Interpreter</label>
+            <default>G4</default>
+            <items>G4\nDLD\nsystem\nPython</items>
+          </widget>
+          <widget class="CommandLine" name="consoleCommandLine">
+            <activate exec="DLD">OnX ui_execute_script @[consolePrompt.value]@ @this.value@</activate>
+            <complete exec="DLD">G4Lab G4Lab_consolePrompt_complete</complete>
+          </widget>
+        </widget>
+        <widget class="PushButton">
+          <label>Hide</label>
+          <activate exec="DLD">OnX ui_hide @shell@this@</activate>
+        </widget>
+      </widget>
+    </widget>
+  </widget>
+-->
+</OnX>

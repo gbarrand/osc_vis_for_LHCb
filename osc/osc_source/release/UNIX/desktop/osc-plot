@@ -1,0 +1,34 @@
+#!/bin/sh -f
+
+script_app=`basename "$0"`
+
+osc_home_dir=`dirname "$0"`
+osc_home_dir=`dirname "${osc_home_dir}"`
+
+#////////////////////////////////////////////////////////////////
+#/// Check HOME /////////////////////////////////////////////////
+#////////////////////////////////////////////////////////////////
+#
+# As the program may produce output files, we start from a 
+#    %script_app%
+# directory created in the home directory.
+#
+
+# Do not rm, since another run may use it.
+#/bin/rm -R -f ${HOME}/OpenScientist/log/${script_app}
+
+/bin/mkdir -p ${HOME}/OpenScientist/log/${script_app}
+
+script_pwd=`pwd`
+
+cd ${HOME}/OpenScientist/log/${script_app}
+
+#////////////////////////////////////////////////////////////////
+#/// run ////////////////////////////////////////////////////////
+#////////////////////////////////////////////////////////////////
+
+. "${osc_home_dir}/setup.sh"
+
+"${osc_home_dir}/bin/${script_app}"
+
+cd ${script_pwd}

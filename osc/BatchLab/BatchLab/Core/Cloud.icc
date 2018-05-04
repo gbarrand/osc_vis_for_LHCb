@@ -1,0 +1,1244 @@
+
+inline
+BatchLab::Cloud2D::Cloud2D(std::ostream& a_out,const std::string& aName)
+:BaseCloud(a_out,aName,-1)
+,fLowerX(0)
+,fUpperX(0)
+,fLowerY(0)
+,fUpperY(0)
+,fSxw(0)
+,fSx2w(0)
+,fSyw(0)
+,fSy2w(0)
+,fCnvXnumber(0)
+,fCnvXmin(0)
+,fCnvXmax(0)
+,fCnvYnumber(0)
+,fCnvYmin(0)
+,fCnvYmax(0)
+,fHistogram(0)
+{}
+
+inline
+BatchLab::Cloud2D::Cloud2D(std::ostream& a_out,const std::string& aName,const std::string& aTitle,int aLimit)
+:BaseCloud(a_out,aName,aLimit)
+,fLowerX(0)
+,fUpperX(0)
+,fLowerY(0)
+,fUpperY(0)
+,fSxw(0)
+,fSx2w(0)
+,fSyw(0)
+,fSy2w(0)
+,fCnvXnumber(0)
+,fCnvXmin(0)
+,fCnvXmax(0)
+,fCnvYnumber(0)
+,fCnvYmin(0)
+,fCnvYmax(0)
+,fHistogram(0)
+{
+  setTitle(aTitle);
+}
+
+inline
+BatchLab::Cloud2D::Cloud2D(const Cloud2D& aFrom)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::IBaseHistogram(aFrom)
+,AIDA::ICloud(aFrom)
+,AIDA::ICloud2D(aFrom)
+,Slash::Store::IStorable(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseCloud(aFrom)
+,fXs(aFrom.fXs)
+,fYs(aFrom.fYs)
+,fLowerX(aFrom.fLowerX)
+,fUpperX(aFrom.fUpperX)
+,fLowerY(aFrom.fLowerY)
+,fUpperY(aFrom.fUpperY)
+,fSxw(aFrom.fSxw)
+,fSx2w(aFrom.fSx2w)
+,fSyw(aFrom.fSyw)
+,fSy2w(aFrom.fSy2w)
+,fCnvXnumber(aFrom.fCnvXnumber)
+,fCnvXmin(aFrom.fCnvXmin)
+,fCnvXmax(aFrom.fCnvXmax)
+,fCnvYnumber(aFrom.fCnvYnumber)
+,fCnvYmin(aFrom.fCnvYmin)
+,fCnvYmax(aFrom.fCnvYmax)
+,fHistogram(0)
+{
+  if(aFrom.fHistogram) {
+    fHistogram = new BatchLab::Histogram2D(*aFrom.fHistogram);
+  }
+}
+
+inline
+BatchLab::Cloud2D::~Cloud2D(){delete fHistogram;}
+
+inline
+std::string BatchLab::Cloud2D::storeClassName() const{return "BatchLab::Cloud2D";}
+
+inline
+std::string BatchLab::Cloud2D::type() const {return "AIDA::ICloud2D";}
+
+inline
+void* BatchLab::Cloud2D::cast(const std::string& a_class) const {
+  INLIB_IF_CAST(AIDA::ICloud2D)
+  else INLIB_IF_CAST(AIDA::ICloud)
+  else INLIB_IF_CAST(AIDA::IBaseHistogram)
+  else INLIB_IF_CAST(Slash::Store::IStorable)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else INLIB_IF_CAST(BatchLab::Cloud2D)
+  else return BaseCloud::cast(a_class);
+}
+
+inline
+std::vector<double>& BatchLab::Cloud2D::xs(){return fXs;}
+inline
+std::vector<double>& BatchLab::Cloud2D::ys(){return fYs;}
+
+inline
+AIDA::IAnnotation& BatchLab::Cloud2D::annotation() {return fAnnotation;}
+inline
+const AIDA::IAnnotation& BatchLab::Cloud2D::annotation() const {return fAnnotation;}
+inline
+int BatchLab::Cloud2D::dimension() const {return 2;}
+inline
+int BatchLab::Cloud2D::maxEntries() const{return fLimit;}
+inline
+bool BatchLab::Cloud2D::isConverted() const {return fHistogram ? true : false;}
+
+inline
+bool BatchLab::Cloud2D::visit(Slash::Store::IConstVisitor& aVisitor) const {
+  if(!aVisitor.begin(*this,"BatchLab::Cloud2D",s_visit)) return false;
+
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+
+  // BaseCloud :
+  if(!aVisitor.visit("fAnnotation",fAnnotation)) return false;
+  if(!aVisitor.visit("fTitle",fTitle)) return false;
+  if(!aVisitor.visit("fLimit",fLimit)) return false;
+  if(!aVisitor.visit("fSw",fSw)) return false;
+  if(!aVisitor.visit("fWs",fWs)) return false;
+
+  // Cloud2D :
+  if(!aVisitor.visit("fXs",fXs)) return false;
+  if(!aVisitor.visit("fYs",fYs)) return false;
+  if(!aVisitor.visit("fLowerX",fLowerX)) return false;
+  if(!aVisitor.visit("fUpperX",fUpperX)) return false;
+  if(!aVisitor.visit("fLowerY",fLowerY)) return false;
+  if(!aVisitor.visit("fUpperY",fUpperY)) return false;
+  if(!aVisitor.visit("fSxw",fSxw)) return false;
+  if(!aVisitor.visit("fSx2w",fSx2w)) return false;
+  if(!aVisitor.visit("fSyw",fSyw)) return false;
+  if(!aVisitor.visit("fSy2w",fSy2w)) return false;
+  if(!aVisitor.visit("fCnvXnumber",fCnvXnumber)) return false;
+  if(!aVisitor.visit("fCnvXmin",fCnvXmin)) return false;
+  if(!aVisitor.visit("fCnvXmax",fCnvXmax)) return false;
+  if(!aVisitor.visit("fCnvYnumber",fCnvYnumber)) return false;
+  if(!aVisitor.visit("fCnvYmin",fCnvYmin)) return false;
+  if(!aVisitor.visit("fCnvYmax",fCnvYmax)) return false;
+
+  if(!aVisitor.visit("fIsConverted",fHistogram ?true:false)) return false;
+  if(fHistogram) {
+    if(!aVisitor.visit("fHistogram",*fHistogram)) return false;
+  }
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::Cloud2D::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+
+  int version;
+  if(!aVisitor.visit(version)) return false;
+
+  // BaseCloud :
+  if(!fAnnotation.read(aVisitor)) return false;
+  if(!aVisitor.visit(fTitle)) return false;
+  if(!aVisitor.visit(fLimit)) return false;
+  if(!aVisitor.visit(fSw)) return false;
+  if(!aVisitor.visit(fWs)) return false;
+
+  // Cloud2D :
+  if(!aVisitor.visit(fXs)) return false;
+  if(!aVisitor.visit(fYs)) return false;
+  if(!aVisitor.visit(fLowerX)) return false;
+  if(!aVisitor.visit(fUpperX)) return false;
+  if(!aVisitor.visit(fLowerY)) return false;
+  if(!aVisitor.visit(fUpperY)) return false;
+  if(!aVisitor.visit(fSxw)) return false;
+  if(!aVisitor.visit(fSx2w)) return false;
+  if(!aVisitor.visit(fSyw)) return false;
+  if(!aVisitor.visit(fSy2w)) return false;
+  if(!aVisitor.visit(fCnvXnumber)) return false;
+  if(!aVisitor.visit(fCnvXmin)) return false;
+  if(!aVisitor.visit(fCnvXmax)) return false;
+  if(!aVisitor.visit(fCnvYnumber)) return false;
+  if(!aVisitor.visit(fCnvYmin)) return false;
+  if(!aVisitor.visit(fCnvYmax)) return false;
+ {bool b;
+  if(!aVisitor.visit(b)) return false;
+  if(b) {
+    fHistogram = new BatchLab::Histogram2D(out(),this->name());
+    if(!fHistogram->read(aVisitor)) return false;
+  }}
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+//private : not lock/unlocked.
+inline
+void BatchLab::Cloud2D::clear(){
+  fLowerX = 0;
+  fUpperX = 0;
+  fLowerY = 0;
+  fUpperY = 0;
+  fSw = 0;
+  fSxw = 0;
+  fSx2w = 0;
+  fSyw = 0;
+  fSy2w = 0;
+  fXs.clear();
+  fYs.clear();
+  fWs.clear();
+}
+
+inline
+bool BatchLab::Cloud2D::private_convert( 
+ int aBinsX,double aLowerEdgeX,double aUpperEdgeX
+,int aBinsY,double aLowerEdgeY,double aUpperEdgeY 
+) { 
+  if(fHistogram) return true; // Done.
+  fHistogram = new BatchLab::Histogram2D(out(),
+                                    this->name(),this->title(),
+                                    aBinsX,aLowerEdgeX,aUpperEdgeX,
+                                    aBinsY,aLowerEdgeY,aUpperEdgeY);
+  if(!fHistogram) return false;
+  fill_h_2D(*fHistogram);
+  clear(); //no lock/unlock inside
+  return true;
+}
+
+inline
+bool BatchLab::Cloud2D::convert_to_histogram(){
+  if( (fCnvXnumber<=0) || (fCnvXmax<=fCnvXmin) ||
+      (fCnvYnumber<=0) || (fCnvYmax<=fCnvYmin) ) {
+    double dx = 0.01 * (upperEdgeX() - lowerEdgeX())/BINS;
+    double dy = 0.01 * (upperEdgeY() - lowerEdgeY())/BINS;
+    return private_convert(BINS,lowerEdgeX(),upperEdgeX()+dx,
+                   BINS,lowerEdgeY(),upperEdgeY()+dy);
+  } else {
+    return private_convert(fCnvXnumber,fCnvXmin,fCnvXmax,
+                   fCnvYnumber,fCnvYmin,fCnvYmax);
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+/// lock/unlocked ins ////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+Slash::Store::IObject* BatchLab::Cloud2D::copy() const{
+  lock();
+  Slash::Store::IObject* obj = new BatchLab::Cloud2D(*this);
+  unlock();
+  return obj;
+}
+
+inline
+void BatchLab::Cloud2D::setName(const std::string& aName){
+  lock();
+  BaseObject::setName(aName);
+  if(fHistogram) fHistogram->setName(aName);
+  unlock();
+}
+
+inline
+bool BatchLab::Cloud2D::setTitle(const std::string& aTitle){
+  lock();
+  fTitle = aTitle;
+  fAnnotation.setValue("Title",aTitle);
+  if(fHistogram) fHistogram->setTitle(aTitle);
+  unlock();
+  return true;
+}
+
+inline
+bool BatchLab::Cloud2D::scale(double aScale) {
+  lock();
+  bool stat = false;
+  if(fHistogram) {
+    stat = fHistogram->scale(aScale);
+  } else {
+    unsigned int number = fWs.size();
+    for(unsigned int index=0;index<number;index++) fWs[index] *= aScale;
+    fSw *= aScale;
+    fSxw *= aScale;
+    fSx2w *= aScale;
+    fSyw *= aScale;
+    fSy2w *= aScale;
+    stat = true;
+  }
+  unlock();
+  return stat;
+}
+
+inline
+bool BatchLab::Cloud2D::setHistogram(BatchLab::Histogram2D* aHistogram){
+  if(aHistogram->hasMutex()) {
+    out() << "BatchLab::Cloud2D::setHistogram :"
+        << " failed, histogram has a mutex." 
+        << std::endl;
+    return false;
+  }
+  lock();
+  clear(); //no lock/unlock inside
+  fHistogram = aHistogram;
+  unlock();
+  return true;
+}
+
+inline
+std::string BatchLab::Cloud2D::title() const { 
+  lock();
+  std::string s = fTitle;
+  unlock();
+  return s;
+}
+
+inline
+bool BatchLab::Cloud2D::reset() { 
+  lock();
+  clear(); //no lock/unlock inside
+  delete fHistogram;
+  fHistogram = 0;
+  unlock();
+  return true;
+}
+
+inline
+bool BatchLab::Cloud2D::fill(double aX,double aY,double aW){
+  lock();
+  if(!fHistogram && (fLimit!=BATCHLAB_UNLIMITED) && ((int)fXs.size()>=fLimit)){
+    convert_to_histogram();
+  }
+
+  bool stat = false;
+  bool emit = false;
+  if(fHistogram) {
+    stat = fHistogram->fill(aX,aY,aW);
+  } else {
+    if(fXs.size()) {
+      fLowerX = inlib::mn<double>(aX,fLowerX);
+      fUpperX = inlib::mx<double>(aX,fUpperX);
+    } else {
+      fLowerX = aX;
+      fUpperX = aX;
+    }
+    if(fYs.size()) { 
+      fLowerY = inlib::mn<double>(aY,fLowerY);
+      fUpperY = inlib::mx<double>(aY,fUpperY);
+    } else {
+      fLowerY = aY;
+      fUpperY = aY;
+    }
+    fXs.push_back(aX);
+    fYs.push_back(aY);
+    fWs.push_back(aW);
+    fSw += aW;
+    double xw = aX * aW;
+    fSxw += xw;
+    fSx2w += aX * xw;
+    double yw = aY * aW; 
+    fSyw += yw;
+    fSy2w += aY * yw;
+    stat = true;
+    emit = true;
+  }
+  unlock();
+  if(emit) emitUpdate();
+  return stat;
+}
+
+inline
+bool BatchLab::Cloud2D::convert( 
+ int aBinsX,double aLowerEdgeX,double aUpperEdgeX
+,int aBinsY,double aLowerEdgeY,double aUpperEdgeY 
+) { 
+  lock();
+  bool stat = private_convert(aBinsX,aLowerEdgeX,aUpperEdgeX,
+                         aBinsY,aLowerEdgeY,aUpperEdgeY);
+  unlock();
+  return stat;
+}
+
+inline
+bool BatchLab::Cloud2D::convert(const std::vector<double>& aEdgesX,const std::vector<double>& aEdgesY) { 
+  lock();
+  bool stat = true;
+  if(!fHistogram) {
+    fHistogram = new BatchLab::Histogram2D(out(),
+                                      this->name(),this->title(),
+                                      aEdgesX,aEdgesY);
+    if(fHistogram) {
+      fill_h_2D(*fHistogram);
+      clear(); //no lock/unlock inside
+    } else {
+      stat = false;
+    }
+  }
+  unlock();
+  return stat;
+}
+
+inline
+bool BatchLab::Cloud2D::fillHistogram(AIDA::IHistogram2D& aHistogram) const { 
+  lock();
+  fill_h_2D(aHistogram);
+  unlock();
+  return true;
+}
+
+inline
+bool BatchLab::Cloud2D::setConversionParameters(
+ int aCnvXnumber,double aCnvXmin,double aCnvXmax
+,int aCnvYnumber,double aCnvYmin,double aCnvYmax
+){
+  lock();
+  fCnvXnumber = aCnvXnumber;
+  fCnvXmin = aCnvXmin;
+  fCnvXmax = aCnvXmax;
+  fCnvYnumber = aCnvYnumber;
+  fCnvYmin = aCnvYmin;
+  fCnvYmax = aCnvYmax;
+  unlock();
+  return true;
+}
+
+inline
+bool BatchLab::Cloud2D::convertToHistogram(){
+  lock();
+  bool stat = convert_to_histogram();
+  unlock();
+  return stat;
+}
+
+inline
+const AIDA::IHistogram2D& BatchLab::Cloud2D::histogram() const { 
+  lock();
+  INLIB_SELF(BatchLab::Cloud2D);
+  if(!fHistogram) self.convert_to_histogram();
+  unlock();
+  return *fHistogram;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/// lock/unlocked outs ///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+int BatchLab::Cloud2D::entries() const { 
+  lock();
+  int v = fHistogram ? fHistogram->allEntries() : fWs.size();
+  unlock();
+  return v;
+}
+
+inline
+double BatchLab::Cloud2D::sumOfWeights() const { 
+  lock();
+  double v = (fHistogram ? fHistogram->sumBinHeights() : fSw);
+  unlock();
+  return v;
+}
+
+inline
+int BatchLab::Cloud2D::nanEntries() const {return 0;} //FIXME
+
+inline
+double BatchLab::Cloud2D::lowerEdgeX() const {
+  lock();
+  double v = fHistogram ? fHistogram->xAxis().lowerEdge() : fLowerX;
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud2D::lowerEdgeY() const { 
+  lock();
+  double v = fHistogram ? fHistogram->yAxis().lowerEdge() : fLowerY;
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud2D::upperEdgeX() const { 
+  lock();
+  double v = fHistogram ? fHistogram->xAxis().upperEdge() : fUpperX;
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud2D::upperEdgeY() const { 
+  lock();
+  double v = fHistogram ? fHistogram->yAxis().upperEdge() : fUpperY;
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud2D::valueX(int aIndex) const { 
+  lock();
+  double v = fHistogram ? 0 : fXs[aIndex];
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud2D::valueY(int aIndex) const { 
+  lock();
+  double v = fHistogram ? 0 : fYs[aIndex];
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud2D::weight(int aIndex) const { 
+  lock();
+  double v = fHistogram ? 0 : fWs[aIndex];
+  unlock();
+  return v;
+}
+
+inline
+double BatchLab::Cloud2D::meanX() const {
+  lock();
+  double v = fHistogram ? fHistogram->meanX() : (fSw?fSxw/fSw:0);
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud2D::meanY() const {
+  lock();
+  double v = fHistogram ? fHistogram->meanY() : (fSw?fSyw/fSw:0);
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud2D::rmsX() const {
+  lock();
+  double rms = 0; //FIXME nan.
+  if(fHistogram) {
+    rms = fHistogram->rmsX();
+  } else {
+    if(fSw==0) {
+    } else {
+      double mean = fSxw / fSw;
+      rms = ::sqrt(::fabs( (fSx2w / fSw) - mean * mean));
+    }
+  }
+  unlock();
+  return rms;
+}
+inline
+double BatchLab::Cloud2D::rmsY() const {
+  lock();
+  double rms = 0; //FIXME nan.
+  if(fHistogram) {
+    rms = fHistogram->rmsY();
+  } else {
+    if(fSw==0) {
+    } else {
+      double mean = fSyw / fSw;
+      rms = ::sqrt(::fabs( (fSy2w / fSw) - mean * mean));
+    }
+  }
+  unlock();
+  return rms;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+// Empty cstor used by IO readers.
+
+inline
+BatchLab::Cloud3D::Cloud3D(std::ostream& a_out,const std::string& aName)
+:BaseCloud(a_out,aName,-1)
+,fLowerX(0)
+,fUpperX(0)
+,fLowerY(0)
+,fUpperY(0)
+,fLowerZ(0)
+,fUpperZ(0)
+,fSxw(0)
+,fSx2w(0)
+,fSyw(0)
+,fSy2w(0)
+,fSzw(0)
+,fSz2w(0)
+,fCnvXnumber(0)
+,fCnvXmin(0)
+,fCnvXmax(0)
+,fCnvYnumber(0)
+,fCnvYmin(0)
+,fCnvYmax(0)
+,fCnvZnumber(0)
+,fCnvZmin(0)
+,fCnvZmax(0)
+,fHistogram(0)
+{}
+
+inline
+BatchLab::Cloud3D::Cloud3D(std::ostream& a_out,const std::string& aName,const std::string& aTitle,int aLimit)
+:BaseCloud(a_out,aName,aLimit)
+,fLowerX(0)
+,fUpperX(0)
+,fLowerY(0)
+,fUpperY(0)
+,fLowerZ(0)
+,fUpperZ(0)
+,fSxw(0)
+,fSx2w(0)
+,fSyw(0)
+,fSy2w(0)
+,fSzw(0)
+,fSz2w(0)
+,fCnvXnumber(0)
+,fCnvXmin(0)
+,fCnvXmax(0)
+,fCnvYnumber(0)
+,fCnvYmin(0)
+,fCnvYmax(0)
+,fCnvZnumber(0)
+,fCnvZmin(0)
+,fCnvZmax(0)
+,fHistogram(0)
+{
+  setTitle(aTitle);
+}
+
+inline
+BatchLab::Cloud3D::Cloud3D(const Cloud3D& aFrom)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::IBaseHistogram(aFrom)
+,AIDA::ICloud(aFrom)
+,AIDA::ICloud3D(aFrom)
+,Slash::Store::IStorable(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseCloud(aFrom)
+,fXs(aFrom.fXs)
+,fYs(aFrom.fYs)
+,fZs(aFrom.fZs)
+,fLowerX(aFrom.fLowerX)
+,fUpperX(aFrom.fUpperX)
+,fLowerY(aFrom.fLowerY)
+,fUpperY(aFrom.fUpperY)
+,fLowerZ(aFrom.fLowerZ)
+,fUpperZ(aFrom.fUpperZ)
+,fSxw(aFrom.fSxw)
+,fSx2w(aFrom.fSx2w)
+,fSyw(aFrom.fSyw)
+,fSy2w(aFrom.fSy2w)
+,fSzw(aFrom.fSzw)
+,fSz2w(aFrom.fSz2w)
+,fCnvXnumber(aFrom.fCnvXnumber)
+,fCnvXmin(aFrom.fCnvXmin)
+,fCnvXmax(aFrom.fCnvXmax)
+,fCnvYnumber(aFrom.fCnvYnumber)
+,fCnvYmin(aFrom.fCnvYmin)
+,fCnvYmax(aFrom.fCnvYmax)
+,fCnvZnumber(aFrom.fCnvZnumber)
+,fCnvZmin(aFrom.fCnvZmin)
+,fCnvZmax(aFrom.fCnvZmax)
+,fHistogram(0)
+{
+  if(aFrom.fHistogram) {
+    fHistogram = new BatchLab::Histogram3D(*aFrom.fHistogram);
+  }
+}
+
+inline
+BatchLab::Cloud3D::~Cloud3D(){delete fHistogram;}
+
+inline
+std::string BatchLab::Cloud3D::storeClassName() const{return "BatchLab::Cloud3D";}
+inline
+std::string BatchLab::Cloud3D::type() const {return "AIDA::ICloud3D";}
+
+inline
+void* BatchLab::Cloud3D::cast(const std::string& a_class) const {
+  INLIB_IF_CAST(AIDA::ICloud3D)
+  else INLIB_IF_CAST(AIDA::ICloud)
+  else INLIB_IF_CAST(AIDA::IBaseHistogram)
+  else INLIB_IF_CAST(Slash::Store::IStorable)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else INLIB_IF_CAST(BatchLab::Cloud3D)
+  else return BaseCloud::cast(a_class);
+}
+
+inline
+AIDA::IAnnotation& BatchLab::Cloud3D::annotation() {return fAnnotation;}
+inline
+const AIDA::IAnnotation& BatchLab::Cloud3D::annotation() const {return fAnnotation;}
+
+inline
+int BatchLab::Cloud3D::dimension() const { return 3;}
+inline
+int BatchLab::Cloud3D::maxEntries() const {return fLimit;}
+inline
+bool BatchLab::Cloud3D::isConverted() const {return fHistogram ? true : false;}
+
+inline
+std::vector<double>& BatchLab::Cloud3D::xs(){return fXs;}
+inline
+std::vector<double>& BatchLab::Cloud3D::ys(){return fYs;}
+inline
+std::vector<double>& BatchLab::Cloud3D::zs(){return fZs;}
+
+inline
+bool BatchLab::Cloud3D::visit(Slash::Store::IConstVisitor& aVisitor) const{
+  if(!aVisitor.begin(*this,"BatchLab::Cloud3D",s_visit)) return false;
+
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+
+  // BaseCloud :
+  if(!aVisitor.visit("fAnnotation",fAnnotation)) return false;
+  if(!aVisitor.visit("fTitle",fTitle)) return false;
+  if(!aVisitor.visit("fLimit",fLimit)) return false;
+  if(!aVisitor.visit("fSw",fSw)) return false;
+  if(!aVisitor.visit("fWs",fWs)) return false;
+
+  // Cloud3D :
+  if(!aVisitor.visit("fXs",fXs)) return false;
+  if(!aVisitor.visit("fYs",fYs)) return false;
+  if(!aVisitor.visit("fZs",fZs)) return false;
+  if(!aVisitor.visit("fLowerX",fLowerX)) return false;
+  if(!aVisitor.visit("fUpperX",fUpperX)) return false;
+  if(!aVisitor.visit("fLowerY",fLowerY)) return false;
+  if(!aVisitor.visit("fUpperY",fUpperY)) return false;
+  if(!aVisitor.visit("fLowerZ",fLowerZ)) return false;
+  if(!aVisitor.visit("fUpperZ",fUpperZ)) return false;
+  if(!aVisitor.visit("fSxw",fSxw)) return false;
+  if(!aVisitor.visit("fSx2w",fSx2w)) return false;
+  if(!aVisitor.visit("fSyw",fSyw)) return false;
+  if(!aVisitor.visit("fSy2w",fSy2w)) return false;
+  if(!aVisitor.visit("fSzw",fSzw)) return false;
+  if(!aVisitor.visit("fSz2w",fSz2w)) return false;
+  if(!aVisitor.visit("fCnvXnumber",fCnvXnumber)) return false;
+  if(!aVisitor.visit("fCnvXmin",fCnvXmin)) return false;
+  if(!aVisitor.visit("fCnvXmax",fCnvXmax)) return false;
+  if(!aVisitor.visit("fCnvYnumber",fCnvYnumber)) return false;
+  if(!aVisitor.visit("fCnvYmin",fCnvYmin)) return false;
+  if(!aVisitor.visit("fCnvYmax",fCnvYmax)) return false;
+  if(!aVisitor.visit("fCnvZnumber",fCnvZnumber)) return false;
+  if(!aVisitor.visit("fCnvZmin",fCnvZmin)) return false;
+  if(!aVisitor.visit("fCnvZmax",fCnvZmax)) return false;
+
+  if(!aVisitor.visit("fIsConverted",fHistogram?true:false)) return false;
+  if(fHistogram) {
+    if(!aVisitor.visit("fHistogram",*fHistogram)) return false;
+  }
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::Cloud3D::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+
+  int version;
+  if(!aVisitor.visit(version)) return false;
+
+  // BaseCloud :
+  if(!fAnnotation.read(aVisitor)) return false;
+  if(!aVisitor.visit(fTitle)) return false;
+  if(!aVisitor.visit(fLimit)) return false;
+  if(!aVisitor.visit(fSw)) return false;
+  if(!aVisitor.visit(fWs)) return false;
+
+  // Cloud3D :
+  if(!aVisitor.visit(fXs)) return false;
+  if(!aVisitor.visit(fYs)) return false;
+  if(!aVisitor.visit(fZs)) return false;
+  if(!aVisitor.visit(fLowerX)) return false;
+  if(!aVisitor.visit(fUpperX)) return false;
+  if(!aVisitor.visit(fLowerY)) return false;
+  if(!aVisitor.visit(fUpperY)) return false;
+  if(!aVisitor.visit(fLowerZ)) return false;
+  if(!aVisitor.visit(fUpperZ)) return false;
+  if(!aVisitor.visit(fSxw)) return false;
+  if(!aVisitor.visit(fSx2w)) return false;
+  if(!aVisitor.visit(fSyw)) return false;
+  if(!aVisitor.visit(fSy2w)) return false;
+  if(!aVisitor.visit(fSzw)) return false;
+  if(!aVisitor.visit(fSz2w)) return false;
+  if(!aVisitor.visit(fCnvXnumber)) return false;
+  if(!aVisitor.visit(fCnvXmin)) return false;
+  if(!aVisitor.visit(fCnvXmax)) return false;
+  if(!aVisitor.visit(fCnvYnumber)) return false;
+  if(!aVisitor.visit(fCnvYmin)) return false;
+  if(!aVisitor.visit(fCnvYmax)) return false;
+  if(!aVisitor.visit(fCnvZnumber)) return false;
+  if(!aVisitor.visit(fCnvZmin)) return false;
+  if(!aVisitor.visit(fCnvZmax)) return false;
+ {bool b;
+  if(!aVisitor.visit(b)) return false;
+  if(b) {
+    fHistogram = new BatchLab::Histogram3D(out(),this->name());
+    if(!fHistogram->read(aVisitor)) return false;
+  }}
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+//private : not lock/unlocked.
+inline
+void BatchLab::Cloud3D::clear(){
+  fLowerX = 0;
+  fUpperX = 0;
+  fLowerY = 0;
+  fUpperY = 0;
+  fLowerZ = 0;
+  fUpperZ = 0;
+  fSw = 0;
+  fSxw = 0;
+  fSx2w = 0;
+  fSyw = 0;
+  fSy2w = 0;
+  fSzw = 0;
+  fSz2w = 0;
+  fXs.clear();
+  fYs.clear();
+  fZs.clear();
+  fWs.clear();
+}
+
+inline
+bool BatchLab::Cloud3D::private_convert( 
+ int aBinsX,double aLowerEdgeX,double aUpperEdgeX
+,int aBinsY,double aLowerEdgeY,double aUpperEdgeY 
+,int aBinsZ,double aLowerEdgeZ,double aUpperEdgeZ 
+) { 
+  if(fHistogram) return true; // Done.
+  fHistogram = new BatchLab::Histogram3D(out(),
+                                    this->name(),this->title(),
+                                    aBinsX,aLowerEdgeX,aUpperEdgeX,
+                                    aBinsY,aLowerEdgeY,aUpperEdgeY,
+                                    aBinsZ,aLowerEdgeZ,aUpperEdgeZ);
+  if(!fHistogram) return false;
+  fill_h_3D(*fHistogram);
+  clear(); //no lock/unlock inside
+  return true;
+}
+
+inline
+bool BatchLab::Cloud3D::convert_to_histogram(){
+  if( (fCnvXnumber<=0) || (fCnvXmax<=fCnvXmin) ||
+      (fCnvYnumber<=0) || (fCnvYmax<=fCnvYmin) ||
+      (fCnvZnumber<=0) || (fCnvZmax<=fCnvZmin) ) {
+    double dx = 0.01 * (upperEdgeX() - lowerEdgeX())/BINS;
+    double dy = 0.01 * (upperEdgeY() - lowerEdgeY())/BINS;
+    double dz = 0.01 * (upperEdgeZ() - lowerEdgeZ())/BINS;
+    return private_convert(BINS,lowerEdgeX(),upperEdgeX()+dx,
+                   BINS,lowerEdgeY(),upperEdgeY()+dy,
+                   BINS,lowerEdgeZ(),upperEdgeZ()+dz);
+  } else {
+    return private_convert(fCnvXnumber,fCnvXmin,fCnvXmax,
+                   fCnvYnumber,fCnvYmin,fCnvYmax,
+                   fCnvZnumber,fCnvZmin,fCnvZmax);
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/// lock/unlocked ins ////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+Slash::Store::IObject* BatchLab::Cloud3D::copy() const {
+  lock();
+  Slash::Store::IObject* obj = new BatchLab::Cloud3D(*this);
+  unlock();
+  return obj;
+}
+
+inline
+bool BatchLab::Cloud3D::setTitle(const std::string& aTitle){
+  lock();
+  fTitle = aTitle;
+  fAnnotation.setValue("Title",aTitle);
+  if(fHistogram) fHistogram->setTitle(aTitle);
+  unlock();
+  return true;
+}
+
+inline
+void BatchLab::Cloud3D::setName(const std::string& aName) {
+  lock();
+  BaseObject::setName(aName);
+  if(fHistogram) fHistogram->setName(aName);
+  unlock();
+}
+
+inline
+bool BatchLab::Cloud3D::scale(double aScale) {
+  lock();
+  bool stat = false;
+  if(fHistogram) {
+    stat = fHistogram->scale(aScale);
+  } else {
+    unsigned int number = fWs.size();
+    for(unsigned int index=0;index<number;index++) fWs[index] *= aScale;
+    fSw *= aScale;
+    fSxw *= aScale;
+    fSx2w *= aScale;
+    fSyw *= aScale;
+    fSy2w *= aScale;
+    fSzw *= aScale;
+    fSz2w *= aScale;
+    stat = true;
+  }
+  unlock();
+  return stat;
+}
+
+inline
+bool BatchLab::Cloud3D::setConversionParameters(
+ int aCnvXnumber,double aCnvXmin,double aCnvXmax
+,int aCnvYnumber,double aCnvYmin,double aCnvYmax
+,int aCnvZnumber,double aCnvZmin,double aCnvZmax
+){
+  lock();
+  fCnvXnumber = aCnvXnumber;
+  fCnvXmin = aCnvXmin;
+  fCnvXmax = aCnvXmax;
+  fCnvYnumber = aCnvYnumber;
+  fCnvYmin = aCnvYmin;
+  fCnvYmax = aCnvYmax;
+  fCnvZnumber = aCnvZnumber;
+  fCnvZmin = aCnvZmin;
+  fCnvZmax = aCnvZmax;
+  unlock();
+  return true;
+}
+
+
+inline
+bool BatchLab::Cloud3D::convertToHistogram(){
+  lock();
+  bool stat = convert_to_histogram();
+  unlock();
+  return stat;
+}
+
+inline
+const AIDA::IHistogram3D& BatchLab::Cloud3D::histogram() const { 
+  lock();
+  INLIB_SELF(BatchLab::Cloud3D);
+  if(!fHistogram) self.convert_to_histogram();
+  unlock();
+  return *fHistogram;
+}
+
+inline
+std::string BatchLab::Cloud3D::title() const { 
+  lock();
+  std::string s = fTitle;
+  unlock();
+  return s;
+}
+
+inline
+bool BatchLab::Cloud3D::reset() { 
+  lock();
+  clear(); //no lock/unlock inside
+  delete fHistogram;
+  fHistogram = 0;
+  unlock();
+  return true;
+}
+
+inline
+bool BatchLab::Cloud3D::fill(double aX,double aY,double aZ,double aW){
+  lock();
+  if(!fHistogram && (fLimit!=BATCHLAB_UNLIMITED) && ((int)fXs.size()>=fLimit)){
+    convert_to_histogram();
+  }
+
+  bool stat = false;
+  bool emit = false;
+  if(fHistogram) {
+    stat = fHistogram->fill(aX,aY,aZ,aW);
+  } else {
+    if(fXs.size()) {
+      fLowerX = inlib::mn<double>(aX,fLowerX);
+      fUpperX = inlib::mx<double>(aX,fUpperX);
+    } else {
+      fLowerX = aX;
+      fUpperX = aX;
+    }
+    if(fYs.size()) { 
+      fLowerY = inlib::mn<double>(aY,fLowerY);
+      fUpperY = inlib::mx<double>(aY,fUpperY);
+    } else {
+      fLowerY = aY;
+      fUpperY = aY;
+    }
+    if(fZs.size()) { 
+      fLowerZ = inlib::mn<double>(aZ,fLowerZ);
+      fUpperZ = inlib::mx<double>(aZ,fUpperZ);
+    } else {
+      fLowerZ = aZ;
+      fUpperZ = aZ;
+    }
+    fXs.push_back(aX);
+    fYs.push_back(aY);
+    fZs.push_back(aZ);
+    fWs.push_back(aW);
+    fSw += aW;
+    double xw = aX * aW;
+    fSxw += xw;
+    fSx2w += aX * xw;
+    double yw = aY * aW; 
+    fSyw += yw;
+    fSy2w += aY * yw;
+    double zw = aZ * aW;
+    fSzw += zw;
+    fSz2w += aZ * zw;
+    stat = true;
+    emit = true;
+  }
+  unlock();
+  if(emit) emitUpdate();
+  return stat;
+}
+
+inline
+bool BatchLab::Cloud3D::setHistogram(BatchLab::Histogram3D* aHistogram){
+  if(aHistogram->hasMutex()) {
+    out() << "BatchLab::Cloud3D::setHistogram :"
+        << " failed, histogram has a mutex." 
+        << std::endl;
+    return false;
+  }
+  lock();
+  clear(); //no lock/unlock inside
+  fHistogram = aHistogram;
+  unlock();
+  return true;
+}
+
+inline
+bool BatchLab::Cloud3D::convert( 
+ int aBinsX,double aLowerEdgeX,double aUpperEdgeX
+,int aBinsY,double aLowerEdgeY,double aUpperEdgeY 
+,int aBinsZ,double aLowerEdgeZ,double aUpperEdgeZ 
+) { 
+  lock();
+  bool stat = private_convert(aBinsX,aLowerEdgeX,aUpperEdgeX,
+                          aBinsY,aLowerEdgeY,aUpperEdgeY,
+                          aBinsZ,aLowerEdgeZ,aUpperEdgeZ);
+  unlock();
+  return stat;
+}
+
+inline
+bool BatchLab::Cloud3D::convert( 
+ const std::vector<double>& aEdgesX
+,const std::vector<double>& aEdgesY
+,const std::vector<double>& aEdgesZ
+) { 
+  lock();
+  bool stat = true;
+  if(!fHistogram) {
+    fHistogram = new BatchLab::Histogram3D(out(),
+                                      this->name(),this->title(),
+                                      aEdgesX,aEdgesY,aEdgesZ);
+    if(fHistogram) {
+      fill_h_3D(*fHistogram);
+      clear(); //no lock/unlock inside
+    } else {
+      stat = false;
+    }
+  }
+  unlock();
+  return stat;
+}
+
+inline
+bool BatchLab::Cloud3D::fillHistogram(AIDA::IHistogram3D& aHistogram) const { 
+  lock();
+  fill_h_3D(aHistogram);
+  unlock();
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/// lock/unlocked outs ///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+double BatchLab::Cloud3D::sumOfWeights() const { 
+  lock();
+  double v = (fHistogram ? fHistogram->sumBinHeights() : fSw);
+  unlock();
+  return v;
+}
+
+inline
+int BatchLab::Cloud3D::entries() const { 
+  lock();
+  int v = fHistogram ? fHistogram->allEntries() : fWs.size();
+  unlock();
+  return v;
+}
+
+inline
+int BatchLab::Cloud3D::nanEntries() const {return 0;} //FIXME
+
+inline
+double BatchLab::Cloud3D::lowerEdgeX() const { 
+  lock();
+  double v = fHistogram ? fHistogram->xAxis().lowerEdge() : fLowerX;
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud3D::lowerEdgeY() const { 
+  lock();
+  double v = fHistogram ? fHistogram->yAxis().lowerEdge() : fLowerY;
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud3D::lowerEdgeZ() const { 
+  lock();
+  double v = fHistogram ? fHistogram->zAxis().lowerEdge() : fLowerZ;
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud3D::upperEdgeX() const { 
+  lock();
+  double v = fHistogram ? fHistogram->xAxis().upperEdge() : fUpperX;
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud3D::upperEdgeY() const { 
+  lock();
+  double v = fHistogram ? fHistogram->yAxis().upperEdge() : fUpperY;
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud3D::upperEdgeZ() const { 
+  lock();
+  double v = fHistogram ? fHistogram->zAxis().upperEdge() : fUpperZ;
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud3D::valueX(int aIndex) const { 
+  lock();
+  double v = fHistogram ? 0 : fXs[aIndex];
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud3D::valueY(int aIndex) const { 
+  lock();
+  double v = fHistogram ? 0 : fYs[aIndex];
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud3D::valueZ(int aIndex) const { 
+  lock();
+  double v = fHistogram ? 0 : fZs[aIndex];
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud3D::weight(int aIndex) const { 
+  lock();
+  double v = fHistogram ? 0 : fWs[aIndex];
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud3D::meanX() const {
+  lock();
+  double v = fHistogram ? fHistogram->meanX() : (fSw?fSxw/fSw:0);
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud3D::meanY() const {
+  lock();
+  double v = fHistogram ? fHistogram->meanY() : (fSw?fSyw/fSw:0);
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud3D::meanZ() const {
+  lock();
+  double v = fHistogram ? fHistogram->meanZ() : (fSw?fSzw/fSw:0);
+  unlock();
+  return v;
+}
+inline
+double BatchLab::Cloud3D::rmsX() const {
+  lock();
+  double rms = 0; //FIXME nan.
+  if(fHistogram) {
+    rms = fHistogram->rmsX();
+  } else {
+    if(fSw==0) {
+    } else {
+      double mean = fSxw / fSw;
+      rms = ::sqrt(::fabs( (fSx2w / fSw) - mean * mean));
+    }
+  }
+  unlock();
+  return rms;
+}
+inline
+double BatchLab::Cloud3D::rmsY() const {
+  lock();
+  double rms = 0; //FIXME nan.
+  if(fHistogram) {
+    rms = fHistogram->rmsY();
+  } else {
+    if(fSw==0) {
+    } else {
+      double mean = fSyw / fSw;
+      rms = ::sqrt(::fabs( (fSy2w / fSw) - mean * mean));
+    }
+  }
+  unlock();
+  return rms;
+}
+inline
+double BatchLab::Cloud3D::rmsZ() const {
+  lock();
+  double rms = 0; //FIXME nan.
+  if(fHistogram) {
+    rms = fHistogram->rmsZ();
+  } else {
+    if(fSw==0) {
+    } else {
+      double mean = fSzw / fSw;
+      rms = ::sqrt(::fabs( (fSz2w / fSw) - mean * mean));
+    }
+  }
+  unlock();
+  return rms;
+}

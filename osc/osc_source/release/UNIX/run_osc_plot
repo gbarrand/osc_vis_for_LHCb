@@ -1,0 +1,49 @@
+#!/bin/sh -f
+
+run_args=
+build_args=
+
+while test $# -ge 1 ; do
+  case $1 in
+    -gnu)     build_args="${build_args} $1";;
+    -intel)   build_args="${build_args} $1";;
+    -clang)   build_args="${build_args} $1";;
+    -visual)  build_args="${build_args} $1";;
+    -sdk_mac) build_args="${build_args} $1";;
+
+    -*) run_args="${run_args} $1";;  
+     *) run_args="${run_args} $1";;  
+  esac
+  shift
+done
+
+inlib_mgr=./Resources/inlib/mgr
+
+. ${inlib_mgr}/build_header # to get build_path
+
+save_dir="`pwd`"
+
+#//////////////////////////////////////////
+#//////////////////////////////////////////
+#//////////////////////////////////////////
+
+. ./setup.sh
+
+# if using the Qt driver :
+use_Qt=yes
+. ./Resources/exlib/mgr/use_Qt
+if [ "${Qt_ld_library_path}" != "" ] ; then
+  ld_path="${Qt_ld_library_path}"
+  . ./Resources/inlib/mgr/build_ld_library_path
+fi
+
+#//////////////////////////////////////////
+#//////////////////////////////////////////
+#//////////////////////////////////////////
+
+LC_CTYPE=C;export LC_CTYPE
+
+osc-plot ${run_args}
+
+cd ${save_dir}
+

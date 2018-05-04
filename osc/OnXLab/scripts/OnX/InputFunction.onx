@@ -1,0 +1,22 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnXLab_InputFunction">
+    <label>Function editor</label>
+
+    <input name="name" label="Name" type="text" default="my_function"/>
+    <input name="title" label="Title" type="text" default="My function"/>
+    <input name="kind" label="Kind" type="option" default="class" items="class\nscripted\ncomposite\ncompiled"/>
+    <input name="class_script" label="Class script" type="combo" default="Gaussian" items="Gaussian\nBreitWigner\nExpHBOOK\nExpAIDA\nPolynomial0\nPolynomial1\nPolynomial2\nPolynomial3\nPolynomial4"/>
+    <input name="scripted_script" label="Scripted script" type="combo" default="cos(x)" items="cos(x)\nsin(x)"/>
+    <input name="composite_script" label="Composite script" type="combo" default="G" items="G\nBW\nG+G"/>
+    <input name="plot" label="Plot" type="option" default="true" items="true\nfalse"/>
+
+    <input name="compiled_script" label="Compiled script" type="combo" default=" " items="$OSC_HOME_DIR/Resources/AIDA/examples/data/cut_func.c\ncmandel;$OSC_HOME_DIR/Resources/AIDA/examples/data/mandel_func.c"/>
+
+    <ok exec="DLD">OnXLab OnXLab_InputFunction_ok @current@</ok>
+    <ok exec="DLD">OnX ui_set_parameter OnXLab_tree.items @session@hierarchy@</ok>
+    <help file="@{ONXLAB_HOME}@ @cat@ /scripts/Help/InputFunction.help"/>
+  </widget>
+
+</OnX>
+

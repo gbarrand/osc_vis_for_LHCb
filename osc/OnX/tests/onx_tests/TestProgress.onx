@@ -1,0 +1,30 @@
+<widget class="Dialog" name="OnX_TestProgress_dialog">
+  <geometry>400x90</geometry>
+  <title>Test ProgressBar</title>
+  <show>no</show> 
+  <widget class="VBox"> 
+    <expand>first</expand>
+    <sizeOfFixed>30</sizeOfFixed>
+    <variable name="xxx">ui_echo hello</variable>
+    <widget class="ProgressBar" name="OnX_TestProgress_progressBar">
+      <variable name="OnX_Test_progressBar_update_script">
+        OnX set_variable tmp @cyclic@OnX_Test_progressBar_cyclic@iterations@\n
+        OnX set_variable tmp @calc@mod(x,100.)@{tmp}@\n
+        OnX ui_set_parameter OnX_TestProgress_progressBar.value @{tmp}@
+      </variable>
+      <variable name="OnX_Test_progressBar_update">OnX dld_exec_text @{OnX_Test_progressBar_update_script}@</variable>
+      <create exec="DLD">OnX cyclic_create OnX_Test_progressBar_cyclic 250 yes DLD @{OnX_Test_progressBar_update}@</create>
+    </widget>
+    <widget class="VContainer"> 
+      <widget class="PushButton">
+        <label>Stop/start</label>
+        <activate exec="DLD">OnX cyclic_toggle OnX_Test_progressBar_cyclic</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Cancel</label>
+        <activate exec="DLD">OnX ui_hide @shell@this@</activate>
+      </widget>
+    </widget>
+  </widget>
+</widget>
+

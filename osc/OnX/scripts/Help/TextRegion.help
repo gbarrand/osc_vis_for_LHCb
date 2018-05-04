@@ -1,0 +1,7 @@
+  Set a text region (SoTextRegion).
+ 
+  Someone can give a text and some encoding ;
+ for example the PAW one :
+   encodign = PAW
+   text = W^+! -> e^+! [n]?e!
+   text = W^-! -> [m]^-! |[n]?[m]!

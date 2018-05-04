@@ -1,0 +1,98 @@
+#!/bin/sh -f
+
+compiler=
+set_x=no
+
+what=
+args=
+while test $# -ge 1 ; do
+  case $1 in
+    -gnu) compiler=g++;args="${args} $1";;
+    -clang) compiler=clang++;args="${args} $1";;
+    -x) set_x=yes;args="${args} $1";;
+    -*) args="${args} $1";;
+     *) if [ $# = 1 ] ; then
+          what=$1
+        else         
+          echo "unknwon option : $1"
+        fi
+        ;;
+  esac
+  shift
+done
+
+if [ "${what}" = "" ] ; then
+  find . -maxdepth 1 -name '*.cpp' -exec ./build ${args} {} \;
+  exit
+fi
+
+if [ ${set_x} = "yes" ] ; then set -x;fi
+
+exa=${what}
+
+exa=`echo ${exa} | sed -e 's:.cpp::g'`
+exa=`echo ${exa} | sed -e 's:./::g'`
+
+echo "build ${exa}..."
+
+if [ "${compiler}" = "" ] ; then
+  aida_compiler=`aida-config --compiler`
+  if [ "${aida_compiler}" != "" ] ; then
+    compiler=${aida_compiler}
+  else
+    if [ `uname` = Darwin ] ; then
+      compiler=clang++
+    else
+      compiler=c++
+    fi
+  fi
+fi
+
+aida_implementation=`aida-config --implementation`
+#echo ${aida_implementation}
+
+cppflags=
+
+cppflags="${cppflags} -I."
+#cppflags="${cppflags} `aida-config --incs`"
+cppflags="${cppflags} `amanip-config --incs`"
+cppflags="${cppflags} `inlib-config --incs`"
+
+slash_exa=`echo ${exa} | sed -e 's:slash_::g'`
+if [ ${slash_exa} != ${exa} ] ; then
+#  echo "Slash example."
+  cppflags="${cppflags} `slash-config --incs`"
+fi
+
+slash_iv_exa=`echo ${exa} | sed -e 's:slash_iv_::g'`
+if [ ${slash_iv_exa} != ${exa} ] ; then
+  if [ ${aida_implementation} = OnXLab ] ; then
+    #  echo "Slash example."
+    cppflags="${cppflags} `osc-config --iv_incs`"
+  else
+    echo "We can't build this example with this AIDA implementation."
+    exit
+  fi
+fi
+
+files=
+load_exa=`echo ${exa} | sed -e 's:load_::g'`
+if [ ${load_exa} != ${exa} ] ; then
+#  echo "Load example."
+  files="${files} ./lib/Loader.cpp"
+  cppflags="${cppflags} -w"
+fi
+
+ldflags=
+#if [ `uname` = Darwin ] ; then
+#  ldflags="${ldflags} -Wl,-headerpad_max_install_names -Wl,-headerpad,800"
+#fi
+
+thread_exa=`echo ${exa} | sed -e 's:thread::g'`
+if [ ${thread_exa} != ${exa} ] ; then
+  if [ `uname` = Linux ] ; then
+    ldflags="${ldflags} -lpthread"
+  fi
+fi
+
+eval ${compiler} -o AIDA_example_${exa} ${cppflags} ${exa}.cpp ${files} ${ldflags} `aida-config --libs`

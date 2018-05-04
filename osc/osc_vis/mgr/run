@@ -1,0 +1,71 @@
+#!/bin/sh -f
+
+version=17.0
+
+run_gdb=no
+run_args=
+build_args=
+
+run_viewer=no
+
+while test $# -ge 1 ; do
+  case $1 in
+    -gnu)     build_args="${build_args} $1";;
+    -intel)   build_args="${build_args} $1";;
+    -clang)   build_args="${build_args} $1";;
+    -visual)  build_args="${build_args} $1";;
+    -sdk_mac) build_args="${build_args} $1";;
+
+    # local options : 
+    -gdb)    run_gdb=yes;;
+    -viewer) run_viewer=yes;;
+
+    -*) run_args="${run_args} $1";;  
+     *) run_args="${run_args} $1";;  
+  esac
+  shift
+done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+. ${ourex_mgr}/build_header # to get build_path
+
+save_dir="`pwd`"
+
+#//////////////////////////////////////////
+#//////////////////////////////////////////
+#//////////////////////////////////////////
+
+cd ${build_path}/distrib/osc_vis/${version}
+./install
+
+. ./setup.sh
+
+# if using the Qt driver :
+use_Qt=yes
+. ./Resources/exlib/mgr/use_Qt
+if [ "${Qt_ld_library_path}" != "" ] ; then
+  ld_path="${Qt_ld_library_path}"
+  . ./Resources/inlib/mgr/build_ld_library_path
+fi
+
+#//////////////////////////////////////////
+#//////////////////////////////////////////
+#//////////////////////////////////////////
+
+LC_CTYPE=C;export LC_CTYPE
+
+if [ ${run_viewer} = yes ] ; then
+  osc-gui-viewer ${run_args} ${OSC_HOME_DIR}/Resources/OnX/examples/OnX/progress.onx
+else
+  if [ ${run_gdb} = yes ] ; then
+    gdb osc-plot
+  else
+    osc-plot ${run_args}
+  fi
+fi
+
+cd ${save_dir}
+

@@ -1,0 +1,16 @@
+
+<!-- to build NextStep related components. -->
+
+<obuild>
+
+  <darwin_app template="osc-plot-T" name="osc-plot"> 
+    <group>NextStep</group>
+    <replace name="@@driver@@">NextStep</replace>
+    <copy_dir>
+      <from>${obuild_OnX_path}/source/NextStep/OnX.nib</from>
+      <to>@@dir_bin@@/@@component@@.app/Contents/Resources/.</to>
+      <new_name>osc-plot.nib</new_name>
+    </copy_dir>
+  </darwin_app>
+
+</obuild>

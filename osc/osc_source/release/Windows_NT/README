@@ -1,0 +1,125 @@
+///////////////////////////////////////////////////////////////////////////
+// Working with AIDA :
+///////////////////////////////////////////////////////////////////////////
+    
+  From a DOS prompt, someone can setup the AIDA environment
+ with :
+    DOS> call <install_path>\OpenScientist\<version>\aida-setup.bat
+
+  After having done the aida-setup, someone can run aida-config with :
+    DOS> aida-config
+    DOS> aida-config --incs
+    DOS> aida-config --libs
+    DOS> aida-config --version
+    DOS> aida-config --implementation (here OnXLab)
+
+ Someone can run the AIDA examples (using then OnXLab AIDA implementation) 
+ with :
+    DOS> AIDA_example_Histogram
+    DOS> AIDA_example_<name>
+
+ The AIDA_examples_Store produces the myFile.aida AIDA xml file. Its content
+ can be visualized with the OnXLab_onx interactive program :
+    DOS> onxlab
+     GUI>File>Open AIDA XML file...> choose myFile.aida
+     GUI>Tree> open the myFile.aida tree branch.
+     GUI>Tree> clik 'test 1d' or 'test 2d'.
+ or by using opaw with :
+    DOS> opaw
+     opaw> h/file 10 myFile.aida
+     opaw> zone 1 2
+     opaw> h/plot 'test 1d'
+  ( DOS> opaw -term )
+
+ Someone can run all AIDA examples in order with :
+    DOS> call %AIDA_HOME_DIR%\tools\aida-run-all-examples.bat
+
+  Note that the installation comes with various data files under the :
+   <install_path>\OpenScientist\<version>\Resources\OnXLab\examples\data
+ directory. Someone can play with them by using onxlab. For example :
+ - open aptuple.tnt with "File/Open hippodraw file (*.tnt)..."
+ - open the aptuple.tnt folder in the left browsing tree widget.
+ - click the "CERN personnel" tuple ; it should map 
+   the "Tuple Explorer" palette.
+ - in the "Tuple Explorer" palette "bind X" to "Age"
+ - bind Y to "Cost"
+ - play with the sliders for X or Y.
+ - plot a lego with : Plotter>Shape>Lego
+ - play with the sliders for X or Y.
+
+ Some data files are at the hbook format. To be browsed, they will 
+ need the BatchLabZebra DLL which may not be available on some 
+ platform. About .hbook see the below paragraph about file formats.
+
+///////////////////////////////////////////////////////////////////////////
+// Creating an AIDA application :
+///////////////////////////////////////////////////////////////////////////
+
+  For example let us rebuild the AIDA_example_Histogram program.
+    DOS> call <install_path>\OpenScientist\<version>\aida-setup.bat
+    DOS> copy %AIDA_HOME_DIR%\Resources\AIDA\examples\cpp\Histogram.cpp .
+  ( DOS> have a look at the code with some editor )
+    DOS> copy %AIDA_HOME_DIR%\Resources\AIDA\examples\cpp\Random.cpp .
+    DOS> copy %AIDA_HOME_DIR%\Resources\AIDA\examples\cpp\Random.h .
+    DOS> copy %AIDA_HOME_DIR%\Resources\AIDA\examples\cpp\Config.h .
+    DOS> <setup VisualC++ so that cl.exe is available>
+    DOS> copy %AIDA_HOME_DIR%\aida-build_example.bat .
+  ( DOS> have a look at the aida-build-example.bat with some editor )
+    DOS> aida-build_example Histogram.cpp Random.cpp
+    DOS> Histogram.exe
+     (Click on "Leave OnX control" to exit the program.)
+
+///////////////////////////////////////////////////////////////////////////
+// The file formats intrinsic pain :
+///////////////////////////////////////////////////////////////////////////
+
+  .hbook : we definitely advise to avoid the .hbook format which is
+ related to software no more supported by the lab that created it (CERN).
+ The OpenScientist/BatchLab package can read and write .hbook files but by
+ still using the deprecated CERNLIBs. CERN had not been able to do the
+ technical followup of this format ; at least pass from F77 to C and
+ repack to have a standalone IO package. Be sure that there is no plan 
+ in OpenScientist to do this painfull job ; this is a trash that we do not
+ want to empty. If wanting to using it, you must be aware that the number of 
+ people being able to understand the related code can be probably counted 
+ now on one hand.
+
+  .root : people able to understand this format and the IO related code 
+ can be counted on two fingers and then we obviously advise to NOT jump 
+ into this new engineering CERN trap ; at least for storing such common 
+ data than histograms and tuples. The OpenScientist/BatchLab package, by 
+ using Rio, can write and read at this format without tying to the 
+ "Reinvented Object Orientation Technology" quantum entanglement ; but we 
+ are left anyway in the hand of an uncontrolled engineering concerning the 
+ specifications of the format and the related code. Able to read your 
+ file today, but tomorrow ?
+
+  .aida : the best for the moment is to use the AIDA XML format.
+ Compared to the two uppers it is an ocean of limpidity. Moreover it is 
+ understood by all the AIDA implementations and someone having an XML 
+ package at hand can easily implement a reader. It will probably cover 
+ good part of your needs, with the guarantee of not attaching your
+ application to some already outdated software.
+
+  .tnt, .ascii : with OSC/BatchLab someone can write a tuple in a file at the 
+ simple hippodraw "tnt" ascii format (AIDA::ITree "hippodraw" storage type). 
+ The first line of the file is the tuple title, the second is a space 
+ separated list of the column labels and the rest of the file are rows 
+ of space or tab separated numbers. See data/aptuple.tnt or glast.tnt 
+ for examples. See BatchLab/examples/BatchLab_exa_hippo.cxx for a writing 
+ example program. Note that in fact someone can easily write such a 
+ data tuple file even without using AIDA (std::cout or even ::printf can 
+ do the job). These files are understood also by the hippodraw (non-AIDA) 
+ application, and by removing the two first lines they are also understood 
+ by a lot of software (including Mathematica and Excel (and old CERN/PAW)). 
+ For Mathematica there are .mat scripts examples under 
+ Resources/OnXLab/examples/mathematica.
+
+  .hdf5 : the future for big AIDA data files ? The open source IO binary 
+ standard that we dream of for so long ?
+
+///////////////////////////////////////////////////////////////////////////
+// URL :
+///////////////////////////////////////////////////////////////////////////
+ 
+   http://OpenScientist.lal.in2p3.fr

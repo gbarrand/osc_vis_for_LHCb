@@ -1,0 +1,46 @@
+#!/bin/sh -f
+
+if test $# -eq 1 ; then
+
+utility=/tmp/OnX_findsrc_tmp_0
+
+/bin/rm -f ${utility}
+
+cat > ${utility} <<END
+#!/bin/sh -f
+grep "\$1" \$2 && echo \$2
+END
+
+chmod a+x ${utility}
+
+find . -name '*.[ichfF]*' -exec ${utility} "$1" {} \;
+# l = lex, y = yacc :
+find . -name '*.[ly]' -exec ${utility} "$1" {} \;   
+find . -name '*.py' -exec ${utility} "$1" {} \;   
+# m = Objective-C :
+find . -name '*.m' -exec ${utility} "$1" {} \;   
+find . -name '*.mm' -exec ${utility} "$1" {} \;   
+# nib = Next Interface Builder
+find . -name '*.nib' -exec ${utility} "$1" {} \;   
+find . -name '*.onx' -exec ${utility} "$1" {} \;   
+find . -name '*.styles' -exec ${utility} "$1" {} \;   
+find . -name '*.tcl' -exec ${utility} "$1" {} \;   
+find . -name '*.java' -exec ${utility} "$1" {} \;   
+find . -name '*.xml' -exec ${utility} "$1" {} \;   
+# Make systems :
+find . -name 'requirements' -exec ${utility} "$1" {} \;   
+find . -name 'GNUmakefile' -exec ${utility} "$1" {} \;   
+find . -name '*.gmk' -exec ${utility} "$1" {} \;   
+find . -name '*.obuild' -exec ${utility} "$1" {} \;   
+# scripts :
+find . -name '*.bat' -exec ${utility} "$1" {} \;   
+find . -name '*.sh' -exec ${utility} "$1" {} \;   
+# Gaudi job options files :
+find . -name '*.opts' -exec ${utility} "$1" {} \;   
+find . -name '*.txt' -exec ${utility} "$1" {} \;   
+
+/bin/rm -f ${utility}
+
+else
+echo "$# arguments given. One expected."
+fi

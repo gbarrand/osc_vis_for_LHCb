@@ -1,0 +1,113 @@
+
+// proxy should be on pure Qt (and not on OnX itself).
+
+#include <inlib/cstr>
+#include <inlib/sto>
+
+#include <OnX/Qt/QTk.h>
+
+#define S_QGLWidget    "QGLWidget"
+#define S_QMainWindow  "QMainWindow"
+#define S_QDialog      "QDialog"
+
+#define S_OnX_QFileDialog     "OnX_QFileDialog"
+#define S_OnX_QOpenGLArea     "OnX_QOpenGLArea"
+#define S_OnX_QColorDialog    "OnX_QColorDialog"
+
+#include "../source/Core/Proxy.h"
+
+inline bool qt_proxy(
+ void* aTag
+,const std::string& aWhat
+,const std::vector<std::string>& aArgs
+,void*& aReturn
+){
+  aReturn = 0;
+  QWidget* widget = (QWidget*)aTag;
+  if(aWhat==PX_WRITE) {
+    if(aArgs.size()!=3) return false;
+    std::string file = aArgs[0];
+    std::string format = aArgs[1];
+    std::string opts = aArgs[2];
+    if(widget->inherits(S_OnX_QOpenGLArea)) {
+      if(format=="gl2ps") {
+        unsigned int width = widget->width();
+        unsigned int height = widget->height();
+        return ((OnX_QOpenGLArea*)widget)->write_gl2ps(file,opts);
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  } else if(aWhat==PX_SIZE) {
+    typedef unsigned int uint_t;
+    uint_t* sz = new uint_t[2];
+    sz[0] = widget->width();
+    sz[1] = widget->height();
+    aReturn = sz;
+    return true;
+  } else if(aWhat==PX_POSITION) {
+    int* pos = new int[2];
+    pos[0] = widget->x();
+    pos[1] = widget->y();
+    aReturn = pos;
+    return true;
+  } else if(aWhat==PX_MANAGE) {
+    if(aArgs.size()!=1) return false;
+    bool value;
+    if(!inlib::to(aArgs[0],value)) return false;
+    //FIXME
+    //if(value) 
+    //  XtManageChild(widget);
+    //else 
+    //  XtUnmanageChild(widget);
+    return false;
+  } else if(aWhat==PX_REFRESH) {
+    if(widget->inherits(S_QGLWidget)) {
+      ((QGLWidget*)widget)->updateGL();
+    }
+    return true;
+  } else if(aWhat==PX_SHOW) {
+    //FIXME : should use some QtTools/OnX::show.
+    // In Qt4 QWidget::show(),hide() are no more virtual !
+    if(widget->inherits(S_OnX_QFileDialog)) {
+      ((OnX_QFileDialog*)widget)->map();
+#if QT_VERSION < 0x040600
+    } else if(widget->inherits(S_OnX_QColorDialog)) {
+      ((OnX_QColorDialog*)widget)->map();
+#endif
+    } else {
+      QWidget* shell = widget->topLevelWidget();
+      if(shell) {
+        if(shell->inherits(S_QDialog)) {
+          if(shell->isHidden()) { //To avoid a recenter if already shown.
+            int sw = shell->width();
+            int sh = shell->height();
+            QWidget* parent = shell->parentWidget();
+            if(parent && parent->inherits(S_QMainWindow)) {
+              int w = parent->width();
+              int h = parent->height();
+              int x = parent->x();
+              int y = parent->y();
+              shell->move(x+(w-sw)/2,y+(h-sh)/2);
+            }
+            shell->show(); 
+          }
+        } else {
+          shell->show(); 
+        }
+      }
+    }
+    return true;
+
+  } else if(aWhat==PX_HIDE) {
+    if(widget->inherits(S_OnX_QFileDialog)) {
+    } else {
+      QWidget* shell = widget->topLevelWidget();
+      if(shell) shell->hide(); 
+    }
+    return true;
+  }
+  return false;
+}

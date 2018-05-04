@@ -1,0 +1,13 @@
+<widget class="CascadeButton">
+  <label>File</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>User manager method</label>
+      <activate exec="DLD">OnXTemplateFive OnXTemplateFive_userMethod</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Exit</label>
+      <activate exec="DLD">OnX ui_exit</activate>
+    </widget>
+  </widget>
+</widget>

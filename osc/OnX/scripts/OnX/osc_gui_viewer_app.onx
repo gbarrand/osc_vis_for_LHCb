@@ -1,0 +1,6 @@
+<OnX>
+
+  <!-- NextStep, Qt : if dragging a data file on the icon .app -->
+  <openFile exec="DLD">OnX ui_load @empty@ @{session.openFile}@</openFile>
+
+</OnX>

@@ -1,0 +1,8 @@
+#!/bin/sh -f
+find ../src/Inventor -name "*.ic" -exec /bin/rm {} \;
+find ../src/Inventor -name "*.icc" -exec /bin/rm {} \;
+find ../src/Inventor -name "*.cpp" -exec /bin/rm {} \;
+find ../src/Inventor -name "*.h" -exec /bin/rm {} \;
+find ../include/Inventor -name "*.h" -exec /bin/rm {} \;
+find ../include/Inventor -name "*.xpm" -exec /bin/rm {} \;
+find ../data -name "*.h" -exec /bin/rm {} \;

@@ -1,0 +1,9 @@
+<widget class="CascadeButton">
+  <label>File</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Exit</label>
+      <activate exec="DLD">OnXTemplateSix OnXTemplateSix_exit</activate>
+    </widget>
+  </widget>
+</widget>

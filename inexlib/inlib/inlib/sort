@@ -1,0 +1,94 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file inlib.license for terms.
+
+#ifndef inlib_sort
+#define inlib_sort
+
+#include "cstr"
+
+#include <vector>
+#include <string>
+
+extern "C" {
+
+// since extern "C" does not take into account namespace,
+// we prefix with inlib_
+
+typedef int (*inlib_sort_func_t)(const void*,const void*);
+
+}
+
+namespace inlib {
+namespace sort {
+
+inline int strlen_greater(char** a1,char** a2){
+  size_t l1 = ::strlen(*a1);
+  size_t l2 = ::strlen(*a2);
+  if(l1==l2) return 0;
+  return (l1>l2)?1:-1;
+}
+inline int strlen_lesser(char** a1,char** a2){
+  size_t l1 = ::strlen(*a1);
+  size_t l2 = ::strlen(*a2);
+  if(l1==l2) return 0;
+  return (l1<l2)?1:-1;
+}
+
+inline void strlen(std::vector<std::string>& a_text,bool a_increasing = true){
+  unsigned int linen = a_text.size();
+  if(linen<=1) return;
+  char** lines = new char*[linen];
+ {for(unsigned int i=0;i<linen;i++) 
+    lines[i] = str_dup(a_text[i].c_str());}
+  if(a_increasing) {
+    ::qsort(lines,(size_t)linen,(size_t)sizeof(char*),
+            (inlib_sort_func_t)strlen_greater);
+  } else {
+    ::qsort(lines,(size_t)linen,(size_t)sizeof(char*),
+            (inlib_sort_func_t)strlen_lesser);
+  }
+  for(unsigned int i=0;i<linen;i++) {
+    a_text[i] = lines[i];
+    str_del(lines[i]);
+  }
+  delete [] lines;
+}
+
+template <class T>
+class item {
+public:
+  T m_value;
+public:
+  static int greater(item* a1,item* a2){
+    if((*a1).m_value==(*a2).m_value) return 0;
+    return ((*a1).m_value>(*a2).m_value)?1:-1;
+  }
+  static int lesser(item* a1,item* a2){
+    if((*a1).m_value==(*a2).m_value) return 0;
+    return ((*a1).m_value<(*a2).m_value)?1:-1;
+  }
+};
+
+template <class T>
+inline void sort(std::vector<T>& a_vec,bool a_increasing = true) {
+  unsigned int l = a_vec.size();
+  if(l<=1) return;
+  item<T>* items = new item<T>[l];
+ {for(unsigned int i=0;i<l;i++) items[i].m_value = a_vec[i];}
+
+  if(a_increasing) {
+    ::qsort(items,(size_t)l,(size_t)sizeof(item<T>),
+            (inlib_sort_func_t)item<T>::greater);
+  } else {
+    ::qsort(items,(size_t)l,(size_t)sizeof(item<T>),
+            (inlib_sort_func_t)item<T>::lesser);
+  }
+
+ {for(unsigned int i=0;i<l;i++) a_vec[i] = items[i].m_value;}
+
+  delete [] items;
+}
+
+}}
+
+#endif

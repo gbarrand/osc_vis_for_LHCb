@@ -1,0 +1,574 @@
+#ifndef Lib_ExpFunc_icc
+#define Lib_ExpFunc_icc
+
+#include <cmath>
+#include <cstdlib>
+#include <inlib/math>
+
+extern "C" {
+inline static double Lib_RandomFlat_shoot(double /*aSeed*/) {
+  // Shoot random numbers in [0,1] according a flat distribution.
+  //FIXME srandom(aSeed);  
+  double value  = (double)::rand();
+  value /= (double)RAND_MAX;
+  return value;
+}
+inline static double Lib_toint(double a_x) {return (double)int(a_x);}
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+/// Functions ////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+namespace Lib {
+
+class ExpFunc_nco : public Lib::ExpFunc {
+public:
+  virtual bool eval(const Args& a_args,
+                    Lib::Value& a_return,std::string& aError) {
+    if(a_args.size()!=fNumArgs) return false;
+    if(a_args[0].type()==Slash::Core::IValue::ARRAY_DOUBLE) {
+      std::vector<unsigned int> is;
+      a_return.set((unsigned int)a_args[0].get_array_double(is).size());
+      return true;
+    }
+    return false;
+  }
+  virtual IExpFunc* copy() const { return new ExpFunc_nco(*this);}
+public:
+  ExpFunc_nco():ExpFunc("nco",1){}
+  virtual ~ExpFunc_nco(){}
+private:
+  ExpFunc_nco(const ExpFunc_nco& aFrom):ExpFunc(aFrom){}
+  ExpFunc_nco& operator=(const ExpFunc_nco& aFrom){
+    ExpFunc::operator=(aFrom);return *this;
+  }
+};
+
+class ExpFunc_vsum : public Lib::ExpFunc {
+public:
+  virtual bool eval(const Args& a_args,
+                    Lib::Value& a_return,std::string& aError) {
+    if(a_args.size()!=fNumArgs) return false;
+    if(a_args[0].type()==Slash::Core::IValue::ARRAY_DOUBLE) {
+      std::vector<unsigned int> is;
+      const std::vector<double>& stdv = a_args[0].get_array_double(is);
+      double dv = 0;
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) dv += stdv[index];
+      a_return.set(dv);
+      return true;
+    } 
+    return false;
+  }
+  virtual IExpFunc* copy() const { return new ExpFunc_vsum(*this);}
+public:
+  ExpFunc_vsum():ExpFunc("vsum",1){}
+  virtual ~ExpFunc_vsum(){}
+private:
+  ExpFunc_vsum(const ExpFunc_vsum& aFrom):ExpFunc(aFrom){}
+  ExpFunc_vsum& operator=(const ExpFunc_vsum& aFrom){
+    ExpFunc::operator=(aFrom);return *this;
+  }
+};
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+class ExpFunc_pow : public Lib::ExpFunc {
+public:
+  virtual bool eval(const Args& a_args,
+                    Lib::Value& a_return,std::string& aError) {
+    if(a_args.size()!=fNumArgs) return false;
+    return ExpFunc::eval1(a_args[0],a_return,aError,a_args[1],::pow);
+  }
+  virtual IExpFunc* copy() const { return new ExpFunc_pow(*this);}
+public:
+  ExpFunc_pow():ExpFunc("pow",2){}
+  virtual ~ExpFunc_pow(){}
+private:
+  ExpFunc_pow(const ExpFunc_pow& aFrom):ExpFunc(aFrom){}
+  ExpFunc_pow& operator=(const ExpFunc_pow& aFrom){
+    ExpFunc::operator=(aFrom);return *this;
+  }
+};
+
+class ExpFunc_mod : public Lib::ExpFunc {
+public:
+  virtual bool eval(const Args& a_args,
+                    Lib::Value& a_return,std::string& aError) {
+    if(a_args.size()!=fNumArgs) return false;
+    return ExpFunc::eval1(a_args[0],a_return,aError,a_args[1],::fmod);
+  }
+  virtual IExpFunc* copy() const { return new ExpFunc_mod(*this);}
+public:
+  ExpFunc_mod():ExpFunc("mod",2){}
+  virtual ~ExpFunc_mod(){}
+private:
+  ExpFunc_mod(const ExpFunc_mod& aFrom):ExpFunc(aFrom){}
+  ExpFunc_mod& operator=(const ExpFunc_mod& aFrom){
+    ExpFunc::operator=(aFrom);return *this;
+  }
+};
+
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+#include <inlib/array>
+
+namespace Lib {
+
+class ExpFunc_array : public Lib::ExpFunc {
+public:
+  virtual bool eval(const Args& a_args,
+                    Lib::Value& a_return,std::string& aError) {
+    if(a_args.size()!=fNumArgs) return false;
+    if(a_args[0].type()==Slash::Core::IValue::ARRAY_DOUBLE) {
+    } else {
+  
+      double x;
+      if(!TO_D(a_args[0],x,a_return,aError)) return false;
+  
+      double d_1;
+      if(!TO_D(a_args[1],d_1,a_return,aError)) return false;
+      double d_2;
+      if(!TO_D(a_args[2],d_2,a_return,aError)) return false;
+  
+      int n = (int)x;
+      std::vector<unsigned int> orders(1);
+      orders[0] = n;
+      inlib::array<double> v(orders);
+      if(n>=2) {
+        std::vector<double>& stdv = v.vector();
+        double delta = (d_2 - d_1)/(n-1);
+        for(int i=0;i<n;i++) stdv[i] = d_1 + i * delta;
+      }
+      a_return.set(v.orders(),v.vector());
+      return true;
+  
+    }
+    return false;
+  }
+  virtual IExpFunc* copy() const { return new ExpFunc_array(*this);}
+public:
+  ExpFunc_array():ExpFunc("array",3){}
+  virtual ~ExpFunc_array(){}
+private:
+  ExpFunc_array(const ExpFunc_array& aFrom):ExpFunc(aFrom){}
+  ExpFunc_array& operator=(const ExpFunc_array& aFrom){
+    ExpFunc::operator=(aFrom);return *this;
+  }
+};
+
+}
+
+#include <inlib/func>
+#include <Lib/Functions.h>
+
+namespace Lib {
+
+class ExpFunc_expo : public Lib::ExpFunc {
+public:
+  virtual bool eval(const Args& a_args,
+                    Lib::Value& a_return,std::string& aError) {
+    if(a_args.size()!=fNumArgs) return false;
+    if(a_args[0].type()==Slash::Core::IValue::ARRAY_DOUBLE) {
+    } else {
+  
+      double x;
+      if(!TO_D(a_args[0],x,a_return,aError)) return false;
+  
+      double d_1;
+      if(!TO_D(a_args[1],d_1,a_return,aError)) return false;
+      double d_2;
+      if(!TO_D(a_args[2],d_2,a_return,aError)) return false;
+  
+      inlib::func::expo func(d_1,d_2);
+      a_return.set(func.value(x));
+      return true;
+  
+    }
+    return false;
+  }
+  virtual IExpFunc* copy() const { return new ExpFunc_expo(*this);}
+public:
+  ExpFunc_expo():ExpFunc("expo",3){}
+  virtual ~ExpFunc_expo(){}
+private:
+  ExpFunc_expo(const ExpFunc_expo& aFrom):ExpFunc(aFrom){}
+  ExpFunc_expo& operator=(const ExpFunc_expo& aFrom){
+    ExpFunc::operator=(aFrom);return *this;
+  }
+};
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+class ExpFunc_gauss : public Lib::ExpFunc {
+public:
+  virtual bool eval(const Args& a_args,
+                    Lib::Value& a_return,std::string& aError) {
+    if(a_args.size()!=fNumArgs) return false;
+    if(a_args[0].type()==Slash::Core::IValue::ARRAY_DOUBLE) {
+    } else {
+  
+      double x;
+      if(!TO_D(a_args[0],x,a_return,aError)) return false;
+  
+      double d_1;
+      if(!TO_D(a_args[1],d_1,a_return,aError)) return false;
+      double d_2;
+      if(!TO_D(a_args[2],d_2,a_return,aError)) return false;
+      double d_3;
+      if(!TO_D(a_args[3],d_3,a_return,aError)) return false;
+  
+      inlib::func::gaussian func(d_1,d_2,d_3);
+      a_return.set(func.value(x));
+      return true;
+  
+    }
+    return false;
+  }
+  virtual IExpFunc* copy() const { return new ExpFunc_gauss(*this);}
+public:
+  ExpFunc_gauss():ExpFunc("gauss",4){}
+  virtual ~ExpFunc_gauss(){}
+private:
+  ExpFunc_gauss(const ExpFunc_gauss& aFrom):ExpFunc(aFrom){}
+  ExpFunc_gauss& operator=(const ExpFunc_gauss& aFrom){
+    ExpFunc::operator=(aFrom);return *this;
+  }
+};
+
+class ExpFunc_bw : public Lib::ExpFunc {
+public:
+  virtual bool eval(const Args& a_args,
+                    Lib::Value& a_return,std::string& aError) {
+    if(a_args.size()!=fNumArgs) return false;
+    if(a_args[0].type()==Slash::Core::IValue::ARRAY_DOUBLE) {
+    } else {
+      double x;
+      if(!TO_D(a_args[0],x,a_return,aError)) return false;
+      double d_1;
+      if(!TO_D(a_args[1],d_1,a_return,aError)) return false;
+      double d_2;
+      if(!TO_D(a_args[2],d_2,a_return,aError)) return false;
+      double d_3;
+      if(!TO_D(a_args[3],d_3,a_return,aError)) return false;
+      inlib::func::bw func(d_1,d_2,d_3);
+      a_return.set(func.value(x));
+      return true;
+    }
+    return false;
+  }
+  virtual IExpFunc* copy() const { return new ExpFunc_bw(*this);}
+public:
+  ExpFunc_bw():ExpFunc("bw",4){}
+  virtual ~ExpFunc_bw(){}
+private:
+  ExpFunc_bw(const ExpFunc_bw& aFrom):ExpFunc(aFrom){}
+  ExpFunc_bw& operator=(const ExpFunc_bw& aFrom){
+    ExpFunc::operator=(aFrom);return *this;
+  }
+};
+
+// For backward compatibility. Same as upper.
+class ExpFunc_breit : public Lib::ExpFunc {
+public:
+  virtual bool eval(const Args& a_args,
+                    Lib::Value& a_return,std::string& aError) {
+    if(a_args.size()!=fNumArgs) return false;
+    if(a_args[0].type()==Slash::Core::IValue::ARRAY_DOUBLE) {
+    } else {
+      double x;
+      if(!TO_D(a_args[0],x,a_return,aError)) return false;
+      double d_1;
+      if(!TO_D(a_args[1],d_1,a_return,aError)) return false;
+      double d_2;
+      if(!TO_D(a_args[2],d_2,a_return,aError)) return false;
+      double d_3;
+      if(!TO_D(a_args[3],d_3,a_return,aError)) return false;
+      inlib::func::bw func(d_1,d_2,d_3);
+      a_return.set(func.value(x));
+      return true;
+    }
+    return false;
+  }
+  virtual IExpFunc* copy() const { return new ExpFunc_breit(*this);}
+public:
+  ExpFunc_breit():ExpFunc("breit",4){}
+  virtual ~ExpFunc_breit(){}
+private:
+  ExpFunc_breit(const ExpFunc_breit& aFrom):ExpFunc(aFrom){}
+  ExpFunc_breit& operator=(const ExpFunc_breit& aFrom){
+    ExpFunc::operator=(aFrom);return *this;
+  }
+};
+
+class ExpFunc_cauchy : public Lib::ExpFunc {
+public:
+  virtual bool eval(const Args& a_args,
+                    Lib::Value& a_return,std::string& aError) {
+    if(a_args.size()!=fNumArgs) return false;
+    if(a_args[0].type()==Slash::Core::IValue::ARRAY_DOUBLE) {
+    } else {
+  
+      double x;
+      if(!TO_D(a_args[0],x,a_return,aError)) return false;
+  
+      double d_1;
+      if(!TO_D(a_args[1],d_1,a_return,aError)) return false;
+      double d_2;
+      if(!TO_D(a_args[2],d_2,a_return,aError)) return false;
+      double d_3;
+      if(!TO_D(a_args[3],d_3,a_return,aError)) return false;
+  
+      inlib::func::cauchy func(d_1,d_2,d_3);
+      a_return.set(func.value(x));
+      return true;
+  
+    }
+    return false;
+  }
+  virtual IExpFunc* copy() const { return new ExpFunc_cauchy(*this);}
+public:
+  ExpFunc_cauchy():ExpFunc("cauchy",4){}
+  virtual ~ExpFunc_cauchy(){}
+private:
+  ExpFunc_cauchy(const ExpFunc_cauchy& aFrom):ExpFunc(aFrom){}
+  ExpFunc_cauchy& operator=(const ExpFunc_cauchy& aFrom){
+    ExpFunc::operator=(aFrom);return *this;
+  }
+};
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+class ExpFunc_pol1 : public Lib::ExpFunc {
+public:
+  virtual bool eval(const Args& a_args,
+                    Lib::Value& a_return,std::string& aError) {
+    if(a_args.size()!=fNumArgs) return false;
+    if(a_args[0].type()==Slash::Core::IValue::ARRAY_DOUBLE) {
+    } else {
+  
+      double x;
+      if(!TO_D(a_args[0],x,a_return,aError)) return false;
+  
+      double d_1;
+      if(!TO_D(a_args[1],d_1,a_return,aError)) return false;
+      double d_2;
+      if(!TO_D(a_args[2],d_2,a_return,aError)) return false;
+  
+      std::vector<double> params(2);
+      params[0] = d_1;
+      params[1] = d_2;
+      inlib::func::polynomial func(params);
+      a_return.set(func.value(x));
+      return true;
+  
+    }
+    return false;
+  }
+  virtual IExpFunc* copy() const { return new ExpFunc_pol1(*this);}
+public:
+  ExpFunc_pol1():ExpFunc("pol1",3){}
+  virtual ~ExpFunc_pol1(){}
+private:
+  ExpFunc_pol1(const ExpFunc_pol1& aFrom):ExpFunc(aFrom){}
+  ExpFunc_pol1& operator=(const ExpFunc_pol1& aFrom){
+    ExpFunc::operator=(aFrom);return *this;
+  }
+};
+
+class ExpFunc_pol2 : public Lib::ExpFunc {
+public:
+  virtual bool eval(const Args& a_args,
+                    Lib::Value& a_return,std::string& aError) {
+    if(a_args.size()!=fNumArgs) return false;
+    if(a_args[0].type()==Slash::Core::IValue::ARRAY_DOUBLE) {
+    } else {
+  
+      double x;
+      if(!TO_D(a_args[0],x,a_return,aError)) return false;
+  
+      double d_1;
+      if(!TO_D(a_args[1],d_1,a_return,aError)) return false;
+      double d_2;
+      if(!TO_D(a_args[2],d_2,a_return,aError)) return false;
+      double d_3;
+      if(!TO_D(a_args[3],d_3,a_return,aError)) return false;
+  
+      std::vector<double> params(3);
+      params[0] = d_1;
+      params[1] = d_2;
+      params[2] = d_3;
+      inlib::func::polynomial func(params);
+      a_return.set(func.value(x));
+      return true;
+  
+    }
+    return false;
+  }
+  virtual IExpFunc* copy() const { return new ExpFunc_pol2(*this);}
+public:
+  ExpFunc_pol2():ExpFunc("pol2",4){}
+  virtual ~ExpFunc_pol2(){}
+private:
+  ExpFunc_pol2(const ExpFunc_pol2& aFrom):ExpFunc(aFrom){}
+  ExpFunc_pol2& operator=(const ExpFunc_pol2& aFrom){
+    ExpFunc::operator=(aFrom);return *this;
+  }
+};
+
+class ExpFunc_pol3 : public Lib::ExpFunc {
+public:
+  virtual bool eval(const Args& a_args,
+                    Lib::Value& a_return,std::string& aError) {
+    if(a_args.size()!=fNumArgs) return false;
+    if(a_args[0].type()==Slash::Core::IValue::ARRAY_DOUBLE) {
+    } else {
+  
+      double x;
+      if(!TO_D(a_args[0],x,a_return,aError)) return false;
+  
+      double d_1;
+      if(!TO_D(a_args[1],d_1,a_return,aError)) return false;
+      double d_2;
+      if(!TO_D(a_args[2],d_2,a_return,aError)) return false;
+      double d_3;
+      if(!TO_D(a_args[3],d_3,a_return,aError)) return false;
+      double d_4;
+      if(!TO_D(a_args[4],d_4,a_return,aError)) return false;
+  
+      std::vector<double> params(4);
+      params[0] = d_1;
+      params[1] = d_2;
+      params[2] = d_3;
+      params[3] = d_4;
+      inlib::func::polynomial func(params);
+      a_return.set(func.value(x));
+      return true;
+  
+    }
+    return false;
+  }
+  virtual IExpFunc* copy() const { return new ExpFunc_pol3(*this);}
+public:
+  ExpFunc_pol3():ExpFunc("pol3",5){}
+  virtual ~ExpFunc_pol3(){}
+private:
+  ExpFunc_pol3(const ExpFunc_pol3& aFrom):ExpFunc(aFrom){}
+  ExpFunc_pol3& operator=(const ExpFunc_pol3& aFrom){
+    ExpFunc::operator=(aFrom);return *this;
+  }
+};
+
+class ExpFunc_pol4 : public Lib::ExpFunc {
+public:
+  virtual bool eval(const Args& a_args,
+                    Lib::Value& a_return,std::string& aError) {
+    if(a_args.size()!=fNumArgs) return false;
+    if(a_args[0].type()==Slash::Core::IValue::ARRAY_DOUBLE) {
+    } else {
+  
+      double x;
+      if(!TO_D(a_args[0],x,a_return,aError)) return false;
+  
+      double d_1;
+      if(!TO_D(a_args[1],d_1,a_return,aError)) return false;
+      double d_2;
+      if(!TO_D(a_args[2],d_2,a_return,aError)) return false;
+      double d_3;
+      if(!TO_D(a_args[3],d_3,a_return,aError)) return false;
+      double d_4;
+      if(!TO_D(a_args[4],d_4,a_return,aError)) return false;
+      double d_5;
+      if(!TO_D(a_args[5],d_5,a_return,aError)) return false;
+  
+      std::vector<double> params(5);
+      params[0] = d_1;
+      params[1] = d_2;
+      params[2] = d_3;
+      params[3] = d_4;
+      params[4] = d_5;
+      inlib::func::polynomial func(params);
+      a_return.set(func.value(x));
+      return true;
+  
+    }
+    return false;
+  }
+  virtual IExpFunc* copy() const { return new ExpFunc_pol4(*this);}
+public:
+  ExpFunc_pol4():ExpFunc("pol4",6){}
+  virtual ~ExpFunc_pol4(){}
+private:
+  ExpFunc_pol4(const ExpFunc_pol4& aFrom):ExpFunc(aFrom){}
+  ExpFunc_pol4& operator=(const ExpFunc_pol4& aFrom){
+    ExpFunc::operator=(aFrom);return *this;
+  }
+};
+
+}
+
+inline Lib::ExpFuncs::ExpFuncs() {
+  Debug::increment("Lib::ExpFuncs");
+
+  fFuncs.push_back(new ExpFunc_cfunc("cos",::cos,inlib::in_domain_all));
+  fFuncs.push_back(new ExpFunc_cfunc("sin",::sin,inlib::in_domain_all));
+
+  fFuncs.push_back(new ExpFunc_cfunc("cosh",::cosh,inlib::in_domain_all));
+  fFuncs.push_back(new ExpFunc_cfunc("sinh",::sinh,inlib::in_domain_all));
+  fFuncs.push_back(new ExpFunc_cfunc("tanh",::tanh,inlib::in_domain_all));
+  fFuncs.push_back(new ExpFunc_cfunc("atan",::atan,inlib::in_domain_all));
+  fFuncs.push_back(new ExpFunc_cfunc("sqrt",::sqrt,inlib::in_domain_all));
+  fFuncs.push_back(new ExpFunc_cfunc("exp",::exp,inlib::in_domain_all));
+  fFuncs.push_back(new ExpFunc_cfunc("fabs",::fabs,inlib::in_domain_all));
+
+  fFuncs.push_back(new ExpFunc_cfunc("abs",::fabs,inlib::in_domain_all));
+  fFuncs.push_back(new ExpFunc_cfunc("rndm",::Lib_RandomFlat_shoot,
+                                     inlib::in_domain_all));
+  fFuncs.push_back(new ExpFunc_cfunc("toint",::Lib_toint,
+                                     inlib::in_domain_all));
+
+  //for OpenPAW/c_pawex20.kumac
+  fFuncs.push_back(new ExpFunc_cfunc("int",::Lib_toint,inlib::in_domain_all)); 
+
+  fFuncs.push_back(new ExpFunc_cfunc("tan",::tan,inlib::in_domain_tan));
+  fFuncs.push_back(new ExpFunc_cfunc("acos",::acos,inlib::in_domain_acos));
+  fFuncs.push_back(new ExpFunc_cfunc("asin",::asin,inlib::in_domain_acos));
+  fFuncs.push_back(new ExpFunc_cfunc("log",::log,inlib::in_domain_log));
+  fFuncs.push_back(new ExpFunc_cfunc("log10",::log10,inlib::in_domain_log));
+
+  fFuncs.push_back(new ExpFunc_nco());
+  fFuncs.push_back(new ExpFunc_vsum());
+
+  fFuncs.push_back(new ExpFunc_pow());
+  fFuncs.push_back(new ExpFunc_mod());
+
+  fFuncs.push_back(new ExpFunc_array());
+  fFuncs.push_back(new ExpFunc_expo());
+  fFuncs.push_back(new ExpFunc_pol1());
+
+  fFuncs.push_back(new ExpFunc_gauss());
+  fFuncs.push_back(new ExpFunc_bw());
+  fFuncs.push_back(new ExpFunc_cauchy());
+  fFuncs.push_back(new ExpFunc_pol2());
+
+  fFuncs.push_back(new ExpFunc_pol3());
+  fFuncs.push_back(new ExpFunc_pol4());
+
+  // For backward compatibility :
+  fFuncs.push_back(new ExpFunc_breit());
+}
+
+#endif

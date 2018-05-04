@@ -1,0 +1,31 @@
+<widget class="ToolBar">
+<!--
+  <widget class="ToolBarItem">
+    <pixmap>$ONXROOT/scripts/images/stop.png</pixmap>
+    <tooltip>Exit</tooltip>
+    <activate exec="DLD">OnX ui_exit</activate>
+  </widget>
+-->
+  <widget class="ToolBarItem">
+<!--
+    <label>Print...</label>
+-->
+    <pixmap>$ONXROOT/scripts/images/fileprint.xpm</pixmap>
+    <tooltip>Map print dialog</tooltip>
+    <activate exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/InputPrint.onx OnX_InputPrint_dialog</activate>
+  </widget>
+  <widget class="ToolBarItem">
+<!--
+    <label>Clear region</label>
+-->
+    <pixmap>$ONXROOT/scripts/images/editdelete.xpm</pixmap>
+    <tooltip>Clear region</tooltip>
+    <activate exec="DLD">OnX viewer_clear @current@ all</activate>
+  </widget>
+<!--
+  <widget class="ToolBarItem">
+    <label>No pixmap</label>
+    <tooltip>Tool bar item without pixmap</tooltip>
+  </widget>
+-->
+</widget>

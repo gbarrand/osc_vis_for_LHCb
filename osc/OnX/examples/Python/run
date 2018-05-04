@@ -1,0 +1,39 @@
+#!/bin/sh -f
+
+if [ $# -eq 0 ] ; then
+  find . -maxdepth 1 -name '*.py' -exec ./run {} \;
+  exit
+fi
+
+exa=$1
+
+if test `uname` = "Darwin" ; then
+  py_exe=pythonw
+fi
+
+if test `uname` = "Linux" ; then
+  py_exe=python
+fi
+
+options=
+if [ ${exa} = "prompt.py" -o ${exa} = "./prompt.py" ] ; then
+  options=-i
+fi
+if [ ${exa} = "prompt_thread.py" -o ${exa} = "./prompt_thread.py" ] ; then
+  options=-i
+fi
+if [ ${exa} = "loop.py" -o ${exa} = "./loop.py" ] ; then
+  options=-i
+fi
+
+#if [ ${exa} = "cube_qt.py" ] ; then
+# FIXME : check OnXQt is here and that Qt-setup sourced.
+#fi
+
+OSC_ARGS="-balance";export OSC_ARGS
+
+echo "${exa}..."
+
+${py_exe} ${options} ${exa}
+
+

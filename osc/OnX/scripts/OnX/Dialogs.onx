@@ -1,0 +1,13 @@
+<OnX>
+  <widget class="FileSelection" name="fileChooser">
+    <title>File selection</title>
+    <show>no</show>
+  </widget>
+  <widget class="ColorSelection" name="colorChooser">
+    <title>Color selection</title>
+    <show>no</show>
+  </widget>
+  <widget class="WarningDialog" name="warningDialog">
+    <show>no</show>
+  </widget>
+</OnX>

@@ -1,0 +1,86 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+. ${ourex_mgr}/build_header
+
+build_pack=plugin_OnXNextStep
+plugin=OnXNextStep
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+if [ ${build_compile} = "yes" ] ; then
+
+ccflags="${ccflags} -I../include"
+
+cppflags="${cppflags} -I${inlib_mgr}/.."
+cppflags="${cppflags} -I${exlib_mgr}/.."
+
+cppflags="${cppflags} -I../include"
+cppflags="${cppflags} -I../../Slash"
+cppflags="${cppflags} -I../../Lib/include"
+
+mmfiles="${mmfiles} ../source/NextStep/NSTools.mm"
+mmfiles="${mmfiles} ../source/NextStep/NSTk.m"
+mmfiles="${mmfiles} ../source/NextStep/NSCyclic.mm"
+mmfiles="${mmfiles} ../source/NextStep/proxy.mm"
+mmfiles="${mmfiles} ../source/NextStep/NS_UI.mm"
+
+# related to Inventor NextStep :
+mmfiles="${mmfiles} ../source/NextStep/NSSoExaminerViewer.mm"
+mmfiles="${mmfiles} ../source/NextStep/NSPageViewer.mm"
+
+# plugin :
+mmfiles="${mmfiles} ../source/NextStep/LoadNextStep.mm"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+libs="${libs} -L${build_path} -lOnXCore -lOnXInventor"
+libs="${libs} -L../../Lib/mgr/${build_dir} -lLibUtils"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+use_CoinNextStep=yes
+use_HEPVis=yes
+use_CoinGL=yes
+use_expat=yes
+use_GL=yes
+use_Cocoa=yes
+use_png=yes
+use_jpeg=yes
+use_freetype=yes
+use_zlib=yes
+
+. ${exlib_mgr}/use_CoinNextStep
+. ${exlib_mgr}/use_HEPVis
+. ${exlib_mgr}/use_CoinGL
+. ${exlib_mgr}/use_expat
+. ${exlib_mgr}/use_GL
+. ${exlib_mgr}/use_Cocoa
+. ${exlib_mgr}/use_png
+. ${exlib_mgr}/use_jpeg
+. ${exlib_mgr}/use_freetype
+. ${exlib_mgr}/use_zlib
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+. ${inlib_mgr}/build_compile
+
+fi # end build_compile
+ 
+if [ ${build_plugin} = "yes" ] ; then . ${inlib_mgr}/build_plugin; fi
+
+. ${inlib_mgr}/build_clean

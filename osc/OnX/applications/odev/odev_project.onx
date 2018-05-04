@@ -1,0 +1,19 @@
+<OnX>
+
+  <widget class="InputDialog" name="odev_project">
+    <label>Project</label>
+    <input name="project" label="Project" type="combo" items="osc_vis\nosc_batch" />
+    <input name="version" label="Version" type="combo" items="16.11" />
+    <input name="home" label="Home" type="combo" items="/Users/barrand/dev/OpenScientist/head dev\nC:\barrand\dev\OpenScientist\head dev" />
+
+    <ok exec="DLD">OnX set_variable odev_project @[odev_project_input_project.value]@</ok>
+    <ok exec="DLD">OnX set_variable odev_version @[odev_project_input_version.value]@</ok>
+    <ok exec="DLD">OnX set_variable odev_home @[odev_project_input_home.value]@</ok>
+    <ok exec="DLD">OnX dld_exec_text @{odev_open}@</ok>
+
+<!--
+    <help file="$ONXROOT/scripts/Help/InputProject.help"/>
+-->
+  </widget>
+
+</OnX>

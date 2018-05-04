@@ -1,0 +1,26 @@
+<OnX>
+
+  <widget class="Window">
+    <geometry>400x400</geometry>
+    <title>mire</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>60</sizeOfFixed>
+
+      <widget class="PageViewer" name="Viewer">
+        <create exec="DLD">OnX ui_set_current_widget @this@</create>
+        <create exec="DLD">OnX page_set_title @this@ OnX</create>
+        <create exec="DLD">OnX page_title_visible @this@ false</create>
+        <create exec="DLD">OnX page_create_regions @this@ SoDisplayRegion 1 1 0</create>
+      </widget>
+
+      <widget class="PushButton">
+        <label>Quit</label>
+        <activate exec="DLD">OnX ui_exit</activate>
+      </widget>
+    </widget>
+  </widget>
+</OnX>

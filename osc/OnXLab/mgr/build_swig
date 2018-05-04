@@ -1,0 +1,40 @@
+#!/bin/sh -f
+#
+#  To produce wrappers using SWIG.
+#
+
+exlib_mgr=../../../inexlib/exlib/mgr
+inlib_mgr="${exlib_mgr}/../../inlib/mgr"
+ourex_mgr="${exlib_mgr}/../../ourex/mgr"
+
+use_swig=yes
+. ${exlib_mgr}/use_swig
+
+if [ ! -x ${swig_exe} ] ; then
+  echo "swig program not found."
+  exit
+fi
+
+pivy_home="${ourex_mgr}/../pivy"
+
+incs=
+incs="${incs} -I${pivy_home} -I${pivy_home}/fake_headers"
+incs="${incs} -I${pivy_home}/interfaces"
+
+incs="${incs} -I../../AIDA/v3r2p1"
+incs="${incs} -I../../Slash"
+incs="${incs} -I../../OnX/include"
+incs="${incs} -I../../OnX/source/SWIG"
+
+incs="${incs} -I../source/SWIG"
+
+flags="-includeall -modern -D__PIVY__"
+flags="${flags} -w302,306,307,312,389,361,362,467,503,509,510"
+flags="${flags} -fcompact"
+
+out_file=../source/Python/OnXLab_SWIG_Python.ic
+eval ${swig_exe} -interface OnXLab_SWIG_Python -python -c++ ${flags} ${incs} -o ${out_file} ../source/SWIG/OnXLab_SWIG.i
+/bin/mv ../source/Python/OnXLab.py ../scripts/Python/.
+
+sed -e 's#PyErr_Format(PyExc_RuntimeError, mesg)#PyErr_Format(PyExc_RuntimeError, "%s",mesg)#g' ${out_file} > tmp;mv tmp ${out_file}
+

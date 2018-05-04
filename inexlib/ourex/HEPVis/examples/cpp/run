@@ -1,0 +1,42 @@
+#!/bin/sh -f
+
+if [ "${OSC_HOME_DIR}" = "" ] ; then
+  echo "OSC_HOME_DIR not defined."
+  echo "You have to source setup osc."
+  exit
+fi
+
+if [ $# -eq 0 ] ; then
+  find . -maxdepth 1 -name 'iv*' -exec ./run {} \;
+  exit
+fi
+
+exa=$1
+
+TTFPATH="${OSC_HOME_DIR}/Resources/HEPVis/fonts"
+export TTFPATH
+
+if [ `echo ${exa} | sed -e 's:.app/Contents::g'` != ${exa} ] ; then
+  # exe within a .app
+  exit
+fi
+
+if [ `echo ${exa} | sed -e 's:.app::g'` != ${exa} ] ; then
+  unset OSC_HOME_DIR
+  unset DYLD_LIBRARY_PATH
+  echo "open ${exa}..."
+  open -W ${exa}
+  exit
+fi
+
+if [ `uname` = Linux ] ; then
+  # ubuntu : CoinGL dynamicly loads the /usr/lib/libfreetype.so
+  #          and then a mess with libosc_freetype.so
+  #          which is probably of a different version.
+  COIN_FREETYPE2_LIBNAME="libosc_freetype2.so"
+  export COIN_FREETYPE2_LIBNAME
+fi
+
+echo "run ${exa}..."
+
+${exa}

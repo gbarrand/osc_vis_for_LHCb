@@ -1,0 +1,65 @@
+<!-- WARNING : Darwin : this file must not be loaded with the
+               osc-gui-viewer.app because of the Run callback. -->
+
+<OnX>
+  <create exec="DLD">OnX OnX_Initialize</create>
+
+  <widget class="Window">
+    <geometry>300x300+0+0</geometry>
+    <title>OnX/New package</title>
+    <destroy exec="DLD">OnX ui_exit</destroy>
+    <widget class="MenuBar">
+      <widget class="CascadeButton">
+        <label>File</label>
+        <widget class="Menu">
+          <widget class="MenuItem">
+            <label>Exit</label>
+            <activate exec="DLD">OnX ui_exit</activate>
+          </widget>
+        </widget>
+      </widget>
+    </widget>
+    <widget class="VBox">
+      <expand>second</expand>
+      <sizeOfFixed>150</sizeOfFixed>
+      <widget class="VContainer">
+        <widget class="Entry" name="entry">
+          <value>MyOnXPackage</value>
+        </widget>
+        <widget class="ComboBox" name="which">
+          <default>$ONXROOT/templates/OnXTemplateOne</default>
+          <items>$ONXROOT/templates/OnXTemplateOne\n$ONXROOT/templates/OnXTemplateTwo\n$ONXROOT/templates/OnXTemplateThree\n$ONXROOT/templates/OnXTemplateFour\n$ONXROOT/templates/OnXTemplateFive\n$ONXROOT/templates/OnXTemplateSix</items>
+        </widget>
+        <widget class="PushButton">
+          <label>Create</label>
+          <activate exec="DLD">OnX sys_rmdir @[entry.value]@</activate>
+          <activate exec="DLD">OnX lib_clone @[which.value]@ @[entry.value]@</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Build</label>
+          <activate exec="DLD">OnX set_variable dos_and &amp; @cat@ &amp;</activate>
+          <variable name="os_build">
+            Linux\nOnX sys_execute cd @[entry.value]@ @cat@ /v1r0/build;sh ./build\n
+            Darwin\nOnX sys_execute cd @[entry.value]@ @cat@ /v1r0/build;sh ./build\n
+            Windows_NT\nOnX sys_execute CD @[entry.value]@ @cat@ \v1r0\build @{dos_and}@ CALL build.bat\n
+          </variable>
+          <activate exec="DLD">OnX set_variable tmp @os@</activate>
+          <activate exec="DLD">OnX ui_execute_script DLD @next@{tmp}@{os_build}@strip_key@</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Run</label>
+          <variable name="os_run">
+            Linux\nOnX sys_execute cd @[entry.value]@ @cat@ /v1r0/build; if test -e setup.sh ; then . ./setup.sh ; fi ; osc-gui-viewer ../scripts/OnX/main.onx\n
+            Darwin\nOnX sys_execute cd @[entry.value]@ @cat@ /v1r0/build; if test -e setup.sh ; then . ./setup.sh ; fi ; osc-gui-viewer ../scripts/OnX/main.onx\n
+            Windows_NT\nOnX sys_execute CD @[entry.value]@ @cat@ \v1r0\build @{dos_and}@ IF EXIST setup.bat ( CALL setup.bat @{dos_and}@ osc-gui-viewer ..\scripts\OnX\main.onx ) ELSE ( osc-gui-viewer ..\scripts\OnX\main.onx )\n
+          </variable>    
+          <activate exec="DLD">OnX set_variable tmp @os@</activate>
+          <activate exec="DLD">OnX ui_execute_script DLD @next@{tmp}@{os_run}@strip_key@</activate>
+        </widget>
+      </widget>
+      <widget class="ScrolledText" name="consoleText"/>
+    </widget>
+  
+  </widget>
+  
+</OnX>

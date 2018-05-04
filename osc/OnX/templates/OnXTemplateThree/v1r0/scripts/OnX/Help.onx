@@ -1,0 +1,15 @@
+<widget class="CascadeButton">
+  <label>Help</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>OnXTemplateThree</label>
+<!--
+      <activate exec="DLD">OnX ui_help_file </activate>
+      aUI.setParameter("OnX_HelpWindow_text.value",aString);
+-->
+      <activate exec="DLD">OnX ui_load @empty@ $ONXROOT/scripts/OnX/HelpWindow.onx</activate>
+      <activate exec="DLD">OnX ui_set_parameter OnX_HelpWindow_text.value @file@../scripts/Help/OnXTemplateThree.help@</activate>
+      <activate exec="DLD">OnX ui_show OnX_HelpWindow_window</activate>
+    </widget>
+  </widget>
+</widget>

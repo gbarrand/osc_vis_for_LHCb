@@ -1,0 +1,89 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+. ${ourex_mgr}/build_header
+
+build_pack=Rio
+
+if [ ${build_compile} = "yes" ] ; then
+
+ccflags="${ccflags} -I.."
+ccflags="${ccflags} -I../Rio/zip"
+
+cppflags="${cppflags} -I.."
+
+# zip :
+cfiles="${cfiles} ../source/zip/deflate.c"
+cfiles="${cfiles} ../source/zip/inflate.c"
+cfiles="${cfiles} ../source/zip/Trees.c"
+cfiles="${cfiles} ../source/zip/ZDeflate.c"
+cfiles="${cfiles} ../source/zip/ZInflate.c"
+cfiles="${cfiles} ../source/zip/adler32.c"
+cfiles="${cfiles} ../source/zip/compress.c"
+cfiles="${cfiles} ../source/zip/crc32.c"
+cfiles="${cfiles} ../source/zip/gzio.c"
+cfiles="${cfiles} ../source/zip/infback.c"
+cfiles="${cfiles} ../source/zip/inffast.c"
+cfiles="${cfiles} ../source/zip/inftrees.c"
+cfiles="${cfiles} ../source/zip/uncompr.c"
+cfiles="${cfiles} ../source/zip/zutil.c"
+
+# Core :
+cxxfiles="${cxxfiles} ../source/Core/smanip.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Debug.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Lib.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Printer.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Date.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Args.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Map.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Buffer.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Key.cxx"
+cxxfiles="${cxxfiles} ../source/Core/FreeSegment.cxx"
+
+# RIO_META :
+cxxfiles="${cxxfiles} ../source/Core/Object.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Named.cxx"
+cxxfiles="${cxxfiles} ../source/Core/List.cxx"
+cxxfiles="${cxxfiles} ../source/Core/ObjArray.cxx"
+cxxfiles="${cxxfiles} ../source/Core/StreamerElement.cxx"
+cxxfiles="${cxxfiles} ../source/Core/StreamerInfo.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Directory.cxx"
+cxxfiles="${cxxfiles} ../source/Core/File.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Array.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Arrays.cxx"
+cxxfiles="${cxxfiles} ../source/Core/CoreDictionary.cxx"
+
+# Graf :
+cxxfiles="${cxxfiles} ../source/Graf/AttLine.cxx"
+cxxfiles="${cxxfiles} ../source/Graf/AttFill.cxx"
+cxxfiles="${cxxfiles} ../source/Graf/AttMarker.cxx"
+cxxfiles="${cxxfiles} ../source/Graf/GrafDictionary.cxx"
+
+# Tree :
+cxxfiles="${cxxfiles} ../source/Tree/BaseLeaf.cxx"
+cxxfiles="${cxxfiles} ../source/Tree/Leaf.cxx"
+cxxfiles="${cxxfiles} ../source/Tree/LeafObject.cxx"
+cxxfiles="${cxxfiles} ../source/Tree/LeafString.cxx"
+cxxfiles="${cxxfiles} ../source/Tree/LeafElement.cxx"
+cxxfiles="${cxxfiles} ../source/Tree/Basket.cxx"
+cxxfiles="${cxxfiles} ../source/Tree/Branch.cxx"
+cxxfiles="${cxxfiles} ../source/Tree/BranchObject.cxx"
+cxxfiles="${cxxfiles} ../source/Tree/BranchElement.cxx"
+cxxfiles="${cxxfiles} ../source/Tree/Tree.cxx"
+cxxfiles="${cxxfiles} ../source/Tree/TreeDictionary.cxx"
+
+libname=libosc_Rio
+
+. ${inlib_mgr}/build_compile
+
+fi # end build_compile
+ 
+if [ ${build_archive} = "yes" ] ; then . ${inlib_mgr}/build_archive; fi
+
+. ${inlib_mgr}/build_clean

@@ -1,0 +1,17 @@
+<widget class="CascadeButton">
+  <label>Monitor</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Panel 1</label>
+      <activate exec="DLD">OnXLab OnXLab_Monitoring_Cyclic_Panel_1</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Panel 2</label>
+      <activate exec="DLD">OnXLab OnXLab_Monitoring_Cyclic_Panel_2</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Stop timer</label>
+      <activate exec="DLD">OnXLab OnXLab_Monitoring_Cyclic_stop</activate>
+    </widget>
+  </widget>
+</widget>

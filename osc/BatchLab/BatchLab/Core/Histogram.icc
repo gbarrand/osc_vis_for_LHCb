@@ -1,0 +1,2380 @@
+
+#include <inlib/vmanip>
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Axis::isFixedBinning() const {return fAxis.is_fixed_binning();}
+
+inline
+double BatchLab::Axis::lowerEdge() const {return fAxis.lower_edge();}
+
+inline
+double BatchLab::Axis::upperEdge() const {return fAxis.upper_edge();}
+
+inline
+int BatchLab::Axis::bins() const {return fAxis.bins();}
+
+inline
+double BatchLab::Axis::binLowerEdge(int aIndex) const {
+  return fAxis.bin_lower_edge(aIndex);}
+
+inline
+double BatchLab::Axis::binUpperEdge(int aIndex) const {
+  return fAxis.bin_upper_edge(aIndex);}
+
+inline
+double BatchLab::Axis::binWidth(int aIndex) const {
+  return fAxis.bin_width(aIndex);}
+
+inline
+double BatchLab::Axis::binCenter(int aIndex) const {
+  return fAxis.bin_center(aIndex);
+}
+
+inline
+int BatchLab::Axis::coordToIndex(double aCoord) const {
+  return fAxis.coord_to_index(aCoord);
+}
+
+inline
+BatchLab::Axis::Axis(){}
+
+inline
+BatchLab::Axis::Axis(const Axis& aFrom)
+:AIDA::IAxis(aFrom)
+,Slash::Store::IStorable(aFrom)
+,fAxis(aFrom.fAxis){}
+
+inline
+BatchLab::Axis::~Axis(){}
+
+inline
+void BatchLab::Axis::copy(const inlib::histo::axis<double>& aAxis){ fAxis = aAxis;}
+
+inline
+const inlib::histo::axis<double>& BatchLab::Axis::bareAxis() const { return fAxis;}
+
+inline
+void* BatchLab::Axis::cast(const std::string& a_class) const {
+  INLIB_IF_CAST(AIDA::IAxis)
+  else INLIB_IF_CAST(Slash::Store::IStorable)
+  else INLIB_IF_CAST(BatchLab::Axis)
+  else return 0;
+}
+
+inline
+bool BatchLab::Axis::visit(Slash::Store::IConstVisitor& aVisitor) const {
+  SLASH_STORE_BEGIN(BatchLab::Axis)
+
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+
+  if(!aVisitor.visit("fOffset",fAxis.m_offset)) return false;
+  if(!aVisitor.visit("fNumberOfBins",(int)fAxis.m_number_of_bins)) return false;
+  if(!aVisitor.visit("fMinimumValue",fAxis.m_minimum_value)) return false;
+  if(!aVisitor.visit("fMaximumValue",fAxis.m_maximum_value)) return false;
+  if(!aVisitor.visit("fFixed",fAxis.m_fixed)) return false;
+  if(!aVisitor.visit("fBinWidth",fAxis.m_bin_width)) return false;
+  if(!aVisitor.visit("fEdges",fAxis.m_edges)) return false;
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::Axis::read(Slash::Store::IVisitor& aVisitor) {
+  if(!aVisitor.begin(*this)) return false;
+
+  int version;
+  if(!aVisitor.visit(version)) return false;
+
+  if(!aVisitor.visit(fAxis.m_offset)) return false;
+
+ {int nbin;
+  if(!aVisitor.visit(nbin)) return false;
+  fAxis.m_number_of_bins = nbin;}
+
+  if(!aVisitor.visit(fAxis.m_minimum_value)) return false;
+  if(!aVisitor.visit(fAxis.m_maximum_value)) return false;
+  if(!aVisitor.visit(fAxis.m_fixed)) return false;
+  if(!aVisitor.visit(fAxis.m_bin_width)) return false;
+  if(!aVisitor.visit(fAxis.m_edges)) return false;
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+namespace BatchLab {
+typedef inlib::histo::histo_data<double,unsigned int,double> hd_data;
+
+inline bool visitHistogram(const hd_data& aData,Slash::Store::IConstVisitor& aVisitor){
+  if(!aVisitor.visit("fTitle",aData.m_title)) return false;
+  if(!aVisitor.visit("fDimension",(int)aData.m_dimension)) return false;
+  if(!aVisitor.visit("fBinNumber",(int)aData.m_bin_number)) return false;
+
+  if(!aVisitor.visit("fBinEntries",
+    inlib::convert<unsigned int,int>(aData.m_bin_entries))) return false;
+
+  if(!aVisitor.visit("fBinSw",aData.m_bin_Sw)) return false;
+  if(!aVisitor.visit("fBinSw2",aData.m_bin_Sw2)) return false;
+  if(!aVisitor.visit("fBinSxw",aData.m_bin_Sxw)) return false;
+  if(!aVisitor.visit("fBinSx2w",aData.m_bin_Sx2w)) return false;
+  for(unsigned int iaxis=0;iaxis<aData.m_dimension;iaxis++) {
+    std::string name = "fAxes_" + inlib::to<int>(iaxis);   
+    BatchLab::Axis axis;
+    axis.copy(aData.m_axes[iaxis]);
+    if(!aVisitor.visit(name,axis)) return false;
+  }
+ {int dummy = 0;
+  if(!aVisitor.visit("fMode",dummy)) return false;} //m_mode
+  if(!aVisitor.visit("fProfile",false)) return false;
+  std::vector<double> dummy;
+  if(!aVisitor.visit("fBinSvw",dummy)) return false;
+  if(!aVisitor.visit("fBinSv2w",dummy)) return false;
+  if(!aVisitor.visit("fCutV",false)) return false;
+  if(!aVisitor.visit("fMinV",0)) return false;
+  if(!aVisitor.visit("fMaxV",0)) return false;
+  // Not written :
+  //aData.fDoubles
+  //aData.fInts
+  return true;
+}
+
+inline bool readHistogram(hd_data& aData,Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.visit(aData.m_title)) return false;
+ {int dim;
+  if(!aVisitor.visit(dim)) return false;
+  aData.m_dimension = dim;}
+
+ {int nbin;
+  if(!aVisitor.visit(nbin)) return false;
+  aData.m_bin_number = nbin;}
+
+ {std::vector<int> vec;
+  if(!aVisitor.visit(vec)) return false;
+  aData.m_bin_entries = inlib::convert<int,unsigned int>(vec);}
+
+  if(!aVisitor.visit(aData.m_bin_Sw)) return false;
+  if(!aVisitor.visit(aData.m_bin_Sw2)) return false;
+  if(!aVisitor.visit(aData.m_bin_Sxw)) return false;
+  if(!aVisitor.visit(aData.m_bin_Sx2w)) return false;
+  aData.m_axes.clear();
+  for(unsigned int iaxis=0;iaxis<aData.m_dimension;iaxis++) {
+    BatchLab::Axis baxis;
+    if(!baxis.read(aVisitor)) return false;
+    aData.m_axes.push_back(baxis.bareAxis());
+  }
+ {int dummy;
+  if(!aVisitor.visit(dummy)) return false;} //m_mode
+
+ {bool dummy;
+  if(!aVisitor.visit(dummy)) return false;} //m_is_profile
+
+ {std::vector<double> dummy;
+  if(!aVisitor.visit(dummy)) return false;} //m_bin_Svw
+
+ {std::vector<double> dummy;
+  if(!aVisitor.visit(dummy)) return false;} //m_bin_Sv2w
+
+ {bool dummy;
+  if(!aVisitor.visit(dummy)) return false;} //m_cut_v
+
+ {double dummy;
+  if(!aVisitor.visit(dummy)) return false;} //aData.m_min_v
+
+ {double dummy;
+  if(!aVisitor.visit(dummy)) return false;} //aData.m_max_v
+
+  //aData.fDoubles
+  //aData.fInts
+  //aData.m_coords.resize(aData.m_dimension,0);
+  //aData.m_ints.resize(aData.m_dimension,0);
+
+  return true;
+}
+
+typedef inlib::histo::profile_data<double,unsigned int,double,double> pd_data;
+inline bool visitProfile(const pd_data& aData,Slash::Store::IConstVisitor& aVisitor){
+  if(!aVisitor.visit("fTitle",aData.m_title)) return false;
+  if(!aVisitor.visit("fDimension",(int)aData.m_dimension)) return false;
+  if(!aVisitor.visit("fBinNumber",(int)aData.m_bin_number)) return false;
+
+  if(!aVisitor.visit("fBinEntries",
+    inlib::convert<unsigned int,int>(aData.m_bin_entries))) return false;
+
+  if(!aVisitor.visit("fBinSw",aData.m_bin_Sw)) return false;
+  if(!aVisitor.visit("fBinSw2",aData.m_bin_Sw2)) return false;
+  if(!aVisitor.visit("fBinSxw",aData.m_bin_Sxw)) return false;
+  if(!aVisitor.visit("fBinSx2w",aData.m_bin_Sx2w)) return false;
+  for(unsigned int iaxis=0;iaxis<aData.m_dimension;iaxis++) {
+    std::string name = "fAxes_" + inlib::to<int>(iaxis);   
+    BatchLab::Axis axis;
+    axis.copy(aData.m_axes[iaxis]);
+    if(!aVisitor.visit(name,axis)) return false;
+  }
+ {int dummy = 0;
+  if(!aVisitor.visit("fMode",dummy)) return false;} //m_mode
+  if(!aVisitor.visit("fProfile",true)) return false;
+  if(!aVisitor.visit("fBinSvw",aData.m_bin_Svw)) return false;
+  if(!aVisitor.visit("fBinSv2w",aData.m_bin_Sv2w)) return false;
+  if(!aVisitor.visit("fCutV",aData.m_cut_v)) return false;
+  if(!aVisitor.visit("fMinV",aData.m_min_v)) return false;
+  if(!aVisitor.visit("fMaxV",aData.m_max_v)) return false;
+  // Not written :
+  //aData.fDoubles
+  //aData.fInts
+  return true;
+}
+
+inline bool readProfile(pd_data& aData,Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.visit(aData.m_title)) return false;
+
+ {int dim;
+  if(!aVisitor.visit(dim)) return false;
+  aData.m_dimension = dim;}
+
+ {int nbin;
+  if(!aVisitor.visit(nbin)) return false;
+  aData.m_bin_number = nbin;}
+
+ {std::vector<int> vec;
+  if(!aVisitor.visit(vec)) return false;
+  aData.m_bin_entries = inlib::convert<int,unsigned int>(vec);}
+
+  if(!aVisitor.visit(aData.m_bin_Sw)) return false;
+  if(!aVisitor.visit(aData.m_bin_Sw2)) return false;
+  if(!aVisitor.visit(aData.m_bin_Sxw)) return false;
+  if(!aVisitor.visit(aData.m_bin_Sx2w)) return false;
+  aData.m_axes.clear();
+  for(unsigned int iaxis=0;iaxis<aData.m_dimension;iaxis++) {
+    BatchLab::Axis baxis;
+    if(!baxis.read(aVisitor)) return false;
+    aData.m_axes.push_back(baxis.bareAxis());
+  }
+ {int dummy;
+  if(!aVisitor.visit(dummy)) return false;} //m_mode
+  if(!aVisitor.visit(aData.m_is_profile)) return false;
+  if(!aVisitor.visit(aData.m_bin_Svw)) return false;
+  if(!aVisitor.visit(aData.m_bin_Sv2w)) return false;
+  if(!aVisitor.visit(aData.m_cut_v)) return false;
+  if(!aVisitor.visit(aData.m_min_v)) return false;
+  if(!aVisitor.visit(aData.m_max_v)) return false;
+
+  // Not written :
+  //aData.fDoubles
+  //aData.fInts
+  //aData.m_coords.resize(aData.m_dimension,0);
+  //aData.m_ints.resize(aData.m_dimension,0);
+
+  return true;
+}
+} //namespace BatchLab.
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+BatchLab::BaseHistogram::BaseHistogram(std::ostream& a_out,const std::string& aName)
+:BaseObject(a_out,aName)
+{}
+
+inline
+BatchLab::BaseHistogram::BaseHistogram(const BaseHistogram& aFrom)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,Slash::Store::IStorable(aFrom)
+,BaseObject(aFrom)
+,fAnnotation(aFrom.fAnnotation)
+{}
+
+inline
+BatchLab::BaseHistogram::~BaseHistogram(){}
+
+inline
+void* BatchLab::BaseHistogram::cast(const std::string& a_class) const {
+  INLIB_IF_CAST(Slash::Store::IStorable)
+  else INLIB_IF_CAST(BatchLab::BaseHistogram)
+  else return BaseObject::cast(a_class);
+}
+
+inline
+BatchLab::Annotation& BatchLab::BaseHistogram::getAnnotation() {return fAnnotation;}
+
+inline
+const BatchLab::Annotation& BatchLab::BaseHistogram::getAnnotation() const {return fAnnotation;}
+
+inline
+void BatchLab::BaseHistogram::setAnnotation(const BatchLab::Annotation& aFrom){fAnnotation = aFrom;}
+
+inline
+bool BatchLab::BaseHistogram::visit(Slash::Store::IConstVisitor& aVisitor) const {
+  SLASH_STORE_BEGIN(BatchLab::BaseHistogram)
+
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+
+  if(!aVisitor.visit("fAnnotation",fAnnotation)) return false;
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::BaseHistogram::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+
+  int version;
+  if(!aVisitor.visit(version)) return false;
+
+  if(!fAnnotation.read(aVisitor)) return false;
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+// Empty cstor used by IO readers.
+inline
+BatchLab::Histogram1D::Histogram1D(std::ostream& a_out,const std::string& aName)
+:BaseHistogram(a_out,aName)
+,fHistogram("",10,0,1)
+{}
+
+inline
+BatchLab::Histogram1D::Histogram1D(std::ostream& a_out,const std::string& aName,const inlib::histo::h1d& aHCL)
+:BaseHistogram(a_out,aName)
+,fHistogram("",10,0,1)
+{
+  fHistogram = aHCL;
+  fAxis.copy(fHistogram.get_axis(0));
+  fAnnotation.setValue("Title",fHistogram.title());
+}
+
+inline
+BatchLab::Histogram1D::Histogram1D(std::ostream& a_out,const std::string& aName,const std::string& aTitle,int aXnumber,double aXmin,double aXmax)
+:BaseHistogram(a_out,aName)
+,fHistogram(aTitle,aXnumber,aXmin,aXmax)
+{
+  fAxis.copy(fHistogram.get_axis(0));
+  fAnnotation.setValue("Title",aTitle);
+}
+
+inline
+BatchLab::Histogram1D::Histogram1D(std::ostream& a_out,const std::string& aName,const std::string& aTitle,const std::vector<double>& aEdges)
+:BaseHistogram(a_out,aName)
+,fHistogram(aTitle,aEdges)
+{
+  fAxis.copy(fHistogram.get_axis(0));
+  fAnnotation.setValue("Title",aTitle);
+}
+
+//aFrom lock/unlock ?
+
+inline
+BatchLab::Histogram1D::Histogram1D(const Histogram1D& aFrom)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,Slash::Store::IStorable(aFrom)
+,AIDA::IBaseHistogram(aFrom)
+,AIDA::IHistogram(aFrom)
+,AIDA::IHistogram1D(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseHistogram(aFrom)
+,fHistogram(aFrom.fHistogram)
+,fAxis(aFrom.fAxis)
+{}
+
+inline
+BatchLab::Histogram1D::~Histogram1D(){}
+
+inline
+std::string BatchLab::Histogram1D::storeClassName() const {
+  return "BatchLab::Histogram1D";
+}
+
+inline
+std::string BatchLab::Histogram1D::type() const { 
+  return "AIDA::IHistogram1D";
+}
+
+inline
+void* BatchLab::Histogram1D::cast(const std::string& a_class) const {
+  INLIB_IF_CAST(AIDA::IHistogram1D)
+  else INLIB_IF_CAST(AIDA::IHistogram)
+  else INLIB_IF_CAST(AIDA::IBaseHistogram)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else INLIB_IF_CAST(BatchLab::Histogram1D)
+  else return BaseHistogram::cast(a_class);
+}
+
+inline
+bool BatchLab::Histogram1D::isValid() const {return fHistogram.is_valid();}
+
+inline
+bool BatchLab::Histogram1D::visit(Slash::Store::IConstVisitor& aVisitor) const {
+  SLASH_STORE_BEGIN(BatchLab::Histogram1D)
+
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+
+  if(!BaseHistogram::visit(aVisitor)) return false;
+
+  if(!visitHistogram(fHistogram.get_histo_data(),aVisitor)) return false;
+
+  //if(!aVisitor.visit("fAxis",fAxis)) return false;
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::Histogram1D::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+
+  int version;
+  if(!aVisitor.visit(version)) return false;
+
+  if(!BaseHistogram::read(aVisitor)) return false;
+
+  hd_data hdata;
+  if(!readHistogram(hdata,aVisitor)) return false;
+  fHistogram.copy_from_data(hdata);
+
+  fAxis.copy(fHistogram.get_axis(0));
+
+  if(!aVisitor.end(*this)) return false;
+
+  fHistogram.update_fast_getters();
+
+  return true;
+}
+
+inline
+const inlib::histo::h1d& BatchLab::Histogram1D::hclHistogram() const {return fHistogram;}
+
+inline
+int BatchLab::Histogram1D::dimension() const {return fHistogram.dimension();}
+
+inline
+AIDA::IAnnotation& BatchLab::Histogram1D::annotation() {return fAnnotation;}
+
+inline
+const AIDA::IAnnotation& BatchLab::Histogram1D::annotation() const {return fAnnotation;}
+
+inline
+const AIDA::IAxis& BatchLab::Histogram1D::axis() const {return fAxis;}
+
+inline
+int BatchLab::Histogram1D::coordToIndex(double aCoord) const {return fHistogram.coord_to_index(aCoord);}
+
+//////////////////////////////////////////////////////////////////////////////
+/// lock/unlocked ins ////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+Slash::Store::IObject* BatchLab::Histogram1D::copy() const {
+  lock();
+  Slash::Store::IObject* obj = new BatchLab::Histogram1D(*this);
+  unlock();
+  return obj;
+}
+
+inline
+bool BatchLab::Histogram1D::fill(double aX,double aWeight) {
+  lock();  
+  bool status = fHistogram.fill(aX,aWeight);
+  unlock();  
+  if(status) emitUpdate();
+  return status;
+}
+
+inline
+bool BatchLab::Histogram1D::setTitle(const std::string& aTitle) {
+  lock();
+  fAnnotation.setValue("Title",aTitle);
+  bool stat = fHistogram.set_title(aTitle);
+  unlock();
+  return stat;
+}
+
+inline
+bool BatchLab::Histogram1D::add(const AIDA::IHistogram1D& aHisto) {
+  const BatchLab::Histogram1D* batchlabHisto = 
+    INLIB_CONST_CAST(aHisto,BatchLab::Histogram1D);
+  if(!batchlabHisto) return false;
+  lock();
+  fHistogram.add(batchlabHisto->hclHistogram());
+  unlock();
+  return true;
+}
+
+inline
+bool BatchLab::Histogram1D::reset() {
+  lock();
+  bool val = fHistogram.reset();
+  unlock();
+  return val;
+}
+
+inline
+bool BatchLab::Histogram1D::scale(double aScale) {
+  lock();
+  bool val = fHistogram.scale(aScale);
+  unlock();
+  return val;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/// lock/unlocked outs ///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+int BatchLab::Histogram1D::nanEntries() const { return 0;} //FIXME
+
+inline
+std::string BatchLab::Histogram1D::title() const {
+  lock();
+  std::string val = fHistogram.title();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram1D::entries() const {
+  lock();
+  unsigned int val = fHistogram.entries();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram1D::allEntries() const {
+  lock();
+  unsigned int val = fHistogram.all_entries();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram1D::extraEntries() const {
+  lock();
+  unsigned int val = fHistogram.extra_entries();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram1D::equivalentBinEntries() const {
+  lock();
+  double val = fHistogram.equivalent_bin_entries();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram1D::sumBinHeights() const {
+  lock();
+  double val = fHistogram.sum_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram1D::sumAllBinHeights() const {
+  lock();
+  double val = fHistogram.sum_all_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram1D::sumExtraBinHeights() const {
+  lock();
+  double val = fHistogram.sum_extra_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram1D::minBinHeight() const {
+  lock();
+  double val = fHistogram.min_bin_height();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram1D::maxBinHeight() const {
+  lock();
+  double val = fHistogram.max_bin_height();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram1D::mean() const {
+  lock();
+  double val = fHistogram.mean();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram1D::rms() const {
+  lock();
+  double val = fHistogram.rms();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram1D::binMean(int aIndex) const {
+  lock();
+  double val = fHistogram.bin_mean(aIndex);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram1D::binStdDev(int aIndex) const {
+  lock();
+  double val = fHistogram.bin_rms(aIndex);
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram1D::binEntries(int aIndex) const {
+  lock();
+  unsigned int val = fHistogram.bin_entries(aIndex);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram1D::binHeight(int aIndex) const {
+  lock();
+  double val = fHistogram.bin_height(aIndex);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram1D::binError(int aIndex) const {
+  lock();
+  double val = fHistogram.bin_error(aIndex);
+  unlock();
+  return val;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+// Empty cstor used by IO readers.
+inline
+BatchLab::Profile1D::Profile1D(std::ostream& a_out,const std::string& aName)
+:BaseHistogram(a_out,aName)
+,fHistogram("",10,0,1)
+{}
+
+inline
+BatchLab::Profile1D::Profile1D(std::ostream& a_out,const std::string& aName,const inlib::histo::p1d& aHCL)
+:BaseHistogram(a_out,aName)
+,fHistogram("",10,0,1)
+{
+  fHistogram = aHCL;
+  fAxis.copy(fHistogram.get_axis(0));
+  fAnnotation.setValue("Title",fHistogram.title());
+}
+
+inline
+BatchLab::Profile1D::Profile1D(std::ostream& a_out,const std::string& aName,const std::string& aTitle
+,int aXnumber,double aXmin,double aXmax)
+:BaseHistogram(a_out,aName)
+,fHistogram(aTitle,aXnumber,aXmin,aXmax)
+{
+  fAxis.copy(fHistogram.get_axis(0));
+  fAnnotation.setValue("Title",aTitle);
+}
+
+inline
+BatchLab::Profile1D::Profile1D(std::ostream& a_out,const std::string& aName,const std::string& aTitle
+,int aXnumber,double aXmin,double aXmax
+,double aVmin,double aVmax)
+:BaseHistogram(a_out,aName)
+,fHistogram(aTitle,aXnumber,aXmin,aXmax,aVmin,aVmax)
+{
+  fAxis.copy(fHistogram.get_axis(0));
+  fAnnotation.setValue("Title",aTitle);
+}
+
+inline
+BatchLab::Profile1D::Profile1D(std::ostream& a_out,const std::string& aName,const std::string& aTitle
+,const std::vector<double>& aEdges)
+:BaseHistogram(a_out,aName)
+,fHistogram(aTitle,aEdges)
+{
+  fAxis.copy(fHistogram.get_axis(0));
+  fAnnotation.setValue("Title",aTitle);
+}
+
+inline
+BatchLab::Profile1D::Profile1D(std::ostream& a_out,const std::string& aName,const std::string& aTitle
+,const std::vector<double>& aEdges
+,double aVmin,double aVmax)
+:BaseHistogram(a_out,aName)
+,fHistogram(aTitle,aEdges,aVmin,aVmax)
+{
+  fAxis.copy(fHistogram.get_axis(0));
+  fAnnotation.setValue("Title",aTitle);
+}
+
+inline
+BatchLab::Profile1D::Profile1D(const Profile1D& aFrom)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,Slash::Store::IStorable(aFrom)
+,AIDA::IBaseHistogram(aFrom)
+,AIDA::IProfile(aFrom)
+,AIDA::IProfile1D(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseHistogram(aFrom)
+,fHistogram(aFrom.fHistogram)
+,fAxis(aFrom.fAxis)
+{}
+
+inline
+BatchLab::Profile1D::~Profile1D(){}
+
+inline
+std::string BatchLab::Profile1D::storeClassName() const {return "BatchLab::Profile1D";}
+
+inline
+std::string BatchLab::Profile1D::type() const {return "AIDA::IProfile1D";}
+
+inline
+void* BatchLab::Profile1D::cast(const std::string& a_class) const {
+  INLIB_IF_CAST(AIDA::IProfile1D)
+  else INLIB_IF_CAST(AIDA::IProfile)
+  else INLIB_IF_CAST(AIDA::IBaseHistogram)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else INLIB_IF_CAST(BatchLab::Profile1D)
+  else return BaseHistogram::cast(a_class);
+}
+
+inline
+bool BatchLab::Profile1D::isValid() const {return fHistogram.is_valid();}
+
+inline
+bool BatchLab::Profile1D::visit(Slash::Store::IConstVisitor& aVisitor) const {
+  SLASH_STORE_BEGIN(BatchLab::Profile1D)
+
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+
+  if(!BaseHistogram::visit(aVisitor)) return false;
+
+  if(!visitProfile(fHistogram.get_histo_data(),aVisitor)) return false;
+
+  //if(!aVisitor.visit("fAxis",fAxis)) return false;
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::Profile1D::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+
+  int version;
+  if(!aVisitor.visit(version)) return false;
+
+  if(!BaseHistogram::read(aVisitor)) return false;
+
+  pd_data hdata;
+  if(!readProfile(hdata,aVisitor)) return false;
+  fHistogram.copy_from_data(hdata);
+
+  fAxis.copy(fHistogram.get_axis(0));
+
+  if(!aVisitor.end(*this)) return false;
+
+  fHistogram.update_fast_getters();
+
+  return true;
+}
+
+inline
+AIDA::IAnnotation& BatchLab::Profile1D::annotation() {return fAnnotation;}
+
+inline
+const AIDA::IAnnotation& BatchLab::Profile1D::annotation() const {return fAnnotation;}
+
+inline
+int BatchLab::Profile1D::dimension() const {return fHistogram.dimension();}
+
+inline
+const AIDA::IAxis& BatchLab::Profile1D::axis() const {return fAxis;}
+
+inline
+int BatchLab::Profile1D::coordToIndex(double aCoord) const {return fHistogram.coord_to_index(aCoord);}
+
+//////////////////////////////////////////////////////////////////////////////
+/// lock/unlocked ins ////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+bool BatchLab::Profile1D::fill(double aX,double aY,double aWeight) {
+  lock();
+  bool status = fHistogram.fill(aX,aY,aWeight);
+  unlock();
+  if(status) emitUpdate();
+  return status;
+}
+
+inline
+Slash::Store::IObject* BatchLab::Profile1D::copy() const {
+  lock();
+  Slash::Store::IObject* obj = new BatchLab::Profile1D(*this);
+  unlock();
+  return obj;
+}
+
+inline
+bool BatchLab::Profile1D::add(const AIDA::IProfile1D& aHisto) {
+  const BatchLab::Profile1D* batchlabHisto = 
+    INLIB_CONST_CAST(aHisto,BatchLab::Profile1D);
+  if(!batchlabHisto) return false;
+  lock();
+  fHistogram.add(batchlabHisto->hclHistogram());
+  unlock();
+  return true;
+}
+
+inline
+bool BatchLab::Profile1D::setTitle(const std::string& aTitle) {
+  lock();
+  fAnnotation.setValue("Title",aTitle);
+  bool stat = fHistogram.set_title(aTitle);
+  unlock();
+  return stat;
+}
+
+inline
+bool BatchLab::Profile1D::reset() {
+  lock();
+  bool val = fHistogram.reset();
+  unlock();
+  return val;
+}
+
+inline
+bool BatchLab::Profile1D::scale(double aScale) {
+  lock();
+  bool val = fHistogram.scale(aScale);
+  unlock();
+  return val;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/// lock/unlocked outs ///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+std::string BatchLab::Profile1D::title() const {
+  lock();
+  std::string val = fHistogram.title();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Profile1D::entries() const {
+  lock();
+  unsigned int val = fHistogram.entries();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Profile1D::nanEntries() const { return 0;} //FIXME
+
+inline
+int BatchLab::Profile1D::allEntries() const {
+  lock();
+  unsigned int val = fHistogram.all_entries();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Profile1D::extraEntries() const {
+  lock();
+  unsigned int val = fHistogram.extra_entries();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile1D::equivalentBinEntries() const {
+  lock();
+  double val = fHistogram.equivalent_bin_entries();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile1D::sumBinHeights() const {
+  lock();
+  double val = fHistogram.sum_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile1D::sumAllBinHeights() const {
+  lock();
+  double val = fHistogram.sum_all_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile1D::sumExtraBinHeights() const {
+  lock();
+  double val = fHistogram.sum_extra_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile1D::minBinHeight() const {
+  lock();
+  double val = fHistogram.min_bin_height();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile1D::maxBinHeight() const {
+  lock();
+  double val = fHistogram.max_bin_height();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile1D::mean() const {
+  lock();
+  double val = fHistogram.mean();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile1D::rms() const {
+  lock();
+  double val = fHistogram.rms();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile1D::binMean(int aIndex) const {
+  lock();
+  double val = fHistogram.bin_mean(aIndex);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile1D::binStdDev(int aIndex) const {
+  lock();
+  double val = fHistogram.bin_rms(aIndex);
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Profile1D::binEntries(int aIndex) const {
+  lock();
+  unsigned int val = fHistogram.bin_entries(aIndex);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile1D::binHeight(int aIndex) const {
+  lock();
+  double val = fHistogram.bin_height(aIndex);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile1D::binError(int aIndex) const {
+  lock();
+  double val = fHistogram.bin_error(aIndex);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile1D::binRms(int aIndex) const {
+  lock();
+  double val = fHistogram.bin_rms_value(aIndex);
+  unlock();
+  return val;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+// Empty constructor used by IO readers.
+inline
+BatchLab::Histogram2D::Histogram2D(std::ostream& a_out,const std::string& aName)
+:BaseHistogram(a_out,aName)
+,fHistogram("",10,0,1,10,0,1)
+{}
+
+inline
+BatchLab::Histogram2D::Histogram2D(std::ostream& a_out,const std::string& aName,const inlib::histo::h2d& aHCL)
+:BaseHistogram(a_out,aName)
+,fHistogram("",10,0,1,10,0,1)
+{
+  fHistogram = aHCL;
+  fAxisX.copy(fHistogram.get_axis(0));
+  fAxisY.copy(fHistogram.get_axis(1));
+  fAnnotation.setValue("Title",fHistogram.title());
+}
+
+inline
+BatchLab::Histogram2D::Histogram2D(std::ostream& a_out,const std::string& aName,const std::string& aTitle
+,int aXnumber,double aXmin,double aXmax
+,int aYnumber,double aYmin,double aYmax
+)
+:BaseHistogram(a_out,aName)
+,fHistogram(aTitle,aXnumber,aXmin,aXmax,aYnumber,aYmin,aYmax)
+{
+  fAxisX.copy(fHistogram.get_axis(0));
+  fAxisY.copy(fHistogram.get_axis(1));
+  fAnnotation.setValue("Title",aTitle);
+}
+
+inline
+BatchLab::Histogram2D::Histogram2D(std::ostream& a_out,const std::string& aName,const std::string& aTitle,const std::vector<double>& aEdgesX,const std::vector<double>& aEdgesY)
+:BaseHistogram(a_out,aName)
+,fHistogram(aTitle,aEdgesX,aEdgesY)
+{
+  fAxisX.copy(fHistogram.get_axis(0));
+  fAxisY.copy(fHistogram.get_axis(1));
+  fAnnotation.setValue("Title",aTitle);
+}
+
+//aFrom lock/unlock ?
+
+inline
+BatchLab::Histogram2D::Histogram2D(const Histogram2D& aFrom)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,Slash::Store::IStorable(aFrom)
+,AIDA::IBaseHistogram(aFrom)
+,AIDA::IHistogram(aFrom)
+,AIDA::IHistogram2D(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseHistogram(aFrom)
+,fHistogram(aFrom.fHistogram)
+,fAxisX(aFrom.fAxisX)
+,fAxisY(aFrom.fAxisY)
+{}
+
+inline
+BatchLab::Histogram2D::~Histogram2D(){}
+
+inline
+Slash::Store::IObject* BatchLab::Histogram2D::copy() const {
+  lock();
+  Slash::Store::IObject* obj = new BatchLab::Histogram2D(*this);
+  unlock();
+  return obj;
+}
+
+inline
+std::string BatchLab::Histogram2D::storeClassName() const {
+  return "BatchLab::Histogram2D";
+}
+
+inline
+std::string BatchLab::Histogram2D::type() const { 
+  return "AIDA::IHistogram2D";
+}
+
+inline
+void* BatchLab::Histogram2D::cast(const std::string& a_class) const {
+  INLIB_IF_CAST(AIDA::IHistogram2D)
+  else INLIB_IF_CAST(AIDA::IHistogram)
+  else INLIB_IF_CAST(AIDA::IBaseHistogram)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else INLIB_IF_CAST(BatchLab::Histogram2D)
+  else return BaseHistogram::cast(a_class);
+}
+
+inline
+bool BatchLab::Histogram2D::isValid() const {return fHistogram.is_valid();}
+
+inline
+bool BatchLab::Histogram2D::visit(Slash::Store::IConstVisitor& aVisitor) const{
+  SLASH_STORE_BEGIN(BatchLab::Histogram2D)
+
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+
+  if(!BaseHistogram::visit(aVisitor)) return false;
+
+  if(!visitHistogram(fHistogram.get_histo_data(),aVisitor)) return false;
+
+  //if(!aVisitor.visit("fAxisX",fAxisX)) return false;
+  //if(!aVisitor.visit("fAxisY",fAxisY)) return false;
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::Histogram2D::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+
+  int version;
+  if(!aVisitor.visit(version)) return false;
+
+  if(!BaseHistogram::read(aVisitor)) return false;
+
+  hd_data hdata;
+  if(!readHistogram(hdata,aVisitor)) return false;
+  fHistogram.copy_from_data(hdata);
+
+  fAxisX.copy(fHistogram.get_axis(0));
+  fAxisY.copy(fHistogram.get_axis(1));
+
+  if(!aVisitor.end(*this)) return false;
+
+  fHistogram.update_fast_getters();
+
+  return true;
+}
+
+inline
+const inlib::histo::h2d& BatchLab::Histogram2D::hclHistogram() const {return fHistogram;}
+
+inline
+AIDA::IAnnotation& BatchLab::Histogram2D::annotation() {return fAnnotation;}
+
+inline
+const AIDA::IAnnotation& BatchLab::Histogram2D::annotation() const {return fAnnotation;}
+
+inline
+int BatchLab::Histogram2D::dimension() const {return fHistogram.dimension();}
+
+inline
+const AIDA::IAxis& BatchLab::Histogram2D::xAxis() const{ return fAxisX;}
+
+inline
+const AIDA::IAxis& BatchLab::Histogram2D::yAxis() const{ return fAxisY;}
+
+inline
+int BatchLab::Histogram2D::coordToIndexX(double aCoordX) const{return fHistogram.coord_to_index_x(aCoordX);}
+
+inline
+int BatchLab::Histogram2D::coordToIndexY(double aCoordY) const{return fHistogram.coord_to_index_y(aCoordY);}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Histogram2D::fill(double aX,double aY,double aWeight) { 
+  lock();
+  bool status = fHistogram.fill(aX,aY,aWeight);
+  unlock();
+  if(status) emitUpdate();
+  return status;
+}
+
+inline
+bool BatchLab::Histogram2D::setTitle(const std::string& aTitle) {
+  lock();
+  fAnnotation.setValue("Title",aTitle);
+  bool stat = fHistogram.set_title(aTitle);
+  unlock();
+  return stat;
+}
+
+inline
+bool BatchLab::Histogram2D::add(const IHistogram2D& aHisto) {
+  const BatchLab::Histogram2D* batchlabHisto = 
+    INLIB_CONST_CAST(aHisto,BatchLab::Histogram2D);
+  if(!batchlabHisto) return false;
+  lock();
+  fHistogram.add(batchlabHisto->hclHistogram());
+  unlock();
+  return true;
+}
+
+inline
+bool BatchLab::Histogram2D::reset() {
+  lock();
+  bool val = fHistogram.reset();
+  unlock();
+  return val;
+}
+
+inline
+bool BatchLab::Histogram2D::scale(double aScale) {
+  lock();
+  bool val = fHistogram.scale(aScale);
+  unlock();
+  return val;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+std::string BatchLab::Histogram2D::title() const {
+  lock();
+  std::string val = fHistogram.title();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram2D::entries() const {
+  lock();
+  unsigned int val = fHistogram.entries();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram2D::nanEntries() const { return 0;} //FIXME
+
+inline
+int BatchLab::Histogram2D::allEntries() const {
+  lock();
+  unsigned int val = fHistogram.all_entries();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram2D::extraEntries() const {
+  lock();
+  unsigned int val = fHistogram.extra_entries();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::equivalentBinEntries() const {
+  lock();
+  double val = fHistogram.equivalent_bin_entries();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::sumBinHeights() const {
+  lock();
+  double val = fHistogram.sum_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::sumAllBinHeights() const {
+  lock();
+  double val = fHistogram.sum_all_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::sumExtraBinHeights() const {
+  lock();
+  double val = fHistogram.sum_extra_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::minBinHeight() const {
+  lock();
+  double val = fHistogram.min_bin_height();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::maxBinHeight() const {
+  lock();
+  double val = fHistogram.max_bin_height();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::meanX() const{ 
+  lock();
+  double val = fHistogram.mean_x();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::meanY() const{ 
+  lock();
+  double val = fHistogram.mean_y();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::rmsX() const{ 
+  lock();
+  double val = fHistogram.rms_x();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::rmsY() const{ 
+  lock();
+  double val = fHistogram.rms_y();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::binMeanX(int aIndexX,int aIndexY) const {
+  lock();
+  double val = fHistogram.bin_mean_x(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::binMeanY(int aIndexX,int aIndexY) const {
+  lock();
+  double val = fHistogram.bin_mean_y(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::binStdDevX(int aIndexX,int aIndexY) const {
+  lock();
+  double val = fHistogram.bin_rms_x(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::binStdDevY(int aIndexX,int aIndexY) const {
+  lock();
+  double val = fHistogram.bin_rms_y(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram2D::binEntries(int aIndexX,int aIndexY) const {
+  lock();
+  unsigned int val = fHistogram.bin_entries(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::binError(int aIndexX,int aIndexY) const{
+  lock();
+  double val = fHistogram.bin_error(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::binHeight(int aIndexX,int aIndexY) const {
+  lock();
+  double val = fHistogram.bin_height(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram2D::binEntriesX(int aIndexX) const {
+  lock();
+  unsigned int val = fHistogram.bin_entries_x(aIndexX);
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram2D::binEntriesY(int aIndexY) const {
+  lock();
+  unsigned int val = fHistogram.bin_entries_y(aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::binHeightX(int aIndexX) const {
+  lock();
+  double val = fHistogram.bin_height_x(aIndexX);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram2D::binHeightY(int aIndexY) const{
+  lock();
+  double val = fHistogram.bin_height_y(aIndexY);
+  unlock();
+  return val;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+// Empty cstor used by IO readers.
+inline
+BatchLab::Profile2D::Profile2D(std::ostream& a_out,const std::string& aName)
+:BaseHistogram(a_out,aName)
+,fHistogram("",10,0,1,10,0,1)
+{}
+
+inline
+BatchLab::Profile2D::Profile2D(std::ostream& a_out,const std::string& aName,const inlib::histo::p2d& aHCL)
+:BaseHistogram(a_out,aName)
+,fHistogram("",10,0,1,10,0,1)
+{
+  fHistogram = aHCL;
+  fAxisX.copy(fHistogram.get_axis(0));
+  fAxisY.copy(fHistogram.get_axis(1));
+  fAnnotation.setValue("Title",fHistogram.title());
+}
+
+inline
+BatchLab::Profile2D::Profile2D(std::ostream& a_out,const std::string& aName,const std::string& aTitle
+,int aXnumber,double aXmin,double aXmax
+,int aYnumber,double aYmin,double aYmax
+)
+:BaseHistogram(a_out,aName)
+,fHistogram(aTitle,aXnumber,aXmin,aXmax,aYnumber,aYmin,aYmax)
+{
+  fAxisX.copy(fHistogram.get_axis(0));
+  fAxisY.copy(fHistogram.get_axis(1));
+  fAnnotation.setValue("Title",aTitle);
+}
+
+inline
+BatchLab::Profile2D::Profile2D(
+ std::ostream& a_out
+,const std::string& aName,const std::string& aTitle
+,int aXnumber,double aXmin,double aXmax
+,int aYnumber,double aYmin,double aYmax
+,double aVmin,double aVmax
+)
+:BaseHistogram(a_out,aName)
+,fHistogram(aTitle,aXnumber,aXmin,aXmax,aYnumber,aYmin,aYmax,aVmin,aVmax)
+{
+  fAxisX.copy(fHistogram.get_axis(0));
+  fAxisY.copy(fHistogram.get_axis(1));
+  fAnnotation.setValue("Title",aTitle);
+}
+
+inline
+BatchLab::Profile2D::Profile2D(
+ std::ostream& a_out
+,const std::string& aName,const std::string& aTitle
+,const std::vector<double>& aEdgesX
+,const std::vector<double>& aEdgesY
+)
+:BaseHistogram(a_out,aName)
+,fHistogram(aTitle,aEdgesX,aEdgesY)
+{
+  fAxisX.copy(fHistogram.get_axis(0));
+  fAxisY.copy(fHistogram.get_axis(1));
+  fAnnotation.setValue("Title",aTitle);
+}
+
+inline
+BatchLab::Profile2D::Profile2D(
+ std::ostream& a_out
+,const std::string& aName,const std::string& aTitle
+,const std::vector<double>& aEdgesX
+,const std::vector<double>& aEdgesY
+,double aVmin
+,double aVmax
+)
+:BaseHistogram(a_out,aName)
+,fHistogram(aTitle,aEdgesX,aEdgesY,aVmin,aVmax)
+{
+  fAxisX.copy(fHistogram.get_axis(0));
+  fAxisY.copy(fHistogram.get_axis(1));
+  fAnnotation.setValue("Title",aTitle);
+}
+
+inline
+BatchLab::Profile2D::Profile2D(const Profile2D& aFrom)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,Slash::Store::IStorable(aFrom)
+,AIDA::IBaseHistogram(aFrom)
+,AIDA::IProfile(aFrom)
+,AIDA::IProfile2D(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseHistogram(aFrom)
+,fHistogram(aFrom.fHistogram)
+,fAxisX(aFrom.fAxisX)
+,fAxisY(aFrom.fAxisY)
+{}
+
+inline
+BatchLab::Profile2D::~Profile2D(){}
+
+inline
+Slash::Store::IObject* BatchLab::Profile2D::copy() const {
+  return new BatchLab::Profile2D(*this);
+}
+
+inline
+std::string BatchLab::Profile2D::storeClassName() const {return "BatchLab::Profile2D";}
+
+inline
+void* BatchLab::Profile2D::cast(const std::string& a_class) const {
+  INLIB_IF_CAST(AIDA::IProfile2D)
+  else INLIB_IF_CAST(AIDA::IProfile)
+  else INLIB_IF_CAST(AIDA::IBaseHistogram)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else INLIB_IF_CAST(BatchLab::Profile2D)
+  else return BaseHistogram::cast(a_class);
+}
+
+inline
+std::string BatchLab::Profile2D::type() const {return "AIDA::IProfile2D";}
+
+inline
+bool BatchLab::Profile2D::isValid() const {return fHistogram.is_valid();}
+
+inline
+AIDA::IAnnotation& BatchLab::Profile2D::annotation() {return fAnnotation;}
+
+inline
+const AIDA::IAnnotation& BatchLab::Profile2D::annotation() const {return fAnnotation;}
+
+inline
+int BatchLab::Profile2D::dimension() const {return fHistogram.dimension();}
+
+inline
+const AIDA::IAxis& BatchLab::Profile2D::xAxis() const{ return fAxisX;}
+
+inline
+const AIDA::IAxis& BatchLab::Profile2D::yAxis() const{ return fAxisY;}
+
+inline
+int BatchLab::Profile2D::coordToIndexX(double aCoordX) const{return fHistogram.coord_to_index_x(aCoordX);}
+
+inline
+int BatchLab::Profile2D::coordToIndexY(double aCoordY) const{return fHistogram.coord_to_index_y(aCoordY);}
+
+inline
+bool BatchLab::Profile2D::visit(Slash::Store::IConstVisitor& aVisitor) const {
+  SLASH_STORE_BEGIN(BatchLab::Profile2D)
+
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+
+  if(!BaseHistogram::visit(aVisitor)) return false;
+
+  if(!visitProfile(fHistogram.get_histo_data(),aVisitor)) return false;
+
+  //if(!aVisitor.visit("fAxisX",fAxisX)) return false;
+  //if(!aVisitor.visit("fAxisY",fAxisY)) return false;
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::Profile2D::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+
+  int version;
+  if(!aVisitor.visit(version)) return false;
+
+  if(!BaseHistogram::read(aVisitor)) return false;
+
+  pd_data hdata;
+  if(!readProfile(hdata,aVisitor)) return false;
+  fHistogram.copy_from_data(hdata);
+
+  fAxisX.copy(fHistogram.get_axis(0));
+  fAxisY.copy(fHistogram.get_axis(1));
+
+  if(!aVisitor.end(*this)) return false;
+
+  fHistogram.update_fast_getters();
+
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/// lock/unlocked ins ////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+bool BatchLab::Profile2D::fill(double aX,double aY,double aZ,double aWeight){ 
+  lock();
+  bool status = fHistogram.fill(aX,aY,aZ,aWeight);
+  unlock();
+  if(status) emitUpdate();
+  return status;
+}
+
+inline
+bool BatchLab::Profile2D::add(const IProfile2D& aHisto) {
+  const BatchLab::Profile2D* batchlabHisto = 
+    INLIB_CONST_CAST(aHisto,BatchLab::Profile2D);
+  if(!batchlabHisto) return false;
+  lock();
+  fHistogram.add(batchlabHisto->hclHistogram());
+  unlock();
+  return true;
+}
+
+inline
+bool BatchLab::Profile2D::setTitle(const std::string& aTitle) {
+  lock();
+  fAnnotation.setValue("Title",aTitle);
+  bool stat = fHistogram.set_title(aTitle);
+  unlock();
+  return stat;
+}
+
+inline
+bool BatchLab::Profile2D::reset() {
+  lock();
+  bool val = fHistogram.reset();
+  unlock();
+  return val;
+}
+
+inline
+bool BatchLab::Profile2D::scale(double aScale) {
+  lock();
+  bool val = fHistogram.scale(aScale);
+  unlock();
+  return val;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/// lock/unlocked outs ///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+std::string BatchLab::Profile2D::title() const {
+  lock();
+  std::string val = fHistogram.title();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Profile2D::entries() const {
+  lock();
+  unsigned int val = fHistogram.entries();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Profile2D::nanEntries() const { return 0;} //FIXME
+
+inline
+int BatchLab::Profile2D::allEntries() const {
+  lock();
+  unsigned int val = fHistogram.all_entries();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Profile2D::extraEntries() const {
+  lock();
+  unsigned int val = fHistogram.extra_entries();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::equivalentBinEntries() const {
+  lock();
+  double val = fHistogram.equivalent_bin_entries();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::sumBinHeights() const {
+  lock();
+  double val = fHistogram.sum_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::sumAllBinHeights() const {
+  lock();
+  double val = fHistogram.sum_all_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::sumExtraBinHeights() const {
+  lock();
+  double val = fHistogram.sum_extra_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::minBinHeight() const {
+  lock();
+  double val = fHistogram.min_bin_height();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::maxBinHeight() const {
+  lock();
+  double val = fHistogram.max_bin_height();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::meanX() const{ 
+  lock();
+  double val = fHistogram.mean_x();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::meanY() const{ 
+  lock();
+  double val = fHistogram.mean_y();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::rmsX() const{ 
+  lock();
+  double val = fHistogram.rms_x();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::rmsY() const{ 
+  lock();
+  double val = fHistogram.rms_y();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Profile2D::binEntriesX(int aIndexX) const {
+  lock();
+  unsigned int val = fHistogram.bin_entries_x(aIndexX);
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Profile2D::binEntriesY(int aIndexY) const {
+  lock();
+  unsigned int val = fHistogram.bin_entries_y(aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::binHeightX(int aIndexX) const {
+  lock();
+  double val = fHistogram.bin_height_x(aIndexX);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::binHeightY(int aIndexY) const{
+  lock();
+  double val = fHistogram.bin_height_y(aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::binMeanX(int aIndexX,int aIndexY) const {
+  lock();
+  double val = fHistogram.bin_mean_x(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::binRms(int aIndexX,int aIndexY) const {
+  lock();
+  double val = fHistogram.bin_rms_value(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::binMeanY(int aIndexX,int aIndexY) const {
+  lock();
+  double val = fHistogram.bin_mean_y(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::binStdDevX(int aIndexX,int aIndexY) const {
+  lock();
+  double val = fHistogram.bin_rms_x(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::binStdDevY(int aIndexX,int aIndexY) const {
+  lock();
+  double val = fHistogram.bin_rms_y(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Profile2D::binEntries(int aIndexX,int aIndexY) const {
+  lock();
+  unsigned int val = fHistogram.bin_entries(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::binHeight(int aIndexX,int aIndexY) const {
+  lock();
+  double val = fHistogram.bin_height(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Profile2D::binError(int aIndexX,int aIndexY) const{
+  lock();
+  double val = fHistogram.bin_error(aIndexX,aIndexY);
+  unlock();
+  return val;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+// Empty cstor used by IO readers.
+
+inline
+BatchLab::Histogram3D::Histogram3D(std::ostream& a_out,const std::string& aName)
+:BaseHistogram(a_out,aName)
+,fHistogram("",10,0,1,10,0,1,10,0,1)
+{}
+
+inline
+BatchLab::Histogram3D::Histogram3D(std::ostream& a_out,const std::string& aName,const inlib::histo::h3d& aHCL)
+:BaseHistogram(a_out,aName)
+,fHistogram("",10,0,1,10,0,1,10,0,1)
+{
+  fHistogram = aHCL;
+  fAxisX.copy(fHistogram.get_axis(0));
+  fAxisY.copy(fHistogram.get_axis(1));
+  fAxisZ.copy(fHistogram.get_axis(2));
+  fAnnotation.setValue("Title",fHistogram.title());
+}
+
+inline
+BatchLab::Histogram3D::Histogram3D(
+ std::ostream& a_out
+,const std::string& aName,const std::string& aTitle
+,int aXnumber,double aXmin,double aXmax
+,int aYnumber,double aYmin,double aYmax
+,int aZnumber,double aZmin,double aZmax)
+:BaseHistogram(a_out,aName)
+,fHistogram(aTitle,aXnumber,aXmin,aXmax,aYnumber,aYmin,aYmax,aZnumber,aZmin,aZmax)
+{
+  fAxisX.copy(fHistogram.get_axis(0));
+  fAxisY.copy(fHistogram.get_axis(1));
+  fAxisZ.copy(fHistogram.get_axis(2));
+  fAnnotation.setValue("Title",aTitle);
+}
+
+inline
+BatchLab::Histogram3D::Histogram3D(
+ std::ostream& a_out
+,const std::string& aName,const std::string& aTitle
+,const std::vector<double>& aEdgesX
+,const std::vector<double>& aEdgesY
+,const std::vector<double>& aEdgesZ)
+:BaseHistogram(a_out,aName)
+,fHistogram(aTitle,aEdgesX,aEdgesY,aEdgesZ)
+{
+  fAxisX.copy(fHistogram.get_axis(0));
+  fAxisY.copy(fHistogram.get_axis(1));
+  fAxisZ.copy(fHistogram.get_axis(2));
+  fAnnotation.setValue("Title",aTitle);
+}
+
+inline
+BatchLab::Histogram3D::Histogram3D(const Histogram3D& aFrom)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,Slash::Store::IStorable(aFrom)
+,AIDA::IBaseHistogram(aFrom)
+,AIDA::IHistogram(aFrom)
+,AIDA::IHistogram3D(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseHistogram(aFrom)
+,fHistogram(aFrom.fHistogram)
+,fAxisX(aFrom.fAxisX)
+,fAxisY(aFrom.fAxisY)
+,fAxisZ(aFrom.fAxisZ)
+{}
+
+inline
+BatchLab::Histogram3D::~Histogram3D(){}
+
+inline
+std::string BatchLab::Histogram3D::storeClassName() const {return "BatchLab::Histogram3D";}
+
+inline
+std::string BatchLab::Histogram3D::type() const {return "AIDA::IHistogram3D";}
+
+inline
+void* BatchLab::Histogram3D::cast(const std::string& a_class) const {
+  INLIB_IF_CAST(AIDA::IHistogram3D)
+  else INLIB_IF_CAST(AIDA::IHistogram)
+  else INLIB_IF_CAST(AIDA::IBaseHistogram)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else INLIB_IF_CAST(BatchLab::Histogram3D)
+  else return BaseHistogram::cast(a_class);
+}
+
+inline
+bool BatchLab::Histogram3D::isValid() const{return fHistogram.is_valid();}
+
+inline
+const inlib::histo::h3d& BatchLab::Histogram3D::hclHistogram() const{return fHistogram;}
+
+inline
+AIDA::IAnnotation& BatchLab::Histogram3D::annotation() {return fAnnotation;}
+
+inline
+const AIDA::IAnnotation& BatchLab::Histogram3D::annotation() const {return fAnnotation;}
+
+inline
+int BatchLab::Histogram3D::dimension() const {return fHistogram.dimension();}
+
+inline
+const AIDA::IAxis& BatchLab::Histogram3D::xAxis() const{ return fAxisX;}
+
+inline
+const AIDA::IAxis& BatchLab::Histogram3D::yAxis() const{ return fAxisY;}
+
+inline
+const AIDA::IAxis& BatchLab::Histogram3D::zAxis() const{ return fAxisZ;}
+
+inline
+int BatchLab::Histogram3D::coordToIndexX(double aCoordX) const{return fHistogram.coord_to_index_x(aCoordX);}
+
+inline
+int BatchLab::Histogram3D::coordToIndexY(double aCoordY) const{return fHistogram.coord_to_index_y(aCoordY);}
+
+inline
+int BatchLab::Histogram3D::coordToIndexZ(double aCoordZ) const{return fHistogram.coord_to_index_z(aCoordZ);}
+
+inline
+bool BatchLab::Histogram3D::visit(Slash::Store::IConstVisitor& aVisitor) const{
+  SLASH_STORE_BEGIN(BatchLab::Histogram3D)
+
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+
+  if(!BaseHistogram::visit(aVisitor)) return false;
+
+  if(!visitHistogram(fHistogram.get_histo_data(),aVisitor)) return false;
+
+  //if(!aVisitor.visit("fAxisX",fAxisX)) return false;
+  //if(!aVisitor.visit("fAxisY",fAxisY)) return false;
+  //if(!aVisitor.visit("fAxisZ",fAxisY)) return false;
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::Histogram3D::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+
+  int version;
+  if(!aVisitor.visit(version)) return false;
+
+  if(!BaseHistogram::read(aVisitor)) return false;
+
+  hd_data hdata;
+  if(!readHistogram(hdata,aVisitor)) return false;
+  fHistogram.copy_from_data(hdata);
+
+  fAxisX.copy(fHistogram.get_axis(0));
+  fAxisY.copy(fHistogram.get_axis(1));
+  fAxisZ.copy(fHistogram.get_axis(2));
+
+  if(!aVisitor.end(*this)) return false;
+
+  fHistogram.update_fast_getters();
+
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/// lock/unlocked ins ////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+bool BatchLab::Histogram3D::setTitle(const std::string& aTitle) {
+  lock();
+  fAnnotation.setValue("Title",aTitle);
+  bool stat = fHistogram.set_title(aTitle);
+  unlock();
+  return stat;
+}
+
+inline
+bool BatchLab::Histogram3D::reset() {
+  lock();
+  bool stat = fHistogram.reset();
+  unlock();
+  return stat;
+}
+
+inline
+bool BatchLab::Histogram3D::scale(double aScale) {
+  lock();
+  bool stat = fHistogram.scale(aScale);
+  unlock();
+  return stat;
+}
+
+inline
+bool BatchLab::Histogram3D::fill(double aX,double aY,double aZ,double aWeight){  lock();
+  bool status = fHistogram.fill(aX,aY,aZ,aWeight);
+  unlock();
+  if(status) emitUpdate();
+  return status;
+}
+
+inline
+Slash::Store::IObject* BatchLab::Histogram3D::copy() const {
+  lock();
+  Slash::Store::IObject* obj = new BatchLab::Histogram3D(*this);
+  unlock();
+  return obj;
+}
+
+inline
+bool BatchLab::Histogram3D::add(const IHistogram3D& aHisto) {
+  const BatchLab::Histogram3D* batchlabHisto = 
+    INLIB_CONST_CAST(aHisto,BatchLab::Histogram3D);
+  if(!batchlabHisto) return false;
+  lock();
+  fHistogram.add(batchlabHisto->hclHistogram());
+  unlock();
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/// lock/unlocked outs ///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+std::string BatchLab::Histogram3D::title() const {
+  lock();
+  std::string val = fHistogram.title();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram3D::entries() const {
+  lock();
+  unsigned int val = fHistogram.entries();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram3D::nanEntries() const { return 0;} //FIXME
+
+inline
+int BatchLab::Histogram3D::allEntries() const {
+  lock();
+  unsigned int val = fHistogram.all_entries();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram3D::extraEntries() const {
+  lock();
+  unsigned int val = fHistogram.extra_entries();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::equivalentBinEntries() const {
+  lock();
+  double val = fHistogram.equivalent_bin_entries();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::sumBinHeights() const {
+  lock();
+  double val = fHistogram.sum_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::sumAllBinHeights() const {
+  lock();
+  double val = fHistogram.sum_all_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::sumExtraBinHeights() const {
+  lock();
+  double val = fHistogram.sum_extra_bin_heights();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::minBinHeight() const {
+  lock();
+  double val = fHistogram.min_bin_height();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::maxBinHeight() const {
+  lock();
+  double val = fHistogram.max_bin_height();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::meanX() const{ 
+  lock();
+  double val = fHistogram.mean_x();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::meanY() const{ 
+  lock();
+  double val = fHistogram.mean_y();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::meanZ() const{ 
+  lock();
+  double val = fHistogram.mean_z();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::rmsX() const{ 
+  lock();
+  double val = fHistogram.rms_x();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::rmsY() const{ 
+  lock();
+  double val = fHistogram.rms_y();
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::rmsZ() const{ 
+  lock();
+  double val = fHistogram.rms_z();
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram3D::binEntriesX(int aIndexX) const { 
+  lock();
+  unsigned int val = fHistogram.bin_entries_x(aIndexX);
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram3D::binEntriesY(int aIndexY) const { 
+  lock();
+  unsigned int val = fHistogram.bin_entries_y(aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram3D::binEntriesZ(int aIndexZ) const { 
+  lock();
+  unsigned int val = fHistogram.bin_entries_z(aIndexZ);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::binHeightX(int aIndexX) const { 
+  lock();
+  double val = fHistogram.bin_height_x(aIndexX);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::binHeightY(int aIndexY) const{ 
+  lock();
+  double val = fHistogram.bin_height_y(aIndexY);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::binHeightZ(int aIndexZ) const{ 
+  lock();
+  double val = fHistogram.bin_height_z(aIndexZ);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::binMeanX(int aIndexX,int aIndexY,int aIndexZ) const { 
+  lock();
+  double val = fHistogram.bin_mean_x(aIndexX,aIndexY,aIndexZ);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::binMeanY(int aIndexX,int aIndexY,int aIndexZ) const { 
+  lock();
+  double val = fHistogram.bin_mean_y(aIndexX,aIndexY,aIndexZ);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::binMeanZ(int aIndexX,int aIndexY,int aIndexZ) const { 
+  lock();
+  double val = fHistogram.bin_mean_z(aIndexX,aIndexY,aIndexZ);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::binStdDevX(int aIndexX,int aIndexY,int aIndexZ) const{
+  lock();
+  double val = fHistogram.bin_rms_x(aIndexX,aIndexY,aIndexZ);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::binStdDevY(int aIndexX,int aIndexY,int aIndexZ) const{
+  lock();
+  double val = fHistogram.bin_rms_y(aIndexX,aIndexY,aIndexZ);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::binStdDevZ(int aIndexX,int aIndexY,int aIndexZ) const{
+  lock();
+  double val = fHistogram.bin_rms_z(aIndexX,aIndexY,aIndexZ);
+  unlock();
+  return val;
+}
+
+inline
+int BatchLab::Histogram3D::binEntries(int aIndexX,int aIndexY,int aIndexZ) const { 
+  lock();
+  unsigned int val = fHistogram.bin_entries(aIndexX,aIndexY,aIndexZ);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::binHeight(int aIndexX,int aIndexY,int aIndexZ) const { 
+  lock();
+  double val = fHistogram.bin_height(aIndexX,aIndexY,aIndexZ);
+  unlock();
+  return val;
+}
+
+inline
+double BatchLab::Histogram3D::binError(int aIndexX,int aIndexY,int aIndexZ) const{ 
+  lock();
+  double val = fHistogram.bin_error(aIndexX,aIndexY,aIndexZ);
+  unlock();
+  return val;
+}

@@ -1,0 +1,10 @@
+OnX session_set_parameter tmp @name@tab_stack@Viewer_@
+OnX ui_create_component @{tmp}@ @{viewer_class}@ tab_stack
+
+OnX ui_set_callback @{tmp}@ destroy DLD OnX ui_remove_from_currents @{tmp}@ OnX_viewers
+OnX ui_set_callback @{tmp}@ collect DLD OnX viewer_collect @{tmp}@
+OnX ui_set_callback @{tmp}@ popup DLD OnX viewer_popup
+
+OnX ui_set_parameter @{tmp}@ @cat@ .popupItems No @cat_space@ highlighted @cat@ @char@10@ @cat_space@ Dump @cat_space@ highlighted
+OnX ui_add_in_currents @{tmp}@ OnX_viewers
+OnX ui_set_current_widget @{tmp}@

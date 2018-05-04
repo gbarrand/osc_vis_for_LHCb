@@ -1,0 +1,35 @@
+<OnX>
+  <widget class="Window">
+    <geometry>300x250</geometry>
+    <title>List widget</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>90</sizeOfFixed>
+
+      <widget class="ScrolledList" name="list_widget">
+        <items>item 1\nitem 2\nitem 3\nitem 4\nitem 5\nitem 6\nitem 7\nitem 8</items>
+        <select exec="DLD">OnX ui_set_parameter entry.value @this.value@</select>
+      </widget>
+
+      <widget class="VContainer">
+        <widget class="Entry" name="entry"/>
+        <widget class="PushButton">
+          <label>Print selection</label>
+          <activate exec="DLD">OnX ui_set_parameter entry.value @[list_widget.selection]@</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Set selection item 2</label>
+          <activate exec="DLD">OnX ui_set_parameter list_widget.selection item 2</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Quit</label>
+          <activate exec="DLD">OnX ui_exit</activate>
+        </widget>
+      </widget>
+
+    </widget>
+  </widget>
+</OnX>

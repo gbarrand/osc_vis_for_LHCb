@@ -1,0 +1,11 @@
+<objects>
+  <object class="Class0" name="object_0">
+  </object>
+  <object class="Class1" name="object_1">
+    <field name="fInt">314</field>
+    <field name="fDouble">3.14</field>
+  </object>
+  <object class="Class2" name="object_2">
+    <field name="fString">Hello</field>
+  </object>
+</objects>

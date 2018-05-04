@@ -1,0 +1,12 @@
+
+<!-- to build gtk related components. -->
+
+<obuild>
+
+  <darwin_app template="osc-plot-T" name="osc-plot-gtk"> 
+    <group>gtk</group>
+    <check_foreign>gtk</check_foreign>
+    <replace name="@@driver@@">Gtk</replace>
+  </darwin_app>
+
+</obuild>

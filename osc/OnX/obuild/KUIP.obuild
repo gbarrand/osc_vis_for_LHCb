@@ -1,0 +1,53 @@
+
+<!-- to build KUIP related components. -->
+
+<obuild>
+
+  <reference package="foreign" path="../../foreign" file="socket.obuild"/>  
+
+  <!-- not this : -->
+  <use name="KUIP">
+    <c_include>include</c_include>
+    <lib>KUIP</lib>
+    <path>../../KUIP</path>
+  </use>
+
+  <!-- this : -->
+  <dll name="OnXKUIP">
+    <file>../source/KUIP/Kuip.cxx</file>
+    <file>../source/KUIP/KuipWrap.cxx</file>
+    <file>../source/KUIP/KuipWrapCDF.c</file>
+
+    <!-- not this : -->
+    <cxx_include copy="cxx_include" from="inlib"/>
+    <cxx_include copy="cxx_include" from="Slash"/>
+
+    <cxx_include copy="c_include" from="KUIP"/>
+
+    <cxx_include copy="cxx_include" from="HEPVis"/>
+    <cxx_include copy="cxx_include" from="CoinGL"/>
+    <cxx_macro copy="cxx_macro" from="CoinGL"/>
+    <cxx_options copy="c_options" from="OpenGL"/>
+    <cxx_macro copy="c_macro" from="OpenGL"/>
+
+    <lib copy="lib" from="KUIP"/>
+
+    <lib copy="lib_HEPVisGUI" from="HEPVis"/>
+    <lib copy="lib_HEPVisPlotter" from="HEPVis"/>
+    <lib copy="lib_HEPVisDetector" from="HEPVis"/>
+    <lib copy="lib_HEPVisGeometry" from="HEPVis"/>
+    <lib copy="lib_HEPVisUtils" from="HEPVis"/>
+
+    <lib copy="lib" from="jpeg"/>
+    <lib copy="lib" from="dvi2bitmap"/>
+    <lib copy="lib" from="freetype2"/>
+
+    <lib copy="lib" from="png"/>
+    <lib copy="lib" from="zlib"/>
+
+    <lib copy="lib" from="CoinGL"/>
+    <lib platform="Windows_NT" copy="lib" from="socket"/>
+
+  </dll>
+
+</obuild>

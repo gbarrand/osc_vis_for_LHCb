@@ -1,0 +1,163 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+build_pack=OnX_onx
+
+. ${ourex_mgr}/build_header
+
+if [ ${build_app} = "yes" ] ; then
+
+  cppflags="${cppflags} -I.."
+  cppflags="${cppflags} -I../../Slash"
+  cppflags="${cppflags} -I${inlib_mgr}/.."
+
+  libs="${libs} -L../../OnX/mgr/${build_path} -lOnXCore"
+  libs="${libs} -L../../Lib/mgr/${build_dir} -lLibUtils"
+
+  if [ `uname` = "Linux" ] ; then libs="${libs} -ldl"; fi
+
+  use_expat=yes
+  expat_home=${ourex_mgr}/../expat
+  . ${exlib_mgr}/use_expat
+ 
+  objs=
+  app_exe=osc-plot
+  app_src=../applications/OnXLab_onx.cxx
+  . ${inlib_mgr}/build_app
+
+  # MacOS .app packing :
+  if [ `uname` = Darwin ] ; then
+  if [ ${build_sdk_mac} = yes ] ; then
+
+    /bin/rm -R -f ${build_path}/${app_exe}.app
+    head=${build_path}/${app_exe}.app/Contents
+
+    #////// exe : /////////////////
+    /bin/mkdir -p ${head}/MacOS
+    /bin/cp ${build_path}/${app_exe} ${head}/MacOS
+
+    #////// bin : /////////////////
+    /bin/mkdir -p ${head}/bin
+
+    gui=NextStep
+#    gui=Xt
+#    gui=Qt
+#    gui=gtk
+    /bin/cp ../../OnX/mgr/${build_dir}/OnX${gui}.bundle ${head}/bin/.
+
+    /bin/cp ../../OnX/mgr/${build_dir}/OnX.bundle ${head}/bin/.
+    /bin/cp ../../OnX/mgr/${build_dir}/OnXExas.bundle ${head}/bin/.
+    /bin/cp ../../OnX/mgr/${build_dir}/OnXKUIP.bundle ${head}/bin/.
+    /bin/cp ../../OnX/mgr/${build_dir}/OnXTests.bundle ${head}/bin/.
+#    /bin/cp ../../OnX/mgr/${build_dir}/OnXPython.bundle ${head}/bin/.
+
+    /bin/cp ${build_path}/OnXLabInventor.bundle ${head}/bin/.
+    /bin/cp ${build_path}/OnXLabKUIP.bundle ${head}/bin/.
+    /bin/cp ${build_path}/OnXLab.bundle ${head}/bin/.
+    /bin/cp ${build_path}/OnXLabExas.bundle ${head}/bin/.
+#   /bin/cp ${build_path}/OnXLab_SWIG_Python.bundle ${head}/bin/.
+
+    /bin/cp ../../BatchLab/mgr/${build_dir}/BatchLabFS.bundle ${head}/bin/.
+    /bin/cp ../../BatchLab/mgr/${build_dir}/BatchLabHDF5.bundle ${head}/bin/.
+    /bin/cp ../../BatchLab/mgr/${build_dir}/BatchLabRio.bundle ${head}/bin/.
+    /bin/cp ../../BatchLab/mgr/${build_dir}/BatchLabXML.bundle ${head}/bin/.
+    /bin/cp ../../BatchLab/mgr/${build_dir}/BatchLabZip.bundle ${head}/bin/.
+
+    #////// lib : /////////////////
+    /bin/mkdir -p ${head}/lib
+    /bin/cp ../../BatchLab/mgr/${build_dir}/libBatchLabAIDA.dylib ${head}/lib/.
+    /bin/cp ../../BatchLab/mgr/${build_dir}/libBatchLabHBOOK.dylib ${head}/lib/.
+    /bin/cp ../../Rio/mgr/${build_dir}/libosc_Rio.dylib ${head}/lib/.
+    /bin/cp ../../Minuit/mgr/${build_dir}/libosc_Minuit.dylib ${head}/lib/.
+    /bin/cp ../../Lib/mgr/${build_dir}/libLibUtils.dylib ${head}/lib/.
+    /bin/cp ../../OnX/mgr/${build_dir}/libOnXCore.dylib ${head}/lib/.
+    /bin/cp ../../OnX/mgr/${build_dir}/libOnXInventor.dylib ${head}/lib/.
+
+    packs=
+    packs="${packs} CoinGL HEPVis KUIP hdf5 expat freetype jpeg png zip zlib"
+    packs="${packs} Coin${gui}"
+    if [ ${gui} = gtk ] ; then packs="${packs} gtkglarea"; fi
+    for pack in ${packs} ; do
+      /bin/cp ${ourex_mgr}/../${pack}/${build_dir}/libourex_${pack}.dylib ${head}/lib/.
+    done
+
+    #////// res : /////////////////
+    /bin/mkdir -p ${head}/Resources
+    /bin/cp ../source/NextStep/osc-plot.icns ${head}/Resources/.
+    /bin/cp ../source/NextStep/Info.plist ${head}/.
+
+    /bin/mkdir -p ${head}/Resources/OnXLab
+    /bin/cp -R ../scripts  ${head}/Resources/OnXLab/.
+    /bin/cp -R ../examples ${head}/Resources/OnXLab/.
+
+    /bin/mkdir -p ${head}/Resources/Slash
+    /bin/cp -R ../../Slash/Slash  ${head}/Resources/Slash/.
+
+    /bin/mkdir -p ${head}/Resources/Lib
+    /bin/cp -R ../../Lib/include  ${head}/Resources/Lib/.
+
+    /bin/mkdir -p ${head}/Resources/BatchLab
+    /bin/cp -R ../../BatchLab/scripts  ${head}/Resources/BatchLab/.
+    /bin/cp -R ../../BatchLab/BatchLab ${head}/Resources/BatchLab/.
+
+    /bin/mkdir -p ${head}/Resources/OnX
+    /bin/cp -R ../../OnX/scripts  ${head}/Resources/OnX/.
+
+    /bin/mkdir -p ${head}/Resources/AIDA
+    /bin/cp -R ../../UseAIDA/examples ${head}/Resources/AIDA/.
+    /bin/mkdir -p ${head}/Resources/amanip/src/cpp
+    /bin/cp -R ../../amanip/src/cpp/amanip ${head}/Resources/amanip/src/cpp/.
+
+    /bin/mkdir -p ${head}/Resources/HEPVis
+    /bin/cp -R ${ourex_mgr}/../HEPVis/fonts  ${head}/Resources/HEPVis/.
+    /bin/cp -R ${ourex_mgr}/../HEPVis/scripts  ${head}/Resources/HEPVis/.
+
+
+    #////// instrument exe, plugins, libs : ////////
+    otool -X -L ${head}/MacOS/${app_exe} > tmp_1
+    grep "${build_path}" tmp_1 | awk -s '{print $1;}' > tmp_libs
+    for item2 in $(cat tmp_libs) ; do
+      lib="`basename ${item2}`"
+      to="@executable_path/../lib/${lib}"
+      install_name_tool -change ${item2} ${to} ${head}/MacOS/${app_exe}
+    done    
+    /bin/rm -f tmp_1
+
+    for item in $(cat tmp_libs) ; do
+      lib="`basename ${item}`"
+      #echo " lib : |${item}|${lib}|"
+      name="@executable_path/../lib/${lib}"
+      install_name_tool -id ${name} ${head}/lib/${lib}
+    done    
+    /bin/rm -f tmp_libs
+
+    find ${head}/bin -name '*.bundle' -print > tmp_0
+    for item in $(cat tmp_0) ; do
+      #echo "bundle : ${item}"
+      otool -X -L ${item} > tmp_1
+      grep "${build_path}" tmp_1 | awk -s '{print $1;}' > tmp_libs
+      for item2 in $(cat tmp_libs) ; do
+        lib="`basename ${item2}`"
+        to="@executable_path/../lib/${lib}"
+        install_name_tool -change ${item2} ${to} ${item}
+      done    
+      /bin/rm -f tmp_1 tmp_libs
+    done    
+    /bin/rm -f tmp_0
+
+  else
+    echo "build_app_OnXLab_onx : not build_sdk_mac."
+  fi
+  fi
+
+fi
+
+. ${inlib_mgr}/build_clean

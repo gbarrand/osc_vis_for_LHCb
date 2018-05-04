@@ -1,0 +1,19 @@
+<plist>
+  <dict>
+    <key>CFBundleDocumentTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleTypeExtensions</key>
+        <array>
+          <string>iv</string>
+          <string>hiv</string>
+          <string>wrl</string>
+        </array>
+        <key>CFBundleTypeRole</key>
+        <string>Viewer</string>  <!-- Editor, Viewer, None, Shell -->
+      </dict>
+    </array>
+    <key>CFBundleIconFile</key>
+    <string>osc-viewer</string>
+  </dict>
+</plist>

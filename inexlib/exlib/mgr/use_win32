@@ -1,0 +1,4 @@
+
+if [ "${use_win32}" = "yes" ] ; then
+  libs="${libs} gdi32.lib user32.lib wsock32.lib"
+fi

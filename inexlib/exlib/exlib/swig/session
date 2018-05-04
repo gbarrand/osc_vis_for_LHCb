@@ -1,0 +1,29 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file exlib.license for terms.
+
+#ifndef exlib_swig_session
+#define exlib_swig_session
+
+// generic X11/win32 wrapper.
+
+#include <ostream>
+
+namespace exlib {
+namespace EXLIB_SWIG_XANY {
+
+class session {
+public:
+  session(std::ostream& a_out);
+  virtual ~session();
+public:
+  session(const session& a_from);
+  session& operator=(const session&);
+public:
+  std::ostream& out();
+  bool is_valid();
+  bool steer();
+};
+
+}}
+
+#endif

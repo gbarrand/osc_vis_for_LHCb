@@ -1,0 +1,22 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_InputAccessorManager">
+    <label>OnX data accessor</label>
+    <input name="dataType" label="Data type" type="option"/>
+    <input name="dataFilter" label="Data filter" />
+    <input name="action" label="Action" type="option"/>
+    <input name="args" label="Action arguments" type="text"/>
+
+    <create exec="DLD">OnX ui_set_parameter OnX_InputAccessorManager_input_dataType.items @manager@AccessorManager@accessors@</create>
+    <create exec="DLD">OnX ui_set_parameter OnX_InputAccessorManager_input_action.items @manager@AccessorManager@actions@</create>
+
+    <reset exec="DLD">OnX ui_set_parameter OnX_InputAccessorManager_input_dataType.items @manager@AccessorManager@accessors@</reset>
+    <reset exec="DLD">OnX ui_set_parameter OnX_InputAccessorManager_input_action.items @manager@AccessorManager@actions@</reset>
+
+    <ok exec="DLD">OnX data_collect @[OnX_InputAccessorManager_input_dataType.value]@ @[OnX_InputAccessorManager_input_dataFilter.value]@</ok>
+
+    <ok exec="DLD">OnX data_exec @[OnX_InputAccessorManager_input_action.value]@ @[OnX_InputAccessorManager_input_args.value]@</ok>
+
+  </widget>
+
+</OnX>

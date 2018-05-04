@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE aida SYSTEM "http://aida.freehep.org/schemas/3.0/aida.dtd">
+<aida version="3.0">
+  <implementation version="1.0" package="FreeHEP"/>
+  <histogram1d name="Aida 1D Histogram"
+    title="Aida 1D Histogram" path="/">
+    <axis max="4.2" numberOfBins="40" min="-2.3" direction="x"/>
+    <statistics entries="37">
+      <statistic mean="0.0988825234489392" direction="x"
+        rms="0.7724661745474826"/>
+    </statistics>
+    <data1d>
+      <bin1d entries="1" height="0.48014988896455457"
+        error="0.48014988896455457" binNum="4"/>
+      <bin1d entries="2" height="1.1857719812538532"
+        error="1.0171092512699813" binNum="5"/>
+      <bin1d entries="1" height="1.0" error="1.0" binNum="7"/>
+      <bin1d entries="3" height="2.7440320449537623"
+        error="1.597993643265854" binNum="8"/>
+      <bin1d entries="2" height="2.0"
+        error="1.4142135623730951" binNum="9"/>
+      <bin1d entries="4" height="3.3889153013135007"
+        error="1.7607008191834084" binNum="11"/>
+      <bin1d entries="1" height="0.8990488082124751"
+        error="0.8990488082124751" binNum="12"/>
+      <bin1d entries="1" height="1.0" error="1.0" binNum="13"/>
+      <bin1d entries="2" height="2.0"
+        error="1.4142135623730951" binNum="14"/>
+      <bin1d entries="2" height="1.9674153642512109"
+        error="1.391363535165883" binNum="15"/>
+      <bin1d entries="5" height="3.72513427398379"
+        error="1.733217114721485" binNum="16"/>
+      <bin1d entries="4" height="3.858305073039907"
+        error="1.9306521245805803" binNum="17"/>
+      <bin1d entries="2" height="2.0"
+        error="1.4142135623730951" binNum="18"/>
+      <bin1d entries="2" height="1.8894738554189217"
+        error="1.3383436552223051" binNum="19"/>
+      <bin1d entries="4" height="3.6416959421442847"
+        error="1.8468266704250853" binNum="20"/>
+      <bin1d entries="1" height="1.0" error="1.0" binNum="24"/>
+    </data1d>
+  </histogram1d>
+  <histogram2d name="Aida 2D Histogram"
+    title="Aida 2D Histogram" path="/">
+    <axis max="4.2" numberOfBins="40" min="-2.3" direction="x"/>
+    <axis max="1.2000000000000002" numberOfBins="20" min="-6.1"
+      direction="y"/>
+    <statistics entries="34">
+      <statistic mean="0.0988825234489392" direction="x"
+        rms="0.7724661745474826"/>
+      <statistic mean="-0.13236914232092045" direction="y"
+        rms="1.046545506263643"/>
+    </statistics>
+    <data2d>
+      <bin2d entries="1" height="0.48014988896455457"
+        error="0.48014988896455457" binNumY="16" binNumX="4"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="13"
+        binNumX="5"/>
+      <bin2d entries="1" height="0.18577198125385308"
+        error="0.18577198125385308" binNumY="15" binNumX="5"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="15"
+        binNumX="7"/>
+      <bin2d entries="1" height="0.7440320449537622"
+        error="0.7440320449537622" binNumY="OVERFLOW" binNumX="8"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="12"
+        binNumX="8"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="17"
+        binNumX="8"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="14"
+        binNumX="9"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="16"
+        binNumX="9"/>
+      <bin2d entries="1" height="1.0" error="1.0"
+        binNumY="OVERFLOW" binNumX="11"/>
+      <bin2d entries="1" height="0.43414580155865534"
+        error="0.43414580155865534" binNumY="8" binNumX="11"/>
+      <bin2d entries="2" height="1.9547694997548453"
+        error="1.3826007368948265" binNumY="18" binNumX="11"/>
+      <bin2d entries="1" height="0.8990488082124751"
+        error="0.8990488082124751" binNumY="15" binNumX="12"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="13"
+        binNumX="13"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="14"
+        binNumX="14"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="19"
+        binNumX="14"/>
+      <bin2d entries="1" height="0.967415364251211"
+        error="0.967415364251211" binNumY="13" binNumX="15"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="16"
+        binNumX="15"/>
+      <bin2d entries="1" height="0.4816184061937594"
+        error="0.4816184061937594" binNumY="12" binNumX="16"/>
+      <bin2d entries="1" height="0.7260917042572465"
+        error="0.7260917042572465" binNumY="14" binNumX="16"/>
+      <bin2d entries="1" height="0.5423927939635301"
+        error="0.5423927939635301" binNumY="16" binNumX="16"/>
+      <bin2d entries="2" height="1.9750313695692538"
+        error="1.3966696716275093" binNumY="18" binNumX="16"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="12"
+        binNumX="17"/>
+      <bin2d entries="3" height="2.858305073039907"
+        error="1.6514895174198074" binNumY="17" binNumX="17"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="11"
+        binNumX="18"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="18"
+        binNumX="18"/>
+      <bin2d entries="1" height="1.0" error="1.0"
+        binNumY="OVERFLOW" binNumX="19"/>
+      <bin2d entries="1" height="0.8894738554189215"
+        error="0.8894738554189215" binNumY="15" binNumX="19"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="11"
+        binNumX="20"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="15"
+        binNumX="20"/>
+      <bin2d entries="2" height="1.6416959421442845"
+        error="1.187757866988641" binNumY="17" binNumX="20"/>
+      <bin2d entries="1" height="1.0" error="1.0" binNumY="18"
+        binNumX="24"/>
+    </data2d>
+  </histogram2d>
+  <histogram3d name="Aida 3D Histogram"
+    title="Aida 3D Histogram" path="/">
+    <axis max="4.2" numberOfBins="40" min="-2.3" direction="x"/>
+    <axis max="1.2000000000000002" numberOfBins="20" min="-6.1"
+      direction="y"/>
+    <axis max="7.5" numberOfBins="10" min="-0.6" direction="z"/>
+    <statistics entries="26">
+      <statistic mean="0.0988825234489392" direction="x"
+        rms="0.7724661745474826"/>
+      <statistic mean="-0.13236914232092045" direction="y"
+        rms="1.046545506263643"/>
+      <statistic mean="0.011623483086467807" direction="z"
+        rms="1.0130927507182632"/>
+    </statistics>
+    <data3d>
+      <bin3d entries="1" height="0.48014988896455457"
+        error="0.48014988896455457" binNumZ="1" binNumY="16" binNumX="4"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="0"
+        binNumY="13" binNumX="5"/>
+      <bin3d entries="1" height="0.18577198125385308"
+        error="0.18577198125385308" binNumZ="0" binNumY="15" binNumX="5"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="2"
+        binNumY="15" binNumX="7"/>
+      <bin3d entries="1" height="0.7440320449537622"
+        error="0.7440320449537622" binNumZ="0" binNumY="OVERFLOW" binNumX="8"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="3"
+        binNumY="12" binNumX="8"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="0"
+        binNumY="17" binNumX="8"/>
+      <bin3d entries="1" height="1.0" error="1.0"
+        binNumZ="UNDERFLOW" binNumY="14" binNumX="9"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="0"
+        binNumY="16" binNumX="9"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="0"
+        binNumY="OVERFLOW" binNumX="11"/>
+      <bin3d entries="1" height="0.43414580155865534"
+        error="0.43414580155865534" binNumZ="3" binNumY="8" binNumX="11"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="1"
+        binNumY="18" binNumX="11"/>
+      <bin3d entries="1" height="0.9547694997548454"
+        error="0.9547694997548454" binNumZ="2" binNumY="18" binNumX="11"/>
+      <bin3d entries="1" height="0.8990488082124751"
+        error="0.8990488082124751" binNumZ="0" binNumY="15" binNumX="12"/>
+      <bin3d entries="1" height="1.0" error="1.0"
+        binNumZ="UNDERFLOW" binNumY="13" binNumX="13"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="0"
+        binNumY="14" binNumX="14"/>
+      <bin3d entries="1" height="1.0" error="1.0"
+        binNumZ="UNDERFLOW" binNumY="19" binNumX="14"/>
+      <bin3d entries="1" height="0.967415364251211"
+        error="0.967415364251211" binNumZ="UNDERFLOW" binNumY="13" binNumX="15"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="0"
+        binNumY="16" binNumX="15"/>
+      <bin3d entries="1" height="0.4816184061937594"
+        error="0.4816184061937594" binNumZ="1" binNumY="12" binNumX="16"/>
+      <bin3d entries="1" height="0.7260917042572465"
+        error="0.7260917042572465" binNumZ="UNDERFLOW" binNumY="14" binNumX="16"/>
+      <bin3d entries="1" height="0.5423927939635301"
+        error="0.5423927939635301" binNumZ="1" binNumY="16" binNumX="16"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="0"
+        binNumY="18" binNumX="16"/>
+      <bin3d entries="1" height="0.9750313695692537"
+        error="0.9750313695692537" binNumZ="1" binNumY="18" binNumX="16"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="0"
+        binNumY="12" binNumX="17"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="0"
+        binNumY="17" binNumX="17"/>
+      <bin3d entries="2" height="1.858305073039907"
+        error="1.3143126059455978" binNumZ="1" binNumY="17" binNumX="17"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="0"
+        binNumY="11" binNumX="18"/>
+      <bin3d entries="1" height="1.0" error="1.0"
+        binNumZ="UNDERFLOW" binNumY="18" binNumX="18"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="0"
+        binNumY="OVERFLOW" binNumX="19"/>
+      <bin3d entries="1" height="0.8894738554189215"
+        error="0.8894738554189215" binNumZ="1" binNumY="15" binNumX="19"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="2"
+        binNumY="11" binNumX="20"/>
+      <bin3d entries="1" height="1.0" error="1.0" binNumZ="3"
+        binNumY="15" binNumX="20"/>
+      <bin3d entries="1" height="0.9985921233907223"
+        error="0.9985921233907223" binNumZ="UNDERFLOW" binNumY="17" binNumX="20"/>
+      <bin3d entries="1" height="0.6431038187535622"
+        error="0.6431038187535622" binNumZ="0" binNumY="17" binNumX="20"/>
+      <bin3d entries="1" height="1.0" error="1.0"
+        binNumZ="UNDERFLOW" binNumY="18" binNumX="24"/>
+    </data3d>
+  </histogram3d>
+  <histogram1d name="h1VarAxis" title="h1VarAxis" path="/">
+    <axis max="8.0" numberOfBins="6" min="-12.0" direction="x">
+      <binBorder value="-3.0"/>
+      <binBorder value="-1.0"/>
+      <binBorder value="0.0"/>
+      <binBorder value="0.23"/>
+      <binBorder value="2.67"/>
+    </axis>
+    <statistics entries="37">
+      <statistic mean="0.017692467508137303" direction="x"
+        rms="0.7788938722305893"/>
+    </statistics>
+    <data1d>
+      <bin1d entries="4" height="2.214207569620508"
+        error="1.216679396690764" binNum="1"/>
+      <bin1d entries="12" height="6.081186419164653"
+        error="1.9566487249292221" binNum="2"/>
+      <bin1d entries="2" height="1.0698580511780564"
+        error="0.9728242344298866" binNum="3"/>
+      <bin1d entries="19" height="9.83931927313283"
+        error="2.6723524675041292" binNum="4"/>
+    </data1d>
+  </histogram1d>
+  <histogram2d name="h2VarAxis" title="h2VarAxis" path="/">
+    <axis max="8.0" numberOfBins="6" min="-12.0" direction="x">
+      <binBorder value="-3.0"/>
+      <binBorder value="-1.0"/>
+      <binBorder value="0.0"/>
+      <binBorder value="0.23"/>
+      <binBorder value="2.67"/>
+    </axis>
+    <axis max="78.0" numberOfBins="3" min="-34.0" direction="y">
+      <binBorder value="0.0"/>
+      <binBorder value="12.0"/>
+    </axis>
+    <statistics entries="37">
+      <statistic mean="0.017692467508137303" direction="x"
+        rms="0.7788938722305893"/>
+      <statistic mean="-0.1832217278031476" direction="y"
+        rms="0.9212718999766265"/>
+    </statistics>
+    <data2d>
+      <bin2d entries="3" height="1.7340576806559538"
+        error="1.1179288163649455" binNumY="0" binNumX="1"/>
+      <bin2d entries="1" height="0.48014988896455457"
+        error="0.48014988896455457" binNumY="1" binNumX="1"/>
+      <bin2d entries="6" height="3.2156537190167147"
+        error="1.383126194767403" binNumY="0" binNumX="2"/>
+      <bin2d entries="6" height="2.865532700147938"
+        error="1.383992833115618" binNumY="1" binNumX="2"/>
+      <bin2d entries="2" height="1.0698580511780564"
+        error="0.9728242344298866" binNumY="0" binNumX="3"/>
+      <bin2d entries="9" height="3.9550810070969953"
+        error="1.566238301453147" binNumY="0" binNumX="4"/>
+      <bin2d entries="10" height="5.884238266035834"
+        error="2.1652633312455483" binNumY="1" binNumX="4"/>
+    </data2d>
+  </histogram2d>
+  <histogram3d name="h3VarAxis" title="h3VarAxis" path="/">
+    <axis max="8.0" numberOfBins="6" min="-12.0" direction="x">
+      <binBorder value="-3.0"/>
+      <binBorder value="-1.0"/>
+      <binBorder value="0.0"/>
+      <binBorder value="0.23"/>
+      <binBorder value="2.67"/>
+    </axis>
+    <axis max="78.0" numberOfBins="3" min="-34.0" direction="y">
+      <binBorder value="0.0"/>
+      <binBorder value="12.0"/>
+    </axis>
+    <axis max="7.234" numberOfBins="4" min="-0.345"
+      direction="z">
+      <binBorder value="0.89"/>
+      <binBorder value="1.123"/>
+      <binBorder value="4.3432"/>
+    </axis>
+    <statistics entries="26">
+      <statistic mean="0.017692467508137303" direction="x"
+        rms="0.7788938722305893"/>
+      <statistic mean="-0.1832217278031476" direction="y"
+        rms="0.9212718999766265"/>
+      <statistic mean="0.049370886434605334" direction="z"
+        rms="0.9990358348365859"/>
+    </statistics>
+    <data3d>
+      <bin3d entries="2" height="1.051181763503389"
+        error="0.8851244659550266" binNumZ="0" binNumY="0" binNumX="1"/>
+      <bin3d entries="1" height="0.6828759171525649"
+        error="0.6828759171525649" binNumZ="2" binNumY="0" binNumX="1"/>
+      <bin3d entries="1" height="0.48014988896455457"
+        error="0.48014988896455457" binNumZ="0" binNumY="1" binNumX="1"/>
+      <bin3d entries="2" height="0.9528509256867912"
+        error="0.6752385946609504" binNumZ="UNDERFLOW" binNumY="0" binNumX="2"/>
+      <bin3d entries="2" height="1.24503815574049"
+        error="0.9633262106634145" binNumZ="0" binNumY="0" binNumX="2"/>
+      <bin3d entries="2" height="1.0177646375894334"
+        error="0.7273881513888769" binNumZ="2" binNumY="0" binNumX="2"/>
+      <bin3d entries="3" height="1.6368850804145043"
+        error="0.9792603376837349" binNumZ="UNDERFLOW" binNumY="1" binNumX="2"/>
+      <bin3d entries="2" height="0.27387811997858846"
+        error="0.2118975117664547" binNumZ="0" binNumY="1" binNumX="2"/>
+      <bin3d entries="1" height="0.9547694997548454"
+        error="0.9547694997548454" binNumZ="2" binNumY="1" binNumX="2"/>
+      <bin3d entries="1" height="0.967415364251211"
+        error="0.967415364251211" binNumZ="UNDERFLOW" binNumY="0" binNumX="3"/>
+      <bin3d entries="1" height="0.10244268692684533"
+        error="0.10244268692684533" binNumZ="0" binNumY="0" binNumX="3"/>
+      <bin3d entries="1" height="0.7260917042572465"
+        error="0.7260917042572465" binNumZ="UNDERFLOW" binNumY="0" binNumX="4"/>
+      <bin3d entries="6" height="3.0247515479774765"
+        error="1.3801152236147929" binNumZ="0" binNumY="0" binNumX="4"/>
+      <bin3d entries="2" height="0.20423775486227225"
+        error="0.1455170900421535" binNumZ="2" binNumY="0" binNumX="4"/>
+      <bin3d entries="4" height="1.7808611607644629"
+        error="1.1343628238604022" binNumZ="UNDERFLOW" binNumY="1" binNumX="4"/>
+      <bin3d entries="5" height="3.1938301024674525"
+        error="1.6044658074170453" binNumZ="0" binNumY="1" binNumX="4"/>
+      <bin3d entries="1" height="0.9095470028039193"
+        error="0.9095470028039193" binNumZ="1" binNumY="1" binNumX="4"/>
+    </data3d>
+  </histogram3d>
+</aida>

@@ -1,0 +1,74 @@
+<widget class="VContainer">
+  <widget class="HContainer">
+    <widget class="Label" name="OnX_IB_EditComponent"/>
+    <widget class="Entry" name="OnX_IB_EditName"/>
+    <widget class="PushButton">
+      <label>Change</label>
+      <activate exec="DLD">OnX OnX_IB_ChangeName</activate>
+    </widget>
+  </widget>
+  <widget class="Label">
+    <label>Add new component :</label>
+  </widget>
+  <widget class="HBox">
+    <expand>both</expand>
+    <widget class="OptionMenu" name="OnX_IB_AddComponentName">
+      <valueChanged exec="DLD">OnX OnX_IB_AddComponentChange</valueChanged>
+    </widget>
+    <widget class="PushButton">
+      <label>Add component</label>
+      <activate exec="DLD">OnX OnX_IB_AddComponentApply</activate>
+    </widget>
+  </widget>
+  <widget class="PushButton">
+    <label>Delete this component</label>
+    <activate exec="DLD">OnX OnX_IB_DeleteComponent</activate>
+  </widget>
+  <widget class="Label">
+    <label>Properties :</label>
+  </widget>
+  <widget class="HBox">
+    <widget class="OptionMenu" name="OnX_IB_PropertyName">
+      <valueChanged exec="DLD">OnX OnX_IB_SelectPropertyName</valueChanged>
+    </widget>
+    <widget class="HContainer">
+      <widget class="Entry" name="OnX_IB_PropertyValue"/>
+      <widget class="PushButton">
+        <label>Choose...</label>
+        <activate exec="DLD">OnX OnX_IB_PropertyChoose current</activate>
+      </widget>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <expand>both</expand>
+    <widget class="PushButton">
+      <label>Apply</label>
+      <activate exec="DLD">OnX OnX_IB_PropertyApply</activate>
+    </widget>
+    <widget class="PushButton">
+      <label>Remove</label>
+      <activate exec="DLD">OnX OnX_IB_PropertyRemove</activate>
+    </widget>
+  </widget>
+  <widget class="Label">
+    <label>Callbacks :</label>
+  </widget>
+  <widget class="HBox">
+    <expand>both</expand>
+    <widget class="OptionMenu" name="OnX_IB_CallbackName">
+      <valueChanged exec="DLD">OnX OnX_IB_CallbackName</valueChanged>
+    </widget>
+    <widget class="OptionMenu" name="OnX_IB_CallbackId"/>
+  </widget>
+  <widget class="HBox">
+    <expand>both</expand>
+    <widget class="PushButton">
+      <label>Edit ...</label>
+      <activate exec="DLD">OnX OnX_IB_CallbackEdit</activate>
+    </widget>
+    <widget class="PushButton">
+      <label>Remove</label>
+      <activate exec="DLD">OnX OnX_IB_CallbackRemove</activate>
+    </widget>
+  </widget>
+</widget>

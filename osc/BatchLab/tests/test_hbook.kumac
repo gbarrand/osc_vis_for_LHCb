@@ -1,0 +1,38 @@
+MACRO test_hboook
+**************************************************************************
+* Reading ZEBRA files.                                                   *
+**************************************************************************
+****************************************************************
+* Prepare the page
+****************************************************************
+ZONE 2 3
+****************************************************************
+* Read batchlab_test_hbook.hbook produced by BatchLab_test_hbook.f
+*********/*******************************************************
+H/FILE 1 batchlab_test_hbook.hbook
+**************
+* Histograms :
+**************
+CD //LUN1
+H/LIST
+CD //LUN1/HISTOS/SUB_HISTOS_1
+H/LIST
+H/PLOT 10
+H/PLOT 20
+CD //LUN1/HISTOS/SUB_HISTOS_2
+H/PLOT 30
+H/PLOT 40
+**********
+* Tuples :
+**********
+CD //LUN1/TUPLES
+H/LIST
+H/CREATE/1D 101 100.ga 100 -5 5
+/NTUPLE/PROJECT 101 100.ga
+H/PLOT 101
+H/CREATE/1D 102 100.bw 100 -3 3
+/NTUPLE/PROJECT 102 100.bw
+H/PLOT 102
+CLOSE 1
+H/DEL *
+RETURN

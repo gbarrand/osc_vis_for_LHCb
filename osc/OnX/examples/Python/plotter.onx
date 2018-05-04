@@ -1,0 +1,31 @@
+<OnX>
+  <widget class="Window">
+    <geometry>400x400</geometry>
+    <title>SoExaminerViewer</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>30</sizeOfFixed>
+
+      <widget class="PlanePageViewer" name="plotter">
+        <create exec="DLD">OnX ui_set_current_widget @this@</create>
+        <create exec="DLD">OnX page_set_title @this@ Plotter</create>
+        <create exec="DLD">OnX page_title_visible @this@ false</create>
+        <create exec="DLD">OnX page_create_regions @this@ SoPlotterRegion 1 1 0</create>
+        <create exec="DLD">OnX region_set_color @this@ white</create>
+        <create exec="DLD">OnX viewer_set_decoration @this@ false</create>
+        <create exec="DLD">OnX viewer_set_viewing @this@ false</create>
+      </widget>
+   
+      <widget class="VBox">
+        <widget class="PushButton">
+          <label>Quit</label>
+          <activate exec="DLD">OnX ui_exit</activate>
+        </widget>
+      </widget>
+
+    </widget>
+  </widget>
+</OnX>

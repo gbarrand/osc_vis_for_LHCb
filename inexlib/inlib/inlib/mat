@@ -1,0 +1,645 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file inlib.license for terms.
+
+#ifndef inlib_mat
+#define inlib_mat
+
+#ifdef INLIB_MEM
+#include "mem"
+#endif
+
+//#define INLIB_MAT_NEW
+
+namespace inlib {
+
+template <class T,unsigned int D>
+class mat {
+#ifdef INLIB_MEM
+  static const std::string& s_class() {
+    static const std::string s_v("inlib::mat");
+    return s_v;
+  }
+#endif
+protected:
+  static T zero() {return T();}
+  static T one() {return T(1);}
+  static T minus_one() {return T(-1);}
+  static T two() {return T(2);}
+public:
+  mat() {
+#ifdef INLIB_MEM
+    mem::increment(s_class().c_str());
+#endif
+#ifdef INLIB_MAT_NEW
+    m_vec = new T[D*D];
+#endif
+    for(unsigned int i=0;i<D2;i++) m_vec[i] = zero();
+  }
+  virtual ~mat() {
+#ifdef INLIB_MAT_NEW
+    delete [] m_vec;
+#endif
+#ifdef INLIB_MEM
+    mem::decrement(s_class().c_str());
+#endif
+  }
+public:
+  mat(const mat& a_from) {
+#ifdef INLIB_MEM
+    mem::increment(s_class().c_str());
+#endif
+#ifdef INLIB_MAT_NEW
+    m_vec = new T[D*D];
+#endif
+    for(unsigned int i=0;i<D2;i++) m_vec[i] = a_from.m_vec[i];
+  }
+  mat& operator=(const mat& a_from){
+    for(unsigned int i=0;i<D2;i++) m_vec[i] = a_from.m_vec[i];
+    return *this;
+  }
+public:
+  mat(const T a_v[]){
+#ifdef INLIB_MEM
+    mem::increment(s_class().c_str());
+#endif
+#ifdef INLIB_MAT_NEW
+    m_vec = new T[D*D];
+#endif
+    for(unsigned int i=0;i<D2;i++) m_vec[i] = a_v[i];
+  }
+public:
+  void set_value(unsigned int aR,unsigned int aC,const T& a_value) { 
+    m_vec[aR + aC * D] = a_value;
+  }
+
+  const T& value(unsigned int aR,unsigned int aC) const { 
+    return m_vec[aR + aC * D];
+  }
+
+  T value(unsigned int aR,unsigned int aC) { 
+    return m_vec[aR + aC * D];
+  }
+
+  void set_matrix(const mat& a_m){ //optimization.
+    for(unsigned int i=0;i<D2;i++) m_vec[i] = a_m.m_vec[i];
+  }
+  void set_constant(const T& a_v){
+    for(unsigned int i=0;i<D2;i++) m_vec[i] = a_v;
+  }
+  void set_zero(){
+    for(unsigned int i=0;i<D2;i++) m_vec[i] = zero();
+  }
+  void set_identity() {
+   {for(unsigned int i=0;i<D2;i++) m_vec[i] = zero();}
+    for(unsigned int i=0;i<D;i++) m_vec[i+i*D] = one();
+  }
+  void set_diagonal(const T& a_s) {
+   {for(unsigned int i=0;i<D2;i++) m_vec[i] = zero();}
+    for(unsigned int i=0;i<D;i++) m_vec[i+i*D] = a_s;
+  }
+public:
+/*
+  void mul_vec(T a_v[]) const {
+    // a_v = this * a_v
+    //m_vec[R + C * D];
+    T tmp[D];
+    for(unsigned int r=0;r<D;r++) {
+      T v = T();
+      for(unsigned int c=0;c<D;c++) {
+        v += m_vec[r+c*D]*a_v[c];
+      }
+      tmp[r] = v;
+    }
+   {for(unsigned int i=0;i<D;i++) a_v[i] = tmp[i];}
+  }
+*/
+  void mul_mtx(const mat& a_m) {
+    _mul_mtx(a_m.m_vec);
+  }
+  void left_mul_mtx(const mat& a_m) {    
+    // this = a_m * this :
+    _left_mul_mtx(a_m.m_vec);
+  }
+
+
+  const T* data() const {return m_vec;}
+  unsigned int size() const {return D2;}
+
+  bool equal(const mat& a_m) const {
+    for(unsigned int i=0;i<D2;i++) {
+      if(m_vec[i]!=a_m.m_vec[i]) return false;
+    }
+    return true;
+  }
+
+  bool equal(const mat& a_m,const T& a_epsil) const {
+    T* tp = (T*)m_vec;
+    T* mp = (T*)a_m.m_vec;
+    for(unsigned int i=0;i<D2;i++,tp++,mp++) {
+      T diff = (*tp) - (*mp);
+      if(diff<zero()) diff *= minus_one();
+      if(diff>=a_epsil) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  T trace() const {
+    T _value = zero();
+    for(unsigned int c=0;c<D;c++) _value += m_vec[c+c*D];
+    return _value;
+  }
+
+  void transpose() {
+    for(unsigned int r=0;r<D;r++) {
+      for(unsigned int c=(r+1);c<D;c++) {
+        T vrc = value(r,c);
+        T vcr = value(c,r);
+        set_value(r,c,vcr);
+        set_value(c,r,vrc);
+      }
+    }
+  }
+
+  void multiply(const T& a_T) {
+    for(unsigned int i=0;i<D2;i++) m_vec[i] *= a_T;
+  }
+
+  bool is_symmetric() const {
+    for(unsigned int r=0;r<D;r++) {
+      for(unsigned int c=(r+1);c<D;c++) {
+        if(value(r,c)!=value(c,r)) return false;
+      }
+    }
+    return true;
+  }
+
+  bool is_antisymmetric() const {
+   {for(unsigned int r=0;r<D;r++) {
+      if(value(r,r)!=zero()) return false;
+    }}
+    for(unsigned int r=0;r<D;r++) {
+      for(unsigned int c=(r+1);c<D;c++) {
+        if(value(r,c)!=minus_one()*value(c,r)) return false;
+      }
+    }
+    return true;
+  }
+
+  void symmetric_part(mat& a_res) const {
+    a_res = *this;
+    a_res.transpose();
+    a_res += *this;
+    a_res.multiply(one()/two());
+  }
+
+  void antisymmetric_part(mat& a_res) const {
+    a_res = *this;
+    a_res.transpose();
+    a_res.multiply(minus_one());
+    a_res += *this;
+    a_res.multiply(one()/two());
+  }
+
+  T determinant() const {
+    unsigned int ord = D;
+    if(ord==0) return zero();
+    else if(ord==1) return value(0,0);
+    else if(ord==2) return (value(0,0) * value(1,1) - 
+                            value(1,0) * value(0,1)); //Optimize
+
+    unsigned int rord = ord-1;
+    unsigned int* cs = new unsigned int[rord];
+    unsigned int* rs = new unsigned int[rord];
+
+    T det = zero();
+   {for(unsigned int i=0;i<rord;i++) {cs[i] = i+1;}}
+    unsigned int c = 0;
+    //if(c>=1) cs[c-1] = c-1;
+
+   {for(unsigned int i=0;i<rord;i++) {rs[i] = i+1;}}
+    bool sg = true; //c=0+r=0
+    for(unsigned int r=0;r<ord;r++) {
+      if(r>=1) rs[r-1] = r-1;
+      T subdet = sub_determinant(rord,rs,cs);
+      if(sg) 
+        det += value(r,c) * subdet;
+      else
+        det -= value(r,c) * subdet;
+      sg = sg?false:true;
+    }
+
+    delete [] cs;
+    delete [] rs;
+
+    return det;
+  }
+
+  bool invert(mat& a_result) const {
+    //Generic invertion method.
+    unsigned int ord = D;
+    if(ord==0) return true;
+
+    if(ord==1) {
+      T v = value(0,0);
+      if(v==zero()) return false;
+      a_result.set_value(0,0,T(1)/v);
+      return true;
+    }
+  
+    unsigned int rord = ord-1;
+    unsigned int* cs = new unsigned int[rord];
+    unsigned int* rs = new unsigned int[rord];
+  
+    // Get det with r = 0;
+    T det = zero();
+   {
+   {for(unsigned int i=0;i<rord;i++) {rs[i] = i+1;}}
+    unsigned int r = 0;
+    //if(r>=1) rs[r-1] = r-1;
+  
+   {for(unsigned int i=0;i<rord;i++) {cs[i] = i+1;}}
+    bool sg = true; //r=0+c=0
+    for(unsigned int c=0;c<ord;c++) {
+      if(c>=1) cs[c-1] = c-1;
+      T subdet = sub_determinant(rord,rs,cs);
+      T sgn = sg ? one() : minus_one();
+      det += value(r,c) * subdet * sgn;
+      T _value = subdet * sgn;
+      a_result.set_value(c,r,_value);
+      sg = sg?false:true;
+    }}
+  
+    if(det==zero()) {
+      delete [] cs;
+      delete [] rs;
+      return false;
+    }  
+
+   {for(unsigned int c=0;c<ord;c++) {
+      a_result.set_value(c,0,a_result.value(c,0)/det);
+    }}
+  
+   {for(unsigned int i=0;i<rord;i++) {rs[i] = i+1;}}
+    bool sgr = false; //r=1+c=0
+    for(unsigned int r=1;r<ord;r++) {
+      if(r>=1) rs[r-1] = r-1;
+     {for(unsigned int i=0;i<rord;i++) {cs[i] = i+1;}}
+      bool sg = sgr;
+      for(unsigned int c=0;c<ord;c++) {
+        if(c>=1) cs[c-1] = c-1;
+        T subdet = sub_determinant(rord,rs,cs);
+        T sgn = sg ? one() : minus_one();
+        T _value = (subdet * sgn)/det;
+        a_result.set_value(c,r,_value);
+        sg = sg?false:true;
+      }
+      sgr = sgr?false:true;
+    }
+  
+    delete [] cs;
+    delete [] rs;
+
+    return true;
+  }
+
+public: //operators
+  T operator()(unsigned int a_r,unsigned int a_c) const {
+    //WARNING : no check on a_r,a_c.
+    return m_vec[a_r + a_c * D];
+  }
+
+  T& operator[](unsigned int a_index) { //for inlib/sg/sf_vec
+    //WARNING : no check on a_index.
+    return m_vec[a_index];
+  }
+  const T& operator[](unsigned int a_index) const {
+    //WARNING : no check on a_index.
+    return m_vec[a_index];
+  }
+  bool operator==(const mat& a_array) const {
+    return equal(a_array);
+  }
+  bool operator!=(const mat& a_array) const {
+    return !operator==(a_array);
+  }
+  mat& operator*=(const mat& a_m) {
+    _mul_mtx(a_m.m_vec);
+    return *this;
+  }
+  mat& operator+=(const mat& a_m) {
+    _add_mtx(a_m.m_vec);
+    return *this;
+  }
+  mat& operator-=(const mat& a_m) {
+    _sub_mtx(a_m.m_vec);
+    return *this;
+  }
+  mat& operator*=(const T& a_fac) {
+    for(unsigned int i=0;i<D2;i++) m_vec[i] *= a_fac;
+    return *this;
+  }
+protected:
+  void _add_mtx(const T a_m[]) {  // this = this + a_m,
+    for(unsigned int i=0;i<D2;i++) m_vec[i] += a_m[i];
+  }
+  void _sub_mtx(const T a_m[]) {  // this = this - a_m,
+    for(unsigned int i=0;i<D2;i++) m_vec[i] -= a_m[i];
+  }
+
+  void _mul_mtx(const T a_m[]) {
+    // this = this * a_m
+    unsigned int ord = D;
+    T res[D2];
+    for(unsigned int r=0;r<ord;r++) {
+      for(unsigned int c=0;c<ord;c++) {
+        T _value = zero();
+        for(unsigned int i=0;i<ord;i++) {
+          _value += (*(m_vec+r+i*ord)) * (*(a_m+i+c*ord)); //optimize.
+        }
+        *(res+r+c*ord) = _value;
+      }
+    }
+   {for(unsigned int i=0;i<D2;i++) m_vec[i] = res[i];}
+  }
+
+  void _left_mul_mtx(const T a_m[]) {
+    // this = a_m * this
+    unsigned int ord = D;
+    T res[D2];
+    for(unsigned int r=0;r<ord;r++) {
+      for(unsigned int c=0;c<ord;c++) {
+        T _value = zero();
+        for(unsigned int i=0;i<ord;i++) {
+          _value += (*(a_m+r+i*ord)) * (*(m_vec+i+c*ord)); //optimize.
+        }
+        *(res+r+c*ord) = _value;
+      }
+    }
+   {for(unsigned int i=0;i<D2;i++) m_vec[i] = res[i];}
+  }
+
+  T sub_determinant(unsigned int a_ord,
+                    unsigned int aRs[],
+                    unsigned int aCs[]) const {
+    //WARNING : to optimize, we do not check the content of aRs, aCs.
+    unsigned int ord = a_ord;
+    if(ord==0) return zero();
+    else if(ord==1) return value(aRs[0],aCs[0]);
+    else if(ord==2) {
+      //return (value(aRs[0],aCs[0]) * value(aRs[1],aCs[1]) -
+      //        value(aRs[1],aCs[0]) * value(aRs[0],aCs[1])); 
+      //Optimize the upper :
+
+      unsigned int r_0 = aRs[0];
+      unsigned int r_1 = aRs[1];
+      unsigned int c_0 = aCs[0];
+      unsigned int c_1 = aCs[1];
+
+      unsigned int _ord = D;
+      const T* p = m_vec;
+
+      return ( (*(p+r_0+c_0*_ord)) * (*(p+r_1+c_1*_ord)) -
+               (*(p+r_1+c_0*_ord)) * (*(p+r_0+c_1*_ord)) );
+    }
+
+    unsigned int rord = ord-1;
+    unsigned int* cs = new unsigned int[rord];
+    unsigned int* rs = new unsigned int[rord];
+
+    T det = zero();
+   {for(unsigned int i=0;i<rord;i++) {cs[i] = aCs[i+1];}}
+    unsigned int c = 0;
+    //if(c>=1) cs[c-1] = c-1;
+
+   {for(unsigned int i=0;i<rord;i++) {rs[i] = aRs[i+1];}}
+    bool sg = true; //c=0+r=0
+    for(unsigned int r=0;r<ord;r++) {
+      if(r>=1) rs[r-1] = aRs[r-1];
+      T subdet = sub_determinant(rord,rs,cs);
+      if(sg)
+        det += value(aRs[r],aCs[c]) * subdet;
+      else
+        det -= value(aRs[r],aCs[c]) * subdet;
+      sg = sg?false:true;
+    }
+
+    delete [] cs;
+    delete [] rs;
+
+    return det;
+  }
+
+protected:
+  static const unsigned int D2 = D*D;
+#ifdef INLIB_MAT_NEW
+  T* m_vec;
+#else
+  T m_vec[D*D];
+#endif
+
+private:static void check_instantiation() {mat<float,2> dummy;}
+};
+
+template <class T,unsigned int D> 
+inline void conj(mat<T,D>& a_m) {
+  T* pos = (T*)a_m.data();
+  for(unsigned int i=0;i<(D*D);i++,pos++) {
+    *pos = conj(*pos); //T = std::complex<>
+  }
+}
+
+template <class T,unsigned int D> 
+inline void dagger(mat<T,D>& a_m) {
+  conj(a_m);
+  a_m.transpose();
+}
+
+//for sf, mf :
+//template <class T,unsigned int D>
+//inline const T* get_data(const mat<T,D>& a_v) {return a_v.data();}
+
+template <class T,unsigned int D>
+inline mat<T,D> operator-(const mat<T,D>& a1,const mat<T,D>& a2) {
+  mat<T,D> res(a1);
+  res -= a2;
+  return res;
+}
+template <class T,unsigned int D>
+inline mat<T,D> operator+(const mat<T,D>& a1,const mat<T,D>& a2) {
+  mat<T,D> res(a1);
+  res += a2;
+  return res;
+}
+template <class T,unsigned int D>
+inline mat<T,D> operator*(const mat<T,D>& a1,const mat<T,D>& a2) {
+  mat<T,D> res(a1);
+  res *= a2;
+  return res;
+}
+template <class T,unsigned int D>
+inline mat<T,D> operator*(const T& a_fac,const mat<T,D>& a_m) {
+  mat<T,D> res(a_m);
+  res *= a_fac;
+  return res;
+}
+
+template <class T,unsigned int D>
+inline mat<T,D> commutator(const mat<T,D>& a1,const mat<T,D>& a2) {
+  return a1*a2-a2*a1;
+}
+
+template <class T,unsigned int D>
+inline mat<T,D> anticommutator(const mat<T,D>& a1,const mat<T,D>& a2) {
+  return a1*a2+a2*a1;
+}
+
+template <class T,unsigned int D>
+inline void commutator(const mat<T,D>& a1,const mat<T,D>& a2,
+                       mat<T,D>& a_tmp,
+                       mat<T,D>& a_res) {
+  a_res = a1;
+  a_res *= a2;
+  a_tmp = a2;
+  a_tmp *= a1;
+  a_res -= a_tmp;
+}
+
+template <class T,unsigned int D>
+inline void anticommutator(const mat<T,D>& a1,const mat<T,D>& a2,
+                           mat<T,D>& a_tmp,
+                           mat<T,D>& a_res) {
+  a_res = a1;
+  a_res *= a2;
+  a_tmp = a2;
+  a_tmp *= a1;
+  a_res += a_tmp;
+}
+
+template <class T,unsigned int D>
+inline bool commutator_equal(const mat<T,D>& a_1,const mat<T,D>& a_2,
+                             const mat<T,D>& a_c,const T& a_epsil) {
+  unsigned int order = D;
+  const T* p1 = a_1.data();
+  const T* p2 = a_2.data();
+  const T* pc = a_c.data();
+  for(unsigned int r=0;r<order;r++) {
+    for(unsigned int c=0;c<order;c++) {
+      T _12 = T();
+     {for(unsigned int i=0;i<order;i++) {
+        _12 += (*(p1+r+i*order)) * (*(p2+i+c*order));
+      }}
+      T _21 = T();
+     {for(unsigned int i=0;i<order;i++) {
+        _21 += (*(p2+r+i*order)) * (*(p1+i+c*order));
+      }}
+      T diff = (_12-_21) - *(pc+r+c*order);
+      if(diff<T()) diff *= T(-1);
+      if(diff>=a_epsil) return false;
+    }
+  }
+  return true;
+}
+
+template <class T,unsigned int D>
+inline bool anticommutator_equal(const mat<T,D>& a_1,const mat<T,D>& a_2,
+                                 const mat<T,D>& a_c,const T& a_epsil) {
+  unsigned int order = D;
+  const T* p1 = a_1.data();
+  const T* p2 = a_2.data();
+  const T* pc = a_c.data();
+  for(unsigned int r=0;r<order;r++) {
+    for(unsigned int c=0;c<order;c++) {
+      T _12 = T();
+     {for(unsigned int i=0;i<order;i++) {
+        _12 += (*(p1+r+i*order)) * (*(p2+i+c*order));
+      }}
+      T _21 = T();
+     {for(unsigned int i=0;i<order;i++) {
+        _21 += (*(p2+r+i*order)) * (*(p1+i+c*order));
+      }}
+      T diff = (_12+_21) - *(pc+r+c*order);
+      if(diff<T()) diff *= T(-1);
+      if(diff>=a_epsil) return false;
+    }
+  }
+  return true;
+}
+
+template <class T,unsigned int D>
+inline void exp(const mat<T,D>& a_matrix,unsigned int a_number,
+                mat<T,D>& a_res) {
+  // result = I + M + M**2/2! + M**3/3! + ....
+  a_res.set_identity();
+  mat<T,D> m;     
+  m.set_identity();
+  for(unsigned int i=1;i<a_number;i++) {
+    m = m * a_matrix; 
+    m.multiply(1./double(i)); 
+    a_res += m;
+  }
+}
+
+/*
+template <class T,unsigned int D>
+inline mat<T,D> log(const mat<T,D>& a_matrix,unsigned int a_number = 100) {
+  // result = (M-I) - (M-I)**2/2 + (M-I)**3/3 +...
+  // Warning : it may not converge...
+  mat<T,D> result;
+  mat<T,D> I;     
+  I.set_identity();
+  mat<T,D> x(a_matrix);     
+  x.subtract(I);
+  mat<T,D> m(I);
+  mat<T,D> tmp;
+  T fact = -1;
+  for(unsigned int i=0;i<a_number;i++) {
+    m = m * x; 
+    fact *= -1;
+    tmp = m;
+    tmp.multiply(fact/T(i+1)); 
+    result.add(tmp);
+  }
+  return result;
+}
+
+*/
+
+}
+
+#include <ostream>
+
+namespace inlib {
+
+//NOTE : print is a Python keyword.
+template <class T,unsigned int D>
+inline void dump(std::ostream& a_out,
+                 const std::string& aCMT,
+                 const mat<T,D>& a_matrix) {
+  if(aCMT.size()) a_out << aCMT << std::endl;
+  for(unsigned int r=0;r<D;r++) {
+    for(unsigned int c=0;c<D;c++) {
+      a_out << " " << a_matrix.value(r,c);
+    }
+    a_out << std::endl;
+  }
+}
+
+template <class T,unsigned int D>
+inline bool check_invert(const mat<T,D>& a_matrix,std::ostream& a_out) {
+  mat<T,D> I;
+  I.set_identity();
+  mat<T,D> tmp;
+  if(!a_matrix.invert(tmp)) return false;
+  tmp.mul_mtx(a_matrix);
+  if(!tmp.equal(I)) {
+    dump(a_out,"problem with inv of :",a_matrix);
+    return false;
+  }
+  return true;
+}
+
+}
+
+#endif

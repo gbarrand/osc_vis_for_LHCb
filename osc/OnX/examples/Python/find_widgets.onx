@@ -1,0 +1,27 @@
+<OnX>
+
+  <widget class="Window" name="session">
+    <geometry>400x400</geometry>
+    <title>find_widgets</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>30</sizeOfFixed>
+
+      <widget class="TabStack">
+        <widget class="PageViewer" name="Viewer"/>
+        <widget class="PageViewer" name="Viewer_0"/>
+        <widget class="PageViewer" name="Viewer_1"/>
+      </widget>
+
+      <widget class="VBox">
+        <widget class="PushButton">
+          <label>Quit</label>
+          <activate exec="DLD">OnX ui_exit</activate>
+        </widget>
+      </widget>
+    </widget>
+  </widget>
+</OnX>

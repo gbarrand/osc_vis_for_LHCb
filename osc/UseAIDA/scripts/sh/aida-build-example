@@ -1,0 +1,22 @@
+#!/bin/sh -f 
+
+#set -x
+
+# Look if aida-config is accessible :
+what=aida-config
+found=false
+old_IFS="${IFS}"
+IFS=:
+for path in $PATH ; do
+  if [ -f ${path}/${what} ] ; then found=true;break; fi
+done
+IFS="${old_IFS}"
+if [ ${found} = "false" ] ; then echo "${what} not found.";exit; fi
+
+args=$*
+
+cppflags="-I."
+
+cpp_compiler=`aida-config --compiler`
+
+eval ${cpp_compiler} ${cppflags} `aida-config --incs` ${args} `aida-config --libs`

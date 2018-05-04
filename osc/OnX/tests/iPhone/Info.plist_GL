@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleDisplayName</key>
+	<string>iOnX_GL</string>
+	<key>CFBundleExecutable</key>
+	<string>iOnX_GL</string>
+	<key>CFBundleIconFile</key>
+	<string>iOnX_GL.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.in2p3.iOnX_GL</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>iOnX_GL</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>LSRequiresIPhoneOS</key>
+	<string>YES</string>
+	<key>CFBundleSupportedPlatforms</key>
+	<array>
+		<string>iPhoneSimulator</string>
+	</array>
+	<key>DTPlatformName</key>
+	<string>iphonesimulator</string>	
+        <key>DTSDKName</key>
+	<string>iphonesimulator3.2</string>
+        <key>UIDeviceFamily</key>
+        <array>
+                <string>2</string> <!-- 2 is iPad -->
+        </array>
+</dict>
+</plist>

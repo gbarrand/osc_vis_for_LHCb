@@ -1,0 +1,42 @@
+#!/bin/sh -f
+
+root=/home/barrand/Coin
+from=${root}/SoGtk
+to=/projects/CoinGtk/v1
+
+# Not templated files :
+find ${from}/src -name "*.cpp" -exec ./cp_cpp {} ${from} ${to} \;
+#find ${from}/src -name "gtk*.cpp" -exec ./cp_cpp {} ${from} ${to} \;
+#find ${from}/src -name "Gtk*.cpp" -exec ./cp_cpp {} ${from} ${to} \;
+
+# Template devices :
+
+# Template viewers :
+./gui_in ${root}/SoGUI/viewers/SoGuiConstrainedViewer.cpp.in ${from}  ${to}/src/Inventor/Gtk/viewers Gtk
+./gui_in ${root}/SoGUI/viewers/SoGuiExaminerViewer.cpp.in ${from}  ${to}/src/Inventor/Gtk/viewers Gtk
+./gui_in ${root}/SoGUI/viewers/SoGuiFlyViewer.cpp.in ${from}  ${to}/src/Inventor/Gtk/viewers Gtk
+./gui_in ${root}/SoGUI/viewers/SoGuiFullViewer.cpp.in ${from}  ${to}/src/Inventor/Gtk/viewers Gtk
+./gui_in ${root}/SoGUI/viewers/SoGuiPlaneViewer.cpp.in ${from}  ${to}/src/Inventor/Gtk/viewers Gtk
+./gui_in ${root}/SoGUI/viewers/SoGuiWalkViewer.cpp.in ${from}  ${to}/src/Inventor/Gtk/viewers Gtk
+./gui_in ${root}/SoGUI/viewers/SoGuiViewer.cpp.in ${from}  ${to}/src/Inventor/Gtk/viewers Gtk
+
+# Template widgets :
+./gui_in ${root}/SoGUI/widgets/SoGuiPopupMenu.cpp.in ${from}  ${to}/src/Inventor/Gtk/widgets Gtk
+./gui_in ${root}/SoGUI/widgets/SoAnyThumbWheel.cpp.in ${from}  ${to}/src/Inventor/Gtk/widgets Gtk
+#./gui_in ${root}/SoGUI/SoGuiCursors.cpp.in ${from}  ${to}/src/Inventor/Gtk Gtk
+
+# Template general :
+./gui_in ${root}/SoGUI/SoAny.cpp.in ${from}  ${to}/src/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoAnyMaterialList.cpp.in ${from}  ${to}/src/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoAnyMaterialListBuiltins.cpp.in ${from}  ${to}/src/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoGuiCommon.cpp.in ${from}  ${to}/src/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoGuiObject.cpp.in ${from}  ${to}/src/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoGuiRenderArea.cpp.in ${from}  ${to}/src/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoGuiGLWidgetCommon.cpp.in ${from}  ${to}/src/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoGuiCursor.cpp.in ${from}  ${to}/src/Inventor/Gtk Gtk
+
+#./gui_in ${root}/SoGUI/spwinput_x11.cpp.in ${from} ${to}/src/Inventor/Gtk Gtk
+
+
+
+

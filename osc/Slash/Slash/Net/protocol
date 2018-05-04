@@ -1,0 +1,20 @@
+#ifndef Slash_Net_protocol
+#define Slash_Net_protocol
+
+// data client protocol.
+// used in SoSDL, G4Lab.
+
+#define inlib_net_protocol_hello       "hello"
+#define inlib_net_protocol_exit        "exit"
+#define inlib_net_protocol_doc         "doc"
+#define inlib_net_protocol_cbk         "cbk"
+#define inlib_net_protocol_clear       "clear"
+#define inlib_net_protocol_selection   "selection"
+
+// OnX :
+#define inlib_net_protocol_file        "file"
+#define inlib_net_protocol_file_exists "file_exists"
+#define inlib_net_protocol_out         "output"
+#define inlib_net_protocol_out_ready   "out_ready"
+
+#endif

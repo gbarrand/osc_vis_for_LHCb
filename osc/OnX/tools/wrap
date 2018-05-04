@@ -1,0 +1,11 @@
+#!/bin/sh -f
+
+current=`pwd`
+
+owrap ../scripts/OnX/Session.onx ../include/OnX/Core/Session_onx.h
+
+owrap ../scripts/Help/osc_gui_viewer.help ../applications/osc_gui_viewer_help.h
+owrap ../scripts/Help/osc_new_app.help ../applications/osc_new_app_help.h
+
+cd "${current}"
+

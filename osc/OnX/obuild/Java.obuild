@@ -1,0 +1,112 @@
+<obuild>
+
+  <!-- not this : -->
+  <reference package="foreign" path="../../foreign" file="JavaVM.obuild"/>  
+
+  <!-- this : -->
+  <dll name="OnXJava">
+    <group>Java</group>
+    <check_foreign>JavaVM</check_foreign>
+
+    <file>../source/Java/Java.cxx</file>
+
+    <!-- not this : -->
+    <cxx_include copy="cxx_include" from="Lib"/>
+    <cxx_include copy="cxx_include" from="Slash"/>
+
+    <cxx_include copy="c_include" from="JavaVM"/>
+
+    <lib copy="lib_LibUtils" from="Lib"/>
+    <lib copy="lib" from="JavaVM"/>
+  </dll>
+
+  <!-- OnX_SWIG_Java is a "jnilib".
+       On Darwin it is a .bundle renamed in .jnilib. -->
+  
+  <dll name="OnX_SWIG_Java">
+    <group>Java</group>
+    <check_foreign>JavaVM</check_foreign>
+
+    <file>../source/Java/OnX_SWIG_Java.cxx</file>
+
+    <!-- not this : -->
+
+    <cxx_include>${obuild_OnX_path}/include</cxx_include>
+    <cxx_include copy="cxx_include" from="Lib"/>
+    <cxx_include copy="cxx_include" from="Slash"/>
+
+    <cxx_include copy="c_include" from="JavaVM"/>
+
+    <cxx_include copy="cxx_include" from="HEPVis"/>
+    <cxx_include copy="cxx_include" from="CoinGL"/>
+    <cxx_macro copy="cxx_macro" from="CoinGL"/>
+    <cxx_options copy="c_options" from="OpenGL"/>
+    <cxx_macro copy="c_macro" from="OpenGL"/>
+
+    <lib copy="lib" from="JavaVM"/>
+    <lib>OnXCore</lib>
+    <lib copy="lib" from="expat"/>
+    <lib copy="lib" from="zip"/>
+    <lib copy="lib" from="zlib"/>
+    <lib copy="lib_LibUtils" from="Lib"/>
+    <lib copy="lib_HEPVisGUI" from="HEPVis"/>
+    <lib copy="lib_HEPVisPlotter" from="HEPVis"/>
+    <lib copy="lib_HEPVisDetector" from="HEPVis"/>
+    <lib copy="lib_HEPVisGeometry" from="HEPVis"/>
+    <lib copy="lib_HEPVisUtils" from="HEPVis"/>
+    <lib copy="lib" from="jpeg"/>
+    <lib copy="lib" from="dvi2bitmap"/>
+    <lib copy="lib" from="freetype2"/>
+    <lib copy="lib" from="png"/>
+    <lib copy="lib" from="zlib"/>
+    <lib copy="lib" from="CoinGL"/>
+
+    <copy platform="Darwin" verbatim="yes">libOnX_SWIG_Java.jnilib</copy>
+  </dll>
+
+
+  <library name="OnX_SWIG_Java_jar">  <!-- OnX java package -->
+    <group>Java</group>
+    <check_foreign>JavaVM</check_foreign>
+
+    <files>../source/Java/OnX/*.java</files>
+    <copy>OnX</copy> <!-- will produce a OnX.jar -->
+  </library>
+
+  <application name="OnX_test_Java_hello">
+    <group>Java</group>
+    <check_foreign>JavaVM</check_foreign>
+
+    <file>../tests/Java/OnX_test_Java_hello.java</file>
+  </application>
+
+  <!-- Examples : -->
+  
+  <!-- The below examples can be run by setting the CLASSPATH to :
+         dir_bin/OnXLab.jar:dir_bin/<appname>.jar
+       and then :
+         OS> <setup OnX>  # to setup the load library path.
+         OS> java <appname>
+      or (if not wanting to increment CLASSPATH) with :
+         OS> java -classpath dir_bin/OnXLab.jar:dir_bin/<appname>.jar <appname>
+       On a Windows, a ';' instead of ':' must be used as a 
+       separator in the classpath list. -->
+
+  <template name="OnX_exa_Java_T">
+    <group>Java</group>
+    <check_foreign>JavaVM</check_foreign>
+
+    <file>../examples/Java/@@name@@.java</file>
+    <lib>OnX</lib> <!-- OnX.jar -->
+
+    <run>java -classpath "@@dir_bin@@/OnX.jar@@path_separator@@@@dir_bin@@/@@name@@.jar" @@name@@</run>
+  </template>
+
+  <application template="OnX_exa_Java_T" name="OnX_exa_Java_cube"/>
+  <application template="OnX_exa_Java_T" name="OnX_exa_Java_detector"/>
+  <application template="OnX_exa_Java_T" name="OnX_exa_Java_hello"/>
+  <application template="OnX_exa_Java_T" name="OnX_exa_Java_shapes"/>
+  <application template="OnX_exa_Java_T" name="OnX_exa_Java_std_vector"/>
+  <application template="OnX_exa_Java_T" name="OnX_exa_Java_typemaps"/>
+
+</obuild>

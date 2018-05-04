@@ -1,0 +1,49 @@
+#!/bin/sh -f
+
+build_group=
+
+build_args=
+while test $# -ge 1 ; do
+  case $1 in
+    -group*) build_group="${1:7}";;
+         -*) build_args="${build_args} $1";;
+  esac
+  shift
+done
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+if [ "${build_group}" = Python ] ; then
+  ./build_plugin_OnXPython       ${build_args}
+  ./build_plugin_OnX_SWIG_Python ${build_args}
+
+elif [ "${build_group}" = NextStep ] ; then
+  ./build_plugin_OnXNextStep ${build_args}
+
+elif [ "${build_group}" = Xt ] ; then
+  ./build_plugin_OnXXt       ${build_args}
+
+elif [ "${build_group}" = gtk ] ; then
+  ./build_plugin_OnXGtk       ${build_args}
+
+elif [ "${build_group}" = Qt ] ; then
+  ./build_plugin_OnXQt       ${build_args}
+
+else
+
+  ./build_lib_OnXCore        ${build_args}
+  ./build_lib_OnXInventor    ${build_args}
+
+  ./build_plugin_OnX         ${build_args}
+  ./build_plugin_OnXExas     ${build_args}
+  ./build_plugin_OnXTests    ${build_args}
+
+  ./build_app_OnX_onx        ${build_args}
+
+fi
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////

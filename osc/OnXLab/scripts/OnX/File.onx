@@ -1,0 +1,29 @@
+<widget class="CascadeButton">
+  <label>File</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Open...</label>
+      <activate exec="DLD">OnX ui_show_dialog @{ONXLAB_HOME}@ @cat@ /scripts/OnX/InputOpen.onx OnXLab_InputOpen_dialog</activate>
+    </widget>
+<!--
+    <reference file="$ONXROOT/scripts/OnX/Execute.onx"/>
+-->
+    <widget class="MenuItem">
+      <label>Print</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/InputPrint.onx OnX_InputPrint_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>output to OnX</label>
+      <activate exec="DLD">OnX session_redirectOutput true</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>output to terminal</label>
+      <activate exec="DLD">OnX session_redirectOutput false</activate>
+    </widget>
+    <widget class="MenuItem" name="OnXLab_File_exit">
+      <label>Exit</label>
+      <accelerator>Ctrl+q</accelerator>
+      <activate exec="DLD">OnX ui_exit</activate>
+    </widget>
+  </widget>
+</widget>

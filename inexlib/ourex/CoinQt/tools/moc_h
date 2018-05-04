@@ -1,0 +1,23 @@
+#!/bin/sh -f
+
+dirname=`dirname $1`
+basename=`basename $1`
+
+# Target name :
+#cppname=`echo $basename | sed -e "s#\.h#\.cpp#g" | sed -e "s#include#src#g"`
+toname=moc_`echo $basename | sed -e "s#\.h#\.ic#g"`
+todir=`echo $dirname | sed -e "s|include|src|g"`
+
+echo '--------------++++'
+echo ${todir}
+echo ${toname}
+#echo ${cppname}
+#exit
+
+${QTDIR}/bin/moc -o ${todir}/${toname} $1
+
+#if test -f ${todir}/${cppname} ;
+#then
+#sed -e "s#moc_${cppname}#${toname}#g" ${todir}/${cppname} > tmp
+#/bin/mv tmp ${todir}/${cppname}
+#fi

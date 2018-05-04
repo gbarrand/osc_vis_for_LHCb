@@ -1,0 +1,53 @@
+
+<!-- to build Inventor related components. -->
+
+<obuild>
+
+  <reference package="HEPVis" path="../../HEPVis" file="obuild/export.obuild"/>
+
+  <dll name="OnXLabInventor">
+    <wrap>
+      <in>../scripts/OnX/PlotterWindow.onx</in>
+      <out>../OnXLab/Inventor/PlotterWindow_onx.h</out>
+    </wrap>
+
+    <!-- AIDA::IPlotter implementation by using HEPVis and Inventor. -->
+    <file>../source/Inventor/Styles.cxx</file>
+    <file>../source/Inventor/PlottableThings.cxx</file>
+    <file>../source/Inventor/Representer.cxx</file>
+    <file>../source/Inventor/Plotter.cxx</file>
+    <file>../source/Inventor/PlotterManager.cxx</file>
+    <file>../source/Inventor/Inventor.cxx</file>
+
+    <cxx_include>${obuild_OnXLab_path}</cxx_include>
+
+
+    <!-- not this : -->
+    <cxx_include copy="cxx_include" from="BatchLab"/>
+    <cxx_include copy="cxx_include" from="AIDA"/>
+    <cxx_include copy="cxx_include" from="Lib"/>
+    <cxx_include copy="cxx_include" from="inlib"/>
+    <cxx_include copy="cxx_include" from="Slash"/>
+    <cxx_include copy="cxx_include" from="Minuit"/>
+  
+    <cxx_include copy="cxx_include" from="HEPVis"/>
+    <cxx_include copy="cxx_include" from="CoinGL"/>
+    <cxx_macro copy="cxx_macro" from="CoinGL"/>
+
+    <!-- (stat) data part to plot. -->
+    <lib copy="lib_LibUtils" from="Lib"/>
+    <lib copy="lib" from="Minuit"/>
+
+    <!-- graphics. -->
+    <lib copy="lib_HEPVisPlotter" from="HEPVis"/>
+    <lib copy="lib_HEPVisUtils" from="HEPVis"/>
+    <lib copy="lib" from="jpeg"/>
+    <lib copy="lib" from="dvi2bitmap"/>
+    <lib copy="lib" from="freetype2"/>
+    <lib copy="lib" from="png"/>
+    <lib copy="lib" from="zip"/>
+    <lib copy="lib" from="zlib"/>
+    <lib copy="lib" from="CoinGL"/>
+  </dll>
+
+</obuild>

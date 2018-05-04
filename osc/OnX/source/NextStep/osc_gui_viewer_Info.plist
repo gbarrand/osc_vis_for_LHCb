@@ -1,0 +1,17 @@
+<plist>
+  <dict>
+    <key>CFBundleDocumentTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleTypeExtensions</key>
+        <array>
+          <string>onx</string>
+        </array>
+        <key>CFBundleTypeRole</key>
+        <string>Viewer</string>  <!-- Editor, Viewer, None, Shell -->
+      </dict>
+    </array>
+    <key>CFBundleIconFile</key>
+    <string>osc-gui-viewer</string>
+  </dict>
+</plist>

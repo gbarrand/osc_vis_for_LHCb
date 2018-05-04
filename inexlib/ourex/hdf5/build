@@ -1,0 +1,58 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+. ../mgr/build_header
+
+#//////////////////////////////////////////////
+#/// compile //////////////////////////////////
+#//////////////////////////////////////////////
+if [ ${build_compile} = "yes" ] ; then
+
+empty_files="H5Dmpio.c H5FDgass.c H5Dmpio.c H5FDmpiposix.c"
+empty_files="${empty_files} H5FDsrb.c H5FS.c H5Obogus.c H5Smpio.c H5Zszip.c"
+empty_files="${empty_files} H5Zszip.c H5FDmpio.c"
+if [ ${build_sdk_ios} = "yes" ] ; then
+  echo dummy > /dev/null
+else
+  empty_files="${empty_files} H5TS.c" #H5_HAVE_THREADSAFE
+fi
+
+/bin/rm -f tmp_0
+find ./src -name '*.c' -print > tmp_0
+for file in $(cat tmp_0) ; do
+  name="`basename ${file}`"
+  is_in=`echo ${empty_files} | sed -e "s:${name}::g"`
+  if [ "${is_in}" = "${empty_files}" ] ; then
+    cfiles="${cfiles} ${file}"
+  fi
+done
+/bin/rm -f tmp_0
+
+if [ ${build_visual} = "yes" ] ; then
+  ccflags="${ccflags} /I./include"
+  ccflags="${ccflags} /I../zlib/include"
+else
+  ccflags="${ccflags} -w"
+  ccflags="${ccflags} -I./include"
+  if [ `uname` = "Linux" ] ; then
+    # FIXME : put the below c_macros in the H4pubconf_Linux.h ???
+    ccflags="${ccflags} -D_LARGEFILE_SOURCE"
+    ccflags="${ccflags} -D_LARGEFILE64_SOURCE"
+    ccflags="${ccflags} -D_FILE_OFFSET_BITS=64"
+    ccflags="${ccflags} -D_POSIX_SOURCE"
+    ccflags="${ccflags} -D_BSD_SOURCE"
+  fi
+  ccflags="${ccflags} -I../zlib/include"
+fi
+
+. ${inlib_mgr}/build_compile
+
+fi # end build_compile
+ 
+if [ ${build_archive} = "yes" ] ; then . ${inlib_mgr}/build_archive; fi
+
+. ${inlib_mgr}/build_clean

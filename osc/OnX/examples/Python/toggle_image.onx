@@ -1,0 +1,29 @@
+<OnX>
+  <widget class="Window">
+    <geometry>200x150</geometry>
+    <title>toggle_image</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VContainer"> 
+
+      <widget class="ToggleButton" name="toggle">
+        <pixmap>logo_LAL.xpm</pixmap>
+        <activate exec="Python">toggle_callback()</activate>
+      </widget>
+
+      <widget class="PushButton" name="button">
+        <pixmap>logo_LAL.xpm</pixmap>
+        <create exec="DLD">OnX session_set_parameter button.related_state off</create>
+        <activate exec="Python">button_callback()</activate>
+      </widget>
+
+      <widget class="PushButton">
+        <label>Exit</label>
+        <activate exec="DLD">OnX ui_exit</activate>
+      </widget>
+
+    </widget>
+
+  </widget>
+</OnX>

@@ -1,0 +1,34 @@
+<OnX>
+  <create exec="DLD">OnX OnX_Initialize</create>
+  <widget class="Window" name="main">
+    <geometry>900x700+50+0</geometry>
+    <title>OnX/Main</title>
+    <widget class="MenuBar" name="menuBar">
+      <reference file="$ONXROOT/scripts/OnX/File.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/Examples.onx"/>
+      <reference file="$ONXROOT/tests/OnX/Test/Test.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/Scene.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/Camera.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/Page.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/GUI.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/Viewers.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/Help.onx"/>
+    </widget>
+    <widget class="ToolBar">
+      <widget class="ToolBarItem">
+        <label>Print...</label>
+        <pixmap>$ONXROOT/scripts/images/fileprint.xpm</pixmap>
+        <tooltip>Map print dialog</tooltip>
+        <activate exec="DLD">OnX OnX_print_OpenGLArea</activate>
+      </widget>
+    </widget>
+    <widget class="OpenGLArea" name="OpenGLArea_1">
+      <create exec="DLD">OnX ui_setCurrentWidget OpenGLArea_1</create>
+      <paint exec="DLD">OnX OnX_OpenGL_contour</paint>
+    </widget>
+    <widget class="FileSelection" name="fileChooser">
+      <title>File selection</title>
+      <show>no</show>
+    </widget>
+  </widget>
+</OnX>

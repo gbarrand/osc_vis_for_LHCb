@@ -1,0 +1,213 @@
+
+cpp_compiler=cpp_not_defined
+
+cppflags=
+mmflags=
+
+if [ ${build_gnu} = "yes" ] ; then
+  compiler_kind=gnu
+  cpp_compiler=c++
+  cpp_linker=c++
+
+elif [ ${build_intel} = "yes" ] ; then
+  compiler_kind=intel
+  cpp_compiler=icpc
+  cpp_linker=icpc
+
+elif [ ${build_clang} = "yes" ] ; then
+  compiler_kind=clang
+  cpp_compiler=clang++
+  cpp_linker=clang++
+
+elif [ ${build_sdk_mac} = "yes" ] ; then
+  compiler_kind=sdk_mac
+  cpp_compiler=clang++
+  cpp_linker=clang++
+
+  macosx_vers=10.6
+  macosx_sdk="/Developer/SDKs/MacOSX${macosx_vers}.sdk"
+  if [ ! -d "${macosx_sdk}" ] ; then
+    echo 'MacOSX sdk not found.'
+    exit
+  fi
+
+  macosx_target=10.6
+
+  cpp_compiler="${cpp_compiler} -arch x86_64 -isysroot ${macosx_sdk}"
+  cpp_compiler="${cpp_compiler} -mmacosx-version-min=${macosx_target}"
+
+  cpp_linker="${cpp_linker} -arch x86_64 -isysroot ${macosx_sdk}"
+
+  #LANG=en_US.US-ASCII
+  #export LANG
+
+  MACOSX_DEPLOYMENT_TARGET=${macosx_target}
+  export MACOSX_DEPLOYMENT_TARGET
+
+elif [ ${build_sdk_ios} = "yes" ] ; then
+  compiler_kind=sdk_ios
+  cpp_compiler=clang++
+  cpp_linker=clang++
+
+  ios_vers=5.0
+  ios_sdk="/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS${ios_vers}.sdk"
+  if [ ! -d "${ios_sdk}" ] ; then
+    echo 'iOS sdk not found.'
+    exit
+  fi
+
+  ios_target=3.2
+
+  cpp_compiler="${cpp_compiler} -arch armv7 -pipe -isysroot ${ios_sdk}"
+
+  cpp_linker="${cpp_linker} -arch armv7 -isysroot ${ios_sdk}"
+  cpp_linker="${cpp_linker} -miphoneos-version-min=${ios_target}"
+
+  cppflags="${cppflags} -miphoneos-version-min=${ios_target}"
+
+#  cppflags="${cppflags} -D__IPHONE_OS_VERSION_MIN_REQUIRED=30200"
+#    cppflags="${cppflags} -Wno-trigraphs -Wreturn-type -Wunused-variable"
+#    cppflags="${cppflags} -fmessage-length=0 -fpascal-strings"
+#    cppflags="${cppflags} -fexceptions -fasm-blocks -fvisibility=hidden"
+#    cppflags="${cppflags} -fvisibility-inlines-hidden"
+#    cppflags="${cppflags} -gdwarf-2"
+
+
+  mmflags="${mmflags} -fobjc-abi-version=2 -fobjc-legacy-dispatch"
+
+  LANG=en_US.US-ASCII
+  export LANG
+
+  IPHONEOS_DEPLOYMENT_TARGET=${ios_target}
+  export IPHONEOS_DEPLOYMENT_TARGET
+
+elif [ ${build_sdk_iossim} = "yes" ] ; then
+  compiler_kind=sdk_iossim
+  cpp_compiler=clang++
+  cpp_linker=clang++
+
+  ios_vers=5.0
+  ios_sdk="/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator${ios_vers}.sdk"
+  if [ ! -d "${ios_sdk}" ] ; then
+    echo 'iOS sdk not found.'
+    exit
+  fi
+
+  cpp_compiler="${cpp_compiler} -arch i386 -pipe -isysroot ${ios_sdk}"
+
+  cpp_linker="${cpp_linker} -arch i386 -isysroot ${ios_sdk}"
+
+  cppflags="${cppflags} -D__IPHONE_OS_VERSION_MIN_REQUIRED=30200"
+  mmflags="${mmflags} -fobjc-abi-version=2 -fobjc-legacy-dispatch"
+
+#  MACOSX_DEPLOYMENT_TARGET=10.6
+#  export MACOSX_DEPLOYMENT_TARGET
+#  cpp_linker="${cpp_linker} -mmacosx-version-min=10.6"
+#  cpp_linker="${cpp_linker} -miphoneos-version-min=${ios_vers}"
+#  cpp_linker="${cpp_linker} -Xlinker -objc_abi_version -Xlinker 2"
+
+elif [ ${build_visual} = "yes" ] ; then
+  compiler_kind=visual
+  cpp_compiler=cl.exe
+
+  if [ "${MSVCDir}" != "" ] ;  then
+    # Visual Studio 2003
+    cpp_linker="`cygpath \"${MSVCDir}\"/bin/link.exe`"
+  else
+    if [ "${VCINSTALLDIR}" != "" ] ;  then
+      # Visual Studio 9.0
+      cpp_linker="`cygpath \"${VCINSTALLDIR}\"/bin/link.exe`"
+    else
+      echo "env variables MSVCDir and VCINSTALLDIR not defined. You have to setup Visual."
+      exit
+    fi  
+  fi  
+  #echo ${cpp_linker}
+  cpp_linker=`echo ${cpp_linker} | sed -e 's: :\\\ :g'`
+
+  # ?
+  cpp_linker="${cpp_linker} /nologo /DWIN32 /MD /O2 /W3 /EHsc /GR" 
+
+elif [ ${build_sdk_android} = "yes" ] ; then
+  compiler_kind=sdk_android
+
+  sdk_home=/usr/local/Android/android-sdk_r16-macosx
+  ndk_home=/usr/local/Android/android-ndk-r7
+
+  ndk_bin=${ndk_home}/toolchains/arm-linux-androideabi-4.4.3/prebuilt/darwin-x86/bin
+
+  cpp_compiler=${ndk_bin}/arm-linux-androideabi-g++
+
+ #cppflags="${cppflags} -MMD -MP -MF <some .d path>"
+ #cppflags="${cppflags} -Ijni"
+ #cppflags="${cppflags} -O2 -DNDEBUG -g"
+ #cppflags="${cppflags} -I${ndk_home}/sources/cxx-stl/system/include"
+
+  # same options as use_cc/ccflags :
+  cppflags="${cppflags} -fpic"
+  cppflags="${cppflags} -D__ARM_ARCH_5__ -D__ARM_ARCH_5T__"
+  cppflags="${cppflags} -D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__"
+  cppflags="${cppflags} -Wno-psabi -march=armv5te -mtune=xscale -msoft-float"
+  cppflags="${cppflags} -mthumb"
+  cppflags="${cppflags} -Os"
+  cppflags="${cppflags} -Wa,--noexecstack"
+  cppflags="${cppflags} -ffunction-sections -funwind-tables -fstack-protector"
+  cppflags="${cppflags} -fomit-frame-pointer -fno-strict-aliasing"
+  cppflags="${cppflags} -finline-limit=64"
+  cppflags="${cppflags} -I${ndk_home}/platforms/android-8/arch-arm/usr/include"
+
+  cppflags="${cppflags} -DANDROID"
+
+  # c++ flags :
+#  cppflags="${cppflags} -fno-exceptions -fno-rtti"
+  cppflags="${cppflags} -I${ndk_home}/sources/cxx-stl/gnu-libstdc++/include"
+  cppflags="${cppflags} -I${ndk_home}/sources/cxx-stl/gnu-libstdc++/libs/armeabi/include"
+
+  cpp_linker=${cpp_compiler}
+
+else
+  echo 'no compiler given.'
+  exit
+fi
+
+# NOTE : if not using plugin at all -fPIC is not needed,
+#        but we have some in osc software.
+if [ `uname` = "Linux" ] ; then cppflags="${cppflags} -fPIC";fi
+
+G4_cppflags=
+if [ ${build_visual} = "yes" ] ; then
+
+  cppflags="${cppflags} /nologo /DWIN32 /MD /O2 /W3 /EHsc /GR" 
+
+  if [ ${build_mem} = "yes" ] ; then cppflags="${cppflags} /DINLIB_MEM"; fi
+
+  cppflags="${cppflags} /I.."
+
+else
+
+  if [ ${build_debug} = "yes" ] ; then
+    cppflags="${cppflags} -g"
+  else
+    cppflags="${cppflags} -O2"
+  fi
+
+  if [ ${build_mem} = "yes" ] ; then cppflags="${cppflags} -DINLIB_MEM"; fi
+
+  if [ ${build_m32} = yes ] ; then cppflags="${cppflags} -m32"; fi
+
+  if [ ${build_intel} = "yes" ] ; then
+    G4_cppflags="-ansi -Wno-non-virtual-dtor -Wwrite-strings -Wpointer-arith -Woverloaded-virtual"
+  elif [ ${build_clang} = "yes" ] ; then
+    G4_cppflags="-Wno-non-virtual-dtor -Wwrite-strings -Wpointer-arith -Woverloaded-virtual"
+  elif [ ${build_sdk_ios} = "yes" -o ${build_sdk_iossim} = "yes" ] ; then
+    G4_cppflags="-Wno-non-virtual-dtor -Wwrite-strings -Wpointer-arith -Woverloaded-virtual"
+  elif [ ${build_sdk_android} = "yes" ] ; then
+    echo dummy > /dev/null
+  else
+    G4_cppflags="-W -Wall -ansi -pedantic -Wno-non-virtual-dtor -Wno-long-long -Wwrite-strings -Wpointer-arith -Woverloaded-virtual"
+    G4_cppflags="${G4_cppflags} -Wshadow"
+  fi
+
+fi
+
+cppflags0="${cppflags}"

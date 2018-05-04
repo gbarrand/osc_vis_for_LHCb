@@ -1,0 +1,45 @@
+#!/bin/sh -f
+
+#
+# build the H2R plugin.
+#
+
+#set -x
+
+if [ "${ROOTSYS}" = "" ] ; then
+  echo "You have to 'source setup' ROOT."
+  exit
+fi
+
+#////////////////////////////////////////////
+#///// To be customized if needed : /////////
+#////////////////////////////////////////////
+
+ROOT_rootcint=`root-config --bindir`/rootcint
+ROOT_incs=`root-config --cflags`
+ROOT_libs=`root-config --libs`
+
+inlib_incs="-I../../../inlib"
+
+bin=.
+#////////////////////////////////////////////
+#////////////////////////////////////////////
+
+# Generating H2R CINT wrapping :
+eval ${ROOT_rootcint} -f G__H2R.cpp -c ${inlib_incs} H2R_Def.h H2R_LinkDef.h 
+
+eval c++ -c -O -o ${bin}/G__H2R.o ${ROOT_incs} ${inlib_incs} G__H2R.cpp 
+
+if test `uname` = "Darwin" ; then
+/bin/rm -f ${bin}/H2R.bundle
+eval c++ -bundle -twolevel_namespace -o ${bin}/H2R.bundle ${bin}/G__H2R.o ${ROOT_libs}
+# ROOT wants anyway .so for DLLs on Mac :
+/bin/mv H2R.bundle H2R.so
+fi
+
+if test `uname` = "Linux" ; then
+/bin/rm -f ${bin}/libH2R.so
+eval g++ -shared -o ${bin}/libH2R.so ${bin}/G__H2R.o ${ROOT_libs}
+/bin/mv libH2R.so H2R.so
+fi
+

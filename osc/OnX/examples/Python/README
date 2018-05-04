@@ -1,0 +1,20 @@
+
+ The OnX Python examples must be run from a copy
+ of the OnX/examples/Python directory. (This is so
+ because in general a .py example makes reference 
+ to a .onx file describing a piece of GUI).
+
+ Example of a Python session :
+
+   OS> <source osc_vis setup>
+   OS> <source osc_vis python setup>
+   OS> python
+   >>> import Slash
+   >>> session = Slash.create_session()
+   >>> ui = session.createUI('page_viewer.onx')
+   >>> ui.steer()
+   >>> del session
+
+ To steer the GUI but have also the hand on the Python 
+ prompt, look at the prompt.py and prompt_thread.py
+ examples.

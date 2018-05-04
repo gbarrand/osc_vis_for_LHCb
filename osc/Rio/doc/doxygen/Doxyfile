@@ -1,0 +1,31 @@
+PROJECT_NAME     = "Rio"
+PROJECT_NUMBER   = v5r0
+OUTPUT_DIRECTORY = $(RIOROOT)/doc
+#GENERATE_TAGFILE = Rio.tag
+GENERATE_HTML    = YES
+GENERATE_LATEX   = YES
+GENERATE_MAN     = NO
+GENERATE_RTF     = NO
+CASE_SENSE_NAMES = NO
+
+#INPUT            = $(RIOROOT)/Rio $(RIOROOT)/source $(RIOROOT)/doc/doxygen
+INPUT            = $(RIOROOT)/doc/doxygen $(RIOROOT)/doc/h
+EXCLUDE_PATTERNS = Tailor.h ZIP.h
+FILE_PATTERNS    = *.h *.cxx
+EXAMPLE_PATH     = $(RIOROOT)/tests/Rio_test.cxx
+#IMAGE_PATH       = $(RIOROOT)/doc/images
+RECURSIVE        = YES
+EXTRACT_ALL      = YES
+
+SOURCE_BROWSER   = YES
+INLINE_SOURCES   = YES
+HTML_ALIGN_MEMBERS = YES
+HTML_HEADER      = $(RIOROOT)/doc/doxygen/header.html 
+HTML_FOOTER      = $(RIOROOT)/doc/doxygen/footer.html
+HAVE_DOT         = YES
+QUIET            = YES
+WARNINGS         = NO
+ALPHABETICAL_INDEX = YES
+COLS_IN_ALPHA_INDEX = 3
+JAVADOC_AUTOBRIEF = YES
+

@@ -1,0 +1,306 @@
+#!/bin/sh -f
+
+if [ `uname` != Darwin ] ; then
+  echo "You are not on a Mac !"
+  exit
+fi
+
+#set -x
+
+if test $# -lt 1 ; then
+  echo "Give the name of an application."
+  exit
+fi
+
+obuild_app=$1
+shift
+
+echo "build ${obuild_app}.app..."
+
+obuild_pwd=`pwd`
+
+obuild_path_app="${obuild_pwd}/${obuild_app}"
+obuild_dir_app="${obuild_pwd}/${obuild_app}.app"
+
+# Create the .app structure :
+/bin/rm -R -f "${obuild_dir_app}"
+/bin/mkdir -p "${obuild_dir_app}/Contents/MacOS"
+obuild_dir_lib="${obuild_dir_app}/Contents/lib"
+/bin/mkdir -p "${obuild_dir_lib}"
+obuild_dir_dll="${obuild_dir_app}/Contents/bin"
+/bin/mkdir -p "${obuild_dir_dll}"
+obuild_dir_res="${obuild_dir_app}/Contents/Resources"
+/bin/mkdir -p "${obuild_dir_res}"
+
+# Copy the application :
+/bin/cp "${obuild_path_app}" "${obuild_dir_app}/Contents/MacOS/${obuild_app}"
+
+if [ -e /Library/Frameworks/QtGui.framework/Resources/qt_menu.nib ] ; then
+  cp -R /Library/Frameworks/QtGui.framework/Resources/qt_menu.nib "${obuild_dir_res}"
+fi
+
+# probably too much things put in the .app.
+find "${OSC_HOME_DIR}/bin" -name "BatchLab*.bundle" -exec /bin/cp {} "${obuild_dir_app}/Contents/bin/." \;
+find "${OSC_HOME_DIR}/bin" -name "OnX*.bundle" -exec /bin/cp {} "${obuild_dir_app}/Contents/bin/." \;
+
+find "${obuild_dir_app}/Contents/bin" -name "OnX_config*.bundle" -exec /bin/rm -f {} \;
+
+/bin/mkdir -p "${obuild_dir_res}/HEPVis"
+/bin/cp -R "${OSC_HOME_DIR}/Resources/HEPVis/fonts" "${obuild_dir_res}/HEPVis"
+
+/bin/cp -R "${OSC_HOME_DIR}/Resources/OnX/scripts/OnX.nib" "${obuild_dir_res}"
+/bin/mv "${obuild_dir_res}/OnX.nib" "${obuild_dir_res}/${obuild_app}.nib"
+
+cd "${obuild_pwd}"
+
+s_awk='{i=index($0," (compatibility");if(i==0){print $0;} else { print substr($0,0,i-1);}}'
+
+grep_v_list=""
+grep_v_list="${grep_v_list} /usr/lib"
+grep_v_list="${grep_v_list} /System/Library"
+grep_v_list="${grep_v_list} /usr/X11R6/lib"
+grep_v_list="${grep_v_list} /usr/X11/lib"
+grep_v_list="${grep_v_list} /opt/local/lib"
+
+grep_Lib_fmk_pattern='^/Library/Frameworks/[[:alnum:]]*'
+
+# Qt :
+grep_Qt_pattern='Qt[[:alnum:]]*.framework/Versions/[0-9]*/Qt'
+grep_head_Qt_pattern='^Qt[[:alnum:]]*.framework/Versions/[0-9]*/Qt'
+grep_SDL_pattern='^SDL'
+
+# Get application linked libraries :
+/bin/rm -f obuild_tmp obuild_tmp1 obuild_tmp2
+otool -X -L  "${obuild_dir_app}/Contents/MacOS/${obuild_app}" > obuild_tmp
+/usr/bin/awk -s "${s_awk}" obuild_tmp > obuild_tmp1
+
+/bin/mv obuild_tmp1 obuild_tmp2
+for grep_v in ${grep_v_list}
+do 
+  /bin/mv obuild_tmp2 obuild_tmp1
+  grep -v ${grep_v} obuild_tmp1 > obuild_tmp2
+done
+
+sed -e 's# #@@#g' obuild_tmp2 > obuild_tmp3
+obuild_app_libs=`cat obuild_tmp3`
+/bin/rm -f obuild_tmp obuild_tmp1 obuild_tmp2 obuild_tmp3
+for libi in ${obuild_app_libs}
+do 
+  libi=`echo ${libi} | sed -e 's#@@# #g'`
+
+  bring_it=yes
+  is_Lib_fmk=`echo ${libi} | grep ${grep_Lib_fmk_pattern}`
+  is_head_Qt_fmk=`echo ${libi} | grep ${grep_head_Qt_pattern}`
+  is_SDL_fmk=`echo ${libi} | grep ${grep_SDL_pattern}`
+  if [ "${is_Lib_fmk}" != "" ] ; then
+    is_Qt_fmk=`echo ${libi} | grep ${grep_Qt_pattern}`
+    if [ "${is_Qt_fmk}" = "" ] ; then
+      bring_it=no
+#   else
+#     echo "Bring ${libi}"
+    fi
+  elif [ "${is_head_Qt_fmk}" != "" ] ; then
+    libi="/Library/Frameworks/${libi}.framework/${libi}"
+  elif [ "${is_SDL_fmk}" != "" ] ; then
+    libi="/Library/Frameworks/SDL.framework/SDL"
+  else
+    libi="${OSC_HOME_DIR}/lib/${libi}"
+  fi
+
+  if [ ${bring_it} = yes ] ; then
+    if [ -e "${libi}" ] ; then
+      eval /bin/cp -f "\"${libi}\"" "\"${obuild_dir_lib}/.\""
+    else
+      echo "build_Darwin_app : for ${obuild_app}, ${libi} not found."
+    fi
+  fi
+done
+unset libi
+
+# Get dlls linked libraries :
+cd "${obuild_dir_dll}"
+obuild_app_dlls=`find . -name "*" -type f -print`
+for dlla in ${obuild_app_dlls}
+do 
+  /bin/rm -f obuild_tmp obuild_tmp1 obuild_tmp2
+  otool -X -L "${dlla}" > obuild_tmp
+  /usr/bin/awk -s "${s_awk}" obuild_tmp > obuild_tmp1
+
+  /bin/mv obuild_tmp1 obuild_tmp2
+  for grep_v in ${grep_v_list}
+  do 
+    /bin/mv obuild_tmp2 obuild_tmp1
+    grep -v ${grep_v} obuild_tmp1 > obuild_tmp2
+  done
+
+  sed -e 's# #@@#g' obuild_tmp2 > obuild_tmp3
+  libs=`cat obuild_tmp3`
+  /bin/rm -f obuild_tmp obuild_tmp1 obuild_tmp2 obuild_tmp3
+  for libi in ${libs}
+  do 
+    libi=`echo ${libi} | sed -e 's#@@# #g'`
+
+    bring_it=yes
+    is_Lib_fmk=`echo ${libi} | grep ${grep_Lib_fmk_pattern}`
+    is_head_Qt_fmk=`echo ${libi} | grep ${grep_head_Qt_pattern}`
+    is_SDL_fmk=`echo ${libi} | grep ${grep_SDL_pattern}`
+    if [ "${is_Lib_fmk}" != "" ] ; then
+      is_Qt_fmk=`echo ${libi} | grep ${grep_Qt_pattern}`
+      if [ "${is_Qt_fmk}" = "" ] ; then
+        bring_it=no
+#     else
+#       echo "Bring ${libi}"
+      fi
+    elif [ "${is_head_Qt_fmk}" != "" ] ; then
+      libi="/Library/Frameworks/${libi}.framework/${libi}"
+    elif [ "${is_SDL_fmk}" != "" ] ; then
+      libi="/Library/Frameworks/SDL.framework/SDL"
+    else
+      libi="${OSC_HOME_DIR}/lib/${libi}"
+    fi
+
+    if [ ${bring_it} = yes ] ; then
+      if [ -e "${libi}" ] ; then
+        eval /bin/cp -f "\"${libi}\"" "\"${obuild_dir_lib}/.\""
+      else
+        echo "build_Darwin_app : for ${dlla}, ${libi} not found."
+      fi
+    fi
+  done
+  unset libi
+  unset libs
+done
+unset dlla
+cd "${obuild_pwd}"
+
+# Change the install names of the application :
+# Get linked libraries :
+/bin/rm -f obuild_tmp obuild_tmp1 obuild_tmp2
+otool -X -L "${obuild_dir_app}/Contents/MacOS/${obuild_app}" > obuild_tmp
+/usr/bin/awk -s "${s_awk}" obuild_tmp > obuild_tmp1
+
+/bin/mv obuild_tmp1 obuild_tmp2
+for grep_v in ${grep_v_list}
+do 
+  /bin/mv obuild_tmp2 obuild_tmp1
+  grep -v ${grep_v} obuild_tmp1 > obuild_tmp2
+done
+
+sed -e 's# #@@#g' obuild_tmp2 > obuild_tmp3
+libs=`cat obuild_tmp3`
+/bin/rm -f obuild_tmp obuild_tmp1 obuild_tmp2 obuild_tmp3
+for libi in ${libs}
+do 
+  libi=`echo ${libi} | sed -e 's#@@# #g'`
+  new_install_name=`basename "${libi}"`
+  if [ -f "${obuild_dir_lib}/${new_install_name}" ] ; then
+    new_install_name=@executable_path/../lib/${new_install_name}
+    install_name_tool -change "${libi}" ${new_install_name} "${obuild_dir_app}/Contents/MacOS/${obuild_app}"
+  else
+    echo "build_Darwin_app : for ${obuild_app}, ${new_install_name} not found."
+  fi
+  unset new_install_name
+done
+unset libi
+unset libs
+
+# Change the install names of the libraries :
+cd "${obuild_dir_lib}"
+obuild_app_libs=`find . -name "*" -type f -print`
+for liba in ${obuild_app_libs}
+do 
+  #echo "----> ${liba}"
+
+  chmod u+w "${liba}"
+
+  new_install_name=`basename "${liba}"`
+  new_install_name=@executable_path/../lib/${new_install_name}
+  install_name_tool -id ${new_install_name} "${liba}"
+  unset new_install_name
+  
+  # Get linked libraries :
+  /bin/rm -f obuild_tmp obuild_tmp1 obuild_tmp2
+  otool -X -L "${liba}" > obuild_tmp
+  /usr/bin/awk -s "${s_awk}" obuild_tmp > obuild_tmp1 
+
+  /bin/mv obuild_tmp1 obuild_tmp2
+  for grep_v in ${grep_v_list}
+  do 
+    /bin/mv obuild_tmp2 obuild_tmp1
+    grep -v ${grep_v} obuild_tmp1 > obuild_tmp2
+  done
+
+  sed -e 's# #@@#g' obuild_tmp2 > obuild_tmp3
+  libs=`cat obuild_tmp3`
+  /bin/rm -f obuild_tmp obuild_tmp1 obuild_tmp2 obuild_tmp3
+  for libi in ${libs}
+  do 
+    libi=`echo ${libi} | sed -e 's#@@# #g'`
+    #echo "${libi}"
+    new_install_name=`basename "${libi}"`
+    if [ -f "${obuild_dir_lib}/${new_install_name}" ] ; then
+      new_install_name=@executable_path/../lib/${new_install_name}
+      install_name_tool -change "${libi}" ${new_install_name} "${liba}"
+    else
+      echo "build_Darwin_app : for ${liba}, ${new_install_name} not found."
+    fi
+    unset new_install_name
+  done
+  unset libi
+  unset libs
+done
+unset liba
+cd "${obuild_pwd}"
+
+# Change the install names of the dlls :
+cd "${obuild_dir_dll}"
+obuild_app_dlls=`find . -name "*" -type f -print`
+for dlla in ${obuild_app_dlls}
+do 
+  #echo "----> ${dlla}"
+
+  chmod u+w "${dlla}"
+
+  # Get linked libraries :
+  /bin/rm -f obuild_tmp obuild_tmp1 obuild_tmp2
+  otool -X -L "${dlla}" > obuild_tmp
+  /usr/bin/awk -s "${s_awk}" obuild_tmp > obuild_tmp1
+
+  /bin/mv obuild_tmp1 obuild_tmp2
+  for grep_v in ${grep_v_list}
+  do 
+    /bin/mv obuild_tmp2 obuild_tmp1
+    grep -v ${grep_v} obuild_tmp1 > obuild_tmp2
+  done
+
+  sed -e 's# #@@#g' obuild_tmp2 > obuild_tmp3
+  libs=`cat obuild_tmp3`
+  /bin/rm -f obuild_tmp obuild_tmp1 obuild_tmp2 obuild_tmp3
+  for libi in ${libs}
+  do 
+    libi=`echo ${libi} | sed -e 's#@@# #g'`
+    #echo "${libi}"
+    new_install_name=`basename "${libi}"`
+    if [ -f "${obuild_dir_lib}/${new_install_name}" ] ; then
+      new_install_name=@executable_path/../lib/${new_install_name}
+      install_name_tool -change "${libi}" ${new_install_name} "${dlla}"
+    else
+      echo "build_Darwin_app : for ${liba}, ${new_install_name} not found."
+    fi
+    unset new_install_name
+  done
+  unset libi
+  unset libs
+done
+unset dlla
+cd "${obuild_pwd}"
+
+unset obuild_app_dlls
+unset obuild_dir_dll
+
+unset obuild_app_libs
+unset obuild_dir_lib
+
+unset obuild_dir_app
+
+unset obuild_pwd

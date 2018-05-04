@@ -1,0 +1,298 @@
+
+ inlib :
+ -----
+  inlib is a new package. "inlib" is for "inline library".
+ It contains pure inline code. We gather in this package
+ the "inline" Slash/Tools files that do not depend of the
+ Slash interfaces (smanip, file, etc...). The files are
+ a mere copy of the Slash ones plus a change of the
+ namespace from Slash to inlib. The related files
+ in Slash/Tools have to be considered deprecated.
+
+ inlib :
+ ----- 
+ - introduce the inlib/net directory. The inlib/ftp permits
+   to easily bring code doing fetching files by using FTP.
+ - introduce inlib/web. It permits to fetch file by using
+   ftp, http or curl/wget.
+ - have : array, sqm, sqmz, ad2, ad3, ad4, ad6.
+ - f2cmn : inline version of Midnight.
+ - histo.
+
+ zlib :
+ ----
+  Remove applications/minizip/*
+
+ Slash :
+ -----
+ - Slash/Tools/inlib.h : to avoid a dependency toward inlib,
+   get the few methods of inlib needed to compile UI.h, Net.h,
+   Data.h.
+ - obuild/this.obuild : remove Slash_test.
+ - Slash/Core/ISession.h : out() method. And deprecate cout()
+   and printer().
+ - Slash/UI/IUI.h : steerModal(), exitModal(). Permit to avoid
+   an include OnX/Core/Messages.h in Callbacks.
+ - Slash/UI/IIB.h : despite the forward cast to Lib::Item, we displace
+   OnX/Interfaces/IIB.h in Slash. This permits to remove the last
+   include dependancy of the OnX plugin toward OnX.
+ - Slash/Tools/osc_env : not deprecate because of OnX/Slash.i python set_env.
+ - Slahs/UI/ISceneHandler : to manipulate staticScene, etc... also
+   in a client / server mode. Used in SoWILD.
+
+ amanip :
+ ------
+ - amanip/inlib.h : to avoid a dependency toward inlib,
+   get the few methods of inlib needed to compile hprint.h, etc...
+ - amanip/project.h : have functions handling weight.
+
+ Midnight :
+ --------
+ - Replace IWriter logic with std::ostream one.
+ - rm not needed static keywords. Keep only local const ones.
+   This is to prepare an inline version of the lonely Midnight::Fitter class.
+
+ UseAIDA :
+ -------
+ - use inlib.
+ - rm example/ROOT/meta_setup.csh
+
+ obuild :
+ ------
+ - foreign/SDL.obuild : Linux : have /usr/lib64 on 64 bits machines.
+ - [osc_vis,osc_iv]/obuild/this.obuild : do not build SDL, GLUT by default.
+
+ Lib :
+ --------
+ - Processor.y, Columns.y, FortranFormat.y : find a way to avoid
+   the "static Lib::Xxx* sParser".
+ - use the inlib.
+
+ HCL :
+ ---
+ - removed : we use now (in BatchLab) the inlib/histo classes.
+ - Revisit to handle profile code in the HCL::Profile[1,2]D classes.
+ - Have virtual only the needed methods.
+ - Put the code inline in .h. Prepare for an inlib version.
+ - WARNING : then libHCL is now dummy. To be removed.
+ - and then remove it after having created inlib/histo.
+
+ BatchLab :
+ --------
+ - use Lib/Columns_no_yacc.h.
+ - Code is "pure header" excepted for Zebra, Rio drivers.
+ - source/XML/AIDA_ML.cxx, WAXML.cxx : entryTuple -> entryITuple.
+ - Rio_ROOT/TProfile::streamer : be able to read version>=4 and
+   then TProfile coming from CERN-ROOT-5.x.
+ - use inlib.
+ - use Slash::Dictionary, Slash::LibraryManager.
+ - histogram sector : taken into account modifs in HCL.
+ - MidnightFitter : use inlib::f2cmn.
+ - *obuild : rm Midnight dependency.
+ - DataPointSet : have "thread_safe=true" by default for AIDA/v3r2p1
+   implementation (this is because a user need a thread safe version
+   but we can't pass an option string to the IDataPointSetFactory.create).
+ - DataPoint, Measurement : inlined.
+ - XML_DataWrite.cxx : get_booking() :
+   have :
+     a_string += "{";
+   and not :
+     a_string = "{";
+   (Else the booking string in jec.aida is wrong).
+ - BaseTuple : implement more project() methods.
+ - Rio : Rio_Dictionary.cxx : have streamerinfos for TH1F,TH2,TH2F,TH2D.
+
+ OnX :
+ ---
+ - rm SDL related code.
+ - examples/Python/read_write.py example to show how to read
+   and write an Inventor file.
+ - examples/Python/selection.py to show how to have picking
+   with feedback. (Thanks to L.Duflot).
+ - use Slash::LibraryManager.
+ - SWIG : rm Lib/smanip,fmanip,Randoms wrapping.
+ - SWIG : rm Slash/Tools wrapping.
+ - Callbacks/SceneGraphAccessor : use scene handler.
+ - *UI : declare a Region scene handler.
+ - Callbacks : OnX_scene_handler_clear.
+ - revisit the client / server logic.
+ - SceneGraphAccessor : handle "SoInfo" scene graph style.
+ - GtkUI.cxx : have a :
+#if (GTK_MAJOR_VERSION<2) || (GTK_MINOR_VERSION<10) 
+#else
+      gtk_window_set_deletable(GTK_WINDOW(gtkWidget),FALSE);
+#endif
+   One were lacking and then osc_vis/gtk did not compile
+   on lxplus/slc4/gtk-2.0 which is a 2.4.13.
+ - OnX_test_gtk_menu.c : have <stdio.h> to rm warning.
+
+ OnXLab :
+ ------
+ - *obuild : rm Midnight dependency.
+ - monitor.onx : pure_thread_dps example.
+ - PlotterManager.cxx : do not use SimplePlotter.onx.
+   Have an embedded PlotterWindow.onx to be loaded at each
+   AIDA::IPlotterFactory::create().
+
+ OpenPAW :
+ -------
+ - *obuild : rm Midnight dependency.
+ - pawork : first implementation of /GRAPHICS/WORKSTATION.
+
+ Slash, Lib, OnX :
+ ---------------
+  A long pending issue. Introduce Slash/UI/IStyle.h and arrange to be
+ able to pass a style object (for exa a Slash/Tools/Style one)
+ to the data_visualize. See :
+   OnX/examples/Callbacks/Shapes.cxx/OnXExas_shape_visualize for
+ an example. Add method to the IStyleManager to be able to add
+ a style without having to read a file. See also the Shape example.
+ 
+  WARNING : we have changed the logic of Slash/Tools/InventorAccessor
+ about the way to fill the SoGC. See comments in the fillSoGC method. 
+ In particular if passing a style we do not look anymore also
+ for the session modeling parameters. We think it is less confusing
+ to understand, for example, where a color is taken from.
+
+ oroot :
+ -----
+ - Use inlib. Remove amanip.
+ - oroot_root.cxx/oroot_load : have -fPIC for Linuxes.
+
+ SoGLUT, HEPVis, OnX, osc_iv, osc_vis :
+ ----------------------------
+  Do not distribute SoGLUT for the moment. Remove SoGLUT related material.
+ As GLUT does not handle events, we prefer to concentrate on SDL.
+
+ gtkglarea :
+ ---------
+ - In source/gdkgl.c, have #include "" instead of #include <>.
+ - cube.c : add a <stdio.h> to remove a warning.
+
+ HEPVis :
+ ------
+ - SbConvert.h/SbConvertToFloat : protect strtod with LC_NUMERIC C.
+ - have the repository at LAL. Fermilab "connection refused".
+ - SbJPEG::readFile : replace malloc, free by new, delete [].
+ - SoButton. In SoSDL_Viewer use SoButton instead of SoSimpleButton.
+   SoButton minimizes the relationship toward other HEPVis code.
+   It can be used easoly in SoSDL.
+ - rm GLUT related material.
+ - SbColormap, SbStyle, etc.. : inline. Then rm SbColormap.cxx, SbStyle.cxx...
+ - SbConvert : for the string manip used in SbStyle.h.
+ - SoPlotter::updateLayout : XYZ : do the scale with a combineLeft before
+   "center" and take into account dData (have a dData/zfac in the third
+   scale factor). Displacing before "center" permits to correct a
+   shear effect when rotating with thumbweel a lego plot. This shear effect
+   appeared in 16.10 after modifications to handle SoPlotter::theta, phi
+   fields for OpenPAW.
+ - SbTessContour : Darwin, SnowLeopard : fix the osc-plot 
+   "Function 2d curve" crash. It came from a bad signature of
+   the combineCallback (on a 64 bits machine, we got a bad
+   "This" pointer).
+ - SoTools::getSceneGraphs : handle "SoInfo" scene graph style.
+ - SoAxis : computeTicksHippo : found a case in which some ticks
+   are not within given min,max, then add some code to clip them.
+ - SoPlotter : numberOfLevels for contour : do :
+    std::vector<double> zs(zn);
+    double zd = (zmax-zmin)/zn;
+    for(int zi=0;zi<zn;zi++) zs[zi] = zmin + zi * zd;
+   then "numberOfLevels" drawn (and not numberOfLevels+1). 
+ - SbAxisHPLOT : #times10^{%d} changed to a PAW encoding : x10^%d!
+
+ jpeg :
+ ----
+  jconfig_macosx.h : #ifndef HAVE_S<XXX>_H
+  jconfig_win32.h : JPEG_HAVE_INT32, JPEG_HAVE_FAR
+
+ CoinGL :
+ ------
+ - inttypes_macosx.h : #ifndef HAVE_S<XXX>_H
+ - src/glue/dl.c : rm the attempted_glsymbols logic. It induces
+   crash when using SoOffscreenRenderer with CGL on Mac.
+ - srg/glue/gl_cgl code from Coin-3.1.3.
+ - srg/glue/gl.cpp : to include gl_cgl.cpp and HAVE_CGL.
+ - srg/misc/SoOffscreenCGData : from Coin-3.1.3.
+ - srg/misc/SoOffscreenRenderer : HAVE_CGL.
+ - config_macosx : disconnect HAVE_AGL and HAVE_CGL.
+
+ simage :
+ ------
+  New package. Bring the code of simage-1.7.0. This permits
+ to have SoImage working for SoSDL/README.iv.
+
+ CoinPython :
+ ----------
+ - Inventor.h : add SoSFDouble.h. (For SoAxis::timeOffset).
+
+ KUIP :
+ ----
+  gl_<xxx> -> kgl_<xxx>
+  kstrtod : to protect strtod against LC_NUMERIC being not C.
+
+ G4Lab :
+ -----
+ - inline some code. Now libG4UIOnX is dummy.
+ - rm SteppingAction, SoG4RunManager, TrajectoryContainerAccessor :
+   in fact not very usefull. Was introduced to OpenGL draw the steps
+   whilst producing an event. But the way to do it was a little bit
+   awckward (since it was an SoNode that did the BeamOn !).
+   If wanting that, we have to find something better.
+ - osc-g4-vis : use inlib instead of Slash.
+ - osc-g4-vis : N02, N03, A01, copy the main
+   from Resources/G4Lab/applications/specific.
+
+ osc_[batch,iv,vis], */*.obuild :
+ ------------------------------ 
+  Change *.obuild files to avoid the need for OBUILD_PATH.
+ Now the osc_<project>/obuild/setup.[csh,.sh,.bat] do not
+ set anymore OBUILD_PATH.
+
+  Arrange in obuild/templates/tools.obuild to have :
+    <options platform="Darwin">-mmacosx-version-min=10.5</options>
+ and then the MACOSX_DEPLOYMENT_TARGET is not needed in 
+ the project setup files.
+
+  The project setup files are now empty and are no more needed.
+
+ HDF5 :
+ ----
+ - this.obuild : CYGWIN : for h5_array_compound app, have :
+      <c_linker_options platform="CYGWIN">-Wl,--enable-auto-import</c_linker_options>
+   to rm the messages :
+      Info: resolving xxx by linking to __imp__xxx (auto-import). 
+   They come from the global variables in H5Tpublic.h :
+      H5_DLLVAR hid_t H5T_NATIVE_<TYPE>_g;
+
+ Rio :
+ ---
+ - Basket.cxx/writeBuffer() : try to change on the fly fVersion>1000
+   if fSeekKey > RIO_START_BIG_FILE whilst fVersion still 2.
+   It permits to pass the MEMPHYS/merge program that produces a
+   file of 10 Gbytes. See #ifdef RIO_MEMPHYS code.
+ - Rio/source/ZInflate.c : have 
+     #define R__ZLIB
+   to be able to read CERN-ROOT-5.x files.
+ - Basket.cxx : readBasketBuffers :
+   return false in case if(fObjectSize<=0).
+   It permits to avoid a crash with osc-plot when plotting 
+   the "freq" column of the BAOJEC.root file of JEC.
+ - Basket::Basket : enforce fVersion>1000.
+   It permits to pass the MEMPHYS_merge program that creates
+   a file >2Gbytes. If not doing that, when
+   writing around 2Gbytes, we have some situation where
+   Key::fVersion==2 and a Key::fSeekKey>RIO_START_BIG_FILE
+   is written on a Seek32 in file. Then problem when reading
+   events around 2Gbytes. See comment in Basket.cxx file.
+
+ G3Lab, Interfaces, Midnight :
+ ---------------------------
+  Do not release anymore.
+
+ expat :
+ -----
+  Have some cast in order to compile with C++.
+
+ zip :
+ ---
+  KG to ANSI C function arguments. To be able to compile with C++.

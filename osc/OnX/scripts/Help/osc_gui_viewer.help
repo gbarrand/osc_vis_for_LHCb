@@ -1,0 +1,117 @@
+DESCRIPTION
+  osc-gui-viewer permits to create and visualize a GUI (Graphical User
+  Interface) described in files at the OnX XML format.
+
+USAGE
+      OS> osc-gui-viewer <options> [<OnX XML file>]
+  (OS is for Operating System). The upper command assumes that 
+  the setup script of OpenScientist had been executed and that
+  the OSC_HOME_DIR environment variable points to your
+  OpenScientist installation.
+
+  Some simple OnX XML files can be found under :
+      $OSC_HOME_DIR/Resources/OnX/examples/OnX  
+    ( %OSC_HOME_DIR%\Resources\OnX\examples\OnX on a Windows)
+
+  For example on a UNIX :
+      csh> osc-gui-viewer $OSC_HOME_DIR/Resources/OnX/examples/OnX/hello_world.onx
+       sh> osc-gui-viewer $OSC_HOME_DIR/Resources/OnX/examples/OnX/so_examiner_viewer.onx
+  or on a Windows under DOS :
+      DOS> osc-gui-viewer %OSC_HOME_DIR%\Resources\OnX\examples\OnX\shapes.onx
+
+OPTIONS
+ -version : 
+    OnX version.
+
+ -toolkit=[Xt, Gtk, Qt, Win, NS] :
+    GUI toolkit to be used when creating a GUI from a .onx xml file.
+    This assumes that the corresponding OnX GUI driver / DLL had 
+    been installed.
+    For example :
+      OS> osc-gui-viewer -toolkit=Xt shapes.onx
+
+ -Xt -xt -Xm -xm -motif -Motif :
+    use Motif GUI toolkit. It is the default on a UNIX system.
+
+ -Gtk -gtk :
+    use gtk.
+    For example :
+      OS> osc-gui-viewer -gtk
+
+ -Qt -qt :
+    use Qt.
+
+ -Win -win :
+    use WIN32 GUI toolkit. It is the default on a Windows system.
+
+ -stdout :
+    redirect all output to the terminal. In this mode the session.printer, 
+    std[out,err] and also std::[cout,cerr] write on the terminal.
+    (In particular, there is no tentative to redirect the std channels
+    to the "UI console" ; see below).
+
+ -defout :
+    redirect only the session.printer to the "UI console".
+    The "UI console" is the first widget named "consoleText"
+    found in the GUI hierarchy. In this mode the std[out,err] and 
+    std::[cout,cerr] are still on the terminal (no redirection
+    is attempted).
+     If working with Python, someone can do a : 
+       >>> import OnX;OnX.sys2onx() 
+    to redirect Python output to the UI console.
+
+ -uiout :
+    redirect all the output to the "UI console"
+    It is the default of the osc-gui-viewer program.
+    In this mode the session.printer, std[out,err] and 
+    also std::[cout,cerr] are redirected to the UI console.
+     If working with Python, it is better to explicitly
+    do a : 
+       >>> import OnX;OnX.sys2onx() 
+    to redirect Python output to the UI console.
+
+ [-verbose,-verbose=<manager>] :
+    enable verbose mode. Convenient to debug.
+    For example :
+      OS> osc-gui-viewer -verbose -stdout
+      OS> osc-gui-viewer -verbose=UI_Manager -stdout -gtk
+
+ -balance : 
+ -debug_check_class : 
+    enable object balance counting per class.
+
+ -style=[windows,motif,cde,motifplus,platinum,sgi]
+ -style=[compact,windowsxp,aqua,macintosh] : 
+    passed to some GUI (for exa Qt) that supports multiple GUI styles.
+    For example :
+      OS> osc-gui-viewer -qt -style=windows OnX.onx
+
+ -thread : 
+    enable multithreading in case the (GUI, scripting) drivers support it.
+
+ -session=<file> :
+    session parameters xml file. The default is :
+      $OSC_HOME_DIR/Resources/OnX/scripts/OnX/Session.onx
+
+ENVIRONMENT
+  OSC_HOME_DIR : directory where OpenScientist is installed.
+  OSC_ARGS : to pass arguments.
+  ONX_SESSION : session parameters xml file. 
+  ONX_PS_VIEWER : PostScript viewer program.
+  ONX_JPEG_VIEWER : JPEG viewer program.
+  ONX_PDF_VIEWER : PDF viewer program.
+  ONX_GIF_VIEWER : GIF file viewer program.
+  ONX_IV_VIEWER : Inventor file viewer program.
+  ONX_XRM : Xt/Motif driver. Permit to pass a X11 resource file.
+  ONX_GTK_RC : gtk driver. Permit to pass a gtk "rc" file.
+  TTFPATH : to set access to TTF fonts.
+
+FILES 
+  Under $OSC_HOME_DIR/Resources/OnX :
+    examples/OnX/hello_world.onx
+    scripts/OnX/Sessin.onx
+    etc...
+
+WEB
+  http://OpenScientist.lal.in2p3.fr
+

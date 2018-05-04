@@ -1,0 +1,24 @@
+
+  The installation brings :
+ - the onxlab program which is a GUI interactive program to read
+   data files at various formats, browse them, plot histograms and 
+   functions, manipulate tuples interactively, etc...
+ - the opaw program which is the command line emulation of the 
+   CERN/PAW program. 
+ - the materials to work with AIDA from a DOS prompt. 
+   For example the aida-config program, the libraries to create 
+   new AIDA applications and some examples.
+ - the programs and libraries to build new OnX applications. 
+
+  If creating applications, it is assumed that VisualC++ is installed 
+ and accessible from a DOS prompt. That is to say cl.exe, link.exe, etc... 
+ are up and running from a DOS prompt. See "Create applications" in the 
+ web pages for more.
+
+  To get more instructions without having to go in the web pages,
+ a README can be found under :
+    <install_path>\OpenScientist\<version>
+
+  The web pages are at :
+    http://OpenScientist.lal.in2p3.fr
+

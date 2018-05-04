@@ -1,0 +1,37 @@
+# hapi is for Handy API.
+
+import AIDA
+
+# Do the below try/execpt in case of : 
+#   OS> python -i hapi.py
+#   >>> import hapi
+# In this case the 'import hapi' reexecutes
+# the content of hapi and then g_aida is no
+# more a singleton.
+try:
+  import __main__
+  g_aida = __main__.g_aida
+except AttributeError:
+  g_aida = AIDA.createAnalysisFactory()
+
+class H1D(AIDA.H1D):
+  def __init__(self,a_name,a_title,a_n,a_min,a_max):
+    AIDA.H1D.__init__(self,g_aida,a_name,a_title,a_n,a_min,a_max)    
+  #def __del__(self):
+  #  del self.m_h
+
+class Plotter(AIDA.Plotter):
+  def __init__(self):
+    AIDA.Plotter.__init__(self,g_aida)
+  #def __del__(self):
+  #  del self.m_plotter
+
+
+def in_hook():
+  import OnX
+  ui = OnX.session().ui()
+  if ui != None : OnX.set_PyOS_InputHook(ui)
+def restore_hook():
+  import OnX
+  ui = OnX.session().ui()
+  if ui != None : OnX.reset_PyOS_InputHook()

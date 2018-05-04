@@ -1,0 +1,41 @@
+#!/bin/sh -f
+
+# NOTE : Python is done in ourex/HEPVisPython.
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+. ../mgr/build_header
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+ccflags="${ccflags} -DGL2PS_HAVE_ZLIB"
+ccflags="${ccflags} -DGL2PS_HAVE_LIBPNG"
+
+cppflags="${cppflags} -DHEPVIS_HAS_TTF2"
+cppflags="${cppflags} -DHEPVIS_HAS_JPEG"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+use_CoinGL=yes
+use_GL=yes
+use_png=yes
+use_jpeg=yes
+use_freetype=yes
+use_zlib=yes
+
+. ${exlib_mgr}/use_CoinGL
+. ${exlib_mgr}/use_GL
+. ${exlib_mgr}/use_png
+. ${exlib_mgr}/use_jpeg
+. ${exlib_mgr}/use_freetype
+. ${exlib_mgr}/use_zlib
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+. ../mgr/build_generic

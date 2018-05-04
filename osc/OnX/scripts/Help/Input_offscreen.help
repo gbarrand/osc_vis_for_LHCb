@@ -1,0 +1,11 @@
+
+  width : wanted width (in pixels).
+          If "scale*window", the width will be the displayed window/widget
+          width (in pixels) multiplied by the given scale factor.
+
+  height : wanted height (in pixels).
+           If "scale*window", the height will be the displayed window/widget
+           height (in pixels) multiplied by the given scale factor.
+
+  scale : scale factor.
+

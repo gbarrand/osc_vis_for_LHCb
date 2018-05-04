@@ -1,0 +1,45 @@
+#!/bin/sh -f
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+build_pack=osc_batch
+version=17.0
+
+. ${ourex_mgr}/build_header
+
+build_distrib=yes
+if [ "${build_distrib}" = "yes" ] ; then
+
+  if [ ${build_verbose} = yes ] ; then echo "build distrib ...";fi
+
+  /bin/rm -R -f ${build_path}/distrib
+
+  head=${build_path}/distrib/${build_pack}/${version}
+  /bin/mkdir -p ${head}/bin
+  /bin/mkdir -p ${head}/lib
+  /bin/mkdir -p ${head}/Resources
+
+  . ./build_cp2distrib
+
+  #/////////////////////////////////////////////
+  #/////////////////////////////////////////////
+  #/////////////////////////////////////////////
+
+  platform=`${inlib_mgr}/build_platform`
+  #echo ${platform}
+  if [ "${platform}" = "" ] ; then
+    echo "osc_batch/mgr/build : can't guess platform."
+  else
+    save_dir=`pwd`
+    cd ${build_path}/distrib
+    zip -qr ${build_pack}-${version}-${platform}.zip ./${build_pack}
+    cd ${save_dir}
+
+  fi
+
+fi

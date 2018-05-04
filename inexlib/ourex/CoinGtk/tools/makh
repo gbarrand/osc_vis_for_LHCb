@@ -1,0 +1,52 @@
+#!/bin/sh -f
+
+root=/home/barrand/Coin
+from=${root}/SoGtk
+to=/projects/CoinGtk/v1
+
+# Not templated files :
+find ${from}/src -name "So*.h" -exec ./cp_h {} ${from} ${to} \;
+find ${from}/src -name "gtk*.h" -exec ./cp_h {} ${from} ${to} \;
+find ${from}/src -name "Gtk*.h" -exec ./cp_h {} ${from} ${to} \;
+
+# Template devices :
+./gui_in ${root}/SoGUI/devices/SoGuiMouse.h.in ${from}  ${to}/include/Inventor/Gtk/devices Gtk
+./gui_in ${root}/SoGUI/devices/SoGuiKeyboard.h.in ${from}  ${to}/include/Inventor/Gtk/devices Gtk
+./gui_in ${root}/SoGUI/devices/SoGuiSpaceball.h.in ${from}  ${to}/include/Inventor/Gtk/devices Gtk
+./gui_in ${root}/SoGUI/devices/SoGuiInputFocus.h.in ${from}  ${to}/include/Inventor/Gtk/devices Gtk
+./gui_in ${root}/SoGUI/spwinput.h.in ${from}  ${to}/include/Inventor/Gtk/devices Gtk
+
+# Template viewers :
+./gui_in ${root}/SoGUI/viewers/SoGuiConstrainedViewer.h.in ${from}  ${to}/include/Inventor/Gtk/viewers Gtk
+./gui_in ${root}/SoGUI/viewers/SoGuiExaminerViewer.h.in ${from}  ${to}/include/Inventor/Gtk/viewers Gtk
+./gui_in ${root}/SoGUI/viewers/SoGuiFlyViewer.h.in ${from}  ${to}/include/Inventor/Gtk/viewers Gtk
+./gui_in ${root}/SoGUI/viewers/SoGuiFullViewer.h.in ${from}  ${to}/include/Inventor/Gtk/viewers Gtk
+./gui_in ${root}/SoGUI/viewers/SoGuiPlaneViewer.h.in ${from}  ${to}/include/Inventor/Gtk/viewers Gtk
+./gui_in ${root}/SoGUI/viewers/SoGuiWalkViewer.h.in ${from}  ${to}/include/Inventor/Gtk/viewers Gtk
+./gui_in ${root}/SoGUI/viewers/SoGuiViewer.h.in ${from}  ${to}/include/Inventor/Gtk/viewers Gtk
+
+# Template widgets :
+./gui_in ${root}/SoGUI/widgets/SoGuiPopupMenu.h.in ${from}  ${to}/include/Inventor/Gtk/widgets Gtk
+./gui_in ${root}/SoGUI/widgets/SoAnyThumbWheel.h.in ${from}  ${to}/include/Inventor/Gtk/widgets Gtk
+
+# Template general :
+./gui_in ${root}/SoGUI/SoAny.h.in ${from}  ${to}/include/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoAnyMaterialList.h.in ${from}  ${to}/include/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoGuiMaterialList.h.in ${from}  ${to}/include/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoGui.h.in ${from}  ${to}/include/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoGuiBasic.h.in ${from}  ${to}/include/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoGuiComponent.h.in ${from}  ${to}/include/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoGuiGLWidget.h.in ${from}  ${to}/include/Inventor/Gtk Gtk
+#./gui_in ${root}/SoGUI/SoGuiMaterialList.h.in ${from}  ${to}/include/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoGuiObject.h.in ${from}  ${to}/include/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoGuiRenderArea.h.in ${from}  ${to}/include/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/SoGuiCursor.h.in ${from}  ${to}/include/Inventor/Gtk Gtk
+./gui_in ${root}/SoGUI/gl.h.in ${from} ${to}/src/Inventor/Gtk/common Gtk
+./gui_in ${root}/SoGUI/soguidefs.h.in ${from} ${to}/src Gtk
+
+# Else :
+/bin/rm -f ${to}/include/config.h
+
+exit
+
+

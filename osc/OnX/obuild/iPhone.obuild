@@ -1,0 +1,60 @@
+<!-- to build iPhone/iPod touch related components. -->
+
+<obuild>
+
+  <reference package="foreign" path="../../foreign" file="iPhone.obuild"/>
+
+  <application name="iOnX">
+    <group>iPhone</group>
+    <check_foreign>iPhone</check_foreign>
+
+    <file>../tests/iPhone/main.m</file>
+
+    <lib copy="lib" from="iPhone"/>
+
+    <post_build>
+/bin/rm -R -f ../bin_obuild/iOnX.app;
+/bin/mkdir -p ../bin_obuild/iOnX.app;
+/bin/mkdir -p ../bin_obuild/iOnX.app/tmp;
+/bin/mkdir -p ../bin_obuild/iOnX.app/Documents;
+/bin/mkdir -p ../bin_obuild/iOnX.app/Library/Preferences;
+/bin/mkdir -p ../bin_obuild/iOnX.app/Library/Caches;
+/bin/cp ../bin_obuild/iOnX ../bin_obuild/iOnX.app/.;
+/bin/cp ../tests/iPhone/Info.plist ../bin_obuild/iOnX.app/Info.plist
+    </post_build>
+
+  </application>
+  
+  <application name="iOnX_GL">
+    <group>iPhone</group>
+    <check_foreign>iPhone</check_foreign>
+
+    <linker>cxx</linker>
+
+    <file>../tests/iPhone/main_GL.m</file>
+    <file>../tests/iPhone/GLView.m</file>
+
+    <file>../tests/iPhone/ftp.cxx</file>
+    <cxx_include copy="cxx_include" from="inlib"/>
+
+    <lib copy="lib_GL" from="iPhone"/>
+    <lib copy="lib" from="iPhone"/>
+
+    <post_build>
+/bin/rm -R -f ../bin_obuild/iOnX_GL.app;
+/bin/mkdir -p ../bin_obuild/iOnX_GL.app;
+/bin/mkdir -p ../bin_obuild/iOnX_GL.app/tmp;
+/bin/mkdir -p ../bin_obuild/iOnX_GL.app/Documents;
+/bin/mkdir -p ../bin_obuild/iOnX_GL.app/Library/Preferences;
+/bin/mkdir -p ../bin_obuild/iOnX_GL.app/Library/Caches;
+/bin/cp ../bin_obuild/iOnX_GL ../bin_obuild/iOnX_GL.app/.;
+/bin/cp ../tests/iPhone/Info.plist_GL ../bin_obuild/iOnX_GL.app/Info.plist;
+/bin/cp ../tests/iPhone/iOnX_GL.icns ../bin_obuild/iOnX_GL.app/iOnX_GL.icns;
+/bin/rm -R -f ${HOME}/Library/Application Support/iPhone Simulator/3.2/Applications/iOnX_GL.app;
+/bin/cp -R ../bin_obuild/iOnX_GL.app "${HOME}/Library/Application Support/iPhone Simulator"/3.2/Applications/.;
+open "/Developer/Platforms/iPhoneSimulator.platform/Developer/Applications/iPhone Simulator.app"
+    </post_build>
+
+  </application>
+  
+</obuild>

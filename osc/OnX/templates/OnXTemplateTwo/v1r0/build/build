@@ -1,0 +1,37 @@
+#!/bin/sh -f 
+
+#set -x
+
+if test "`osc-config --version`" = "" ; then
+  echo "osc-config not available."
+  exit
+fi
+
+bin=.
+
+#args=$*
+
+cppflags="-w -I.."
+
+eval `osc-config --compiler` -c ${cppflags} `osc-config --cppflags` -o ${bin}/Hello.o ../source/Hello.cxx
+
+eval `osc-config --compiler` -c ${cppflags} `osc-config --py_cppflags` -o ${bin}/PythonSWIG.o ../source/Python/PythonSWIG.cxx
+
+libs=`osc-config --py_libs`
+libs="${libs} `osc-config --core_libs`"
+
+objs="${bin}/PythonSWIG.o ${bin}/Hello.o"
+
+if test `uname` = "Darwin" ; then
+/bin/rm -f ${bin}/OnXTemplateTwo_SWIG_Python.bundle
+eval c++ -bundle -twolevel_namespace -o ${bin}/OnXTemplateTwo_SWIG_Python.bundle ${objs} ${libs}
+# Python wants a .so :
+/bin/mv -f ${bin}/OnXTemplateTwo_SWIG_Python.bundle ${bin}/OnXTemplateTwo_SWIG_Python.so
+fi
+
+if test `uname` = "Linux" ; then
+/bin/rm -f ${bin}/libOnXTemplateTwo_SWIG_Python.so
+eval g++ -shared -o ${bin}/OnXTemplateTwo_SWIG_Python.so ${objs} ${libs}
+fi
+
+find . -name '*.o' -exec /bin/rm -f {} \;

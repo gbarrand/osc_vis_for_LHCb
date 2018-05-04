@@ -1,0 +1,1792 @@
+
+#include <Slash/Store/IStoreManager.h>
+#include <Slash/Tools/Manager.h>
+
+#include <inlib/histo/sliced>
+
+#include <BatchLab/Core/Histogram.h>
+#include <BatchLab/Core/FindAllocator.h>
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::HistogramFactory::HistogramFactory(
+ Slash::Core::ISession& aSession
+,Slash::Store::ITree& aTree
+)
+:BaseFactory(aSession.cout(),aTree)
+,fSession(aSession)
+,fAllocator(0)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  Lib::Debug::increment("BatchLab::HistogramFactory");
+  fAllocator = BatchLab::histogramAllocator(fSession);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::HistogramFactory::~HistogramFactory()
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  Lib::Debug::decrement("BatchLab::HistogramFactory");
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram1D* BatchLab::HistogramFactory::createHistogram1D(
+ const std::string& aPath
+,const std::string& aTitle
+,int aXnumber
+,double aXmin
+,double aXmax
+,const std::string& aOptions
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  Slash::Store::IObject* object = 0;
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    Slash::Store::IStoreManager* storeManager = 
+      Slash_findManager(fSession,"Zebra_Manager",Slash::Store::IStoreManager);
+    if(!storeManager) return 0;
+    std::vector<Slash::Store::IStoreManager::Range> args;
+    args.push_back
+      (Slash::Store::IStoreManager::Range
+        (aXnumber,std::pair<double,double>(aXmin,aXmax)));
+    object = storeManager->createObject
+               (fTree,"AIDA::IHistogram1D",path,name,aTitle,args,aOptions);
+  } else {
+    if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createHistogram1D")) return 0;
+    object = fAllocator->new_Histogram1D(f_out,name,aTitle,
+                                             aXnumber,aXmin,aXmax);
+  }
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,"BatchLab::HistogramFactory::createHistogram1D")) {delete object;return 0;}
+  AIDA::IHistogram1D* aobject = INLIB_CAST(*object,AIDA::IHistogram1D);
+  if(!aobject) {
+    f_out << "BatchLab::HistogramFactory::createHistogram1D :" 
+        << " Slash::Store::IObject not an AIDA::IHistogram1D." << std::endl;
+    delete object;
+    return 0;
+  }
+  if(!manage(aOptions)) return aobject;
+  if(!manageObject(object,path)) {
+    delete object;
+    return 0;
+  }
+  return aobject;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram1D* BatchLab::HistogramFactory::createHistogram1D(
+ const std::string& aPath
+,int aXnumber
+,double aXmin
+,double aXmax
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  return createHistogram1D(aPath,name,aXnumber,aXmin,aXmax,"");
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram1D* BatchLab::HistogramFactory::createHistogram1D(
+ const std::string& aPath
+,const std::string& aTitle
+,const std::vector<double>& aEdges
+,const std::string& aOptions
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aEdges.size()<=1) {
+    f_out << "BatchLab::HistogramFactory::createHistogram1D :" 
+        << " at least two edges expected" 
+        << " for variable bins histogram booking." 
+        << std::endl;
+    return 0;
+  }
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  Slash::Store::IObject* object = 0;
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    Slash::Store::IStoreManager* storeManager = 
+      Slash_findManager(fSession,"Zebra_Manager",Slash::Store::IStoreManager);
+    if(!storeManager) return 0;
+
+    std::vector<Slash::Store::IStoreManager::Range> args;
+    unsigned int edgen = aEdges.size();
+    for(unsigned int index=0;index<edgen;index++) {
+      args.push_back
+        (Slash::Store::IStoreManager::Range
+           (0,std::pair<double,double>(aEdges[index],0)));
+    }
+
+    object = storeManager->createObject
+               (fTree,"AIDA::IHistogram1D",path,name,aTitle,args,aOptions);
+  } else {
+    if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createHistogram1D"))
+      return 0;
+    object = fAllocator->new_Histogram1D(f_out,name,aTitle,aEdges);
+  }
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,
+                    "BatchLab::HistogramFactory::createHistogram1D")) {
+    delete object;
+    return 0;
+  }
+  AIDA::IHistogram1D* aobject = INLIB_CAST(*object,AIDA::IHistogram1D);
+  if(!aobject) {
+    f_out << "BatchLab::HistogramFactory::createHistogram1D :" 
+        << " Slash::Store::IObject not an AIDA::IHistogram1D." << std::endl;
+    delete object;
+    return 0;
+  }
+  if(!manage(aOptions)) return aobject;
+  if(!manageObject(object,path)) {
+    delete object;
+    return 0;
+  }
+  return aobject;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram2D* BatchLab::HistogramFactory::createHistogram2D(
+ const std::string& aPath
+,const std::string& aTitle
+,int aXnumber
+,double aXmin
+,double aXmax
+,int aYnumber
+,double aYmin
+,double aYmax
+,const std::string& aOptions
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  Slash::Store::IObject* object = 0;
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    Slash::Store::IStoreManager* storeManager = 
+      Slash_findManager(fSession,"Zebra_Manager",Slash::Store::IStoreManager);
+    if(!storeManager) return 0;
+    std::vector<Slash::Store::IStoreManager::Range> args;
+    args.push_back
+      (Slash::Store::IStoreManager::Range
+         (aXnumber,std::pair<double,double>(aXmin,aXmax)));
+    args.push_back
+      (Slash::Store::IStoreManager::Range
+         (aYnumber,std::pair<double,double>(aYmin,aYmax)));
+    object = storeManager->createObject
+               (fTree,"AIDA::IHistogram2D",path,name,aTitle,args,aOptions);
+  } else {
+    if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createHistogram2D")) return 0;
+    object = fAllocator->new_Histogram2D(f_out,name,aTitle,
+                                         aXnumber,aXmin,aXmax,
+                                         aYnumber,aYmin,aYmax);
+  }
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,
+                    "BatchLab::HistogramFactory::createHistogram2D")) {
+    delete object;
+    return 0;
+  }
+  AIDA::IHistogram2D* aobject = INLIB_CAST(*object,AIDA::IHistogram2D);
+  if(!aobject) {
+    f_out << "BatchLab::HistogramFactory::createHistogram2D :" 
+        << " Slash::Store::IObject not an AIDA::IHistogram2D." << std::endl;
+    delete object;
+    return 0;
+  }
+  if(!manage(aOptions)) return aobject;
+  if(!manageObject(object,path)) {
+    delete object;
+    return 0;
+  }
+  return aobject;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram2D* BatchLab::HistogramFactory::createHistogram2D(
+ const std::string& aPath
+,int aXnumber
+,double aXmin
+,double aXmax
+,int aYnumber
+,double aYmin
+,double aYmax
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  return createHistogram2D(aPath,name,
+                           aXnumber,aXmin,aXmax,aYnumber,aYmin,aYmax,"");
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram2D* BatchLab::HistogramFactory::createHistogram2D(
+ const std::string& aPath
+,const std::string& aTitle
+,const std::vector<double>& aEdgesX
+,const std::vector<double>& aEdgesY
+,const std::string& aOptions
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    f_out << "BatchLab::HistogramFactory::createHistogram2D :" 
+        << " variable bins not supported by HBOOK." << std::endl;
+    return 0;
+  }
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createHistogram2D")) return 0;
+  BatchLab::Histogram2D* object = 
+    fAllocator->new_Histogram2D(f_out,name,aTitle,
+                                aEdgesX,aEdgesY);
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,"BatchLab::HistogramFactory::createHistogram2D")) {delete object;return 0;}
+  if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram3D* BatchLab::HistogramFactory::createHistogram3D(
+ const std::string& aPath
+,const std::string& aTitle
+,int aXnumber
+,double aXmin
+,double aXmax
+,int aYnumber
+,double aYmin
+,double aYmax
+,int aZnumber
+,double aZmin
+,double aZmax
+,const std::string& aOptions
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    f_out << "BatchLab::HistogramFactory::createHistogram3D :" 
+        << " histogram 3D not supported by HBOOK." << std::endl;
+    return 0;
+  }
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createHistogram3D")) return 0;
+  BatchLab::Histogram3D* object = 
+    fAllocator->new_Histogram3D(f_out,name,aTitle,
+                                aXnumber,aXmin,aXmax,
+                                aYnumber,aYmin,aYmax,
+                                aZnumber,aZmin,aZmax);
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,
+                    "BatchLab::HistogramFactory::createHistogram3D")) {
+    delete object;
+    return 0;
+  }
+  if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram3D* BatchLab::HistogramFactory::createHistogram3D(
+ const std::string& aPath
+,int aXnumber
+,double aXmin
+,double aXmax
+,int aYnumber
+,double aYmin
+,double aYmax
+,int aZnumber
+,double aZmin
+,double aZmax
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  return createHistogram3D(aPath,name,
+                           aXnumber,aXmin,aXmax, 
+                           aYnumber,aYmin,aYmax,
+                           aZnumber,aZmin,aZmax,"");
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram3D* BatchLab::HistogramFactory::createHistogram3D(
+ const std::string& aPath
+,const std::string& aTitle
+,const std::vector<double>& aEdgesX
+,const std::vector<double>& aEdgesY
+,const std::vector<double>& aEdgesZ
+,const std::string& aOptions
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    f_out << "BatchLab::HistogramFactory::createHistogram3D :" 
+        << " variable bins not supported by HBOOK." << std::endl;
+    return 0;
+  }
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createHistogram3D")) return 0;
+  BatchLab::Histogram3D* object = 
+    fAllocator->new_Histogram3D(f_out,name,aTitle,
+                                aEdgesX,aEdgesY,aEdgesZ);
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,"BatchLab::HistogramFactory::createHistogram3D")) {delete object;return 0;}
+  if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////I
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram1D* BatchLab::HistogramFactory::add( 
+ const std::string& aPath
+,const AIDA::IHistogram1D& aA
+,const AIDA::IHistogram1D& aB
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram1D* batchlabA = 
+    INLIB_CONST_CAST(aA,BatchLab::Histogram1D);
+  if(!batchlabA) return 0;
+  const inlib::histo::h1d& hclA = batchlabA->hclHistogram();
+
+  const BatchLab::Histogram1D* batchlabB = 
+    INLIB_CONST_CAST(aB,BatchLab::Histogram1D);
+  if(!batchlabB) return 0;
+  const inlib::histo::h1d& hclB = batchlabB->hclHistogram();
+
+  inlib::histo::h1d hclR(hclA);
+  if(!hclR.add(hclB)) return 0;
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::add")) return 0;
+  BatchLab::Histogram1D* object = 
+    fAllocator->new_Histogram1D(f_out,name,hclR);
+  if(!object) return 0;
+  object->setTitle(name);
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram1D* BatchLab::HistogramFactory::subtract( 
+ const std::string& aPath
+,const AIDA::IHistogram1D& aA
+,const AIDA::IHistogram1D& aB
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram1D* batchlabA = 
+    INLIB_CONST_CAST(aA,BatchLab::Histogram1D);
+  if(!batchlabA) return 0;
+  const inlib::histo::h1d& hclA = batchlabA->hclHistogram();
+
+  const BatchLab::Histogram1D* batchlabB = 
+    INLIB_CONST_CAST(aB,BatchLab::Histogram1D);
+  if(!batchlabB) return 0;
+  const inlib::histo::h1d& hclB = batchlabB->hclHistogram();
+
+  inlib::histo::h1d hclR(hclA);
+  if(!hclR.subtract(hclB)) return 0;
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::subtract")) return 0;
+  BatchLab::Histogram1D* object = 
+    fAllocator->new_Histogram1D(f_out,name,hclR);
+  if(!object) return 0;
+  object->setTitle(name);
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram1D* BatchLab::HistogramFactory::multiply( 
+ const std::string& aPath
+,const AIDA::IHistogram1D& aA
+,const AIDA::IHistogram1D& aB
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram1D* batchlabA = 
+    INLIB_CONST_CAST(aA,BatchLab::Histogram1D);
+  if(!batchlabA) return 0;
+  const inlib::histo::h1d& hclA = batchlabA->hclHistogram();
+
+  const BatchLab::Histogram1D* batchlabB = 
+    INLIB_CONST_CAST(aB,BatchLab::Histogram1D);
+  if(!batchlabB) return 0;
+  const inlib::histo::h1d& hclB = batchlabB->hclHistogram();
+
+  inlib::histo::h1d hclR(hclA);
+  if(!hclR.multiply(hclB)) return 0;
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::multiply")) return 0;
+  BatchLab::Histogram1D* object = 
+    fAllocator->new_Histogram1D(f_out,name,hclR);
+  if(!object) return 0;
+  object->setTitle(name);
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram1D* BatchLab::HistogramFactory::divide( 
+ const std::string& aPath
+,const AIDA::IHistogram1D& aA
+,const AIDA::IHistogram1D& aB
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram1D* batchlabA = 
+    INLIB_CONST_CAST(aA,BatchLab::Histogram1D);
+  if(!batchlabA) return 0;
+  const inlib::histo::h1d& hclA = batchlabA->hclHistogram();
+
+  const BatchLab::Histogram1D* batchlabB = 
+    INLIB_CONST_CAST(aB,BatchLab::Histogram1D);
+  if(!batchlabB) return 0;
+  const inlib::histo::h1d& hclB = batchlabB->hclHistogram();
+
+  inlib::histo::h1d hclR(hclA);
+  if(!hclR.divide(hclB)) return 0;
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::divide")) return 0;
+  BatchLab::Histogram1D* object = 
+    fAllocator->new_Histogram1D(f_out,name,hclR);
+  if(!object) return 0;
+  object->setTitle(name);
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram2D* BatchLab::HistogramFactory::add( 
+ const std::string& aPath
+,const AIDA::IHistogram2D& aA
+,const AIDA::IHistogram2D& aB
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram2D* batchlabA = 
+    INLIB_CONST_CAST(aA,BatchLab::Histogram2D);
+  if(!batchlabA) return 0;
+  const inlib::histo::h2d& hclA = batchlabA->hclHistogram();
+
+  const BatchLab::Histogram2D* batchlabB = 
+    INLIB_CONST_CAST(aB,BatchLab::Histogram2D);
+  if(!batchlabB) return 0;
+  const inlib::histo::h2d& hclB = batchlabB->hclHistogram();
+
+  inlib::histo::h2d hclR(hclA);
+  if(!hclR.add(hclB)) return 0;
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::add")) return 0;
+  BatchLab::Histogram2D* object = 
+    fAllocator->new_Histogram2D(f_out,name,hclR);
+  if(!object) return 0;
+  object->setTitle(name);
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram2D* BatchLab::HistogramFactory::subtract( 
+ const std::string& aPath
+,const AIDA::IHistogram2D& aA
+,const AIDA::IHistogram2D& aB
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram2D* batchlabA = 
+    INLIB_CONST_CAST(aA,BatchLab::Histogram2D);
+  if(!batchlabA) return 0;
+  const inlib::histo::h2d& hclA = batchlabA->hclHistogram();
+
+  const BatchLab::Histogram2D* batchlabB = 
+    INLIB_CONST_CAST(aB,BatchLab::Histogram2D);
+  if(!batchlabB) return 0;
+  const inlib::histo::h2d& hclB = batchlabB->hclHistogram();
+
+  inlib::histo::h2d hclR(hclA);
+  if(!hclR.subtract(hclB)) return 0;
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::subtract")) return 0;
+  BatchLab::Histogram2D* object = 
+    fAllocator->new_Histogram2D(f_out,name,hclR);
+  if(!object) return 0;
+  object->setTitle(name);
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram2D* BatchLab::HistogramFactory::multiply( 
+ const std::string& aPath
+,const AIDA::IHistogram2D& aA
+,const AIDA::IHistogram2D& aB
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram2D* batchlabA = 
+    INLIB_CONST_CAST(aA,BatchLab::Histogram2D);
+  if(!batchlabA) return 0;
+  const inlib::histo::h2d& hclA = batchlabA->hclHistogram();
+
+  const BatchLab::Histogram2D* batchlabB = 
+    INLIB_CONST_CAST(aB,BatchLab::Histogram2D);
+  if(!batchlabB) return 0;
+  const inlib::histo::h2d& hclB = batchlabB->hclHistogram();
+
+  inlib::histo::h2d hclR(hclA);
+  if(!hclR.multiply(hclB)) return 0;
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::multiply")) return 0;
+  BatchLab::Histogram2D* object = 
+    fAllocator->new_Histogram2D(f_out,name,hclR);
+  if(!object) return 0;
+  object->setTitle(name);
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram2D* BatchLab::HistogramFactory::divide( 
+ const std::string& aPath
+,const AIDA::IHistogram2D& aA
+,const AIDA::IHistogram2D& aB
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram2D* batchlabA = 
+    INLIB_CONST_CAST(aA,BatchLab::Histogram2D);
+  if(!batchlabA) return 0;
+  const inlib::histo::h2d& hclA = batchlabA->hclHistogram();
+
+  const BatchLab::Histogram2D* batchlabB = 
+    INLIB_CONST_CAST(aB,BatchLab::Histogram2D);
+  if(!batchlabB) return 0;
+  const inlib::histo::h2d& hclB = batchlabB->hclHistogram();
+
+  inlib::histo::h2d hclR(hclA);
+  if(!hclR.divide(hclB)) return 0;
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::divide")) return 0;
+  BatchLab::Histogram2D* object = 
+    fAllocator->new_Histogram2D(f_out,name,hclR);
+  if(!object) return 0;
+  object->setTitle(name);
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram3D* BatchLab::HistogramFactory::add( 
+ const std::string& aPath
+,const AIDA::IHistogram3D& aA
+,const AIDA::IHistogram3D& aB
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram3D* batchlabA = 
+    INLIB_CONST_CAST(aA,BatchLab::Histogram3D);
+  if(!batchlabA) return 0;
+  const inlib::histo::h3d& hclA = batchlabA->hclHistogram();
+
+  const BatchLab::Histogram3D* batchlabB = 
+    INLIB_CONST_CAST(aB,BatchLab::Histogram3D);
+  if(!batchlabB) return 0;
+  const inlib::histo::h3d& hclB = batchlabB->hclHistogram();
+
+  inlib::histo::h3d hclR(hclA);
+  if(!hclR.add(hclB)) return 0;
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::add")) return 0;
+  BatchLab::Histogram3D* object = 
+    fAllocator->new_Histogram3D(f_out,name,hclR);
+  if(!object) return 0;
+  object->setTitle(name);
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram3D* BatchLab::HistogramFactory::subtract( 
+ const std::string& aPath
+,const AIDA::IHistogram3D& aA
+,const AIDA::IHistogram3D& aB
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram3D* batchlabA = 
+    INLIB_CONST_CAST(aA,BatchLab::Histogram3D);
+  if(!batchlabA) return 0;
+  const inlib::histo::h3d& hclA = batchlabA->hclHistogram();
+
+  const BatchLab::Histogram3D* batchlabB = 
+    INLIB_CONST_CAST(aB,BatchLab::Histogram3D);
+  if(!batchlabB) return 0;
+  const inlib::histo::h3d& hclB = batchlabB->hclHistogram();
+
+  inlib::histo::h3d hclR(hclA);
+  if(!hclR.subtract(hclB)) return 0;
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::subtract")) return 0;
+  BatchLab::Histogram3D* object = 
+    fAllocator->new_Histogram3D(f_out,name,hclR);
+  if(!object) return 0;
+  object->setTitle(name);
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram3D* BatchLab::HistogramFactory::multiply( 
+ const std::string& aPath
+,const AIDA::IHistogram3D& aA
+,const AIDA::IHistogram3D& aB
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram3D* batchlabA = 
+    INLIB_CONST_CAST(aA,BatchLab::Histogram3D);
+  if(!batchlabA) return 0;
+  const inlib::histo::h3d& hclA = batchlabA->hclHistogram();
+
+  const BatchLab::Histogram3D* batchlabB = 
+    INLIB_CONST_CAST(aB,BatchLab::Histogram3D);
+  if(!batchlabB) return 0;
+  const inlib::histo::h3d& hclB = batchlabB->hclHistogram();
+
+  inlib::histo::h3d hclR(hclA);
+  if(!hclR.multiply(hclB)) return 0;
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::multiply")) return 0;
+  BatchLab::Histogram3D* object = 
+    fAllocator->new_Histogram3D(f_out,name,hclR);
+  if(!object) return 0;
+  object->setTitle(name);
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram3D* BatchLab::HistogramFactory::divide( 
+ const std::string& aPath
+,const AIDA::IHistogram3D& aA
+,const AIDA::IHistogram3D& aB
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram3D* batchlabA = 
+    INLIB_CONST_CAST(aA,BatchLab::Histogram3D);
+  if(!batchlabA) return 0;
+  const inlib::histo::h3d& hclA = batchlabA->hclHistogram();
+
+  const BatchLab::Histogram3D* batchlabB = 
+    INLIB_CONST_CAST(aB,BatchLab::Histogram3D);
+  if(!batchlabB) return 0;
+  const inlib::histo::h3d& hclB = batchlabB->hclHistogram();
+
+  inlib::histo::h3d hclR(hclA);
+  if(!hclR.divide(hclB)) return 0;
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::divide")) return 0;
+  BatchLab::Histogram3D* object = 
+    fAllocator->new_Histogram3D(f_out,name,hclR);
+  if(!object) return 0;
+  object->setTitle(name);
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram1D* BatchLab::HistogramFactory::sliceX( 
+ const std::string& aPath
+,const AIDA::IHistogram2D& aHisto
+,int aIndexY1
+,int aIndexY2
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram2D* batchlabHisto = 
+    INLIB_CONST_CAST(aHisto,BatchLab::Histogram2D);
+  if(!batchlabHisto) return 0;
+  const inlib::histo::h2d& hcl = batchlabHisto->hclHistogram();
+
+  inlib::histo::h1d* hclR = slice_x(hcl,aIndexY1,aIndexY2,"SliceX");
+  if(!hclR) return 0;
+  hclR->set_title(name);
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::sliceX")) return 0;
+  BatchLab::Histogram1D* object = 
+    fAllocator->new_Histogram1D(f_out,name,*hclR);
+  delete hclR;
+
+  if(!object) return 0;
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram1D* BatchLab::HistogramFactory::sliceY( 
+ const std::string& aPath
+,const AIDA::IHistogram2D& aHisto
+,int aIndexX1
+,int aIndexX2
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram2D* batchlabHisto = 
+    INLIB_CONST_CAST(aHisto,BatchLab::Histogram2D);
+  if(!batchlabHisto) return 0;
+  const inlib::histo::h2d& hcl = batchlabHisto->hclHistogram();
+
+  inlib::histo::h1d* hclR = slice_y(hcl,aIndexX1,aIndexX2,"SliceY");
+  if(!hclR) return 0;
+  hclR->set_title(name);
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::sliceY")) return 0;
+  BatchLab::Histogram1D* object = 
+    fAllocator->new_Histogram1D(f_out,name,*hclR);
+  delete hclR;
+
+  if(!object) return 0;
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram1D* BatchLab::HistogramFactory::sliceX( 
+ const std::string& aPath
+,const AIDA::IHistogram2D& aHisto
+,int aIndexY
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return sliceX(aPath,aHisto,aIndexY,aIndexY);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram1D* BatchLab::HistogramFactory::sliceY( 
+ const std::string& aPath
+,const AIDA::IHistogram2D& aHisto
+,int aIndexX
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return sliceY(aPath,aHisto,aIndexX,aIndexX);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram1D* BatchLab::HistogramFactory::projectionX( 
+ const std::string& aPath
+,const AIDA::IHistogram2D& aHisto
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return sliceX(aPath,aHisto,
+                AIDA::IAxis::UNDERFLOW_BIN,
+                AIDA::IAxis::OVERFLOW_BIN);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram1D* BatchLab::HistogramFactory::projectionY(
+ const std::string& aPath
+,const AIDA::IHistogram2D& aHisto
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return sliceY(aPath,aHisto,
+                AIDA::IAxis::UNDERFLOW_BIN,
+                AIDA::IAxis::OVERFLOW_BIN);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram2D* BatchLab::HistogramFactory::sliceXY( 
+ const std::string& aPath
+,const AIDA::IHistogram3D& aHisto
+,int aIndexZ1
+,int aIndexZ2
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram3D* batchlabHisto = 
+    INLIB_CONST_CAST(aHisto,BatchLab::Histogram3D);
+  if(!batchlabHisto) return 0;
+  const inlib::histo::h3d& hcl = batchlabHisto->hclHistogram();
+
+  inlib::histo::h2d* hclR = slice_xy(hcl,aIndexZ1,aIndexZ2,"SliceXY");
+  if(!hclR) return 0;
+  hclR->set_title(name);
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::sliceXY")) return 0;
+  BatchLab::Histogram2D* object = 
+    fAllocator->new_Histogram2D(f_out,name,*hclR);
+  delete hclR;
+
+  if(!object) return 0;
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram2D* BatchLab::HistogramFactory::sliceXZ( 
+ const std::string& aPath
+,const AIDA::IHistogram3D& aHisto
+,int aIndexY1
+,int aIndexY2
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram3D* batchlabHisto = 
+    INLIB_CONST_CAST(aHisto,BatchLab::Histogram3D);
+  if(!batchlabHisto) return 0;
+  const inlib::histo::h3d& hcl = batchlabHisto->hclHistogram();
+
+  inlib::histo::h2d* hclR = slice_xz(hcl,aIndexY1,aIndexY2,"SliceXZ");
+  if(!hclR) return 0;
+  hclR->set_title(name);
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::sliceXZ")) return 0;
+  BatchLab::Histogram2D* object = 
+    fAllocator->new_Histogram2D(f_out,name,*hclR);
+  delete hclR;
+
+  if(!object) return 0;
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram2D* BatchLab::HistogramFactory::sliceYZ( 
+ const std::string& aPath
+,const AIDA::IHistogram3D& aHisto
+,int aIndexX1
+,int aIndexX2
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+
+  const BatchLab::Histogram3D* batchlabHisto = 
+    INLIB_CONST_CAST(aHisto,BatchLab::Histogram3D);
+  if(!batchlabHisto) return 0;
+  const inlib::histo::h3d& hcl = batchlabHisto->hclHistogram();
+
+  inlib::histo::h2d* hclR = slice_yz(hcl,aIndexX1,aIndexX2,"SliceYZ");
+  if(!hclR) return 0;
+  hclR->set_title(name);
+
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::sliceYZ")) return 0;
+  BatchLab::Histogram2D* object = 
+    fAllocator->new_Histogram2D(f_out,name,*hclR);
+  delete hclR;
+
+  if(!object) return 0;
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram2D* BatchLab::HistogramFactory::projectionXY( 
+ const std::string& aPath
+,const AIDA::IHistogram3D& aHisto
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return sliceXY(aPath,aHisto,
+                 AIDA::IAxis::UNDERFLOW_BIN,
+                 AIDA::IAxis::OVERFLOW_BIN);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram2D* BatchLab::HistogramFactory::projectionXZ(
+ const std::string& aPath
+,const AIDA::IHistogram3D& aHisto
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return sliceXZ(aPath,aHisto,
+                 AIDA::IAxis::UNDERFLOW_BIN,
+                 AIDA::IAxis::OVERFLOW_BIN);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram2D* BatchLab::HistogramFactory::projectionYZ( 
+ const std::string& aPath
+,const AIDA::IHistogram3D& aHisto
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return sliceYZ(aPath,aHisto,
+                 AIDA::IAxis::UNDERFLOW_BIN,
+                 AIDA::IAxis::OVERFLOW_BIN);
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+#include <BatchLab/Core/Cloud.h>
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::ICloud1D* BatchLab::HistogramFactory::createCloud1D(
+ const std::string& aPath
+,const std::string& aTitle
+,int aLimit
+,const std::string& aOptions
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    f_out << "BatchLab::HistogramFactory::createCloud1D :" 
+        << " cloud not supported by HBOOK." << std::endl;
+    return 0;
+  }
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createCloud1D")) return 0;
+  BatchLab::Cloud1D* object = 
+    fAllocator->new_Cloud1D(f_out,name,aTitle,aLimit);
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,
+                    "BatchLab::HistogramFactory::createCloud1D")) {
+    delete object;
+    return 0;
+  }
+  if(!manage(aOptions)) return object;
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::ICloud1D* BatchLab::HistogramFactory::createCloud1D(
+ const std::string& aPath
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  return createCloud1D(aPath,name,-1,"");
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::ICloud2D* BatchLab::HistogramFactory::createCloud2D(
+ const std::string& aPath
+,const std::string& aTitle
+,int aLimit
+,const std::string& aOptions
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    f_out << "BatchLab::HistogramFactory::createCloud2D :" 
+        << " cloud not supported by HBOOK." << std::endl;
+    return 0;
+  }
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createCloud2D")) return 0;
+  BatchLab::Cloud2D* object = 
+    fAllocator->new_Cloud2D(f_out,name,aTitle,aLimit);
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,"BatchLab::HistogramFactory::createCloud2D")) {delete object;return 0;}
+  if(!manage(aOptions)) return object;
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::ICloud2D* BatchLab::HistogramFactory::createCloud2D(
+ const std::string& aPath
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  return createCloud2D(aPath,name,-1,"");
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::ICloud3D* BatchLab::HistogramFactory::createCloud3D(
+ const std::string& aPath
+,const std::string& aTitle
+,int aLimit 
+,const std::string& aOptions
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    f_out << "BatchLab::HistogramFactory::createCloud3D :" 
+        << " cloud not supported by HBOOK." << std::endl;
+    return 0;
+  }
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createCloud3D")) return 0;
+  BatchLab::Cloud3D* object = 
+    fAllocator->new_Cloud3D(f_out,name,aTitle,aLimit);
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,
+                    "BatchLab::HistogramFactory::createCloud3D")) {
+    delete object;
+    return 0;
+  }
+  if(!manage(aOptions)) return object;
+  //if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::ICloud3D* BatchLab::HistogramFactory::createCloud3D(
+ const std::string& aPath
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  return createCloud3D(aPath,name,-1,"");
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram1D* BatchLab::HistogramFactory::createCopy(
+ const std::string& aPath
+,const AIDA::IHistogram1D& aFrom
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(const Histogram1D* from  = INLIB_CONST_CAST(aFrom,BatchLab::Histogram1D)) {
+    std::string path,name,suffix;
+    if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+    if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createCopy")) return 0;
+    BatchLab::Histogram1D* object = fAllocator->new_Histogram1D(*from);
+    if(!object) return 0;
+    object->setName(name);
+    //if(!manage(aOptions)) return object;
+    if(manageObject(object,path)) return object;
+    delete object;
+    return 0;
+  } else {
+    return 0;//FIXME
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram2D* BatchLab::HistogramFactory::createCopy(
+ const std::string& aPath
+,const AIDA::IHistogram2D& aFrom
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(const Histogram2D* from = INLIB_CONST_CAST(aFrom,BatchLab::Histogram2D)) {
+    std::string path,name,suffix;
+    if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+    if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createCopy")) return 0;
+    BatchLab::Histogram2D* object = fAllocator->new_Histogram2D(*from);
+    if(!object) return 0;
+    object->setName(name);
+    //if(!manage(aOptions)) return object;
+    if(manageObject(object,path)) return object;
+    delete object;
+    return 0;
+  } else {
+    return 0;//FIXME
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IHistogram3D* BatchLab::HistogramFactory::createCopy(
+ const std::string& aPath
+,const AIDA::IHistogram3D& aFrom
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(const Histogram3D* from = INLIB_CONST_CAST(aFrom,BatchLab::Histogram3D)) {
+    std::string path,name,suffix;
+    if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+    if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createCopy")) return 0;
+    BatchLab::Histogram3D* object = fAllocator->new_Histogram3D(*from);
+    if(!object) return 0;
+    object->setName(name);
+    //if(!manage(aOptions)) return object;
+    if(manageObject(object,path)) return object;
+    delete object;
+    return 0;
+  } else {
+    return 0;//FIXME
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::HistogramFactory::destroy(
+ AIDA::IBaseHistogram* aHistogram
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(!aHistogram) return false;
+  Slash::Store::IObject* bo = INLIB_CAST(*aHistogram,Slash::Store::IObject);
+  if(!bo) return false;
+  if(!fTree.isObjectValid(bo)) return false;
+  delete bo; //It remove the object from the folder (See ~BaseObject)
+  fTree.emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::ICloud1D* BatchLab::HistogramFactory::createCopy(
+ const std::string& aPath
+,const AIDA::ICloud1D& aFrom
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(const Cloud1D* from  = INLIB_CONST_CAST(aFrom,BatchLab::Cloud1D)) {
+    std::string path,name,suffix;
+    if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+    if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createCopy")) return 0;
+    BatchLab::Cloud1D* object = fAllocator->new_Cloud1D(*from);
+    if(!object) return 0;      
+    object->setName(name);
+    //if(!manage(aOptions)) return object;
+    if(manageObject(object,path)) return object;
+    delete object;
+    return 0;
+  } else {
+    return 0;//FIXME
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::ICloud2D* BatchLab::HistogramFactory::createCopy(
+ const std::string& aPath
+,const AIDA::ICloud2D& aFrom
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(const Cloud2D* from  = INLIB_CONST_CAST(aFrom,BatchLab::Cloud2D)) {
+    std::string path,name,suffix;
+    if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+    if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createCopy")) return 0;
+    BatchLab::Cloud2D* object = fAllocator->new_Cloud2D(*from);
+    if(!object) return 0;
+    object->setName(name);
+    //if(!manage(aOptions)) return object;
+    if(manageObject(object,path)) return object;
+    delete object;
+    return 0;
+  } else {
+    return 0;//FIXME
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::ICloud3D* BatchLab::HistogramFactory::createCopy(
+ const std::string& aPath
+,const AIDA::ICloud3D& aFrom
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(const Cloud3D* from  = INLIB_CONST_CAST(aFrom,BatchLab::Cloud3D)) {
+    std::string path,name,suffix;
+    if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+    if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createCopy")) return 0;
+    BatchLab::Cloud3D* object = fAllocator->new_Cloud3D(*from);
+    if(!object) return 0;
+    object->setName(name);
+    //if(!manage(aOptions)) return object;
+    if(manageObject(object,path)) return object;
+    delete object;
+    return 0;
+  } else {
+    return 0;//FIXME
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IProfile1D* BatchLab::HistogramFactory::createProfile1D(
+ const std::string& aPath
+,const std::string& aTitle
+,int aXnumber
+,double aXmin
+,double aXmax
+,const std::string& aOptions
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    f_out << "BatchLab::HistogramFactory::createProfile1D :" 
+        << " profile 1D without passing YMIN, YMAX"
+        << " not supported by BatchLab::Zebra." 
+        << std::endl;
+    return 0;
+  }
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createProfile1D")) return 0;
+  BatchLab::Profile1D* object = 
+    fAllocator->new_Profile1D(f_out,name,aTitle,
+                              aXnumber,aXmin,aXmax);
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,"BatchLab::HistogramFactory::createProfile1D")) {delete object;return 0;}
+  if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IProfile1D* BatchLab::HistogramFactory::createProfile1D(
+ const std::string& aPath
+,const std::string& aTitle
+,int aXnumber
+,double aXmin
+,double aXmax
+,double aVmin
+,double aVmax
+,const std::string& aOptions
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  Slash::Store::IObject* object = 0;
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    Slash::Store::IStoreManager* storeManager = 
+      Slash_findManager(fSession,"Zebra_Manager",Slash::Store::IStoreManager);
+    if(!storeManager) return 0;
+    std::vector<Slash::Store::IStoreManager::Range> args;
+    args.push_back
+      (Slash::Store::IStoreManager::Range
+         (aXnumber,std::pair<double,double>(aXmin,aXmax)));
+    args.push_back
+      (Slash::Store::IStoreManager::Range
+         (0,std::pair<double,double>(aVmin,aVmax)));
+    object = storeManager->createObject
+               (fTree,"AIDA::IProfile1D",path,name,aTitle,args,aOptions);
+  } else {
+    if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createProfile1D")) return 0;
+    object = fAllocator->new_Profile1D(f_out,name,aTitle,
+                                       aXnumber,aXmin,aXmax,
+                                       aVmin,aVmax);
+  }
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,
+                    "BatchLab::HistogramFactory::createProfile1D")) {
+    delete object;
+    return 0;
+  }
+  AIDA::IProfile1D* aobject = INLIB_CAST(*object,AIDA::IProfile1D);
+  if(!aobject) {
+    f_out << "BatchLab::HistogramFactory::createProfile1D :" 
+        << " Slash::Store::IObject not an AIDA::IProfile1D." << std::endl;
+    delete object;
+    return 0;
+  }
+  if(!manage(aOptions)) return aobject;
+  if(!manageObject(object,path)) {
+    delete object;
+    return 0;
+  }
+  return aobject;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IProfile1D* BatchLab::HistogramFactory::createProfile1D(
+ const std::string& aPath
+,const std::string& aTitle
+,const std::vector<double>& aEdges
+,const std::string& aOptions
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    f_out << "BatchLab::HistogramFactory::createProfile1D :" 
+        << " profile 1D with variable size bins"
+        << " not supported by BatchLab::Zebra." 
+        << std::endl;
+    return 0;
+  }
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createProfile1D")) return 0;
+  BatchLab::Profile1D* object = 
+    fAllocator->new_Profile1D(f_out,name,aTitle,aEdges);
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,"BatchLab::HistogramFactory::createProfile1D")) {delete object;return 0;}
+  if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IProfile1D* BatchLab::HistogramFactory::createProfile1D(
+ const std::string& aPath
+,const std::string& aTitle
+,const std::vector<double>& aEdges
+,double aVmin
+,double aVmax
+,const std::string& aOptions
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    f_out << "BatchLab::HistogramFactory::createProfile1D :" 
+        << " profile 1D with variable size bins"
+        << " not supported by BatchLab::Zebra." 
+        << std::endl;
+    return 0;
+  }
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createProfile1D")) return 0;
+  BatchLab::Profile1D* object = 
+    fAllocator->new_Profile1D(f_out,name,aTitle,
+                              aEdges,aVmin,aVmax);
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,
+                    "BatchLab::HistogramFactory::createProfile1D")) {
+    delete object;
+    return 0;
+  }
+  if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IProfile1D* BatchLab::HistogramFactory::createProfile1D(
+ const std::string& aPath
+,int aXnumber
+,double aXmin
+,double aXmax
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  return createProfile1D(aPath,name,aXnumber,aXmin,aXmax,"");
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IProfile1D* BatchLab::HistogramFactory::createProfile1D(
+ const std::string& aPath
+,int aXnumber
+,double aXmin
+,double aXmax
+,double aVmin
+,double aVmax
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  return createProfile1D(aPath,name,aXnumber,aXmin,aXmax,aVmin,aVmax,"");
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IProfile2D* BatchLab::HistogramFactory::createProfile2D(
+ const std::string& aPath
+,const std::string& aTitle
+,int aXnumber
+,double aXmin
+,double aXmax
+,int aYnumber
+,double aYmin
+,double aYmax
+,const std::string& aOptions
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    f_out << "BatchLab::HistogramFactory::createProfile2D :" 
+        << " profile 2D not supported by HBOOK." << std::endl;
+    return 0;
+  }
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createProfile2D")) return 0;
+  BatchLab::Profile2D* object = 
+    fAllocator->new_Profile2D(f_out,name,aTitle,
+                              aXnumber,aXmin,aXmax,
+                              aYnumber,aYmin,aYmax);
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,"BatchLab::HistogramFactory::createProfile2D")) {delete object;return 0;}
+  if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IProfile2D* BatchLab::HistogramFactory::createProfile2D(
+ const std::string& aPath
+,const std::string& aTitle
+,int aXnumber
+,double aXmin
+,double aXmax
+,int aYnumber
+,double aYmin
+,double aYmax
+,double aVmin
+,double aVmax
+,const std::string& aOptions
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    f_out << "BatchLab::HistogramFactory::createProfile2D :" 
+        << " profile 2D not supported by HBOOK." << std::endl;
+    return 0;
+  }
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createProfile2D")) return 0;
+  BatchLab::Profile2D* object = 
+    fAllocator->new_Profile2D(f_out,name,aTitle,
+                              aXnumber,aXmin,aXmax,
+                              aYnumber,aYmin,aYmax,
+                              aVmin,aVmax);
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,
+                    "BatchLab::HistogramFactory::createProfile2D")) {
+    delete object;
+    return 0;
+  }
+  if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IProfile2D* BatchLab::HistogramFactory::createProfile2D(
+ const std::string& aPath
+,int aXnumber
+,double aXmin
+,double aXmax
+,int aYnumber
+,double aYmin
+,double aYmax
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  return createProfile2D(aPath,name,
+                         aXnumber,aXmin,aXmax,aYnumber,aYmin,aYmax,"");
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IProfile2D* BatchLab::HistogramFactory::createProfile2D(
+ const std::string& aPath
+,int aXnumber
+,double aXmin
+,double aXmax
+,int aYnumber
+,double aYmin
+,double aYmax
+,double aVmin
+,double aVmax
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  return createProfile2D(aPath,name,
+                    aXnumber,aXmin,aXmax,aYnumber,aYmin,aYmax,aVmin,aVmax,"");
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IProfile2D* BatchLab::HistogramFactory::createProfile2D(
+ const std::string& aPath
+,const std::string& aTitle
+,const std::vector<double>& aEdgesX
+,const std::vector<double>& aEdgesY
+,const std::string& aOptions
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    f_out << "BatchLab::HistogramFactory::createProfile2D :" 
+        << " profile 2D not supported by HBOOK." << std::endl;
+    return 0;
+  }
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createProfile2D")) return 0;
+  BatchLab::Profile2D* object = 
+    fAllocator->new_Profile2D(f_out,name,aTitle,aEdgesX,aEdgesY);
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,"BatchLab::HistogramFactory::createProfile2D")) {delete object;return 0;}
+  if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IProfile2D* BatchLab::HistogramFactory::createProfile2D(
+ const std::string& aPath
+,const std::string& aTitle
+,const std::vector<double>& aEdgesX
+,const std::vector<double>& aEdgesY
+,double aVmin
+,double aVmax
+,const std::string& aOptions
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(fTree.storeType()=="BatchLab::Zebra::Tree") {
+    f_out << "BatchLab::HistogramFactory::createProfile2D :" 
+        << " profile 2D not supported by HBOOK." << std::endl;
+    return 0;
+  }
+  std::string path,name,suffix;
+  if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+  if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createProfile2D")) return 0;
+  BatchLab::Profile2D* object = 
+    fAllocator->new_Profile2D(f_out,name,aTitle,
+                              aEdgesX,aEdgesY,aVmin,aVmax);
+  if(!object) return 0;
+  if(!THREAD_SAFETY(*object,aOptions,
+                    "BatchLab::HistogramFactory::createProfile2D")) {
+    delete object;
+    return 0;
+  }
+  if(!manage(aOptions)) return object;
+  if(manageObject(object,path)) return object;
+  delete object;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IProfile1D* BatchLab::HistogramFactory::createCopy(
+ const std::string& aPath
+,const AIDA::IProfile1D& aFrom
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(const Profile1D* from  = INLIB_CONST_CAST(aFrom,BatchLab::Profile1D)) {
+    std::string path,name,suffix;
+    if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+    if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createCopy")) return 0;
+    BatchLab::Profile1D* object = fAllocator->new_Profile1D(*from);
+    if(!object) return 0;
+    object->setName(name);
+    //if(!manage(aOptions)) return object;
+    if(manageObject(object,path)) return object;
+    delete object;
+    return 0;
+  } else {
+    return 0;//FIXME
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IProfile2D* BatchLab::HistogramFactory::createCopy(
+ const std::string& aPath
+,const AIDA::IProfile2D& aFrom
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(const Profile2D* from  = INLIB_CONST_CAST(aFrom,BatchLab::Profile2D)) {
+    std::string path,name,suffix;
+    if(!inlib::path_name_suffix(aPath,path,name,suffix)) return 0;
+    if(!CHECK_ALLOCATOR("BatchLab::HistogramFactory::createCopy")) return 0;
+    BatchLab::Profile2D* object = fAllocator->new_Profile2D(*from);
+    if(!object) return 0;
+    object->setName(name);
+    //if(!manage(aOptions)) return object;
+    if(manageObject(object,path)) return object;
+    delete object;
+    return 0;
+  } else {
+    return 0;//FIXME
+  }
+}

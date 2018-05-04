@@ -1,0 +1,60 @@
+<OnX>
+  <widget class="Window">
+    <geometry>400x400</geometry>
+    <title>OnX/IvViewer</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <!-- A simple menu bar with a 
+         "File" and "Scene" pull down menus (PDM). -->
+
+    <widget class="MenuBar" name="menu_bar">
+
+      <!-- A File PDM.  -->
+      <widget class="CascadeButton">
+        <label>File</label>
+        <widget class="Menu">
+          <widget class="MenuItem">
+            <label>Open...</label>
+            <variable name="OnX_Scene_read_iv.script">OnX ui_echo @this.value@</variable>
+            <activate exec="DLD">OnX ui_set_fileChooser . *.iv;*.hiv;*.wrl open DLD @{OnX_Scene_read_iv.script}@</activate>
+            <activate exec="DLD">OnX ui_show fileChooser</activate>
+          </widget>
+          <widget class="MenuItem">
+            <label>echo hello</label>
+            <activate exec="DLD">OnX ui_echo hello</activate>
+          </widget>
+          <widget class="MenuItem">
+            <label>Exit</label>
+            <accelerator>Ctrl+q</accelerator>
+            <activate exec="DLD">OnX ui_exit</activate>
+          </widget>
+        </widget>
+      </widget>
+
+      <reference file="$ONXROOT/examples/OnX/pdm.onx_ref"/>
+
+    </widget>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>35</sizeOfFixed>
+      <widget class="ScrolledText" name="consoleText"/>
+      <widget class="PushButton">
+        <label>Open...</label>
+        <variable name="OnX_Scene_read_iv.script">OnX ui_echo @this.value@</variable>
+        <activate exec="DLD">OnX ui_set_fileChooser . *.iv;*.hiv;*.wrl open DLD @{OnX_Scene_read_iv.script}@</activate>
+        <activate exec="DLD">OnX ui_show fileChooser</activate>
+      </widget>
+    </widget>
+
+    <reference file="$ONXROOT/scripts/OnX/Dialogs.onx"/>
+
+  </widget>
+
+  <widget class="Window" name="OnX_window_1">
+    <close exec="DLD">OnX ui_echo close OnX_window_1</close>
+    <destroy exec="DLD">OnX ui_echo destroy OnX_window_1</destroy>
+    <show>no</show>
+  </widget>
+</OnX>

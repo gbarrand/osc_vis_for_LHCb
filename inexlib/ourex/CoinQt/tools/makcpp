@@ -1,0 +1,79 @@
+#!/bin/sh -f
+
+#set -x
+
+from=/barrand/externals/SoQt-1.3.0
+sogui=${from}/src/Inventor/Qt/common
+to=/barrand/OpenScientist/dev/CoinQt/v1r50p3
+
+# Template devices :
+./gui_in ${sogui}/devices/SoGuiSpaceball.cpp.in ${from}  ${to}/src/Inventor/Qt/devices Qt SoQtSpaceballCommon.cpp
+./gui_in ${sogui}/devices/SoGuiDevice.cpp.in ${from}  ${to}/src/Inventor/Qt/devices Qt SoQtDeviceCommon.cpp
+./gui_in ${sogui}/devices/SoGuiMouse.cpp.in ${from}  ${to}/src/Inventor/Qt/devices Qt SoQtMouseCommon.cpp
+./gui_in ${sogui}/devices/SoGuiKeyboard.cpp.in ${from}  ${to}/src/Inventor/Qt/devices Qt SoQtKeyboardCommon.cpp
+./gui_in ${sogui}/devices/SoGuiInputFocus.cpp.in ${from}  ${to}/src/Inventor/Qt/devices Qt SoQtInputFocusCommon.cpp
+
+# Template viewers :
+./gui_in ${sogui}/viewers/SoGuiConstrainedViewer.cpp.in ${from}  ${to}/src/Inventor/Qt/viewers Qt
+./gui_in ${sogui}/viewers/SoGuiExaminerViewer.cpp.in ${from}  ${to}/src/Inventor/Qt/viewers Qt
+./gui_in ${sogui}/viewers/SoGuiFlyViewer.cpp.in ${from}  ${to}/src/Inventor/Qt/viewers Qt
+./gui_in ${sogui}/viewers/SoGuiFullViewer.cpp.in ${from}  ${to}/src/Inventor/Qt/viewers Qt
+./gui_in ${sogui}/viewers/SoGuiPlaneViewer.cpp.in ${from}  ${to}/src/Inventor/Qt/viewers Qt
+#./gui_in ${sogui}/viewers/SoGuiWalkViewer.cpp.in ${from}  ${to}/src/Inventor/Qt/viewers Qt
+./gui_in ${sogui}/viewers/SoGuiViewer.cpp.in ${from}  ${to}/src/Inventor/Qt/viewers Qt
+
+# Template widgets :
+./gui_in ${sogui}/widgets/SoGuiPopupMenu.cpp.in ${from}  ${to}/src/Inventor/Qt/widgets Qt
+./gui_in ${sogui}/widgets/SoAnyThumbWheel.cpp.in ${from}  ${to}/src/Inventor/Qt/widgets Qt
+#./gui_in ${sogui}/SoGuiCursors.cpp.in ${from}  ${to}/src/Inventor/Qt Qt
+
+# Template nodes :
+./gui_in ${sogui}/nodes/ClickCounter.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt ClickCounter.cpp
+./gui_in ${sogui}/nodes/ColorEditor.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt ColorEditor.cpp
+./gui_in ${sogui}/nodes/Frame.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt Frame.cpp
+./gui_in ${sogui}/nodes/Image.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt Image.cpp
+./gui_in ${sogui}/nodes/Label.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt Label.cpp
+./gui_in ${sogui}/nodes/MaterialEditor.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt MaterialEditor.cpp
+./gui_in ${sogui}/nodes/Nodes.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt SoGuiNodes.cpp
+./gui_in ${sogui}/nodes/Pane.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt Pane.cpp
+./gui_in ${sogui}/nodes/Position.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt Position.cpp
+./gui_in ${sogui}/nodes/RadioButton.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt RadioButton.cpp
+./gui_in ${sogui}/nodes/SceneTexture2.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt SceneTexture2.cpp
+./gui_in ${sogui}/nodes/Slider1.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt Slider1.cpp
+./gui_in ${sogui}/nodes/Slider2.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt Slider2.cpp
+./gui_in ${sogui}/nodes/ToggleButton.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt ToggleButton.cpp
+./gui_in ${sogui}/nodes/Translation.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt Translation.cpp
+./gui_in ${sogui}/nodes/ViewpointWrapper.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt ViewpointWrapper.cpp
+./gui_in ${sogui}/nodes/ViewportFix.cpp.in ${from}  ${to}/src/Inventor/Qt/nodes Qt ViewportFix.cpp
+
+# Template engines :
+./gui_in ${sogui}/engines/Engines.cpp.in ${from} ${to}/src/Inventor/Qt/engines Qt Engines.cpp
+./gui_in ${sogui}/engines/Format.cpp.in ${from} ${to}/src/Inventor/Qt/engines Qt Format.cpp
+./gui_in ${sogui}/engines/RadioGroup.cpp.in ${from} ${to}/src/Inventor/Qt/engines Qt RadioGroup.cpp
+
+# Template editors :
+#./gui_in ${sogui}/editors/MaterialEditor.cpp.in ${from} ${to}/src/Inventor/Qt/editors Qt SoQtMaterialEditor.cpp
+#./gui_in ${sogui}/editors/ColorEditor.cpp.in ${from} ${to}/src/Inventor/Qt/editors Qt SoQtColorEditor.cpp
+
+# Template general :
+./gui_in ${sogui}/SoAny.cpp.in ${from}  ${to}/src/Inventor/Qt Qt
+#./gui_in ${sogui}/SoAnyMaterialList.cpp.in ${from}  ${to}/src/Inventor/Qt Qt
+#./gui_in ${sogui}/SoAnyMaterialListBuiltins.cpp.in ${from}  ${to}/src/Inventor/Qt Qt
+./gui_in ${sogui}/SoGuiCommon.cpp.in ${from}  ${to}/src/Inventor/Qt Qt
+./gui_in ${sogui}/SoGuiObject.cpp.in ${from}  ${to}/src/Inventor/Qt Qt
+./gui_in ${sogui}/SoGuiRenderArea.cpp.in ${from}  ${to}/src/Inventor/Qt Qt
+./gui_in ${sogui}/SoGuiGLWidgetCommon.cpp.in ${from}  ${to}/src/Inventor/Qt Qt
+./gui_in ${sogui}/SoGuiCursor.cpp.in ${from}  ${to}/src/Inventor/Qt Qt
+./gui_in ${sogui}/SoGuiComponentCommon.cpp.in ${from}  ${to}/src/Inventor/Qt Qt
+
+#./gui_in ${sogui}/spwinput_x11.cpp.in ${from} ${to}/src/Inventor/Qt Qt
+
+# Not templated files :
+find ${from}/src -name "*.cpp" -exec ./cp_cpp {} ${from} ${to} \;
+find ${from}/src -name "Qt*.cpp" -exec ./cp_cpp {} ${from} ${to} \;
+
+find ../src -name 'all-*.cpp' -exec /bin/rm {} \;
+find ../src -name 'all*.c' -exec /bin/rm {} \;
+
+
+

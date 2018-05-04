@@ -1,0 +1,35 @@
+<OnX>
+
+  <widget class="Window">
+    <geometry>400x400</geometry>
+    <title>OpenGLArea</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>30</sizeOfFixed>
+
+      <widget class="VBox">
+        <expand>both</expand>
+
+        <widget class="OpenGLArea">
+          <paint exec="DLD">OnXExas opengl_cube_paint</paint>
+          <event exec="DLD">OnXExas opengl_event</event>
+        </widget>
+
+        <widget class="OpenGLArea">
+          <paint exec="DLD">OnXExas opengl_contour_paint</paint>
+          <event exec="DLD">OnXExas opengl_event</event>
+        </widget>
+
+      </widget>
+
+      <widget class="PushButton">
+        <label>Quit</label>
+        <activate exec="DLD">OnX ui_exit</activate>
+      </widget>
+
+    </widget>
+  </widget>
+</OnX>

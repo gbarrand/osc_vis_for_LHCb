@@ -1,0 +1,45 @@
+<OnX>
+  <widget class="Window">
+    <geometry>400x400</geometry>
+    <title>OnX</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="MenuBar"> 
+
+      <widget class="CascadeButton">
+        <label>File</label>
+        <widget class="Menu">
+
+          <widget class="MenuItem">
+            <label>Dump highlighted objects</label>
+            <!-- NOTE : the below callback works for both cases
+                        of starting with :
+                          OS> <start Python>
+                          >>> import shapes          
+                        or with :
+                          OS> python -i shapes.py   -->
+            <activate exec="Python">
+              import sys\n\
+              if sys.modules.has_key('shapes'):\n\
+                sys.modules['shapes'].callback()\n\
+              else:\n\
+                callback()
+            </activate>
+          </widget>
+
+          <widget class="MenuItem">
+            <label>Exit</label>
+            <activate exec="DLD">OnX ui_exit</activate>
+          </widget>
+
+        </widget>
+      </widget>
+    </widget>
+
+    <widget class="PageViewer" name="Viewer">
+      <collect exec="DLD">OnX viewer_collect @this@</collect>
+    </widget>
+
+  </widget>
+</OnX>

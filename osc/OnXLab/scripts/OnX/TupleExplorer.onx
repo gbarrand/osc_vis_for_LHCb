@@ -1,0 +1,123 @@
+<widget class="Dialog" name="OnXLab_TupleExplorer_dialog">
+  <!-- height : 1+4+3+1+1+1+1+4+1 = 17 * 35 = 595 -->
+<!--
+  <geometry>310x595</geometry>
+-->
+  <geometry>310x650</geometry>
+  <title>Tuple explorer</title>
+  <show>no</show>
+
+  <widget class="VBox"> 
+    <expand>first</expand>
+    <sizeOfFixed>30</sizeOfFixed>
+
+    <widget class="VBox"> 
+      <expand>second</expand>
+      <!-- 11 * 35 = 385 -->
+      <sizeOfFixed>385</sizeOfFixed>
+      <widget class="VContainer"> 
+        <widget class="PushButton" name="TupleExplorer_update">
+          <label>Update (according browser selected tuple)</label>
+          <activate exec="DLD">OnXLab OnXLab_TupleExplorer_update</activate>
+        </widget>
+        <widget class="Entry" name="OnXLab_TupleExplorer_tree"/>
+        <widget class="Entry" name="OnXLab_TupleExplorer_tuple"/>
+        <widget class="Entry" name="OnXLab_TupleExplorer_title"/>
+        <widget class="Entry" name="OnXLab_TupleExplorer_rows"/>
+
+        <widget class="HContainer"> 
+          <widget class="OptionMenu" name="OnXLab_TupleExplorer_bind_x"> 
+            <label>Bind X</label>
+            <valueChanged exec="DLD">OnXLab OnXLab_TupleExplorer_bind</valueChanged>
+          </widget>
+          <widget class="Entry" name="OnXLab_TupleExplorer_bind_x_entry">
+            <activate exec="DLD">OnXLab OnXLab_TupleExplorer_bind</activate>
+          </widget>
+          <widget class="PushButton">
+            <label>Infos</label>
+            <activate exec="DLD">OnXLab OnXLab_TupleExplorer_infos x</activate>
+          </widget>
+        </widget>
+
+        <widget class="HContainer"> 
+          <widget class="OptionMenu" name="OnXLab_TupleExplorer_bind_y"> 
+            <label>Bind Y</label>
+            <valueChanged exec="DLD">OnXLab OnXLab_TupleExplorer_bind</valueChanged>
+          </widget>
+          <widget class="Entry" name="OnXLab_TupleExplorer_bind_y_entry">
+            <activate exec="DLD">OnXLab OnXLab_TupleExplorer_bind</activate>
+          </widget>
+          <widget class="PushButton">
+            <label>Infos</label>
+            <activate exec="DLD">OnXLab OnXLab_TupleExplorer_infos y</activate>
+          </widget>
+        </widget>
+
+        <widget class="HContainer"> 
+          <widget class="OptionMenu" name="OnXLab_TupleExplorer_bind_z"> 
+            <label>Bind Z</label>
+            <valueChanged exec="DLD">OnXLab OnXLab_TupleExplorer_bind</valueChanged>
+          </widget>
+          <widget class="Entry" name="OnXLab_TupleExplorer_bind_z_entry">
+            <activate exec="DLD">OnXLab OnXLab_TupleExplorer_bind</activate>
+          </widget>
+          <widget class="PushButton">
+            <label>Infos</label>
+            <activate exec="DLD">OnXLab OnXLab_TupleExplorer_infos z</activate>
+          </widget>
+        </widget>
+
+        <widget class="HContainer"> 
+          <widget class="Label">
+            <label>Filter</label>
+          </widget>
+          <widget class="Entry" name="OnXLab_TupleExplorer_filter_entry">
+            <activate exec="DLD">OnXLab OnXLab_TupleExplorer_bind</activate>
+          </widget>
+        </widget>
+
+        <widget class="HBox"> 
+          <expand>first</expand>
+          <sizeOfFixed>70</sizeOfFixed>
+          <widget class="ComboBox" name="OnXLab_TupleExplorer_on_eval_filter"> 
+            <label>Graphical cut</label>
+            <default>none</default>
+            <items>none</items>
+            <valueChanged exec="DLD">OnXLab OnXLab_TupleExplorer_bind</valueChanged>
+          </widget>
+          <widget class="PushButton">
+            <label>Update</label>
+            <activate exec="DLD">OnXLab OnXLab_TupleExplorer_on_eval_filter_update</activate>
+          </widget>
+        </widget>
+
+        <widget class="OptionMenu" name="OnXLab_TupleExplorer_rep"> 
+          <label>Rep</label>
+          <default>Histogram2D (two bindings)</default>
+          <items>Histogram2D (two bindings)\nProfile1D (two bindings)\nCloud2D (two bindings)\nCloud3D (three bindings)</items>
+          <valueChanged exec="DLD">OnXLab OnXLab_TupleExplorer_bind</valueChanged>
+        </widget>
+      </widget>
+
+      <widget class="TabStack" name="OnXLab_TupleExplorer_tab">
+        <reference file="TE_X.onx"/>
+        <reference file="TE_Y.onx"/>
+        <reference file="TE_Z.onx"/>
+      </widget>
+
+    </widget>
+
+    <widget class="HContainer">
+      <widget class="PushButton">
+        <label>Cancel</label>
+        <activate exec="DLD">OnX ui_hide OnXLab_TupleExplorer_dialog</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Help</label>
+        <activate exec="DLD">OnX ui_help_file @{ONXLAB_HOME}@ @cat@ /scripts/Help/TupleExplorer.help</activate>
+      </widget>
+    </widget>
+
+  </widget>
+</widget>
+

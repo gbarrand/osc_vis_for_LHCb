@@ -1,0 +1,24 @@
+<OnX>
+  <widget class="Window">
+    <geometry>200x300</geometry>
+    <title>OnX</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>30</sizeOfFixed>
+
+      <widget class="ScrolledTree" name="tree"/> 
+
+      <widget class="VBox">
+        <widget class="PushButton">
+          <label>Quit</label>
+          <activate exec="DLD">OnX ui_exit</activate>
+        </widget>
+      </widget>
+
+    </widget>
+
+  </widget>
+</OnX>

@@ -1,0 +1,49 @@
+<OnX>
+  <widget class="Dialog" name="OnX_JPEG_Dialog">
+    <geometry>400x200</geometry>
+    <decoration>no_close_button\nno_system_menu</decoration>
+    <title>Jpg quality selection</title>
+    <widget class="VContainer">
+      <widget class="Label">
+        <label>Select jpg quality for :</label>
+      </widget>
+      <widget class="Label" name="OnX_JPEG_Dialog_file">
+      </widget>
+      <widget class="HScale" name="OnX_JPEG_Dialog_quality">
+        <value>50</value>
+        <minimum>0</minimum>
+        <maximum>100</maximum>
+        <drag exec="DLD">OnX ui_setParameter OnX_JPEG_Dialog_q.label @this.value@</drag>
+      </widget>
+      <widget class="HContainer">
+        <widget class="Label">
+        <label>Quality : </label>
+        </widget>
+        <widget class="Label" name="OnX_JPEG_Dialog_q">
+        <label>50</label>
+        </widget>
+        <widget class="Label">
+        <label>  </label>
+        </widget>
+      </widget>
+
+      <widget class="HContainer">
+        <widget class="PushButton">
+          <label>Ok</label>
+          <activate exec="DLD">OnX ui_echo @[OnX_JPEG_Dialog_file.label]@ @[OnX_JPEG_Dialog_quality.value]@</activate>
+          <activate exec="DLD">OnX widget_write @current@ @[OnX_JPEG_Dialog_file.label]@ jpeg @[OnX_JPEG_Dialog_quality.value]@</activate>
+          <activate exec="DLD">OnX ui_hide @shell@this@</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Apply</label>
+          <activate exec="DLD">OnX ui_echo @[OnX_JPEG_Dialog_file.label]@ @[OnX_JPEG_Dialog_quality.value]@</activate>
+          <activate exec="DLD">OnX widget_write @current@ @[OnX_JPEG_Dialog_file.label]@ jpeg @[OnX_JPEG_Dialog_quality.value]@</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Cancel</label>
+          <activate exec="DLD">OnX ui_hide @shell@this@</activate>
+        </widget>
+      </widget>
+    </widget>
+  </widget>
+</OnX>

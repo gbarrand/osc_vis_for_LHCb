@@ -1,0 +1,13 @@
+#!/bin/sh -f
+
+./AIDA_example_b1
+./AIDA_example_b11
+./AIDA_example_b2
+./AIDA_example_b3
+./AIDA_example_b4
+#FIXME ./AIDA_example_b5
+./AIDA_example_b6
+./AIDA_example_b7
+#FIXME ./AIDA_example_b8
+
+

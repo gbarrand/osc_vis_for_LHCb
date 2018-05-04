@@ -1,0 +1,8 @@
+
+  OpenScientist being an integration of open source products 
+ it has no license of its own. Each package comes with its own 
+ license and for the moment they are all GPL. The following 
+ packages written at LAL are GPL : obuild, Lib, Rio, HCL, 
+ BatchLab, UseAIDA, OnX, OnXLab, VisAIDA, OpenPAW, G3Lab, 
+ G3Simple, G4Lab, G4Simple, G4Examples.
+

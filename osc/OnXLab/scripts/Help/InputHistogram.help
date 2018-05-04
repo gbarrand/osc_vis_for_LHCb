@@ -1,0 +1,5 @@
+  Create a 1D histogram.
+  
+  The name, being an identifier, must be unique.
+ 
+  The histogram is managed in the memoryTree in the current directory.

@@ -1,0 +1,100 @@
+
+ Some usefull commands :
+ ---------------------
+
+ To print all known procedures, classes, variables, etc...
+    Python> print dir()
+
+ To print imported modules :
+    Python> import sys
+    Python> print sys.modules
+
+ To reload and reexecute a module :
+
+    Python> import OnX
+    Python> OnX.sys_import('OnX_exa_detector')
+ or :
+    Python> from OnX import x
+    Python> x('OnX_exa_cube')
+
+ sys_import does an "import" if the module is not loaded 
+ or a "reload" is it has been already imported.
+
+  In general, classes declared in OnX/source/SWIG/OnX_SWIG.i are known
+ by Python OnX module. From the OnX module, someone can access
+ to the "ISession" object (the "I root" of everything !) and then
+ to everything (to all the managers). For example, you can access
+ to the "IUI" manager that controls the GUI. For example :
+    Python> import OnX
+    Python> ui = OnX.session().ui()
+    Python> ui.echo('Hello OnX')
+    Python> ui.exit()
+
+ An Inventor viewer, if one in the GUI, is access with :
+    Python> page = ui.currentPage()
+ and the visualization region with :
+    Python> region = page.currentRegion()
+    Python> region.clear()
+ etc...
+
+ See OnX/<version>/examples/Python/OnX_exa_*.py for examples.
+
+ Start OnX from Python shell : 
+ --------------------------- 
+      csh> source <path>/OnX/<version>/cmt/setup.csh
+    (  sh> . <path>/OnX/<version>/cmt/setup.sh )
+    ( DOS> call <path>\OnX\<version>\cmt\setup.bat )
+       OS> <start python>
+ ( Darwin> /usr/bin/pythonw )
+       >>> import OnX
+       >>> onx = OnX.run()
+       OnX> < work with the GUI >
+       OnX> click on File/Exit to exit ui.steer().
+       >>> onx.steer() # To go back to the GUI.
+       >>> del onx
+ To have a more tuned control, someone can do also :
+       OS> <setup OnX>
+       OS> <start python>
+       >>> import OnX
+       >>> onx = OnX.Main((),0)
+     ( >>> onx = OnX.Main(("-stdout",),0) )
+       >>> ui = onx.createUI('','Gtk')
+     ( >>> ui = onx.createUI(<OnX file>,<driver>)  )
+       >>> ui.steer()
+       OnX> click on File/Exit to exit ui.steer().
+       >>> del onx
+
+ Regions :
+ -------
+ To get the current region (the one with red border)
+
+ To set current region position (lower left corner) within a page :
+     Python> import OnX
+    Python> ui = OnX.session().ui()
+    Python> region = ui.currentPage().currentRegion()
+    Python> region.setPosition(<x : real [0,1]>,<y : real [0,1]>)
+    Python> region.setPosition(0.25,0.25)
+
+ To set current region size :
+    Python> region.setSize(<x : real [0,1]>,<y : real [0,1]>)
+    Python> region_setSize(0.5,0.5)
+
+ Collect :
+ -------
+ To manipulate some data declared to the Lib::AccessorManager...
+
+ To "collect" some data and visualize them :
+    Python> import OnX
+    Python> session = OnX.session()
+    Python> da = session.accessorManager() # data accessor manager.
+    Python> da.collect('OnX_Shape','type=="Cube"')
+    Python> da.visualize()
+
+ Change current color, collect and visualize with more cuts :
+    Python> session.setColor('blue')
+    Python> da.collect('OnX_Shape','(type=="Sphere")&&(size<3)')
+    Python> da.visualize()
+ and :
+    Python> session.setColor('red')
+    Python> da.collect('OnX_Shape','(type=="Sphere")&&(size>=3)')
+    Python> da.visualize()

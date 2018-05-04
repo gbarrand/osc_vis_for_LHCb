@@ -1,0 +1,58 @@
+
+# to be sourced in <app>/mgr/build scripts.
+
+if [ "${app_src}" = "" ] ; then
+  if [ ${build_visual} = "yes" ] ; then
+    app_src=../win32/${app_main}
+
+  elif [ ${build_cocoa} = "yes" ] ; then
+    app_src=../Cocoa/${app_main}
+  elif [ ${build_ios} = "yes" ] ; then
+    app_src=../iOS/${app_main}
+  elif [ ${build_iossim} = "yes" ] ; then
+    app_src=../iOS/${app_main}
+
+  elif [ ${build_Wt} = "yes" ] ; then
+    app_src=../Wt/${app_main}
+  elif [ ${build_x11} = "yes" ] ; then
+    app_src=../X11/${app_main}
+
+  elif [ ${build_android} = "yes" ] ; then
+    app_src=${exlib_mgr}/../exlib/app/Android/Main_java
+
+  else
+    echo "exlib/build_app : can't guess main app_src. Continue."
+    #exit # not fatal
+  fi
+fi
+
+if [ ${build_install} = "yes" ] ; then
+  if [ ${build_android} = "yes" ] ; then
+
+    adb_cmd=${sdk_home}/tools/adb
+    if [ ! -f ${adb_cmd} ] ; then
+      adb_cmd=${sdk_home}/platform-tools/adb
+    fi
+
+    if [ ${build_debug} = "yes" ] ; then
+      ${adb_cmd} install -r ${build_path}/${app}-debug.apk
+    else
+      ${adb_cmd} install -r ${build_path}/${app}-release.apk
+    fi
+
+  elif [ ${build_ios} = "yes" ] ; then
+    use_fruitstrap=yes
+    . ${exlib_mgr}/use_fruitstrap
+    if [ ! -x ${fruitstrap_exe} ] ; then
+      echo "exlib/build_app : exe ${fruitstrap_exe} not found."
+    else
+      ${fruitstrap_exe} -b ./${build_dir}/distrib/${app}/${version}/${app}.app
+    fi
+  else
+    echo "exlib/build_app : install : nothing done for this config."
+  fi
+  exit
+fi
+
+. ${inlib_mgr}/build_app
+. ${exlib_mgr}/build_app_distrib

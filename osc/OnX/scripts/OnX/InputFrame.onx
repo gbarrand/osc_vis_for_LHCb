@@ -1,0 +1,19 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_InputFrame">
+    <label>Add a frame</label>
+    <input name="size" label="Size" type="combo" items="1\n10"/>
+    <input name="where" label="Placement" type="option" items="staticScene\ndynamicScene"/>
+
+    <ok exec="DLD">OnX viewer_read_scene @current@ $ONXROOT/scripts/Inventor/frame.iv iv @[OnX_InputFrame_input_where.value]@</ok>
+
+    <ok exec="DLD">OnX set_variable tmp @[OnX_InputFrame_input_size.value]@</ok>
+    <ok exec="DLD">OnX set_variable value scaleFactor @{tmp}@ @{tmp}@ @{tmp}@</ok>
+
+<!-- FIXME : [first, last] does not work properly 
+    <ok exec="DLD">OnX region_node_set @current@ @[OnX_InputFrame_input_where.value]@ name frame_scale first @{value}@</ok>
+-->
+
+  </widget>
+
+</OnX>

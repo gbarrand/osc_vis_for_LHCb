@@ -1,0 +1,82 @@
+
+ ///////////////////////////////////////////////////////////////
+ //// build ////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////
+ To build code over C lib, STL and OpenGL only :    
+   ./build
+
+ To build [gtk,Qt,OpenMotif,Python] related code, you may have to customize :  
+   ../../../inexlib/exlib/mgr/use_[gtk,Qt,Xt,Python]
+ and then :
+   ./build -[gtk,Qt,Xt,Python]
+
+ For Qt, Python on lxplus see the special note below.
+
+ To build the release :
+   ./build -release
+
+ It produces the zip distribution binary file :
+   ./osc/osc_vis/mgr/bin_[gnu,clang]/distrib/osc_vis-<version>-<platform>-<compiler>.zip
+
+ To have a trace of what happens (what is compiled, linked), you can type :
+   ./build -v
+
+ and to be full verbose :
+   ./build -x
+
+ ///////////////////////////////////////////////////////////////
+ //// install //////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////
+ To install a binary kit, for example under you home directory,
+ in an existing writable "local" directory :
+   cd ~/local
+   <get a zip binary kit>
+   unzip -q osc_vis-<version>-<platform>-<compiler>.zip
+   cd osc_vis/<version>
+   ./install
+
+ The ./install script enforces the installation path in the
+ [aida-]setup.[csh,sh] scripts. You have to execute it once.
+
+ ///////////////////////////////////////////////////////////////
+ //// use //////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////
+ After installation, to use the kit you have to "source setup" it
+ by sourcing, according your shell, or the setup.sh or the setup.csh
+ script. If you have a sh flavoured shell :
+   sh> . <installation_path>/osc_vis/<version>/setup.sh
+   sh> osc-plot
+
+ If you have a csh flavoured shell :
+   csh> source <installation_path>/osc_vis/<version>/setup.csh
+   csh> osc-plot
+
+ ///////////////////////////////////////////////////////////////
+ //// Qt, Python on lxplus /////////////////////////////////////
+ ///////////////////////////////////////////////////////////////
+ The exlib/mgr/use_Qt, use_Python are tuned to find Qt
+ and Python on the "lcg area" under :
+   /afs/cern.ch/sw/lcg/external/[Python,qt]
+
+ If "being on lxplus" is detected (by using `uname -n`), then
+ the version of Python, Qt used is choosen from a BUILD_CONFIG
+ variable that you have to define before launching the build
+ for Python, Qt. For example :
+   sh> export BUILD_CONFIG=x86_64-slc5-gcc46-opt
+
+ Obviously you must take care to be on the correct kind of machine,
+ then here a 64 bits machine under SLC5, and be sure to use the   
+ right compiler. Here typing :
+   sh> g++ --version
+
+ should return you a 4.6.x version. Various version of g++ can
+ be found under :
+   /afs/cern.ch/sw/lcg/contrib/gcc
+
+ For example to setup a 4.6 one under a csh shell, type :
+   csh source /afs/cern.ch/sw/lcg/contrib/gcc/4.6/x86_64-slc5-gcc46-opt/setup.csh
+
+ Under the configs directory some scripts can be found to
+ setup both the compiler and BUILD_CONFIG for the configs
+ already known by exlib/mgr/use_[Qt,Python].
+

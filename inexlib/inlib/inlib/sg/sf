@@ -1,0 +1,81 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file inlib.license for terms.
+
+#ifndef inlib_sg_sf
+#define inlib_sg_sf
+
+// sf for simple field.
+
+#include "bsf"
+
+//#include "../sto"
+
+#include "../io/iwbuf"
+#include "../io/irbuf"
+
+namespace inlib {
+namespace sg {
+
+template <class T>
+class sf : public bsf<T> {
+public:
+  virtual bool write(io::iwbuf& a_buffer) {
+    return a_buffer.write(bsf<T>::m_value);
+  }
+  virtual bool read(io::irbuf& a_buffer) {
+    return a_buffer.read(bsf<T>::m_value);
+  }
+  virtual bool dump(std::ostream& a_out) {
+    a_out << bsf<T>::m_value << std::endl;
+    return true;
+  }
+public:
+  sf(){}
+  sf(const T& a_value):bsf<T>(a_value){}
+public:
+  sf(const sf& a_from)
+  :bsf<T>(a_from)
+  {}
+  sf& operator=(const sf& a_from){
+    bsf<T>::operator=(a_from);
+    return *this;
+  }
+public:
+  sf& operator=(const T& a_value){
+    bsf<T>::operator=(a_value);
+    return *this;
+  }
+};
+
+/*
+template <class T>
+class sf_no_io : public bsf<T> {
+public:
+  virtual bool write(io::iwbuf&) {return true;}
+  virtual bool read(io::irbuf&) {return true;}
+  virtual bool dump(std::ostream& a_out) {
+    a_out << bsf<T>::m_value << std::endl;
+    return true;
+  }
+public:
+  sf_no_io(){}
+  sf_no_io(const T& a_value):bsf<T>(a_value){}
+public:
+  sf_no_io(const sf_no_io& a_from)
+  :bsf<T>(a_from)
+  {}
+  sf_no_io& operator=(const sf_no_io& a_from){
+    bsf<T>::operator=(a_from);
+    return *this;
+  }
+public:
+  sf_no_io& operator=(const T& a_value){
+    bsf<T>::operator=(a_value);
+    return *this;
+  }
+};
+*/
+
+}}
+
+#endif

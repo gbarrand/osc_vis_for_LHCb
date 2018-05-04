@@ -1,0 +1,42 @@
+#!/bin/sh -f
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+. ${ourex_mgr}/build_header
+
+build_pack=plugin_OnXPython
+plugin=OnXPython
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+if [ ${build_compile} = "yes" ] ; then
+
+cppflags="${cppflags} -I${inlib_mgr}/.."
+cppflags="${cppflags} -I../../Slash"
+
+cxxfiles="${cxxfiles} ../source/Python/Python.cxx"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+use_Python=yes
+. ${exlib_mgr}/use_Python
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+. ${inlib_mgr}/build_compile
+
+fi # end build_compile
+ 
+if [ ${build_plugin} = "yes" ] ; then . ${inlib_mgr}/build_plugin; fi
+
+. ${inlib_mgr}/build_clean

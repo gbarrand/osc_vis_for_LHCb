@@ -1,0 +1,35 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file exlib.license for terms.
+
+#ifndef exlib_OpenGL
+#define exlib_OpenGL
+
+#ifdef EXLIB_NO_GL
+#include <gldum/gl.h>
+#else
+
+#ifdef EXLIB_GL_GLES
+
+#ifdef __APPLE__
+#include <OpenGLES/ES1/gl.h> //iPhone SDK
+#else
+#include <GLES/gl.h>         //android NDK
+#endif
+
+#else //not EXLIB_GL_GLES
+
+#ifdef WIN32
+#include <windows.h>
+#endif
+
+#ifdef __APPLE__	
+#include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
+
+#endif //EXLIB_GL_GLES
+
+#endif //EXLIB_NO_GL
+
+#endif

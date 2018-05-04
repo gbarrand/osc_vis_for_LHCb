@@ -1,0 +1,93 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+. ../mgr/build_header
+
+cppflags="${cppflags} -I../CoinGL/include"
+
+# libs for the apps :
+libs="${libs} ${build_path}/${libname}.a"
+libs="${libs} ../CoinGL/${build_dir}/libourex_CoinGL.a"
+use_archive=yes
+
+use_Qt=yes
+use_GL=yes
+#use_X11=yes
+
+. ${exlib_mgr}/use_Qt
+. ${exlib_mgr}/use_GL
+#. ${exlib_mgr}/use_X11
+
+use_thread=yes
+use_dl=yes
+. ${exlib_mgr}/use_thread
+. ${exlib_mgr}/use_dl
+
+if [ `uname` = "Linux" ] ; then
+  use_X11=yes
+  . ${exlib_mgr}/use_X11
+fi
+
+
+if [ ${build_compile} = "yes" ] ; then
+
+
+${moc_exe} -o ./src/Inventor/Qt/moc_SoQtP.icc ./include/Inventor/Qt/SoQtP.h
+${moc_exe} -o ./src/Inventor/Qt/moc_SoQtComponentP.icc ./include/Inventor/Qt/SoQtComponentP.h 
+${moc_exe} -o ./src/Inventor/Qt/moc_SoQtGLWidgetP.icc ./include/Inventor/Qt/SoQtGLWidgetP.h 
+${moc_exe} -o ./src/Inventor/Qt/viewers/moc_SoQtExaminerViewerP.icc ./include/Inventor/Qt/viewers/SoQtExaminerViewerP.h 
+${moc_exe} -o ./src/Inventor/Qt/viewers/moc_SoQtFullViewerP.icc ./include/Inventor/Qt/viewers/SoQtFullViewerP.h 
+${moc_exe} -o ./src/Inventor/Qt/viewers/moc_SoQtPlaneViewerP.icc ./include/Inventor/Qt/viewers/SoQtPlaneViewerP.h 
+${moc_exe} -o ./src/Inventor/Qt/widgets/moc_QtNativePopupMenu.icc ./include/Inventor/Qt/widgets/QtNativePopupMenu.h 
+${moc_exe} -o ./src/Inventor/Qt/widgets/moc_SoQtGLArea.icc ./include/Inventor/Qt/widgets/SoQtGLArea.h 
+${moc_exe} -o ./src/Inventor/Qt/widgets/moc_SoQtThumbWheel.icc ./include/Inventor/Qt/widgets/SoQtThumbWheel.h 
+
+find ./src/Inventor/Qt -maxdepth 1 -name '*.cpp' >> cpp_tmp
+
+find ./src/Inventor/Qt/widgets -name '*.cpp' >> cpp_tmp
+find ./src/Inventor/Qt/devices -name '*.cpp' >> cpp_tmp
+find ./src/Inventor/Qt/viewers -name '*.cpp' >> cpp_tmp
+find ./src/Inventor/Qt/nodes   -name '*.cpp' >> cpp_tmp
+find ./src/Inventor/Qt/engines -name '*.cpp' >> cpp_tmp
+#find ./src/Inventor/Qt/editors -name '*.cpp' >> cpp_tmp
+
+cppflags="${cppflags} -I./include"
+cppflags="${cppflags} -I./src"
+cppflags="${cppflags} -I./data"
+
+cppflags="${cppflags} -DHAVE_CONFIG_H"
+cppflags="${cppflags} -DSOQT_INTERNAL"
+cppflags="${cppflags} -DSOQT_DEBUG=0"
+
+if [ ${build_visual} = "yes" ] ; then
+  cppflags="${cppflags} -DSOQT_MAKE_DLL"
+fi
+
+. ${inlib_mgr}/build_compile
+
+fi # end build_compile
+
+if [ ${build_archive} = "yes" ] ; then . ${inlib_mgr}/build_archive; fi
+
+if [ ${build_app} = "yes" ] ; then
+
+#  if [ ${build_visual} = "yes" ] ; then
+#    ccflags="${ccflags} /I./include"
+#  else
+#    ccflags="${ccflags} -I./include"
+#  fi
+
+  cppflags="${cppflags} -I./include"
+
+  objs=
+  app_exe=test_cube
+  app_src=./tests/CoinQt_test_cube.cpp
+  . ${inlib_mgr}/build_app
+
+fi
+
+. ${inlib_mgr}/build_clean

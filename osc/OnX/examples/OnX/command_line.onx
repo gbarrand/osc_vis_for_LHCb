@@ -1,0 +1,29 @@
+<OnX>
+
+  <widget class="Window">
+    <geometry>200x70</geometry>
+    <title>CommandLine</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>35</sizeOfFixed>
+
+      <widget class="CommandLine">
+        <activate exec="DLD">OnX ui_echo @this.value@</activate>
+        <activate exec="DLD">OnX ui_set_parameter entry.value @this.value@</activate>
+      </widget>
+
+      <widget class="VBox">
+        <expand>both</expand>
+        <widget class="Entry" name="entry"/>
+        <widget class="PushButton">
+          <label>Quit</label>
+          <activate exec="DLD">OnX ui_exit</activate>
+        </widget>
+      </widget>
+    </widget>
+  </widget>
+
+</OnX>

@@ -1,0 +1,20 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_InputTabStackWrite">
+    <label>Print</label>
+
+    <input name="widget" label="Widget" type="text" default="tab_stack"/>
+    <input name="action" label="Action" type="option" items="jpeg\ngl2ps\ngl2pdf\ngl2svg"/>
+
+    <!-- hiv\niv\nwrl\npov -->
+
+    <input name="prefix" label="File prefix" type="text" default="osc_out_"/>
+    <input name="options" label="Options" type="combo" items="50\nDEFAULTS" default="50"/>
+    <!-- \nwhat=scene -->
+
+    <ok exec="DLD">OnX ui_tab_stack_write @[OnX_InputTabStackWrite_input_widget.value]@ @[OnX_InputTabStackWrite_input_prefix.value]@ @[OnX_InputTabStackWrite_input_action.value]@ @[OnX_InputTabStackWrite_input_options.value]@</ok>
+
+    <help file="$ONXROOT/scripts/Help/InputTabStackWrite.help"/>
+  </widget>
+
+</OnX>

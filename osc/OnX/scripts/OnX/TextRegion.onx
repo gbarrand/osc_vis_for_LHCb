@@ -1,0 +1,15 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_TextRegion">
+    <label>Text region editor</label>
+
+    <input name="text" label="Text" type="text" default=""/>
+    <input name="encoding" label="Encoding" type="option" default="none" items="none\nPAW"/>
+
+    <ok exec="DLD">OnX region_set_parameter @current@ text @[OnX_TextRegion_input_text.value]@</ok>
+    <ok exec="DLD">OnX region_set_parameter @current@ styles[0].encoding @[OnX_TextRegion_input_encoding.value]@</ok>
+
+    <help file="$ONXROOT/scripts/Help/TextRegion.help"/>
+  </widget>
+
+</OnX>

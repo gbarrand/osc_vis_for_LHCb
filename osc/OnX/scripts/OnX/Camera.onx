@@ -1,0 +1,16 @@
+<widget class="CascadeButton" name="OnX_menu_Camera">
+  <label>Camera</label>
+  <comment text="  The orientation field of an SoCamera defines"/>
+  <comment text=" a rotation from the default position, that is to say"/>
+  <comment text=" a camera looking toward -z axis with up along y axis."/>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Reset</label>
+      <activate exec="DLD">OnX region_reset_camera @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Dump</label>
+      <activate exec="DLD">OnX region_dump_camera @current@</activate>
+    </widget>
+  </widget>
+</widget>

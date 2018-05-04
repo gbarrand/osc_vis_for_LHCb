@@ -1,0 +1,78 @@
+<widget class="TabStack" name="tab_stack"> <!-- name used in GUI.onx -->
+  <!-- with some toolkit (gtk), a direct <select> would be executed
+       at creation when inserting children. And as the IUI is still
+       not known by the session, then the callback would issue 
+       somw warnings. To sort out that, we install the select callback
+       after the creation of the widgets. -->
+  <create exec="DLD">OnX ui_set_callback @this@ select DLD OnX ui_set_current_widget @ @cat@ this.value@</create>
+
+  <widget class="PageViewer" name="Viewer">
+    <create exec="DLD">OnX ui_add_in_tab_stack @this@</create>
+    <create exec="DLD">OnX ui_add_in_currents @this@ OnX_viewers</create>
+    <create exec="DLD">OnX ui_set_current_widget @this@</create>
+    <!-- Default graphics layout -->
+    <create exec="DLD">OnX dld_exec_file $ONXROOT/tests/onx_tests/banner.dld</create>
+    <!-- Else -->
+    <destroy exec="DLD">OnX ui_remove_from_currents @this@ OnX_viewers</destroy>
+    <destroy exec="DLD">OnX ui_change_current @this@ OnX_viewers</destroy>
+    <collect exec="DLD">OnX viewer_collect @this@</collect>
+    <popupItems>No highlighted\nDump highlighted\nRegion to page\nRegion on top\nDecorations on\nDecorations off</popupItems>
+
+    <variable name="Pages_popup_item_script">
+      No highlighted\nOnX region_no_highlighted @this@\n
+      Dump highlighted\nOnX viewer_collect @this@\n
+      Region to page\nOnX region_to_page @this@\n
+      Region on top\nOnX region_on_top @this@\n
+      Decorations on\nOnX viewer_set_decoration @this@ true\n
+      Decorations off\nOnX viewer_set_decoration @this@ false
+    </variable>
+
+    <popup exec="DLD">OnX ui_execute_script DLD @next@this.value@{Pages_popup_item_script}@strip_key@</popup>
+
+    <!-- Used by Examples/Next event -->
+    <update exec="DLD">OnX region_clear</update>
+    <update exec="DLD">OnX data_collect OnX_Shape type=="Track*"</update>
+    <update exec="DLD">OnX data_visualize</update>
+
+
+  </widget>
+  <widget class="ScrolledText" name="HelpText">
+    <create exec="DLD">OnX ui_setParameter @this@ @cat@ .value @file@$ONXROOT/scripts/Help/Viewer.help@</create>
+  </widget>
+
+  <widget class="SoExaminerViewer" name="ExaminerViewer">
+    <create exec="DLD">OnX viewer_read_scene @this@ $ONXROOT/examples/OnX/bird.iv iv nil</create>
+  </widget>
+  <widget class="SoPlaneViewer" name="PlaneViewer">
+    <create exec="DLD">OnX viewer_read_scene @this@ $ONXROOT/examples/OnX/bird.iv iv nil</create>
+  </widget>
+<!-- SoWinFlyViewer does not work 
+  <widget class="SoFlyViewer" name="FlyViewer">
+    <create exec="DLD">OnX viewer_read_scene @this@ $ONXROOT/examples/OnX/bird.iv iv nil</create>
+  </widget>
+-->
+<!-- WalkViewer not in SoQt and SoWalkViewer does not work 
+  <widget class="SoWalkViewer" name="WalkViewer">
+    <create exec="DLD">OnX viewer_read_scene @this@ $ONXROOT/examples/OnX/bird.iv iv nil</create>
+  </widget>
+-->
+
+  <widget class="PageViewer" name="ImageViewer">
+    <tabLabel>ImageViewer</tabLabel>
+    <create exec="DLD">OnX viewer_set_color @this@ 0.8 0.8 0.8</create>
+    <create exec="DLD">OnX page_delete_regions @this@</create>
+    <create exec="DLD">OnX page_create_region @this@ SoImageRegion 0.25 0.1 1 1</create>
+    <create exec="DLD">OnX page_set_title @this@ OnX</create>
+    <create exec="DLD">OnX page_title_visible @this@ false</create>
+    <create exec="DLD">OnX region_set_color @this@ white</create>
+    <create exec="DLD">OnX viewer_read_scene @this@ $ONXROOT/scripts/images/Panoramix.jpg jpg nil</create>
+  </widget>
+
+  <widget class="OpenGLArea" name="OpenGL_Viewer">
+    <tabLabel>OpenGL_Viewer</tabLabel>
+    <paint exec="DLD">OnXExas opengl_contour_paint</paint>
+    <create exec="DLD">OnX ui_add_in_currents @this@ OnX_viewers</create>
+    <destroy exec="DLD">OnX ui_remove_from_currents @this@ OnX_viewers</destroy>
+  </widget>
+
+</widget>

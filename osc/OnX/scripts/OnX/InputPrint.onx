@@ -1,0 +1,92 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_InputPrint">
+    <label>Print</label>
+    <!-- GL2SVG\nGL2TEX\nGL2PGF does not work properly -->
+    <input name="action" label="Action" type="option" items="JPEG\nGL2PS\nOffScreen\nPS\nPSVec\nGIF\nGL2PDF\nGL2SVG\nOpenGLArea_PS\nHIV\nIV\nWRL\nPOV" />
+
+    <!-- JPEG -->
+    <variable name="OnX_InputPrint_jpeg">
+      OnX set_variable main_Window @child@@nameFromClass@Window@0@\n
+      OnX ui_load @{main_Window}@ $ONXROOT/scripts/OnX/JPEG_Dialog.onx\n
+      OnX ui_setParameter OnX_JPEG_Dialog_file.label @{file_to_print}@\n
+      OnX ui_show OnX_JPEG_Dialog
+    </variable>
+    <!-- GL2PS -->
+    <variable name="OnX_InputPrint_gl2ps">
+      OnX set_variable main_Window @child@@nameFromClass@Window@0@\n
+      OnX ui_load @{main_Window}@ $ONXROOT/scripts/OnX/Input_gl2ps.onx\n
+      OnX ui_setParameter OnX_Input_gl2ps_input_FILE.value @{file_to_print}@\n
+      OnX ui_show OnX_Input_gl2ps_dialog
+    </variable>
+    <!-- offscreen -->
+    <variable name="OnX_InputPrint_offscreen">
+      OnX set_variable main_Window @child@@nameFromClass@Window@0@\n
+      OnX ui_load @{main_Window}@ $ONXROOT/scripts/OnX/Input_offscreen.onx\n
+      OnX ui_setParameter OnX_Input_offscreen_input_FILE.value @{file_to_print}@\n
+      OnX ui_show OnX_Input_offscreen_dialog
+    </variable>
+    <!-- HIV IV WRL POV -->
+    <variable name="OnX_InputPrint_iv">
+      OnX set_variable main_Window @child@@nameFromClass@Window@0@\n
+      OnX ui_load @{main_Window}@ $ONXROOT/scripts/OnX/InputWrite.onx\n
+      OnX ui_setParameter OnX_InputWrite_input_file.value @{file_to_print}@\n
+      OnX ui_show OnX_InputWrite_dialog
+    </variable>
+    <!-- else -->
+    <variable name="OnX_InputPrint_else">OnX widget_write @current@ @{file_to_print}@ @[OnX_InputPrint_input_action.value]@ none</variable>
+    <variable name="OnX_InputPrint_gl2x">OnX widget_write @current@ @{file_to_print}@ @[OnX_InputPrint_input_action.value]@ DEFAULTS</variable>
+
+    <variable name="OnX_InputPrint_action_to_script">
+      JPEG\nOnX_InputPrint_jpeg\n
+      OffScreen\nOnX_InputPrint_offscreen\n
+      GL2PS\nOnX_InputPrint_gl2ps\n
+      HIV\nOnX_InputPrint_iv\n
+      IV\nOnX_InputPrint_iv\n
+      WRL\nOnX_InputPrint_iv\n
+      POV\nOnX_InputPrint_iv\n
+      PS\nOnX_InputPrint_else\n
+      PSVec\nOnX_InputPrint_else\n
+      GL2PDF\nOnX_InputPrint_gl2x\n
+      GL2SVG\nOnX_InputPrint_gl2x\n
+      GL2TEX\nOnX_InputPrint_gl2x\n
+      GL2PGF\nOnX_InputPrint_gl2x\n
+      GIF\nOnX_InputPrint_else\n
+      OpenGLArea_PS\nOnX_InputPrint_gl2ps\n
+    </variable>
+
+    <variable name="OnX_InputPrint_ok_script">
+      OnX set_variable file_to_print @this.value@\n
+      OnX set_variable tmp @next@[OnX_InputPrint_input_action.value]@{OnX_InputPrint_action_to_script}@strip_key@\n
+      OnX dld_exec_text @{{tmp}}@
+    </variable>
+
+    <variable name="OnX_InputPrint_fileChooser_ok">OnX dld_exec_text @{OnX_InputPrint_ok_script}@</variable>
+
+    <variable name="OnX_InputPrint_suffixes">
+      PS\n*.ps\n
+      PSVec\n*.ps\n
+      GL2PS\n*.ps\n
+      GL2PDF\n*.pdf\n
+      GL2SVG\n*.svg\n
+      GL2TEX\n*.tex\n
+      GL2PGF\n*.pgf\n
+      GIF\n*.gif\n
+      JPEG\n*.jpg\n
+      OpenGLArea_PS\n*.ps\n
+      HIV\n*.hiv\nIV\n*.iv\n
+      WRL\n*.wrl\n
+      OffScreen\n*.ps\n
+      POV\n*.pov
+    </variable>
+
+    <ok exec="DLD">OnX set_variable OnX_InputPrint.suffix @next@[OnX_InputPrint_input_action.value]@{OnX_InputPrint_suffixes}@strip_key@</ok>
+
+    <ok exec="DLD">OnX ui_set_fileChooser . @{OnX_InputPrint.suffix}@ save DLD @{OnX_InputPrint_fileChooser_ok}@</ok>
+
+    <ok exec="DLD">OnX ui_show fileChooser</ok>
+
+    <help file="$ONXROOT/scripts/Help/InputPrint.help"/>
+  </widget>
+
+</OnX>

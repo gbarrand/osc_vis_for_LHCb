@@ -1,0 +1,166 @@
+
+  This directory contains material to show how to
+ use AIDA from the CERN-ROOT Interactive Program (CRIP for short).
+
+ /////////////////////////////////////////////
+ /// histograms 1D, 2D ///////////////////////
+ /////////////////////////////////////////////
+
+  The A2R_read.C example opens, by using an AIDA::ITree, the 
+    AIDA_example_A2R.[aida,root,hdf5,hbook]
+ file produced by the AIDA/examples/cpp/osc/A2R.cpp compiled example
+ or by A2R_write.C executed from the root program.
+
+  Then A2R_read.C converts an AIDA::IHistogram1D to a ATH1D,
+ inheriting TH1D, and plots the ATH1D in a TCanvas. The same
+ is done with a AIDA::IHistogram2D (then converted to a ATH2D
+ inheriting TH2D).
+
+  Note that what is nice here is that we are not limited to the
+ root file format at writing / reading since the persitency
+ in both cases is handled by the OpenScientist AIDA implementation
+ which is not limited to the CERN-ROOT file format.
+ If you choose another format than the default "xml" one, take care
+ to be "format consistent" between the A2R_write.C (or A2R.cpp) producer
+ ant the A2R_read.C reader program. (For example don't ask to produce at
+ "xml" format and read back at the "root" format).
+
+  To use A2R_read.C you have first to "source setup" an osc_batch kit
+ and CERN-ROOT. For example from a csh flavoured shell with something
+ as :
+    csh> source /usr/local/osc_batch/<version>/aida-setup.csh
+    csh> source /usr/local/ROOT/<version>/bin/thisroot.csh
+ On Windows with somethings as :
+    DOS> call C:\usr\local\osc_batch\<version>\aida-setup.bat
+    DOS> call C:\usr\local\ROOT\<version>\bin\thisroot.bat
+
+  Check that the programs aida-config, used by the buid_A2R shell script,
+ is at hand :
+     OS> aida-config
+
+  On a UNIX, check that the programs root-config,
+ used by the buid_A2R shell script, is at hand :
+     OS> root-config
+
+  On a Windows, there is no root-config.exe program. The
+ build_A2R.bat uses the ROOTSYS variable to find includes
+ and libs. If needed, modify in the build_A2R.bat script
+ the variables ROOT_cflags, ROOT_libs, ROOT_bin_dir so that 
+ CERN-ROOT includes and libs are found.
+
+  Build the A2R plugin with :
+     OS> <cd to the A2R directory>
+ ( UNIX> chmod a+x build_A2R )
+   UNIX> ./build_A2R
+    DOS> call build_A2R.bat
+ You should have a A2R.so plugin (A2R.dll on Windows)
+ in the current directory.
+  
+  Produce the AIDA_example_A2R.[aida,root,hdf5,hbook] file with :
+     OS> root
+     root[] gSystem->Load("A2R");
+     root[] .x A2R_write.C
+
+ ( or with the compiled AIDA example :
+     AIDA/examples/cpp/osc/A2R.cpp
+ with :
+     OS> cp -R ${OSC_HOME_DIR}/Resources/AIDA/examples/cpp/osc .
+     OS> cd osc
+     OS> ./build A2R
+     OS> ./AIDA_example_A2R [aida,root,hdf5,hbook] 
+     OS> cd ..
+     OS> mv ./osc/AIDA_example_A2R.[aida,root,hdf5,hbook] .
+ )
+
+  Then execute A2R_read.C with :
+     OS> root
+     root[] gSystem->Load("A2R");
+     root[] .x A2R_read.C
+ A TCanvas should open visualizing a ATH1D, ATH2D. 
+
+ /////////////////////////////////////////////
+ /// tuple ///////////////////////////////////
+ /////////////////////////////////////////////
+
+  In the same way, jec.C example works on the jec.root
+ file containing a "tuple-in-tuple" produced by the AIDA_example_jec 
+ example program. In jec.C the file is open by using 
+ an AIDA::ITree, the AIDA::ITuple is "looped" by using AIDA.
+ A TH1D is created and filled within the tuple loop. At end
+ the TH1D is plotted by using a TCanvas.
+
+  To produce the jec.root file do :
+     OS> <cd to the A2R directory>
+     OS> <source setup OpenScientist> # an osc_batch kit is sufficient.
+     OS> cp -R ${OSC_HOME_DIR}/Resources/AIDA/examples/cpp/osc .
+     OS> cd osc
+     OS> ./build jec
+     OS> ./AIDA_example_jec -write -root
+     OS> cd ..
+     OS> mv ./osc/jec.root .
+
+  As upper, you have to setup the ROOT environment
+ and build the A2R plugin. Then you can execute jec.C with :
+     OS> root
+     root[] gSystem->Load("A2R");
+     root[] .x jec.C
+ A TCanvas should open visualizing a "h_ETot" 1D histo.
+
+  Note that, as for A2R, the whole write / read could
+ be done with another file format than ROOT ! Nioce.
+
+  The jec_ROOT.C file shows how to do the same than jec.C
+ but by using only ROOT.
+
+ /////////////////////////////////////////////
+ /// Running a compiled program //////////////
+ /////////////////////////////////////////////
+  We provide the files :
+     A2R_read_main.cpp
+     build_A2R_read
+     build_A2R_read.bat
+
+ that permits to build the compiled version of A2R_read.C.
+ It permits to run A2R_read.C by bypassing CINT and the
+ root interactive program (and then to check at least
+ that the code is correct C++ !). The code of A2R_read_main.cpp
+ includes the A2R_read.C file and adds the necessary
+ CERN-ROOT code to have a valid main program :
+
+     #include <AIDA/AIDA.h>
+     #include <TCanvas.h>
+     #include <TApplication.h>
+     #include "A2R.h"
+     #include "A2R_read.C"
+     int main(int argc,char** argv) {
+       TApplication app("A2R_read",&argc,argv);
+       A2R_read();
+       app.Run();
+       return 0;
+     }
+ 
+  As for the build_A2R script, the build_A2R_read
+ shell script assumes that the programs aida-config
+ and root-config are at hand.
+
+  Then to build and run :
+     OS> <cd to the A2R directory>
+     OS> <source setup OpenScientist> # an osc_batch kit is sufficient.
+     OS> <source setup ROOT>
+
+ As upper, to create the .aida file :
+     OS> ./build_A2R
+  ( DOS> call build_A2R.bat )
+     OS> root
+     root[] gSystem->Load("A2R");
+     root[] .x A2R_write.C
+ and then to create the A2R_read program :  
+     OS> ./build_A2R_read
+  ( DOS> call build_A2R_read.bat )
+     OS> ./A2R_read
+  ( DOS> .\A2R_read.exe )
+ Then, as for executing A2R_read.C from the root interactive program,
+ a TCanvas should popup showing two histos.
+
+
+

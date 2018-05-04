@@ -1,0 +1,66 @@
+#!/bin/sh -f
+
+#
+# build the A2R plugin.
+#
+
+#set -x
+
+if [ "${ROOTSYS}" = "" ] ; then
+  echo "You have to 'source setup' ROOT."
+  exit
+fi
+
+#////////////////////////////////////////////
+#///// To be customized if needed : /////////
+#////////////////////////////////////////////
+
+ROOT_rootcint=`root-config --bindir`/rootcint
+ROOT_incs=`root-config --cflags`
+ROOT_libs=`root-config --libs`
+
+AIDA_incs=`aida-config --include`
+AIDA_libs=`aida-config --lib`
+
+bin=.
+
+#////////////////////////////////////////////
+#////////////////////////////////////////////
+#////////////////////////////////////////////
+flags="-O"
+if test `uname` = "Linux" ; then
+  flags="${flags} -fPIC"
+fi
+#if test `uname` = "Darwin" ; then
+#  flags="${flags} -arch i386"
+#fi
+#////////////////////////////////////////////
+#////////////////////////////////////////////
+#////////////////////////////////////////////
+
+# Generating the A2R CINT wrapping :
+eval ${ROOT_rootcint} -f G__A2R.cpp -c ${AIDA_incs} A2R_Def.h A2R_LinkDef.h 
+
+eval c++ -c ${flags} -o ${bin}/G__A2R.o ${ROOT_incs} ${AIDA_incs} G__A2R.cpp 
+
+eval c++ -c ${flags} -o ${bin}/A2R_Imp.o ${ROOT_incs} ${AIDA_incs} A2R_Imp.cpp 
+
+if test `uname` = "Darwin" ; then
+/bin/rm -f ${bin}/A2R.bundle
+
+# build a lib if wanting to build all compiled programs.
+eval c++ ${flags} -dynamiclib -twolevel_namespace -undefined dynamic_lookup -dynamic -single_module -o ${bin}/libA2R.dylib ${bin}/G__A2R.o ${bin}/A2R_Imp.o ${ROOT_libs} ${AIDA_libs}
+
+# build the plugin :
+eval c++ ${flags} -bundle -twolevel_namespace -o ${bin}/A2R.bundle -L. -lA2R ${ROOT_libs} ${AIDA_libs}
+# ROOT wants anyway .so for DLLs on Mac :
+/bin/mv A2R.bundle A2R.so
+fi
+
+if test `uname` = "Linux" ; then
+/bin/rm -f ${bin}/A2R.so
+/bin/rm -f ${bin}/libA2R.so
+eval g++ -shared -o ${bin}/libA2R.so ${bin}/G__A2R.o ${bin}/A2R_Imp.o ${ROOT_libs} ${AIDA_libs}
+/bin/cp libA2R.so A2R.so
+fi
+

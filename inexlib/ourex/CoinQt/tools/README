@@ -1,0 +1,16 @@
+
+ The code had been taken from an unfolding of SoQt-1.3.0.tar.gz.
+
+ In general, problems are around :
+  gl.h, SoQtBasic.h, soqtdefs.h, config.h.
+
+ In SoQtBasic.h, we have to change the version numbers.
+
+ gl.h, soqtdes.h, config.h are some file guessed 
+ and done at the moment of the first CoinQt CMT repacking 
+ versions.
+
+  G.Barrand  
+
+1 March 2006
+

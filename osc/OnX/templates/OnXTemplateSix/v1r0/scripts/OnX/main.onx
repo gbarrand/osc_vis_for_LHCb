@@ -1,0 +1,28 @@
+<OnX>
+  <create exec="DLD">OnX OnX_Initialize</create>
+  <create exec="DLD">OnXTemplateSix OnXTemplateSix_init</create>
+  <widget class="Window">
+    <geometry>500x500+0+0</geometry>
+    <title>OnXTemplateSix/Main</title>
+    <destroy exec="DLD">OnXTemplateSix OnXTemplateSix_exit</destroy>
+    <widget class="MenuBar">
+      <reference file="File.onx"/>
+      <reference file="Scene.onx"/>
+      <reference file="Help.onx"/>
+    </widget>
+    <widget class="VPaned">
+      <splitPosition>400</splitPosition>
+      <widget class="PageViewer" name="Viewer">
+        <!-- Default graphics layout : -->
+        <create exec="DLD">OnX page_create_regions @this@ SoDisplayRegion 1 1 0</create>
+        <create exec="DLD">OnX page_set_title @this@ Geant4</create>
+        <create exec="DLD">OnX page_title_visible @this@ false</create>
+        <create exec="DLD">OnX region_set_color @this@ 0.8 0.8 0.8</create>
+
+        <collect exec="DLD">OnX viewer_collect @this@</collect>
+      </widget>
+      <widget class="ScrolledText" name="consoleText"/>
+    </widget>
+    <reference file="$ONXROOT/scripts/OnX/Dialogs.onx"/>
+  </widget>
+</OnX>

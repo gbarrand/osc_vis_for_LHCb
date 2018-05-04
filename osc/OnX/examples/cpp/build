@@ -1,0 +1,36 @@
+#!/bin/sh -f
+
+#set -x
+
+if [ $# -eq 0 ] ; then
+  find . -maxdepth 1 -name '*.cpp' -exec ./build {} \;
+  exit
+fi
+
+exa=$1
+
+exa=`echo ${exa} | sed -e 's:.cpp::g'`
+exa=`echo ${exa} | sed -e 's:./::g'`
+
+echo "build ${exa}..."
+
+cppflags=""
+if [ `uname` = Linux ] ; then
+  cppflags="${cppflags} -fPIC"
+fi
+
+libs=""
+libs="${libs} `osc-config --core_libs`"
+
+opengl_exa=`echo ${exa} | sed -e 's:opengl_::g'`
+if [ ${opengl_exa} != ${exa} ] ; then
+  cppflags="${cppflags} -I. `osc-config --gl_cppflags`"
+  libs="${libs} `osc-config --gl_libs`"
+else
+  cppflags="${cppflags} -I. `osc-config --iv_cppflags`"
+  libs="${libs} `osc-config --iv_libs`"
+fi
+
+#echo ${libs}
+
+eval c++ -o osc_example_${exa} ${cppflags} ${exa}.cpp ${files} ${libs}

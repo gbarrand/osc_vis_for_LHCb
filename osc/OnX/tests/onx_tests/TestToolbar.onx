@@ -1,0 +1,44 @@
+<OnX>
+  <widget class="Window" name="OnX_TestList">
+    <geometry>900x700+0+0</geometry>
+    <title>OnX/GUI/Test</title>
+    <widget class="VContainer">
+      <widget class="ToolBar">
+        <widget class="ToolBarItem">
+          <label>Icon 1</label>
+          <pixmap>$ONXROOT/scripts/images/print.xpm</pixmap>
+          <tooltip>Help icon 1</tooltip>
+          <activate exec="Python">ui.echo("Hello")</activate>
+        </widget>
+        <widget class="ToolBarItem">
+          <label>Icon 2</label>
+          <pixmap>$ONXROOT/scripts/images/book.xpm</pixmap>
+          <tooltip>Help icon 2</tooltip>
+          <activate exec="Python">ui.echo("Hello")</activate>
+        </widget>
+      </widget>
+      <widget class="ScrolledTree" name="OnX_GUI_tree">
+        <create exec="Python">ui_setTreeItems('OnX_GUI_tree',os.environ['ONXROOT'] + '/scripts/OnX/Tree.xml')</create>
+      </widget>
+      <widget class="OptionMenu">
+        <label>Items</label>
+        <default>Item 2</default>
+        <items>Item 1\nItem 2\nItem 3</items>
+        <valueChanged exec="Python">ui.echo(ui.callbackValue().c_str())</valueChanged>
+      </widget>
+      <widget class="CommandLine">
+        <activate exec="Python">ui.echo(ui.callbackValue().c_str())</activate>
+      </widget>
+      <widget class="ScrolledList">
+        <items>Item 1\nItem 2\nItem 3\nItem 4\nItem 5\nItem 6\nItem 7</items>
+        <select exec="Python">ui.echo(ui.callbackValue().c_str())</select>
+      </widget>
+      <widget class="ProgressBar" name="OnX_GUI_progressBar">
+        <create exec="Python">
+          OnX_GUI_cyclic = ui.createCyclic(1000,'Python','ui.setParameter("OnX_GUI_progressBar.value","%d" % OnX_GUI_cyclic.iterations())')\n\
+          OnX_GUI_cyclic.start()
+        </create>
+      </widget>
+    </widget>
+  </widget>
+</OnX>

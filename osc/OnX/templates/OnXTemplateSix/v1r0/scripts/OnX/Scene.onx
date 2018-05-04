@@ -1,0 +1,25 @@
+<widget class="CascadeButton">
+  <label>Scene</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Next event</label>
+      <activate exec="DLD">OnXTemplateSix OnXTemplateSix_nextEvent</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Visualize tracks</label>
+      <activate exec="DLD">OnXTemplateSix OnXTemplateSix_vis_tracks</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Visualize detector (a Cube!)</label>
+      <activate exec="DLD">OnXTemplateSix OnXTemplateSix_vis_cube Viewer</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Erase event reps</label>
+      <activate exec="DLD">OnX viewer_clear Viewer dynamicScene</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Erase detector</label>
+      <activate exec="DLD">OnX viewer_clear Viewer staticScene</activate>
+    </widget>
+  </widget>
+</widget>

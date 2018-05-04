@@ -1,0 +1,11 @@
+(*
+ * Usage :
+ *   UNIX> cp ../data/glast.hiptxt .
+ *    DOS> copy ..\data\glast.hiptxt .
+ *   OS> math
+ *   In[]:= <<OnXLab_glast.mat
+ *)
+
+<<aida.mat
+
+tupleplot["glast.hiptxt",5,8]

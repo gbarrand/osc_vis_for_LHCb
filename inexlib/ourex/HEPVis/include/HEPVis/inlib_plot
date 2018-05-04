@@ -1,0 +1,514 @@
+#ifndef HEPVis_inlib_plot
+#define HEPVis_inlib_plot
+
+// Connexion inlib/histo to SoPlotter.
+// All the code is inlined.
+
+#include <HEPVis/SbPlottableThings.h>
+
+#include <inlib/histo/h1d>
+#include <inlib/histo/h2d>
+#include <inlib/histo/p1d>
+#include <inlib/histo/p2d>
+
+#include <inlib/words>
+#include <inlib/tos>
+#include <inlib/sto>
+
+namespace HEPVis {
+
+class h1d2plot : public virtual SbPlottableBins1D {
+public: //SbPlottableObject
+  virtual bool isValid() const {return true;}
+  virtual const char* getName(){return fName.c_str();}
+  virtual const char* getLegend(){return fLegend.c_str();}
+protected:
+  std::string fName;
+private:
+  std::string fLegend;
+  std::string fInfos;
+public:
+  virtual void* cast(const char* aClass) const{
+    if(!::strcmp(aClass,SbPlottableObject_s)) {
+      return (void*)static_cast<const SbPlottableObject*>(this);
+    } else if(!::strcmp(aClass,SbPlottableBins1D_s)) {
+      return (void*)static_cast<const SbPlottableBins1D*>(this);
+    } else {
+      return 0;
+    }
+  }
+  virtual int getDimension() const{return 1;}
+  virtual const char* getLabel(){return fData.title().c_str();}
+public: //SbPlottableBins1D
+  virtual void getBinsSumOfWeightsRange(float& aMin,float& aMax) const {
+    aMin = (float)fData.min_bin_height();
+    aMax = (float)fData.max_bin_height();
+  }
+  virtual int getAxisNumberOfBins() const {return fData.axis().bins();}
+  virtual float getAxisMinimum() const {
+    return (float)fData.axis().lower_edge();
+  }
+  virtual float getAxisMaximum() const {
+    return (float)fData.axis().upper_edge();
+  }
+  virtual float getBinLowerEdge(int aI) const {
+    return (float)fData.axis().bin_lower_edge(aI);
+  }
+  virtual float getBinUpperEdge(int aI) const {
+    return (float)fData.axis().bin_upper_edge(aI);
+  }
+
+  virtual int getBinNumberOfEntries(int aI) const {
+    return fData.bin_entries(aI);
+  }
+
+  virtual float getBinSumOfWeights(int aI) const {
+    return (float)fData.bin_height(aI);
+  }
+
+  virtual float getBinBar(int aI) const {
+    return (float)fData.bin_error(aI);
+  }
+
+  virtual const char* getInfos(const char* aOptions){
+    std::string f_lf("\n");
+    fInfos.clear();
+    std::vector<std::string> words;
+    inlib::words(aOptions," ",false,words);
+    std::vector<std::string>::const_iterator it;
+  
+    for(it=words.begin();it!=words.end();++it) {
+      if((*it)=="name") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "Name\n"+fName;
+  
+      } else if((*it)=="entries") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "Entries\n"+inlib::to<int>(fData.all_entries());
+  
+      } else if((*it)=="mean") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "Mean\n"+inlib::to<double>(fData.mean());
+  
+      } else if((*it)=="rms") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "RMS\n"+inlib::to<double>(fData.rms());
+  
+      } else if((*it)=="overflow") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "UDFLW\n"+inlib::to<double>
+          (fData.bin_height(inlib::histo::axis<double>::UNDERFLOW_BIN));
+  
+      } else if((*it)=="underflow") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "OVFLW\n"+inlib::to<double>
+          (fData.bin_height(inlib::histo::axis<double>::OVERFLOW_BIN));
+  
+  
+      }
+    }
+  
+    return fInfos.c_str();
+  }
+  
+public:
+  h1d2plot(const std::string& aName,const inlib::histo::h1d& aData)
+  :fName(aName)
+  ,fData(aData) //brute force, copy the histo.
+  {}
+  virtual ~h1d2plot(){}
+protected:
+  h1d2plot(const h1d2plot& a_from)
+  :fName(a_from.fName)
+  ,fData(a_from.fData)
+  {}  
+  h1d2plot& operator=(const h1d2plot& a_from){
+    fName = a_from.fName;
+    return *this;
+  }
+private:
+  const inlib::histo::h1d& fData;
+};
+
+class h2d2plot : public virtual SbPlottableBins2D {
+public: //SbPlottableObject
+  virtual bool isValid() const {return true;}
+  virtual const char* getName(){return fName.c_str();}
+  virtual const char* getLegend(){return fLegend.c_str();}
+private:
+  std::string fName;
+  std::string fLegend;
+  std::string fInfos;
+public:
+  virtual void* cast(const char* aClass) const{
+    if(!::strcmp(aClass,SbPlottableObject_s)) {
+      return (void*)static_cast<const SbPlottableObject*>(this);
+    } else if(!::strcmp(aClass,SbPlottableBins2D_s)) {
+      return (void*)static_cast<const SbPlottableBins2D*>(this);
+    } else {
+      return 0;
+    }
+  }
+  virtual int getDimension() const{return 2;}
+  virtual const char* getLabel(){return fData.title().c_str();}
+public: //SbPlottableBins2D
+  virtual void getBinsSumOfWeightsRange(float& aMin,float& aMax) const {
+    aMin = (float)fData.min_bin_height();
+    aMax = (float)fData.max_bin_height();
+  }
+  virtual int getAxisNumberOfBinsX() const {return fData.axis_x().bins();}
+  virtual int getAxisNumberOfBinsY() const {return fData.axis_y().bins();}
+  virtual float getAxisMinimumX() const {return (float)fData.axis_x().lower_edge();}
+  virtual float getAxisMaximumX() const {return (float)fData.axis_x().upper_edge();}
+  virtual float getAxisMinimumY() const {return (float)fData.axis_y().lower_edge();}
+  virtual float getAxisMaximumY() const {return (float)fData.axis_y().upper_edge();}
+
+  virtual float getBinLowerEdgeX(int aI) const {
+    return (float)fData.axis_x().bin_lower_edge(aI);
+  }
+  virtual float getBinUpperEdgeX(int aI) const {
+    return (float)fData.axis_x().bin_upper_edge(aI);
+  }
+  virtual float getBinLowerEdgeY(int aI) const {
+    return (float)fData.axis_y().bin_lower_edge(aI);
+  }
+  virtual float getBinUpperEdgeY(int aI) const {
+    return (float)fData.axis_y().bin_upper_edge(aI);
+  }
+
+  virtual int getBinNumberOfEntries(int aI,int aJ) const {
+    return fData.bin_entries(aI,aJ);
+  }
+
+  virtual float getBinSumOfWeights(int aI,int aJ) const {
+    return (float)fData.bin_height(aI,aJ);
+  }
+
+  virtual float getBinBar(int aI,int aJ) const {
+    return (float)fData.bin_error(aI,aJ);
+  }
+
+  virtual const char* getInfos(const char* aOptions){
+    std::string f_lf("\n");
+    fInfos.clear();
+    std::vector<std::string> words;
+    inlib::words(aOptions," ",false,words);
+    std::vector<std::string>::const_iterator it;
+    for(it=words.begin();it!=words.end();++it) {
+      if((*it)=="name") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "Name\n"+fName;
+  
+      } else if((*it)=="entries") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "Entries\n"+inlib::to<int>(fData.all_entries());
+      } else if((*it)=="mean") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "MeanX\n"+inlib::to<double>(fData.mean_x());
+        fInfos += f_lf;
+        fInfos += "MeanY\n"+inlib::to<double>(fData.mean_y());
+      } else if((*it)=="rms") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "RMS X\n"+inlib::to<double>(fData.rms_x());
+        fInfos += f_lf;
+        fInfos += "RMS Y\n"+inlib::to<double>(fData.rms_y());
+  
+      }
+    }
+  
+    return fInfos.c_str();
+  }
+public:
+  h2d2plot(const std::string& aName,const inlib::histo::h2d& aData)
+  :fName(aName)
+  ,fData(aData) //brute force, copy the histo.
+  {}
+  virtual ~h2d2plot(){}
+protected:
+  h2d2plot(const h2d2plot& a_from):fName(a_from.fName),fData(a_from.fData){}  
+private:
+  h2d2plot& operator=(const h2d2plot&){return *this;}
+private:
+  const inlib::histo::h2d& fData;
+};
+
+class p1d2plot : public virtual SbPlottableBins1D {
+public: //SbPlottableObject
+  virtual bool isValid() const {return true;}
+  virtual const char* getName(){return fName.c_str();}
+  virtual const char* getLegend(){return fLegend.c_str();}
+private:
+  std::string fName;
+  std::string fLegend;
+  std::string fInfos;
+public:
+  virtual void* cast(const char* aClass) const{
+    if(!::strcmp(aClass,SbPlottableObject_s)) {
+      return (void*)static_cast<const SbPlottableObject*>(this);
+    } else if(!::strcmp(aClass,SbPlottableBins1D_s)) {
+      return (void*)static_cast<const SbPlottableBins1D*>(this);
+    } else {
+      return 0;
+    }
+  }
+  virtual int getDimension() const{return 1;}
+  virtual const char* getLabel(){return fData.title().c_str();}
+public: //SbPlottableBins1D
+  virtual void getBinsSumOfWeightsRange(float& aMin,float& aMax) const {
+    aMin = (float)fData.min_bin_height();
+    aMax = (float)fData.max_bin_height();
+  }
+  virtual int getAxisNumberOfBins() const {return fData.axis().bins();}
+  virtual float getAxisMinimum() const {
+    return (float)fData.axis().lower_edge();
+  }
+  virtual float getAxisMaximum() const {
+    return (float)fData.axis().upper_edge();
+  }
+  virtual float getBinLowerEdge(int aI) const {
+    return (float)fData.axis().bin_lower_edge(aI);
+  }
+  virtual float getBinUpperEdge(int aI) const {
+    return (float)fData.axis().bin_upper_edge(aI);
+  }
+  virtual int getBinNumberOfEntries(int aI) const {
+    return fData.bin_entries(aI);
+  }
+  virtual float getBinSumOfWeights(int aI) const {
+    return (float)fData.bin_height(aI);
+  }
+  virtual float getBinBar(int aI) const {
+    return (float)fData.bin_error(aI);
+  }
+
+  virtual const char* getInfos(const char* aOptions){
+    std::string f_lf("\n");
+    fInfos.clear();
+    std::vector<std::string> words;
+    inlib::words(aOptions," ",false,words);
+    std::vector<std::string>::const_iterator it;
+    for(it=words.begin();it!=words.end();++it) {
+      if((*it)=="name") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "Name\n"+fName;
+  
+      } else if((*it)=="entries") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "Entries\n"+inlib::to<int>(fData.all_entries());
+      } else if((*it)=="mean") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "Mean\n"+inlib::to<double>(fData.mean());
+      } else if((*it)=="rms") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "RMS\n"+inlib::to<double>(fData.rms());
+  
+      }
+    }
+  
+    return fInfos.c_str();
+  }
+
+public:
+  p1d2plot(const std::string& aName,const inlib::histo::p1d& aData)
+  :fName(aName)
+  ,fData(aData) //brute force, copy the histo.
+  {}
+  virtual ~p1d2plot(){}
+protected:
+  p1d2plot(const p1d2plot& a_from):fName(a_from.fName),fData(a_from.fData){}  
+private:
+  p1d2plot& operator=(const p1d2plot&){return *this;}
+private:
+  const inlib::histo::p1d& fData;
+};
+
+class p2d2plot : public virtual SbPlottableBins2D {
+public: //SbPlottableObject
+  virtual bool isValid() const {return true;}
+  virtual const char* getName(){return fName.c_str();}
+  virtual const char* getLegend(){return fLegend.c_str();}
+private:
+  std::string fName;
+  std::string fLegend;
+  std::string fInfos;
+public:
+  virtual void* cast(const char* aClass) const{
+    if(!::strcmp(aClass,SbPlottableObject_s)) {
+      return (void*)static_cast<const SbPlottableObject*>(this);
+    } else if(!::strcmp(aClass,SbPlottableBins2D_s)) {
+      return (void*)static_cast<const SbPlottableBins2D*>(this);
+    } else {
+      return 0;
+    }
+  }
+  virtual int getDimension() const{return 2;}
+  virtual const char* getLabel(){return fData.title().c_str();}
+public: //SbPlottableBins2D
+  virtual void getBinsSumOfWeightsRange(float& aMin,float& aMax) const {
+    aMin = (float)fData.min_bin_height();
+    aMax = (float)fData.max_bin_height();
+  }
+  virtual int getAxisNumberOfBinsX() const {return fData.axis_x().bins();}
+  virtual int getAxisNumberOfBinsY() const {return fData.axis_y().bins();}
+  virtual float getAxisMinimumX() const {return (float)fData.axis_x().lower_edge();}
+  virtual float getAxisMaximumX() const {return (float)fData.axis_x().upper_edge();}
+  virtual float getAxisMinimumY() const {return (float)fData.axis_y().lower_edge();}
+  virtual float getAxisMaximumY() const {return (float)fData.axis_y().upper_edge();}
+  virtual float getBinLowerEdgeX(int aI) const {
+    return (float)fData.axis_x().bin_lower_edge(aI);
+  }
+  virtual float getBinUpperEdgeX(int aI) const {
+    return (float)fData.axis_x().bin_upper_edge(aI);
+  }
+  virtual float getBinLowerEdgeY(int aI) const {
+    return (float)fData.axis_y().bin_lower_edge(aI);
+  }
+  virtual float getBinUpperEdgeY(int aI) const {
+    return (float)fData.axis_y().bin_upper_edge(aI);
+  }
+  virtual int getBinNumberOfEntries(int aI,int aJ) const {
+    return fData.bin_entries(aI,aJ);
+  }
+  virtual float getBinSumOfWeights(int aI,int aJ) const {
+    return (float)fData.bin_height(aI,aJ);
+  }
+  virtual float getBinBar(int aI,int aJ) const {
+    return (float)fData.bin_error(aI,aJ);
+  }
+
+  virtual const char* getInfos(const char* aOptions){
+    std::string f_lf("\n");
+    fInfos.clear();
+    std::vector<std::string> words;
+    inlib::words(aOptions," ",false,words);
+    std::vector<std::string>::const_iterator it;
+    for(it=words.begin();it!=words.end();++it) {
+      if((*it)=="name") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "Name\n"+fName;
+  
+      } else if((*it)=="entries") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "Entries\n"+inlib::to<int>(fData.all_entries());
+      } else if((*it)=="mean") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "MeanX\n"+inlib::to<double>(fData.mean_x());
+        fInfos += f_lf;
+        fInfos += "MeanY\n"+inlib::to<double>(fData.mean_y());
+      } else if((*it)=="rms") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "RMS X\n"+inlib::to<double>(fData.rms_x());
+        fInfos += f_lf;
+        fInfos += "RMS Y\n"+inlib::to<double>(fData.rms_y());
+  
+      }
+    }
+  
+    return fInfos.c_str();
+  }
+
+public:
+  p2d2plot(const std::string& aName,const inlib::histo::p2d& aData)
+  :fName(aName)
+  ,fData(aData) //brute force, copy the histo.
+  {}
+  virtual ~p2d2plot(){}
+protected:
+  p2d2plot(const p2d2plot& a_from):fName(a_from.fName),fData(a_from.fData){}  
+private:
+  p2d2plot& operator=(const p2d2plot&){return *this;}
+private:
+  const inlib::histo::p2d& fData;
+};
+
+template <class T>
+class f1d2plot : public virtual SbPlottableFunction1D {
+public: //SbPlottableObject
+  virtual bool isValid() const {return true;}
+  virtual const char* getName(){return fName.c_str();}
+  virtual const char* getLegend(){return fLegend.c_str();}
+private:
+  std::string fName;
+  std::string fLegend;
+  std::string fInfos;
+public:
+  virtual void* cast(const char* aClass) const{
+    if(!::strcmp(aClass,SbPlottableObject_s)) {
+      return (void*)static_cast<const SbPlottableObject*>(this);
+    } else if(!::strcmp(aClass,SbPlottableFunction1D_s)) {
+      return (void*)static_cast<const SbPlottableFunction1D*>(this);
+    } else {
+      return 0;
+    }
+  }
+  virtual int getDimension() const{return 1;}
+  virtual const char* getLabel(){return fLabel.c_str();}
+public: //SbPlottableFunction1D
+  virtual bool value(float aX,float& aValue) const {
+    if(!fData.in_domain(aX)) return false; 
+    aValue = (float)fData.value(aX);
+    return true;
+  }
+
+  virtual int getNumberOfStepsX() const {return 100;}
+  virtual float getMinimumX() const {return 0;}
+  virtual float getMaximumX() const {return 0;}
+
+  virtual const char* getInfos(const char* aOptions){
+    std::string f_lf("\n");
+    fInfos.clear();
+    std::vector<std::string> words;
+    inlib::words(aOptions," ",false,words);
+    std::vector<std::string>::const_iterator it;
+    for(it=words.begin();it!=words.end();++it) {
+      if((*it)=="name") {
+        if(fInfos.size()) fInfos += f_lf;
+        fInfos += "Name\n"+fName;
+      }
+    }
+    return fInfos.c_str();
+  }
+
+public:
+  f1d2plot(const std::string& aName,const std::string& aLabel,const T& aData)
+  :fName(aName)
+  ,fLabel(aLabel)
+  ,fData(aData) //brute force, copy the function.
+  {}
+  virtual ~f1d2plot(){}
+protected:
+  f1d2plot(const f1d2plot& a_from):fName(a_from.fName),fData(a_from.fData){}  
+private:
+  f1d2plot& operator=(const f1d2plot&){return *this;}
+private:
+  const T& fData;
+  std::string fLabel;
+};
+
+class h1d2plot_cp : public h1d2plot {
+public:
+  h1d2plot_cp(const std::string& a_name,const inlib::histo::h1d& a_data)
+  :h1d2plot(a_name,m_cp) //give ref of m_cp to h1d2plot.
+  ,m_cp(a_data)   //do a local copy.
+  {}
+  virtual ~h1d2plot_cp(){}
+protected:
+  h1d2plot_cp(const h1d2plot_cp& a_from)
+  :SbPlottableObject(a_from)
+  ,SbPlottableBins1D(a_from)
+  ,h1d2plot(a_from.fName,m_cp)
+  ,m_cp(a_from.m_cp)
+  {}  
+  h1d2plot_cp& operator=(const h1d2plot_cp& a_from){
+    h1d2plot::operator=(a_from);    
+    m_cp = a_from.m_cp;
+    return *this;
+  }
+protected:
+  inlib::histo::h1d m_cp;
+};
+
+
+}
+
+#endif

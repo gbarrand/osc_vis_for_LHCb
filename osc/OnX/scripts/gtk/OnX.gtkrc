@@ -1,0 +1,19 @@
+
+# This is a comment.
+
+# Could define a style and set it for a  widget class.
+style "OnX_GtkButton_style" = "default" {
+  bg[NORMAL] = {0.0,1.0,1.0}
+}
+# Uncomment to test.
+#class "GtkButton" style "OnX_GtkButton_style"
+
+
+# Could have a style for a named widget.
+# For example on the OnX_TestTabStack_cancel button.
+style "OnX_TestTabStack_cancel_style" = "default" {
+  bg[NORMAL] = {0.6,0.6,0.6}
+}
+# The "*" is needed in order to reach the given widget.
+widget "*OnX_TestTabStack_cancel" style "OnX_TestTabStack_cancel_style"
+

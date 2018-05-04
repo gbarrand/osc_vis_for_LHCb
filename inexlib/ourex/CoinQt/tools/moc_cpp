@@ -1,0 +1,4 @@
+#!/bin/sh -f
+
+awk -f moc.awk $1 > tmp
+/bin/mv tmp $1

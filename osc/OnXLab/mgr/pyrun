@@ -1,0 +1,108 @@
+#!/bin/sh -f
+
+run_what=
+
+build_args=
+while test $# -ge 1 ; do
+  case $1 in
+    -*) build_args="${build_args} $1";;  
+     *) run_what=$1;;  
+  esac
+  shift
+done
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+save_dir=`pwd`
+
+inlib_mgr=${save_dir}/../../../inexlib/inlib/mgr
+exlib_mgr=${save_dir}/../../../inexlib/exlib/mgr
+ourex_mgr=${save_dir}/../../../inexlib/ourex/mgr
+
+. ${ourex_mgr}/build_header
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+# WARNING :
+#   have paths for scripts first
+#   because of Linux OnXLab.py/OnXLab.so clash.
+
+PYTHONPATH=
+#////////////////////////////////////
+#/// .py scripts : //////////////////
+#////////////////////////////////////
+PYTHONPATH="${PYTHONPATH}:${save_dir}/../../OnXLab/scripts/Python"
+PYTHONPATH="${PYTHONPATH}:${save_dir}/../../OnX/scripts/Python"
+PYTHONPATH="${PYTHONPATH}:${ourex_mgr}/../HEPVis/scripts/Python"
+PYTHONPATH="${PYTHONPATH}:${ourex_mgr}/../CoinPython/scripts"
+#////////////////////////////////////
+#/// plugins : //////////////////////
+#////////////////////////////////////
+PYTHONPATH="${PYTHONPATH}:${save_dir}/../../OnXLab/mgr/${build_dir}"
+PYTHONPATH="${PYTHONPATH}:${save_dir}/../../OnX/mgr/${build_dir}"
+PYTHONPATH="${PYTHONPATH}:${ourex_mgr}/../HEPVis/${build_dir}"
+PYTHONPATH="${PYTHONPATH}:${ourex_mgr}/../CoinPython/${build_dir}"
+
+export PYTHONPATH
+
+#////////////////////////////////////
+#/// shared libs : //////////////////
+#////////////////////////////////////
+ld_path=
+ld_path="${ld_path}:${save_dir}/../../OnXLab/mgr/${build_dir}"
+ld_path="${ld_path}:${save_dir}/../../OnX/mgr/${build_dir}"
+ld_path="${ld_path}:${save_dir}/../../Lib/mgr/${build_dir}"
+ld_path="${ld_path}:${save_dir}/../../BatchLab/mgr/${build_dir}"
+ld_path="${ld_path}:${save_dir}/../../Minuit/mgr/${build_dir}"
+
+ld_path="${ld_path}:${ourex_mgr}/../CoinXt/${build_dir}"
+ld_path="${ld_path}:${ourex_mgr}/../HEPVis/${build_dir}"
+ld_path="${ld_path}:${ourex_mgr}/../CoinGL/${build_dir}"
+ld_path="${ld_path}:${ourex_mgr}/../freetype/${build_dir}"
+ld_path="${ld_path}:${ourex_mgr}/../jpeg/${build_dir}"
+ld_path="${ld_path}:${ourex_mgr}/../png/${build_dir}"
+ld_path="${ld_path}:${ourex_mgr}/../zlib/${build_dir}"
+ld_path="${ld_path}:${ourex_mgr}/../expat/${build_dir}"
+
+. ${inlib_mgr}/build_ld_library_path
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+use_Python=yes
+. ${exlib_mgr}/use_Python
+
+#////////////////////////////////////
+#/// run : //////////////////////////
+#////////////////////////////////////
+TTFPATH=${ourex_mgr}/../HEPVis/fonts
+export TTFPATH
+
+OSC_HOME_DIR=.
+export OSC_HOME_DIR
+
+OSC_ARGS="-balance";export OSC_ARGS
+
+if [ "${run_what}" = "" ] ; then run_what=aida_OnX_0; fi
+
+cd ../examples/Python
+
+options=
+if [ "${run_what}" = "aida_OnX_3" ] ; then
+  /bin/mkdir -p ./Resources/OnX/examples
+  /bin/cp -R ${save_dir}/../../OnX/examples/OnX ./Resources/OnX/examples/.
+
+elif [ "${run_what}" = "aida_OnX_2" ] ; then
+  /bin/mkdir -p ./Resources/AIDA/examples/data
+  /bin/cp -R ${save_dir}/../../OnXLab/data/Dirac.gif ./Resources/AIDA/examples/data/.
+fi
+
+${py_exe} ${options} ${run_what}.py
+
+if [ -d Resources ] ; then /bin/rm -R -f ./Resources; fi
+
+cd ${save_dir}

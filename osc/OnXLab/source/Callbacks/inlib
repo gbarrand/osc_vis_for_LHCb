@@ -1,0 +1,119 @@
+
+#include <Slash/UI/IUI.h>
+#include <Slash/Core/IManager.h>
+#include <Slash/Core/ISession.h>
+#include <Slash/Tools/Manager.h>
+
+#include <AIDA/AIDA.h>
+
+#include <inlib/sout>
+#include <inlib/words>
+#include <inlib/strip>
+#include <inlib/sto>
+
+inline AIDA::IManagedObject* find_aida_object(
+ const std::string& aSelection
+,Slash::Core::ISession& aSession
+,AIDA::ITree*& aTree
+,std::string& aManager
+,std::string& aPath
+,std::string& aName
+) { 
+  // FIXME : We do not return the AIAD::ITree, since we need manager->name()
+  //   in Callbacks.cxx. We need a name() over the AIDA::ITree.
+  aTree = 0;
+  aManager = "";
+  aPath = "";
+  aName = "";
+
+  std::ostream& out = aSession.cout();
+
+  if(aSession.verboseLevel()) {
+    out << "find_aida_object :"
+        << " selection is " << inlib::sout(aSelection) << "." 
+        << std::endl;
+  }
+
+  std::vector<std::string> items;
+  //WARNING : Do not use smanip_lines. Some Windows file name
+  // may contain a \n which is not a delimiter ; 
+  // like in ..\examples\data\ntuples.hbook
+  inlib::words(aSelection,"\n",true,items);
+  if(items.size()<2) {
+    out << "find_aida_object :"
+        << " two items expected in " << inlib::sout(aSelection)
+        << std::endl;
+    return 0;
+  }
+
+  // First item is the tree name :
+  std::string mgr = items[0];
+  AIDA::ITree* tree = Slash_findManager_warn(aSession,mgr,AIDA::ITree);
+  if(!tree) return 0;
+
+  // Get dirname, basename of the item :
+
+  // Get dirname :
+  std::string dirname = "/";
+  for(unsigned int index=1;index<items.size()-1;index++) {
+    dirname += items[index] + "/";
+  }
+
+  // Get basenmae. The last item is of the form :
+  //     <basename> class=[AIDA::<class> title="<title>"]
+  // Note that <basename> may contain spaces.
+  std::string basename = items[items.size()-1];
+  std::string::size_type pos = basename.find("class=");
+  if(pos!=std::string::npos) {
+    basename = basename.substr(0,pos);
+    inlib::strip(basename);
+  }
+
+  //NOTE : the below find(aPath) may trigger an update message
+  //       in case the object is found in file and then managed
+  //       in the tree. (The tree.addObject adds the object in a
+  //       Folder that then does emitUpdate).
+
+  AIDA::IManagedObject* object = tree->find(dirname+basename);
+  if(!object) {
+    out << "find_aida_object :"
+        << " object " << inlib::sout(dirname+basename) 
+        << " not found in AIDA::ITree "
+        << inlib::sout(mgr)
+        << std::endl;
+    return 0;
+  }
+
+  aTree = tree;
+  aManager = mgr;
+  aPath = dirname+basename;
+  aName = basename;
+
+  return object;
+}
+
+inline std::string smanip_int2coord(int aValue) {
+       if(aValue==0) return "x";
+  else if(aValue==1) return "y";
+  else if(aValue==2) return "z";
+  else if(aValue==3) return "t";
+  else return inlib::to<int>(aValue);
+}
+
+inline bool smanip_coord2int(const std::string& aString,int& aValue){
+  if((aString=="x")||(aString=="X")) {
+    aValue = 0;
+    return true;
+  } else if((aString=="y")||(aString=="Y")) {
+    aValue = 1;
+    return true;
+  } else if((aString=="z")||(aString=="Z")) {
+    aValue = 2;
+    return true;
+  } else if((aString=="t")||(aString=="T")) {
+    aValue = 3;
+    return true;
+  } else {
+    return inlib::to<int>(aString,aValue);
+  }
+}

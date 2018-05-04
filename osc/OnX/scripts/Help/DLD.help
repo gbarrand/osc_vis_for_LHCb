@@ -1,0 +1,186 @@
+
+ DLD is a simple string interface to dynamic loading.
+ Syntax of a "DLD script" is :
+
+    DLD> <DLL> <extern "C" function> <arg1> <arg2>...
+
+ For example :
+
+    DLD> OnX ui_echo hello
+
+ The DLL (in the upper the OnX one) must be findable
+ by specifying its name. It assumes that the loading path
+ (LD_LIBRARY_PATH on Linuxes, DYLD_LIBRARY_PATH
+  on MacOSX and PATH on Windows) is properly set.
+
+ The "extern C function" must be an "OnX callback" that is 
+ to say functions with the prototype :
+
+   extern "C" {
+     void callback_without_arguments(IUI&);
+     void callback_with_arguments(IUI&,const std::vector<std::string>&);
+   }
+
+ See for example the "ui_echo" in OnX/source/Callbacks/Callbacks.cxx 
+ (put then in the OnX DLL) :
+
+void ui_echo(IUI& aUI,const std::vector<std::string>& aArgs) {
+  std::string line;
+  for(unsigned int index=0;index<aArgs.size();index++) {
+    if(index) line += " ";
+    line += ui_cbk(aUI,aArgs[index]);
+  }
+  aUI.echo(line);
+}
+
+ From the received IUI, someone can access most of things ; in particular
+ the ISession with :
+
+    ISession& session = aUI.session();
+
+ With the ISession, someone can then access to all the managers 
+ (IManager) declared to OnX.
+
+ On a DLD script someone can use the "@" mechanism that permits
+ to avoid on most cases the writing of a compiled OnX callback. 
+ The DLD interpreter replaces the @<keyword>@ by the adequate
+ value. The list of keyword and their replacement is given below.
+
+  @this@ is replaced by the name of the widget executing the callback.
+
+  @this.value@ is replaced by the callback value. For example the 
+ choosen file in case of the ok callback of a file chooser.
+
+  @cat@ permits to concatenate arguments. For example :
+    OnX ui_echo hello_ @cat@ world
+ will echo : hello_world.
+
+  @empty@ is replaced by an empty string.
+
+  @replace@<string>@<old>@<new>@ : replace <old> string to <new> one 
+ in the <string>.
+
+  @ask@<prompt>@ prompt user for a string.
+
+  @ui_is_a@<what>@ : cast IUI to <what> and return true is success.
+
+  @env@<variable>@ returns the value of the <variable> environment variable.
+
+  @cat_space@ permits to concatenate arguments with an in between space. 
+ For example :
+    OnX ui_echo hello @cat_space@ @cat_space@ @cat_space@ world
+ will echo : hello   world.
+
+  @current_name@ is replaced by the name of the "current" widget of the UI.
+
+  @current@ is passed "as it" to the callback. It can be used
+ through the find_widget helper (defined in OnX/Helpers/OnX.h) when
+ programming an OnX callback.
+
+  @about@ is replaced by the "about OnX" text.
+
+  @os@ return the OS kind : Linux, Darwin, Windows_NT.
+  @sep@ file separator. "/" on UNIXes, "\" on Windows.
+  @sep@file@ same as upper.
+  @sep@path@ path separtor. ":" on UNIXes ";" on Windows.
+  @sep@cmd@ shell command separator. ";" on UNIXes, "&&" on Windows.
+
+ Some @ keywords are of the form of a function. They are :
+
+  @session@<parameter>@ is replaced by the value of the <parameter> session
+ parameter.
+
+  @directory@<name>@<mask>@ is replaced by the list of files in the <name>
+ directory filtered with <mask>. The name of the directory is prepend
+ to each found file name.
+
+  @files@<name>@<mask>@ is replaced by the list of files in the <name>
+ directory filtered with <mask>. The name of the directory is not prepend
+ to each found file name.
+
+  @file@<name>@ is replaced by the content of the <name> file. The file is 
+ assumed to contain an ascii text (and not binary data).
+
+  @path@<string>@ expand <string> (which may contain environment variable) to
+ a full path.
+
+  @tmpname@ return a not used file name in current directory.
+
+  @tmpname@<dir>@<prefix>@<sufix>@ return also a not used file name
+ in directory <dir> and beginning with <prefix> and ending with <suffix>.
+
+  @children@<widget>@<what>@<parameter>@ is replaced by the list of 
+ <what> of <widget> children filterd by <parameter>. List of <what> is 
+ (see OnX::BaseUI::searchChild code) :
+    class : widget class of children. <parameter> is not used.
+    name : name of children. <parameter> is not used.
+    nameFromClass : name of children of class <parameter>.
+    labelFromClass : label of children of class <parameter>
+    nameFromLabel : name of children with <label> label.
+
+  @child@<widget>@<what>@<parameter>@<index>@ same as upper but the <index>
+ entry in the children list is taken.
+
+  @name@<top>@<prefix>@ : build a name searching from widget <top>.
+
+  @shell@<widget>@ is replaced by the name of the shell of the <widget> widget.
+
+  @parent@<widget>@ is replaced by the name of the parent of the <widget> 
+ widget.
+
+  @interpreter@<interpreter>@<what>@ is replaced by an anterpreteur info.
+ For example : @interpreter@Python@suffix@ returns py.
+
+  @complete@<interpreter>@<string>@ return the completion of <string>
+ with the <interpreter> interpreter.
+
+  @manager@<manager>@<what>@ is replaced by the returned value of <what>
+ for the <manager> manager. For example @manager@AccessorManager@accessors@.
+
+  @da@<action>@<param>@ is replaced by a Accessor manger action. 
+ For example after a : OnX data_collect PhysicsTable, where 
+ PhysicsTable is some data accessor having a "name" value, then a : 
+ @da@values@name@ returns the \n list of the instances of the PhysicsTable
+ accessor. (It is used for example in G4Lab).
+
+  @nth@<number>@<list>@ is replaced by the nth entry in the <list>. <list>
+ is a list of string separated by \n.
+
+  @next@<item>@<list>@<option>@ : find <item> in the \n separated list <list> 
+ and return the next item. <option> is [strip_key,strip_value,none].
+
+  @filter@<mask>@<list>@ filter out the <list> by using <mask>.
+
+  @cvt@<format>@<string>@ is replaced by a convertion of <string> at various
+ format. For example : @cvt@rgb@red@
+
+  @suffix@<string.suffix>@ is replaced by <suffix>.
+
+  @char@<int>@ is replaced by the character having <int> as decimal code.
+
+  @cyclic@<cyclic>@<what>@ is replaced by the returned value of <what>
+ of the cyclic <cyclic>.
+
+  @calc@<formula>@<list values>@ is replaced by the evaluated <formula>
+ with variable values <values>. For example @calc@2*x@3@ will return 6.
+
+ A bracketing syntax is supported. In any <argument> argument of the upper
+ @ command, if [<widget parameter>] appears, then the <widget parameter> 
+ is searched and the value is put in the argument of he command. 
+ If {<session parameter>} then the value of the <session parameter> 
+ is put in the argument of the command.
+  For example if :
+    @session@[myOption.value]@
+ then the value of the myOption OptionMenu is get and is then searched
+ as a session parameter name. If found the value of this parameter 
+ is passed to the @ DLD argument.
+  In particular if having for example :
+    @[myTextWidget.value]@
+ then the text contains in the myTextWidget widget is put in the @ DLD 
+ And if having :
+    @{myTextWiget.param1.param2}@
+ then the value of the session parameter myTextWiget.param1.param2 is
+ put in the @ DLD argument. 
+
+  Someone can construct thing like :
+    @[{my_session_par}.value]@

@@ -1,0 +1,298 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file inlib.license for terms.
+
+#ifndef inlib_colord
+#define inlib_colord
+
+#include "vec4d"
+#include <string>
+
+namespace inlib {
+
+class colord : public vec4d {
+public:
+  colord(){}
+  colord(double a_r,double a_g,double a_b,double a_a = 1)
+  :vec4d(a_r,a_g,a_b,a_a){}
+  virtual ~colord() {}
+public:
+  colord(const colord& a_from):vec4d(a_from){}
+  colord& operator=(const colord& a_from){
+    vec4d::operator=(a_from);
+    return *this;
+  }
+public:
+  double r() const {return v0();}
+  double g() const {return v1();}
+  double b() const {return v2();}
+  double a() const {return v3();}
+
+  void set_r(double a_v) {m_data[0] = a_v;}
+  void set_g(double a_v) {m_data[1] = a_v;}
+  void set_b(double a_v) {m_data[2] = a_v;}
+  void set_a(double a_v) {m_data[3] = a_v;}
+public:
+  // our forever 65 named colors taken long time ago from X11.
+
+  //NOTE : don't handle a static object because of mem balance.
+  //0-9
+  static colord aquamarine() {return colord(0.496101,0.996109,0.828138);}
+  static colord mediumaquamarine() {return colord(0.398444,0.800793,0.664073);}
+  static colord black() {return colord(0,0,0);}
+  static colord blue() {return colord(0,0,1);}
+  static colord cadetblue() {return colord(0.371099,0.617197,0.62501);}
+  static colord cornflowerblue() {return colord(0.390631,0.58204,0.925795);}
+  static colord darkslateblue() {return colord(0.281254,0.238285,0.542977);}
+  static colord lightblue() {return colord(0.675792,0.843763,0.898451);}
+  static colord lightsteelblue() {return colord(0.68751,0.765637,0.867201);}
+  static colord mediumblue() {return colord(0,0,0.800793);}
+ 
+  //10-19
+  static colord mediumslateblue() {return colord(0.480476,0.406256,0.929702);}
+  static colord midnightblue() {return colord(0.0976577,0.0976577,0.437507);}
+  static colord navyblue() {return colord(0,0,0.500008);}
+  static colord navy() {return colord(0,0,0.500008);}
+  static colord skyblue() {return colord(0.527352,0.8047,0.917983);}
+  static colord slateblue() {return colord(0.414069,0.351568,0.800793);}
+  static colord steelblue() {return colord(0.273442,0.50782,0.703136);}
+  static colord coral() {return colord(0.996109,0.496101,0.312505);}
+  static colord cyan() {return colord(0,1,1);}
+  static colord firebrick() {return colord(0.695323,0.132815,0.132815);}
+      
+  //20-29
+  static colord brown() {return colord(0.644541,0.164065,0.164065);}
+  static colord gold() {return colord(0.996109,0.839857,0);}
+  static colord goldenrod() {return colord(0.851575,0.644541,0.125002);}
+  static colord green() {return colord(0,1,0);}
+  static colord darkgreen() {return colord(0,0.390631,0);}
+  static colord darkolivegreen() {return colord(0.332036,0.417975,0.183597);}
+  static colord forestgreen() {return colord(0.132815,0.542977,0.132815);}
+  static colord limegreen() {return colord(0.195315,0.800793,0.195315);}
+  static colord mediumseagreen() {return colord(0.234379,0.699229,0.441413);}
+  static colord mediumspringgreen() {return colord(0,0.976577,0.601572);}
+      
+  //30-39
+  static colord palegreen() {return colord(0.593759,0.980484,0.593759);}
+  static colord seagreen() {return colord(0.17969,0.542977,0.339849);}
+  static colord springgreen() {return colord(0,0.996109,0.496101);}
+  static colord yellowgreen() {return colord(0.601572,0.800793,0.195315);}
+  static colord darkslategrey() {return colord(0.183597,0.308598,0.308598);}
+  static colord dimgrey() {return colord(0.410163,0.410163,0.410163);}
+  static colord lightgrey() {return colord(0.824231,0.824231,0.824231);}
+  static colord grey() {return colord(0.750011,0.750011,0.750011);}
+  static colord khaki() {return colord(0.937514,0.898451,0.546883);}
+  static colord magenta() {return colord(1,0,1);}
+
+  //40-49
+  static colord maroon() {return colord(0.68751,0.187503,0.375006);}
+  static colord orange() {return colord(0.996109,0.644541,0);}
+  static colord orchid() {return colord(0.851575,0.437507,0.83595);}
+  static colord darkorchid() {return colord(0.597665,0.195315,0.796887);}
+  static colord mediumorchid() {return colord(0.726574,0.332036,0.824231);}
+  static colord pink() {return colord(0.996109,0.750011,0.792981);}
+  static colord plum() {return colord(0.863294,0.62501,0.863294);}
+  static colord red() {return colord(1,0,0);}
+  static colord indianred() {return colord(0.800793,0.35938,0.35938);}
+  static colord mediumvioletred() {return colord(0.777356,0.0820325,0.519539);}
+      
+  //50-59
+  static colord orangered() {return colord(0.996109,0.269535,0);}
+  static colord violetred() {return colord(0.812512,0.125002,0.562509);}
+  static colord salmon() {return colord(0.976577,0.500008,0.445319);}
+  static colord sienna() {return colord(0.62501,0.320317,0.175784);}
+  static colord tan() {return colord(0.820325,0.703136,0.546883);}
+  static colord thistle() {return colord(0.843763,0.746105,0.843763);}
+  static colord turquoise() {return colord(0.250004,0.875013,0.812512);}
+  static colord darkturquoise() {return colord(0,0.8047,0.816419);}
+  static colord mediumturquoise() {return colord(0.281254,0.816419,0.796887);}
+  static colord violet() {return colord(0.929702,0.50782,0.929702);}
+
+  //60-64
+  static colord blueviolet() {return colord(0.539071,0.167971,0.882826);}
+  static colord wheat() {return colord(0.957046,0.867201,0.699229);}
+  static colord white() {return colord(1,1,1);}
+  static colord yellow() {return colord(1,1,0);}
+  static colord greenyellow() {return colord(0.675792,0.996109,0.18359);}
+
+public: //a list form of the uppers :
+  static unsigned int named_color_number() {return 65;}
+  typedef char name[24];
+  static const name* named_color_names() {
+    static const char list[65][24] = { //read only static.
+      "aquamarine",
+      "mediumaquamarine",
+      "black",
+      "blue",
+      "cadetblue",
+      "cornflowerblue",
+      "darkslateblue",
+      "lightblue",
+      "lightsteelblue",
+      "mediumblue",
+
+      "mediumslateblue",
+      "midnightblue",
+      "navyblue",
+      "navy",
+      "skyblue",
+      "slateblue",
+      "steelblue",
+      "coral",
+      "cyan",
+      "firebrick",
+
+      "brown",
+      "gold",
+      "goldenrod",
+      "green",
+      "darkgreen",
+      "darkolivegreen",
+      "forestgreen",
+      "limegreen",
+      "mediumseagreen",
+      "mediumspringgreen",
+
+      "palegreen",
+      "seagreen",
+      "springgreen",
+      "yellowgreen",
+      "darkslategrey",
+      "dimgrey",
+      "lightgrey",
+      "grey",
+      "khaki",
+      "magenta",
+
+      "maroon",
+      "orange",
+      "orchid",
+      "darkorchid",
+      "mediumorchid",
+      "pink",
+      "plum",
+      "red",
+      "indianred",
+      "mediumvioletred",
+      
+      "orangered",
+      "violetred",
+      "salmon",
+      "sienna",
+      "tan",
+      "thistle",
+      "turquoise",
+      "darkturquoise",
+      "mediumturquoise",
+      "violet",
+
+      "blueviolet",
+      "wheat",
+      "white",
+      "yellow",
+      "greenyellow"
+    };
+    return list;
+  }
+
+  typedef double rgb[3];
+  static const rgb* named_color_rgbs() {
+    static const double list[65][3] = {
+      {0.496101,0.996109,0.828138}, //aquamarine
+      {0.398444,0.800793,0.664073}, //mediumaquamarine
+      {0,0,0}, //black
+      {0,0,1}, //blue
+      {0.371099,0.617197,0.62501}, //cadetblue
+      {0.390631,0.58204,0.925795}, //cornflowerblue
+      {0.281254,0.238285,0.542977}, //darkslateblue
+      {0.675792,0.843763,0.898451}, //lightblue
+      {0.68751,0.765637,0.867201}, //lightsteelblue
+      {0,0,0.800793}, //mediumblue
+
+      {0.480476,0.406256,0.929702}, //mediumslateblue
+      {0.0976577,0.0976577,0.437507}, //midnightblue
+      {0,0,0.500008}, //navyblue
+      {0,0,0.500008}, //navy
+      {0.527352,0.8047,0.917983}, //skyblue
+      {0.414069,0.351568,0.800793}, //slateblue
+      {0.273442,0.50782,0.703136}, //steelblue
+      {0.996109,0.496101,0.312505}, //coral
+      {0,1,1}, //cyan
+      {0.695323,0.132815,0.13281}, //firebrick
+
+      {0.644541,0.164065,0.164065}, //brown
+      {0.996109,0.839857,0}, //gold
+      {0.851575,0.644541,0.125002}, //goldenrod
+      {0,1,0}, //green
+      {0,0.390631,0}, //darkgreen
+      {0.332036,0.417975,0.183597}, //darkolivegreen
+      {0.132815,0.542977,0.132815}, //forestgreen
+      {0.195315,0.800793,0.195315}, //limegreen
+      {0.234379,0.699229,0.441413}, //mediumseagreen
+      {0,0.976577,0.601572}, //mediumspringgreen
+
+      {0.593759,0.980484,0.593759}, //palegreen
+      {0.17969,0.542977,0.339849}, //seagreen
+      {0,0.996109,0.496101}, //springgreen
+      {0.601572,0.800793,0.195315}, //yellowgreen
+      {0.183597,0.308598,0.308598}, //darkslategrey
+      {0.410163,0.410163,0.410163}, //dimgrey
+      {0.824231,0.824231,0.824231}, //lightgrey
+      {0.750011,0.750011,0.750011}, //grey
+      {0.937514,0.898451,0.546883}, //khaki
+      {1,0,1}, //magenta
+
+      {0.68751,0.187503,0.375006}, //maroon
+      {0.996109,0.644541,0}, //orange
+      {0.851575,0.437507,0.83595}, //orchid
+      {0.597665,0.195315,0.796887}, //darkorchid
+      {0.726574,0.332036,0.824231}, //mediumorchid
+      {0.996109,0.750011,0.792981}, //pink
+      {0.863294,0.62501,0.863294}, //plum
+      {1,0,0}, //red
+      {0.800793,0.35938,0.35938}, //indianred
+      {0.777356,0.0820325,0.519539}, //mediumvioletred
+      
+      {0.996109,0.269535,0}, //orangered
+      {0.812512,0.125002,0.562509}, //violetred
+      {0.976577,0.500008,0.445319}, //salmon
+      {0.62501,0.320317,0.175784}, //sienna
+      {0.820325,0.703136,0.546883}, //tan
+      {0.843763,0.746105,0.843763}, //thistle
+      {0.250004,0.875013,0.812512}, //turquoise
+      {0,0.8047,0.816419}, //darkturquoise
+      {0.281254,0.816419,0.796887}, //mediumturquoise
+      {0.929702,0.50782,0.929702}, //violet
+
+      {0.539071,0.167971,0.882826}, //blueviolet
+      {0.957046,0.867201,0.699229}, //wheat
+      {1,1,1}, //white
+      {1,1,0}, //yellow
+      {0.675792,0.996109,0.18359} //greenyellow
+    };
+    return list;
+  }
+
+  static bool to(const std::string& a_string,
+                 double& a_r,double& a_g,double& a_b){
+    unsigned int number = named_color_number();
+    const colord::name*  names = named_color_names();
+    const colord::rgb* rgbs = named_color_rgbs();
+    for(unsigned int index=0;index<number;index++) {
+      if(a_string==names[index]) {
+        a_r = rgbs[index][0];
+        a_g = rgbs[index][1];
+        a_b = rgbs[index][2];
+        return true;
+      }
+    }
+    a_r = 0.5;
+    a_g = 0.5;
+    a_b = 0.5;
+    return false;
+  }
+
+};
+
+}
+
+#endif

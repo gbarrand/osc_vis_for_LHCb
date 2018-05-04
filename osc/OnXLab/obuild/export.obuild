@@ -1,0 +1,44 @@
+<obuild>
+
+  <reference package="BatchLab" path="../../BatchLab" file="obuild/export.obuild"/>
+
+  <use name="OnX">
+    <lib>OnXCore</lib>
+    <path>../../OnX</path>
+  </use>
+  
+  <reference package="HEPVis" path="../../HEPVis" file="obuild/export.obuild"/>
+
+  <use name="OnXLab">
+    <lib_OnXLabAIDA>OnXLabAIDA</lib_OnXLabAIDA>
+    <path>../../OnXLab</path>
+  </use>
+
+  <!-- to link an AIDA application : -->
+<!--
+  <foreign name="OnXLab_AIDA">
+    <lib copy="lib_OnXLabAIDA" from="OnXLab"/>
+    <lib copy="lib" from="OnXLab"/>
+
+    <lib copy="lib" from="OnX"/>
+    <lib copy="lib" from="expat"/>
+
+    <lib copy="lib_LibUtils" from="Lib"/>
+    <lib platform="Linux" verbatim="yes">-ldl</lib>
+    <lib copy="lib" from="Minuit"/>
+
+    <lib copy="lib_HEPVisPlotter" from="HEPVis"/>
+    <lib copy="lib_HEPVisDetector" from="HEPVis"/>
+    <lib copy="lib_HEPVisGeometry" from="HEPVis"/>
+    <lib copy="lib_HEPVisUtils" from="HEPVis"/>
+    <lib copy="lib" from="jpeg"/>
+    <lib copy="lib" from="dvi2bitmap"/>
+    <lib copy="lib" from="freetype2"/>
+    <lib copy="lib" from="png"/>
+    <lib copy="lib" from="zip"/>
+    <lib copy="lib" from="zlib"/>
+    <lib copy="lib" from="CoinGL"/>
+  </foreign>
+-->
+
+</obuild>

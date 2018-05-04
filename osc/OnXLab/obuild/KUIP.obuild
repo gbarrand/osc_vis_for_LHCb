@@ -1,0 +1,29 @@
+
+<!-- to build KUIP related components. -->
+
+<obuild>
+
+  <!-- not this : -->
+  <use name="KUIP">
+    <c_include>include</c_include>
+    <lib>KUIP</lib>
+    <path>../../KUIP</path>
+  </use>
+
+  <!-- this : -->
+  <dll name="OnXLabKUIP">
+    <file>../source/KUIP/KuipWrap.cxx</file>
+    <file>../source/KUIP/KuipWrapCDF.c</file>
+
+    <!-- not this : -->
+
+    <cxx_include copy="cxx_include" from="inlib"/>
+    <cxx_include copy="cxx_include" from="Slash"/>
+    <cxx_include copy="cxx_include" from="AIDA"/>
+    <cxx_include copy="cxx_include" from="amanip"/>
+
+    <cxx_include copy="c_include" from="KUIP"/>
+    <lib copy="lib" from="KUIP"/>
+  </dll>
+
+</obuild>

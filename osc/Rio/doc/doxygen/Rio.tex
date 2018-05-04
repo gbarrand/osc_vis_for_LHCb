@@ -1,0 +1,42 @@
+\documentclass[a4paper]{book}
+\usepackage{a4wide}
+\usepackage{makeidx}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{alltt}
+\usepackage{doxygen}
+\makeindex
+\setcounter{tocdepth}{1}
+\begin{document}
+\begin{titlepage}
+\vspace*{7cm}
+\begin{center}
+{\Large Rio Users Guide\\[1ex]\large v5r0}\\
+\vspace*{1cm}
+{\large Guy Barrand}\\
+\vspace*{0.5cm}
+{\small Nov 2003}\\
+\vspace*{0.5cm}
+{\small http://www.lal.in2p3.fr/SI/Rio}\\
+\end{center}
+\end{titlepage}
+\clearemptydoublepage
+\pagenumbering{roman}
+\tableofcontents
+\clearemptydoublepage
+\pagenumbering{arabic}
+\chapter{Introduction}
+\include{rio_introduction}
+\chapter{Architecture}
+\input{rio_architecture}
+\chapter{Download}
+\include{download}
+\chapter{Installation}
+\include{installation}
+\chapter{Tutorial}
+\include{rio_tutorial}
+\chapter{Documentation}
+\include{doc}
+\printindex
+\end{document}

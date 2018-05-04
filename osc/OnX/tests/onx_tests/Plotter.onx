@@ -1,0 +1,25 @@
+<widget class="PlanePageViewer" name="@name_from_current@@">
+  <create exec="DLD">OnX ui_add_in_tab_stack @this@</create>
+  <create exec="DLD">OnX ui_add_in_currents @this@ OnX_viewers</create>
+  <create exec="DLD">OnX ui_set_current_widget @this@</create>
+
+  <create exec="DLD">OnX page_set_title @this@ Plotter</create>
+  <create exec="DLD">OnX page_title_visible @this@ false</create>
+  <create exec="DLD">OnX page_create_regions @this@ SoPlotterRegion 1 1 0</create>
+  <create exec="DLD">OnX region_set_color @this@ white</create>
+  <create exec="DLD">OnX viewer_set_decoration @this@ false</create>
+  <create exec="DLD">OnX viewer_set_viewing @this@ false</create>
+
+  <popupItems>No highlighted\nDump highlighted</popupItems>
+    <variable name="Pages_popup_item_script">
+      No highlighted\nOnX region_no_highlighted @this@\n
+      Dump highlighted\nOnX viewer_collect @this@
+    </variable>
+
+  <popup exec="DLD">OnX ui_execute_script DLD @next@this.value@{Pages_popup_item_script}@strip_key@</popup>
+
+  <destroy exec="DLD">OnX ui_remove_from_currents @this@ OnX_viewers</destroy>
+  <collect exec="DLD">OnX viewer_collect @this@</collect>
+
+  <create exec="DLD">OnXExas plotter_example @this@</create>
+</widget>

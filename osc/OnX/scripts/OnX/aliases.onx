@@ -1,0 +1,16 @@
+<OnX>
+
+  <aliases exec="DLD">
+    <alias name="set">session_set_parameter</alias>
+    <alias name="echo">ui_echo</alias>
+    <alias name="exec">ui_execute_script</alias>
+    <alias name="ask">ui_ask</alias>
+    <alias name="warn">ui_warn</alias>
+    <alias name="none">ui_do_nothing</alias>
+
+    <alias name="collect">data_collect</alias>
+    <alias name="visualize">data_visualize</alias>
+    <alias name="dump">data_dump</alias>
+  </aliases>
+
+</OnX>

@@ -1,0 +1,19 @@
+
+  Go in the OpenScientist/<kit>/obuild directory.
+
+  See instruction in the README file found here.
+
+  Note that the <kit>s are today :
+  - osc_batch : for building only the "batch" related package. There is
+                no GUI and visualization in this build.
+                This build is nice to work with AIDA data (for example 
+                histograms and tuples) in a batch way ; mainly book, fill 
+                and save to files at various formats these AIDA objects.
+  - osc_iv : for building the Inventor/Coin related packages.
+  - osc_vis : for building the osc_batch packages but also the packages 
+              related to GUI, visualization and interactive manipulation
+              of AIDA data. It permits to have the osc-plot, onx, opaw
+              applications.
+
+
+

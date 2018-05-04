@@ -1,0 +1,38 @@
+<OnX>
+  <widget class="Window">
+    <geometry>400x200</geometry>
+    <title>OnX calc</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>60</sizeOfFixed>
+      <!-- name is "consoleText" to have text output to this widget -->
+      <widget class="ScrolledText" name="consoleText">
+        <value>
+Type a formula (without space)\n
+and after one number per variable\n
+For example :\n
+  cos(x) 3.141592\n
+to get -1\n</value>
+      </widget>
+
+      <widget class="VBox">
+        <expand>both</expand>
+
+        <widget class="CommandLine">
+          <activate exec="DLD">OnX ui_execute_script DLD OnX lib_calc @this.value@</activate>
+        </widget>
+
+        <widget class="PushButton">
+          <label>Quit</label>
+          <activate exec="DLD">OnX ui_exit</activate>
+        </widget>
+
+      </widget>
+
+    </widget>
+
+  </widget>
+</OnX>

@@ -1,0 +1,116 @@
+<OnX>
+
+  <create exec="DLD">OnX OnX_declare_accessors</create>
+  <create exec="DLD">OnX session_set_output @{session.output}@</create>
+
+  <create exec="DLD">OnXLab OnXLab_initialize_AIDA</create>
+  <create exec="DLD">OnXLab OnXLab_declare_accessors</create>
+
+  <!-- Set OnXLab.tree before the below OnXLab_command_line_args. -->
+  <create exec="DLD">OnX session_set_parameter OnXLab.tree OnXLab_tree</create>
+  <create exec="DLD">OnX session_set_parameter OnXLab_tree.what keys</create>
+  <create exec="DLD">OnX session_set_parameter OnXLab_tree.append false</create>
+  <create exec="DLD">OnX session_set_parameter OnXLab_tree.show_palette true</create>
+  <create exec="DLD">OnX session_set_parameter OnXLab_tree.selection_plot true</create>
+
+  <create exec="DLD">OnX set_variable ONXLAB_HOME @env@OSC_HOME_DIR@ @cat@ /Resources/OnXLab</create>
+
+  <create exec="DLD">OnXLab OnXLab_command_line_args</create>
+
+  <!-- NextStep, Qt : if dragging a data file on the icon .app -->
+  <openFile exec="DLD">OnXLab OnXLab_open_file @{session.openFile}@ guessed</openFile>
+
+  <widget class="Window">
+    <geometry>850x650+0+0</geometry>
+    <title>osc-plot</title>
+    <destroy exec="DLD">OnX ui_exit</destroy>
+    <widget class="MenuBar">
+      <reference file="File.onx"/>
+      <reference file="Analysis.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/Plotter.onx"/>
+<!--
+      <reference file="$ONXROOT/scripts/OnX/Scene.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/Camera.onx"/>
+-->
+      <reference file="$ONXROOT/scripts/OnX/GUI.onx"/>
+      <reference file="$ONXROOT/scripts/OnX/Viewers.onx"/>
+      <reference file="Help.onx"/>
+    </widget>
+    <reference file="$ONXROOT/scripts/OnX/ToolBar.onx"/>
+
+    <widget class="VPaned"> 
+      <splitPosition>400</splitPosition>
+
+      <widget class="HPaned">
+        <splitPosition>200</splitPosition>
+        <widget class="VBox">
+          <expand>second</expand>
+          <sizeOfFixed>30</sizeOfFixed>
+
+          <widget class="VBox">
+            <expand>both</expand>
+
+            <widget class="OptionMenu">
+              <label>Tree actions</label>
+              <items>AIDA trees\nClear selected tree\nDelete selected tree\nDelete selected object\nManagers</items>
+              <default>AIDA trees</default>
+
+              <variable name="OnXLab_option_delete_tree_message">OnX ui_echo Can't delete the MemoryTree.</variable>
+              <variable name="OnXLab_option_delete_tree_script">
+OnX set_variable tmp @nth@first@[OnXLab_tree.selection]@\n
+OnX ui_execute_script_if " @cat@ @{tmp}@ @cat@ "!="MemoryTree" DLD OnX session_destroy_manager @ @cat@ {tmp} @cat@ @\n
+OnX ui_execute_script_if " @cat@ @{tmp}@ @cat@ "==" @cat@ MemoryTree @cat@ " DLD @{OnXLab_option_delete_tree_message}@
+              </variable>
+
+              <variable name="OnXLab_tree_actions">
+                AIDA trees\nOnX ui_set_parameter @{OnXLab.tree}@ @cat@ .items @session@hierarchy@{OnXLab_tree.what}@\n
+                Managers\nOnX tree_set OnXLab_tree.items @session@manager_names@\n
+                Clear selected tree\nOnXLab OnXLab_aida_tree_clear @nth@first@[OnXLab_tree.selection]@\n
+                Delete selected tree\nOnX dld_exec_text @{OnXLab_option_delete_tree_script}@\n
+                Delete selected object\nOnXLab OnXLab_aida_tree_delete_object @[OnXLab_tree.selection]@
+              </variable>
+
+              <valueChanged exec="DLD">OnX ui_execute_script DLD @next@this.value@{OnXLab_tree_actions}@strip_key@</valueChanged>
+            </widget>
+
+            <widget class="OptionMenu">
+              <label>Tree options</label>
+              <items>Append off\nAppend on\nIn memory objects\nFile keys\nSelection plot\nSelection no plot</items>
+              <default>Append off</default>
+
+<!--
+              <items>Append off\nAppend on\nIn memory objects\nFile keys\nShow palette on\nShow palette off\nSelection plot\nSelection no plot</items>
+
+                Show palette on\nOnX session_set_parameter OnXLab_tree.show_palette true\n
+                Show palette off\nOnX session_set_parameter OnXLab_tree.show_palette false\n
+-->
+
+              <variable name="OnXLab_tree_options">
+                Append on\nOnX session_set_parameter OnXLab_tree.append true\n
+                Append off\nOnX session_set_parameter OnXLab_tree.append false\n
+                In memory objects\nOnX session_set_parameter OnXLab_tree.what memory\n
+                File keys\nOnX session_set_parameter OnXLab_tree.what keys\n
+                Selection plot\nOnX session_set_parameter OnXLab_tree.selection_plot true\n
+                Selection no plot\nOnX session_set_parameter OnXLab_tree.selection_plot false\n
+              </variable>
+
+              <valueChanged exec="DLD">OnX ui_execute_script DLD @next@this.value@{OnXLab_tree_options}@strip_key@</valueChanged>
+            </widget>
+
+          </widget>
+
+
+          <widget class="ScrolledTree" name="OnXLab_tree">
+            <update exec="DLD">OnX ui_set_parameter OnXLab_tree.items @session@hierarchy@{OnXLab_tree.what}@</update>
+            <select exec="DLD">OnXLab OnXLab_tree_selection @this.value@ @current@ @{OnXLab_tree.append}@ @{OnXLab_tree.show_palette}@ @{OnXLab_tree.selection_plot}@</select>
+          </widget>
+        </widget>
+        <reference file="Pages.onx"/>
+      </widget>
+
+      <reference file="$ONXROOT/scripts/OnX/CommandBox.onx"/>
+    </widget>
+    <reference file="$ONXROOT/scripts/OnX/Dialogs.onx"/>
+  </widget>
+
+</OnX>

@@ -1,0 +1,17 @@
+
+<!-- Used by other packages that uses CoinGtk (for example HEPVis). -->
+
+<obuild>
+
+  <reference package="foreign" path="../../foreign" file="gtk2.obuild"/>  
+
+  <reference package="gtkglarea" path="../../gtkglarea" file="obuild/export.obuild"/>  
+
+  <use name="CoinGtk">
+    <cxx_include>include</cxx_include>
+    <cxx_macro platform="Windows_NT" name="SOGTK_DLL"/>
+    <lib>CoinGtk</lib>
+    <path>../../CoinGtk</path>
+  </use>
+
+</obuild>

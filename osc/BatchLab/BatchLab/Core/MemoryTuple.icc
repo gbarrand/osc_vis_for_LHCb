@@ -1,0 +1,1150 @@
+
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+#else
+#include <AIDA/ITupleColumn.h>
+#endif
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+namespace BatchLab {
+
+template <class T> 
+class MemoryColumn 
+:public BaseColumn 
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+#else
+,public virtual AIDA::ITupleColumn<T>
+#endif
+{
+public: //BaseColumn
+  virtual unsigned int size() const { return fData.size();}
+  virtual void add() {
+    fData.push_back(*fFilled);
+    *fFilled = fDefault;
+  }
+  virtual bool append(void* aData) {
+    T* data = (T*)aData;
+    fData.push_back(*data);
+    return true;
+  }
+  virtual void reset() { clear(); }
+  virtual void resetFilled() {
+    *fFilled = fDefault;
+  }
+  virtual std::string stringDefaultValue() const { 
+    return inlib::tos(fDefault);
+  }
+  virtual bool isDefaultDefault() const { 
+    return (fDefault==fDefaultDefault?true:false);
+  }
+  virtual bool value(int aIndex,Lib::Value& aVariable) const {
+    T v;
+    bool status = MemoryColumn::value(aIndex,v);
+    aVariable.set(v);
+    return status;
+  }
+public: //AIDA::ITupleColumn
+  virtual bool fill(const T& aValue) {
+    if(!fBinded) {
+      *fFilled = aValue;
+      return true;
+    } else { 
+      return false;
+    }
+  }
+  virtual T& value() const { //FIXME : should not be const
+    INLIB_SELF(MemoryColumn);
+    if((fRow<0)||(fRow>=fData.size())) {
+      return self.fDefault;
+    } else {
+      //FIXME : error with [T=bool]
+      //return self.fData[fRow];
+      self.fTmp = self.fData[fRow]; //FIXME
+      return self.fTmp;
+    }
+  }
+  virtual bool bind(T* aVariable) {
+    if(!fBinded) delete fFilled;
+    fFilled = aVariable;
+    fBinded = true;
+    return true;
+  }
+  virtual const T& defaultValue() const {
+    return fDefault;
+  }
+  virtual T* fillableObject() const {
+    return fFilled;
+  }
+public:
+  bool visit_base(Slash::Store::IConstVisitor& aVisitor) const {
+    int version = 1;
+    if(!aVisitor.visit("fVersion",version)) return false;
+    if(!aVisitor.visit("fLabel",fLabel)) return false;
+    if(!aVisitor.visit("fType",fType)) return false;
+    if(!aVisitor.visit("fData",fData)) return false;
+    return true;
+  }
+  bool read_base(Slash::Store::IVisitor& aVisitor) {
+    int version;
+    if(!aVisitor.visit(version)) return false;
+    if(!aVisitor.visit(fLabel)) return false;
+    if(!aVisitor.visit(fType)) return false;
+    if(!aVisitor.visit(fData)) return false;
+    return true;
+  }
+public:
+  MemoryColumn(std::ostream& a_out,
+               const std::string& aLabel,
+               const std::string& aType,
+               const T& aDefaultDefault,
+               const T& aDefault)
+  :BaseColumn(a_out,aLabel,aType)
+  ,fDefaultDefault(aDefaultDefault)
+  ,fDefault(aDefault)
+  ,fFilled(0)
+  ,fBinded(false){
+    fFilled = new T;
+    *fFilled = fDefault;    
+  }
+  MemoryColumn(const MemoryColumn<T>& aFrom)
+  :BaseColumn(aFrom)
+  ,fData(aFrom.fData)
+  ,fDefaultDefault(aFrom.fDefaultDefault)
+  ,fDefault(aFrom.fDefault)
+  ,fFilled(0)
+  ,fBinded(false){
+    fFilled = new T;
+    *fFilled = aFrom.fDefault;
+  }
+  virtual ~MemoryColumn() { 
+    clear();
+    if(!fBinded) delete fFilled;
+  }
+public:
+  virtual bool value(int aIndex,T& aValue) const {
+    if((aIndex<0)||(aIndex>=int(fData.size()))) {
+      aValue = fDefault;
+      return false;
+    } else {
+      //FIXME : g++ warning with [T=bool] :  aValue = fData[aIndex];
+      aValue = fData[aIndex];
+      return true;
+    }
+  }
+private:
+  void clear() { fData.clear();}
+protected:
+  std::vector<T> fData;
+  T fDefaultDefault;
+  T fDefault;
+  T* fFilled;
+  bool fBinded;
+  T fTmp; //FIXME
+};
+
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2)
+
+#define MEMORY_COLUMN_SOURCE(aClassName,aType,aSType) \
+class aClassName\
+:public MemoryColumn< aType >\
+,public virtual Slash::Store::IStorable\
+{\
+public:\
+  inline static const std::string& s_class() {\
+    static const std::string s_v(std::string("BatchLab::")+#aClassName); \
+    return s_v;\
+  }\
+public:\
+  virtual void* cast(const std::string& a_class) const {\
+    INLIB_IF_CAST(Slash::Store::IStorable)\
+    else INLIB_IF_CAST(BatchLab::aClassName)\
+    else return BatchLab::BaseColumn::cast(a_class);\
+  }\
+  virtual BaseColumn* copy() const { return new aClassName(*this);}\
+  virtual bool read(Slash::Store::IVisitor& aVisitor) {\
+    if(!aVisitor.begin(*this)) return false;\
+    if(!read_base(aVisitor)) return false;\
+    if(!aVisitor.end(*this)) return false;\
+    return true;\
+  }\
+public:\
+  aClassName(std::ostream& a_out,const std::string& aLabel,\
+             aType aDefaultDefault,aType aDefault)\
+  :MemoryColumn< aType >(a_out,aLabel,#aSType,aDefaultDefault,aDefault){}\
+  aClassName(const aClassName& aFrom)\
+  :Slash::Store::IStorable(aFrom)\
+  ,MemoryColumn< aType >(aFrom){}\
+  virtual ~aClassName() {}\
+private:\
+  static bool s_visit(const Slash::Store::IStorable& aObject,\
+                      Slash::Store::IConstVisitor& aVisitor){\
+    const aClassName* local = \
+      inlib::cast<Slash::Store::IStorable,aClassName>(aObject);\
+    if(!local) return false;\
+    return local->aClassName::visit(aVisitor);\
+  }\
+public:\
+  virtual bool visit(\
+    Slash::Store::IConstVisitor& aVisitor) const {\
+    /*FIXME : in the below, should be BatchLab::#aClassName */\
+    if(!aVisitor.begin(*this,#aClassName,s_visit)) return false;\
+    if(!visit_base(aVisitor)) return false;\
+    if(!aVisitor.end(*this)) return false;\
+    return true;\
+  }\
+};
+
+#else //AIDA_VERSION
+// The only difference with the upper is in the cast
+// method to cast on AIDA::ITupleColumn.
+
+#define MEMORY_COLUMN_SOURCE(aClassName,aType,aSType) \
+class aClassName\
+:public MemoryColumn< aType >\
+,public virtual Slash::Store::IStorable\
+{\
+public:\
+  inline static const std::string& s_class() {\
+    static const std::string s_v(std::string("BatchLab::")+#aClassName); \
+    return s_v;\
+  }\
+public:\
+  virtual void* cast(const std::string& a_class) const {\
+    INLIB_IF_CAST(Slash::Store::IStorable)\
+    else if(aClass==std::string("AIDA::ITupleColumn<")+#aType+">") {\
+      typedef AIDA::ITupleColumn< aType > ColType;\
+      return (void*)static_cast<const ColType*>(this);\
+    }\
+    else INLIB_IF_CAST(BatchLab::aClassName)\
+    else return BatchLab::BaseColumn::cast(a_class);\
+  }\
+  virtual BaseColumn* copy() const { return new aClassName(*this);}\
+  virtual bool read(Slash::Store::IVisitor& aVisitor) {\
+    if(!aVisitor.begin(*this)) return false;\
+    if(!read_base(aVisitor)) return false;\
+    if(!aVisitor.end(*this)) return false;\
+    return true;\
+  }\
+public:\
+  aClassName(std::ostream& a_out,const std::string& aLabel,\
+             aType aDefaultDefault,aType aDefault)\
+  :MemoryColumn< aType >(a_out,aLabel,#aSType,aDefaultDefault,aDefault){}\
+  aClassName(const aClassName& aFrom)\
+  :Slash::Store::IStorable(aFrom)\
+  ,MemoryColumn< aType >(aFrom){}\
+  virtual ~aClassName() {}\
+private:\
+  static bool s_visit(const Slash::Store::IStorable& aObject,\
+                      Slash::Store::IConstVisitor& aVisitor){\
+    const aClassName* local = \
+      inlib::cast<Slash::Store::IStorable,aClassName>(aObject);\
+    if(!local) return false;\
+    return local->aClassName::visit(aVisitor);\
+  }\
+public:\
+  virtual bool visit(\
+    Slash::Store::IConstVisitor& aVisitor) const {\
+    /*FIXME : in the below, should be BatchLab::#aClassName */\
+    if(!aVisitor.begin(*this,#aClassName,s_visit)) return false;\
+    if(!visit_base(aVisitor)) return false;\
+    if(!aVisitor.end(*this)) return false;\
+    return true;\
+  }\
+};
+
+#endif
+
+
+MEMORY_COLUMN_SOURCE(MemoryColumn_float,float,float)
+MEMORY_COLUMN_SOURCE(MemoryColumn_double,double,double)
+MEMORY_COLUMN_SOURCE(MemoryColumn_char,char,char)
+MEMORY_COLUMN_SOURCE(MemoryColumn_byte,inlib::byte,byte)
+MEMORY_COLUMN_SOURCE(MemoryColumn_bool,bool,boolean)
+MEMORY_COLUMN_SOURCE(MemoryColumn_short,short,short)
+MEMORY_COLUMN_SOURCE(MemoryColumn_int,int,int)
+MEMORY_COLUMN_SOURCE(MemoryColumn_string,std::string,string)
+MEMORY_COLUMN_SOURCE(MemoryColumn_array_double,std::vector<double>,double[])
+
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+MEMORY_COLUMN_SOURCE(MemoryColumn_int64,Slash::int64,long)
+#else
+MEMORY_COLUMN_SOURCE(MemoryColumn_int64,AIDA::int64,long)
+#endif
+
+class MemoryColumn_tuple 
+:public BaseColumn 
+,public virtual Slash::Store::IStorable
+{
+public:
+  inline static const std::string& s_class() {
+    static const std::string s_v("BatchLab::MemoryColumn_tuple");
+    return s_v;
+  }
+public: //BaseColumn
+  virtual unsigned int size() const {return fData.size();}
+  virtual void add() { 
+    if(!fTemplate) return;
+    fData.push_back(fTemplate);
+    fTemplate = 0;
+  }
+  virtual bool append(void* aData) { //Used in HDF5_DataReader.
+    AIDA::ITuple* data = (AIDA::ITuple*)aData;
+    BatchLab::MemoryTuple* tuple = 
+      inlib::cast<AIDA::ITuple,MemoryTuple>(*data);
+    if(!tuple) return false;
+    fData.push_back(tuple);
+    return true;
+  }
+  virtual void reset() {
+    clear();
+    if(fTemplate) delete fTemplate;
+    fTemplate = 0;
+  }
+  virtual BaseColumn* copy() const {return new MemoryColumn_tuple(*this);}
+  virtual void resetFilled() {
+    if(!fTemplate) return;
+    fTemplate->reset();
+  }
+  virtual void* cast(const std::string& a_class) const {
+    INLIB_IF_CAST(Slash::Store::IStorable)
+    else INLIB_IF_CAST(BatchLab::MemoryColumn_tuple)
+    else return BatchLab::BaseColumn::cast(a_class);
+  }
+  virtual std::string stringDefaultValue() const { return "";}  
+  virtual bool isDefaultDefault() const { return true;}
+  virtual bool value(int aIndex,Lib::Value& aVariable) const {
+    AIDA::ITuple* v;
+    bool status = MemoryColumn_tuple::value(aIndex,v);
+    aVariable.set((void*)v);
+    return status;
+  }
+public: //IVisited
+  static bool s_visit(const Slash::Store::IStorable& aObject,
+                      Slash::Store::IConstVisitor& aVisitor){
+    const MemoryColumn_tuple* local = 
+      inlib::cast<Slash::Store::IStorable,MemoryColumn_tuple>(aObject);
+    if(!local) return false;
+    return local->BatchLab::MemoryColumn_tuple::visit(aVisitor);
+  }
+  virtual bool visit(
+    Slash::Store::IConstVisitor& aVisitor) const {
+    SLASH_STORE_BEGIN(BatchLab::MemoryColumn_tuple)
+
+    int version = 1;
+    if(!aVisitor.visit("fVersion",version)) return false;
+
+    if(!aVisitor.visit("fLabel",fLabel)) return false;
+    if(!aVisitor.visit("fType",fType)) return false;    
+
+    unsigned int number = fData.size();
+    if(!aVisitor.visit("fSize",number)) return false;
+    //FIXME : optimize for HDF5.
+    for(unsigned int index=0;index<number;index++) {
+      MemoryTuple* tuple = fData[index];
+      std::string sindex = inlib::to<int>(index);
+      if(!aVisitor.visit(sindex,*tuple)) return false;        
+    }
+
+    if(!aVisitor.end(*this)) return false;
+    return true;
+  }
+  virtual bool read(Slash::Store::IVisitor& aVisitor) {
+    if(!aVisitor.begin(*this)) return false;
+
+    int version;
+    if(!aVisitor.visit(version)) return false;
+
+    if(!aVisitor.visit(fLabel)) return false;
+    if(!aVisitor.visit(fType)) return false;
+
+    unsigned int sz;
+    if(!aVisitor.visit(sz)) return false;
+    fData.resize(sz,0);
+    for(unsigned int index=0;index<sz;index++) {
+      MemoryTuple* tuple = new MemoryTuple(f_out,"");
+      if(!tuple->read(aVisitor)) return false;        
+      fData[index] = tuple;
+    }
+
+    if(!aVisitor.end(*this)) return false;
+    return true;
+  }
+public:
+  MemoryColumn_tuple(std::ostream& a_out,
+                     const std::string& aLabel,
+                     const std::list<Lib::Value>& aVariables)
+  :BaseColumn(a_out,aLabel,"ITuple")
+  ,fVariables(aVariables)
+  ,fTemplate(0){}
+  MemoryColumn_tuple(const MemoryColumn_tuple& aFrom)
+  :Slash::Store::IStorable(aFrom)
+  ,BaseColumn(aFrom)
+  ,fVariables(aFrom.fVariables)
+  ,fTemplate(0) {
+    // Copy data :
+    unsigned int nfrom = aFrom.fData.size();
+    fData.resize(nfrom,0);
+    for(unsigned int ifrom=0;ifrom<nfrom;ifrom++) {  
+      MemoryTuple* tuple = aFrom.fData[ifrom];
+      fData[ifrom] = new BatchLab::MemoryTuple(*tuple);
+      fData[ifrom]->setName(name());
+    }
+  }
+  virtual ~MemoryColumn_tuple(){
+    clear();
+    if(fTemplate) {
+      // This may happen if someone do a getTuple to query
+      // (booking) infos of the subtuple. See for exa the 
+      // <store>_DataWriter code to get sub tuples booking.
+      // Then someone do a getTuple without doing addRow.
+      delete fTemplate;
+    }
+    Lib::Columns::deleteColumns(fVariables);
+  }
+  AIDA::ITuple* getTuple() {
+    if(fTemplate) {
+      f_out << "BatchLab::MemoryColumn_tuple::getTuple :"
+          << " can't be done twice before the addRow."
+          << std::endl;
+      return 0;
+    }
+    fTemplate = new MemoryTuple(f_out,name(),"",fVariables);
+    return fTemplate;
+  }
+  virtual bool fill(const AIDA::ITuple& aValue) {
+    if(fTemplate) {
+      f_out << "BatchLab::MemoryColumn_tuple::fill :"
+          << " can't be done whilst a getTuple without addRow had been done."
+          << std::endl;
+      return false;
+    }
+    fTemplate = new MemoryTuple(f_out,name(),"",fVariables);
+    if(!amanip::copy
+      (f_out,const_cast<AIDA::ITuple&>(aValue),*fTemplate)) {
+      f_out << "BatchLab::MemoryColumn_tuple::fill(ITupleEntry) :"
+          << " cannot copy tuple content."
+          << std::endl;
+      delete fTemplate;
+      fTemplate = 0;
+      return false;
+    }
+    return true;
+  }
+  virtual bool value(int aIndex,AIDA::ITuple*& aValue) const {
+    if((aIndex<0)||(aIndex>=int(fData.size()))) {
+      aValue = 0;
+      return false;
+    } else {
+      aValue = fData[aIndex];
+      return true;
+    }
+  }
+  const std::list<Lib::Value>& variables() const { return fVariables;}
+private:
+  void clear() {
+    std::vector<MemoryTuple*>::iterator it;
+    for(it=fData.begin();it!=fData.end();++it) delete (*it);
+    fData.clear();
+  }
+private:
+  std::list<Lib::Value> fVariables;
+  std::vector<MemoryTuple*> fData;
+  MemoryTuple* fTemplate;
+};
+
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::MemoryTuple::MemoryTuple(
+ std::ostream& a_out
+,const std::string& aName
+)
+:BaseTuple(a_out,aName,"")
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::MemoryTuple::MemoryTuple(
+ std::ostream& a_out
+,const std::string& aName
+,const std::string& aTitle
+,const std::string& aBooking
+)
+:BaseTuple(a_out,aName,aTitle)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::list<Lib::Value> variables;
+  if(!booking(out(),aBooking,variables)) return; //FIXME : throw
+  initialize(variables);
+  Lib::Columns::deleteColumns(variables);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::MemoryTuple::MemoryTuple(
+ std::ostream& a_out
+,const std::string& aName
+,const std::string& aTitle
+,const std::list<Lib::Value>& aVariables
+)
+:BaseTuple(a_out,aName,aTitle)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  initialize(aVariables);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::MemoryTuple::MemoryTuple(
+ const MemoryTuple& aFrom
+)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::ITuple(aFrom)
+,AIDA::ITupleEntry(aFrom)
+,Slash::Store::IStorable(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseTuple(aFrom)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::MemoryTuple::~MemoryTuple(
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::MemoryTuple::initialize(
+ const std::list<Lib::Value>& aVariables
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  static const int NotFound  = -1;
+
+  //printf("debug : BatchLab::MemoryTuple::initialize : %ld\n",this);
+  std::list<Lib::Value>::const_iterator it;
+  for(it=aVariables.begin();it!=aVariables.end();++it) {
+    std::string name = (*it).label();
+    if(findColumn(name)!=NotFound) {
+      out() << "BatchLab::MemoryTuple::MemoryTuple :"
+          << " column " << name 
+          << " already exists" << std::endl;
+      clear();
+      return false;
+    }
+    //printf("debug : BatchLab::MemoryTuple::initialize : var : %ld \"%s\" \"%s\"\n",this,name.c_str(),stype.c_str());
+    //FIXME : template the below in some way.
+    switch((*it).type()) {
+    case Slash::Core::IValue::CHAR:
+      fColumns.push_back
+        (new BatchLab::MemoryColumn_char
+           (out(),name,0,(*it).get_char()));
+      break;
+    case Slash::Core::IValue::SHORT:
+      fColumns.push_back
+        (new BatchLab::MemoryColumn_short
+           (out(),name,0,(*it).get_short()));
+      break;
+    case Slash::Core::IValue::INT:
+      fColumns.push_back 
+        (new BatchLab::MemoryColumn_int
+          (out(),name,0,(*it).get_int()));
+      break;
+    case Slash::Core::IValue::INT64:
+      fColumns.push_back
+        (new BatchLab::MemoryColumn_int64
+           (out(),name,0,(*it).get_int64()));
+      break;
+    case Slash::Core::IValue::DOUBLE:
+      fColumns.push_back
+        (new BatchLab::MemoryColumn_double
+           (out(),name,0,(*it).get_double()));
+      break;
+    case Slash::Core::IValue::FLOAT:
+      fColumns.push_back
+        (new BatchLab::MemoryColumn_float
+           (out(),name,0,(*it).get_float()));
+      break;
+    case Slash::Core::IValue::BOOL:
+      fColumns.push_back
+        (new BatchLab::MemoryColumn_bool
+          (out(),name,0,(*it).get_bool()));
+      break;
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+      fColumns.push_back
+        (new BatchLab::MemoryColumn_byte
+           (out(),name,0,(*it).get_unsigned_char()));
+      break;
+    case Slash::Core::IValue::STRING:
+      fColumns.push_back
+        (new BatchLab::MemoryColumn_string
+           (out(),name,"",(*it).get_string()));
+      break;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      std::vector<unsigned int> is;
+      const std::vector<double>& v = (*it).get_array_double(is);
+      fColumns.push_back
+        (new BatchLab::MemoryColumn_array_double
+           (out(),name,std::vector<double>(),v));
+      }break;
+    case Slash::Core::IValue::VOID_STAR:{ //Assume AIDA::ITuple.
+      std::list<Lib::Value>* pvars = 
+        (std::list<Lib::Value>*)(*it).get_void_star();
+
+      std::list<Lib::Value> vars;
+      Lib::Columns::copyColumns(*pvars,vars);
+
+      fColumns.push_back
+        (new BatchLab::MemoryColumn_tuple(out(),name,vars));
+     }break;
+
+    //case UNSIGNED_INTEGER:
+    //case UNSIGNED_INT64:
+    //case VECTOR_DOUBLE:
+    default:
+      out() << "BatchLab::MemoryTuple::initialize :" 
+          << " unhandle type " << inlib::sout((*it).stype()) 
+          << " for variable with name " << inlib::sout(name) 
+          << "." 
+          << std::endl;
+      clear();
+      return false;
+    }
+  }
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+Slash::Store::IObject* BatchLab::MemoryTuple::copy() const {
+  return new BatchLab::MemoryTuple(*this);
+}
+inline
+std::string BatchLab::MemoryTuple::storeClassName() const {
+  return "BatchLab::MemoryTuple";
+}
+
+inline
+void* BatchLab::MemoryTuple::cast(const std::string& a_class) const {
+  INLIB_IF_CAST(Slash::Store::IStorable)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else INLIB_IF_CAST(BatchLab::MemoryTuple)
+  else return BaseTuple::cast(a_class);
+}
+
+inline
+int BatchLab::MemoryTuple::rows() const {
+  if(fColumns.size()<=0) return 0;
+  return fColumns[0]->size();
+}
+
+inline
+bool BatchLab::MemoryTuple::addRow() {
+  std::vector<BaseColumn*>::iterator it;
+  for(it=fColumns.begin();it!=fColumns.end();++it) {
+    (*it)->add();
+  }
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+float BatchLab::MemoryTuple::getFloat(int aColumn) const{
+  return get_value<float,BatchLab::MemoryColumn_float>(aColumn,"float");
+}
+
+inline
+double BatchLab::MemoryTuple::getDouble(int aColumn) const{
+  return get_value<double,BatchLab::MemoryColumn_double>(aColumn,"double");
+}
+
+inline
+char BatchLab::MemoryTuple::getChar(int aColumn) const{
+  return get_value<char,BatchLab::MemoryColumn_char>(aColumn,"char");
+}
+
+inline
+short BatchLab::MemoryTuple::getShort(int aColumn) const{
+  return get_value<short,BatchLab::MemoryColumn_short>(aColumn,"short");
+}
+
+inline
+int BatchLab::MemoryTuple::getInt(int aColumn) const{
+  return get_value<int,BatchLab::MemoryColumn_int>(aColumn,"int");
+}
+
+inline
+bool BatchLab::MemoryTuple::getBoolean(int aColumn) const{
+  return get_value<bool,BatchLab::MemoryColumn_bool>(aColumn,"boolean");
+}
+
+inline
+inlib::byte BatchLab::MemoryTuple::getByte(int aColumn) const{
+  return get_value<inlib::byte,BatchLab::MemoryColumn_byte>(aColumn,"byte");
+}
+
+inline
+std::string BatchLab::MemoryTuple::getString(int aColumn) const{
+ return get_value<std::string,BatchLab::MemoryColumn_string>(aColumn,"string");
+}
+
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+inline
+long BatchLab::MemoryTuple::getLong(int aColumn) const{
+  return 
+    (long)get_value<Slash::int64,BatchLab::MemoryColumn_int64>(aColumn,"long");
+}
+#else
+inline
+AIDA::int64 BatchLab::MemoryTuple::getLong(int aColumn) const{
+  return get_value<AIDA::int64,BatchLab::MemoryColumn_int64>(aColumn,"long");
+}
+#endif
+
+inline
+const AIDA::ITupleEntry* BatchLab::MemoryTuple::getObject(int aColumn) const {
+  BaseColumn* column = findColumn1(aColumn);
+  if(!column) {\
+    out() << "BatchLab::MemoryTuple::getObject :"
+        << " column " << aColumn << " not found."
+        << std::endl;
+    return 0;
+  }
+  MemoryColumn_tuple* col = 
+    inlib::cast<BaseColumn,MemoryColumn_tuple>(*column);
+  if((column->type()!="ITuple")||(!col)) {
+    out() << "BatchLab::MemoryTuple::getObject :"
+        << " type mismatch (" << inlib::sout(column->type()) << ") "
+        << " for column " << aColumn
+        << " " << inlib::sout(column->name()) << "."
+        << std::endl;
+    return 0;
+  }
+  AIDA::ITuple* value = 0;
+  if(!col->value(fRow,value)) {
+    out() << "BatchLab::MemoryTuple::getObject :"
+        << " can't get value."
+        << std::endl;
+    return 0;
+  }
+  if(!value) return 0;
+  return (const AIDA::ITupleEntry*)INLIB_CAST(*value,AIDA::ITupleEntry);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::ITuple* BatchLab::MemoryTuple::findTuple(int aColumn) {
+  BaseColumn* column = findColumn1(aColumn);
+  if(!column) {\
+    out() << "BatchLab::MemoryTuple::findTuple :"
+        << " column " << aColumn << " not found."
+        << std::endl;
+    return 0;
+  }
+  MemoryColumn_tuple* col =
+    inlib::cast<BaseColumn,MemoryColumn_tuple>(*column);
+  if((column->type()!="ITuple")||(!col)) {
+    out() << "BatchLab::MemoryTuple::findTuple :"
+        << " type mismatch (" << inlib::sout(column->type()) << ") "
+        << " for column " << aColumn
+        << " " << inlib::sout(column->name()) << "."
+        << std::endl;
+    return 0;
+  }
+  return col->getTuple();
+}
+
+inline
+const AIDA::ITuple* BatchLab::MemoryTuple::findTuple(int aColumn) const {
+  BaseColumn* column = findColumn1(aColumn);
+  if(!column) {\
+    out() << "BatchLab::MemoryTuple::findTuple :"
+        << " column " << aColumn << " not found."
+        << std::endl;
+    return 0;
+  }
+  MemoryColumn_tuple* col =
+    inlib::cast<BaseColumn,MemoryColumn_tuple>(*column);
+  if((column->type()!="ITuple")||(!col)) {
+    out() << "BatchLab::MemoryTuple::findTuple :"
+        << " type mismatch (" << inlib::sout(column->type()) << ") "
+        << " for column " << aColumn
+        << " " << inlib::sout(column->name()) << "."
+        << std::endl;
+    return 0;
+  }
+  return col->getTuple();
+}
+
+inline
+AIDA::ITuple* BatchLab::MemoryTuple::getTuple(int aColumn) {
+  return findTuple(aColumn);
+}
+
+inline
+const AIDA::ITuple* BatchLab::MemoryTuple::getTuple(int aColumn) const {
+  return findTuple(aColumn);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+bool BatchLab::MemoryTuple::fill(int aColumn,float aValue) {
+  return fill_value<float,BatchLab::MemoryColumn_float>
+           (aColumn,"float",aValue);
+}
+
+inline
+bool BatchLab::MemoryTuple::fill(int aColumn,double aValue) {
+  return fill_value<double,BatchLab::MemoryColumn_double>
+           (aColumn,"double",aValue);
+}
+
+inline
+bool BatchLab::MemoryTuple::fill(int aColumn,short aValue) {
+  return fill_value<short,BatchLab::MemoryColumn_short>
+    (aColumn,"short",aValue);
+}
+
+inline
+bool BatchLab::MemoryTuple::fill(int aColumn,int aValue) {
+  return fill_value<int,BatchLab::MemoryColumn_int>(aColumn,"int",aValue);
+}
+
+inline
+bool BatchLab::MemoryTuple::fill(int aColumn,char aValue) {
+  return fill_value<char,BatchLab::MemoryColumn_char>(aColumn,"char",aValue);
+}
+
+inline
+bool BatchLab::MemoryTuple::fill(int aColumn,bool aValue) {
+  return fill_value<bool,BatchLab::MemoryColumn_bool>
+           (aColumn,"boolean",aValue);
+}
+
+
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+inline
+bool BatchLab::MemoryTuple::fill(int aColumn,long aValue) {
+  return fill_value<Slash::int64,BatchLab::MemoryColumn_int64>
+    (aColumn,"long",(Slash::int64)aValue);
+}
+#else
+inline
+bool BatchLab::MemoryTuple::fill(int aColumn,AIDA::int64 aValue) {
+  return fill_value<AIDA::int64,BatchLab::MemoryColumn_int64>
+           (aColumn,"long",aValue);
+}
+
+inline
+bool BatchLab::MemoryTuple::fill(int aColumn,inlib::byte aValue) {
+  return fill_value<inlib::byte,BatchLab::MemoryColumn_byte>
+           (aColumn,"byte",aValue);
+}
+#endif
+
+inline
+bool BatchLab::MemoryTuple::fill(int aColumn,const std::string& aValue) { 
+  return fill_value<std::string,BatchLab::MemoryColumn_string>
+           (aColumn,"string",aValue);
+}
+
+inline
+bool BatchLab::MemoryTuple::fill(int aColumn,const AIDA::ITupleEntry& aValue){ 
+  BaseColumn* column = findColumn1(aColumn);
+  if(!column) {
+    out() << "BatchLab::MemoryTuple::fill(ITuple) :"
+        << " column " << aColumn << " not found."
+        << std::endl;
+    return false;
+  }
+  MemoryColumn_tuple* col =
+    inlib::cast<BaseColumn,MemoryColumn_tuple>(*column);
+  if((column->type()!="ITuple")||(!col)) {
+    out() << "BatchLab::MemoryTuple::fill(ITuple) :"
+        << " type mismatch (" << inlib::sout(column->type()) << ") "
+        << " for column " << aColumn
+        << " " << inlib::sout(column->name()) << "."
+        << std::endl;
+    return false;
+  }
+  const AIDA::ITuple* tuple = dynamic_cast<const AIDA::ITuple*>(&aValue);
+  if(!tuple) {
+    out() << "BatchLab::MemoryTuple::fill :"
+        << " ITupleEntry not an ITuple."
+        << std::endl;
+    return false;
+  }
+  return col->fill(*tuple);
+}
+
+inline
+bool BatchLab::MemoryTuple::fill(const std::vector<double>& aRow){ 
+  int n = aRow.size();
+  if(n!=columns()) {
+    out() << "BatchLab::MemoryTuple::fill :"
+        << " number of column mismatch (expected = " 
+        << columns() << ", given = " << n << ")" << std::endl;
+    return false;
+  }
+  for(int count=0;count<n;count++) {
+    if(!fill(count,aRow[count])) return false;
+  }
+  return addRow();
+}
+
+inline
+bool BatchLab::MemoryTuple::fill(const std::vector<float>& aRow){ 
+  int n = aRow.size();
+  if(n!=columns()) {
+    out() << "BatchLab::MemoryTuple::fill :"
+        << " number of column mismatch (expected = "
+        << columns() << ", given = " << n << ")" << std::endl;
+    return false;
+  }
+  for(int count=0;count<n;count++) {
+    if(!fill(count,aRow[count])) return false;
+  }
+  return addRow();
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+double BatchLab::MemoryTuple::columnMin(int aColumn) const { 
+  BaseColumn* column = findColumn1(aColumn);
+  if(!column) return 0;
+  double val;
+  if(column->type()=="double") {
+    COLMIN<double,BatchLab::MemoryColumn_double>(*column,val);return val;
+  } else if(column->type()=="float") {
+    COLMIN<float,BatchLab::MemoryColumn_float>(*column,val);return val;
+  } else if(column->type()=="int") {
+    COLMIN<int,BatchLab::MemoryColumn_int>(*column,val);return val;
+  } else if(column->type()=="short") {
+    COLMIN<short,BatchLab::MemoryColumn_short>(*column,val);return val;
+  } else if(column->type()=="long") {
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+    COLMIN<Slash::int64,BatchLab::MemoryColumn_int64>(*column,val);return val;
+#else
+    COLMIN<AIDA::int64,BatchLab::MemoryColumn_int64>(*column,val);return val;
+#endif
+  } else if(column->type()=="char") {
+    COLMIN<char,BatchLab::MemoryColumn_char>(*column,val);return val;
+  } else if(column->type()=="boolean") {
+    COLMIN<bool,BatchLab::MemoryColumn_bool>(*column,val);return val;
+
+  } else {
+    out() << "BatchLab::MemoryTuple::columnMin :"
+        << " make no sense on column type " << column->type() << "."
+        << std::endl;
+    return 0;
+  }
+}
+
+inline
+double BatchLab::MemoryTuple::columnMax(int aColumn) const { 
+  BaseColumn* column = findColumn1(aColumn);
+  if(!column) return 0;
+  double val;
+  if(column->type()=="double") {
+    COLMAX<double,BatchLab::MemoryColumn_double>(*column,val);return val;
+  } else if(column->type()=="float") {
+    COLMAX<float,BatchLab::MemoryColumn_float>(*column,val);return val;
+  } else if(column->type()=="int") {
+    COLMAX<int,BatchLab::MemoryColumn_int>(*column,val);return val;
+  } else if(column->type()=="short") {
+    COLMAX<short,BatchLab::MemoryColumn_short>(*column,val);return val;
+  } else if(column->type()=="long") {
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+    COLMAX<Slash::int64,BatchLab::MemoryColumn_int64>(*column,val);return val;
+#else
+    COLMAX<AIDA::int64,BatchLab::MemoryColumn_int64>(*column,val);return val;
+#endif
+  } else if(column->type()=="char") {
+    COLMAX<char,BatchLab::MemoryColumn_char>(*column,val);return val;
+  } else if(column->type()=="boolean") {
+    COLMAX<bool,BatchLab::MemoryColumn_bool>(*column,val);return val;
+
+  } else {
+    out() << "BatchLab::MemoryTuple::columnMin :"
+        << " make no sense on column type " << column->type() << "."
+        << std::endl;
+    return 0;
+  }
+}
+
+inline
+double BatchLab::MemoryTuple::columnMean(int aColumn) const { 
+  BaseColumn* column = findColumn1(aColumn);
+  if(!column) return 0;
+  double val;
+  if(column->type()=="double") {
+    COLMEAN<double,BatchLab::MemoryColumn_double>(*column,val);return val;
+  } else if(column->type()=="float") {
+    COLMEAN<float,BatchLab::MemoryColumn_float>(*column,val);return val;
+  } else if(column->type()=="int") {
+    COLMEAN<int,BatchLab::MemoryColumn_int>(*column,val);return val;
+  } else if(column->type()=="short") {
+    COLMEAN<short,BatchLab::MemoryColumn_short>(*column,val);return val;
+  } else if(column->type()=="long") {
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+    COLMEAN<Slash::int64,BatchLab::MemoryColumn_int64>(*column,val);return val;
+#else
+    COLMEAN<AIDA::int64,BatchLab::MemoryColumn_int64>(*column,val);return val;
+#endif
+  } else if(column->type()=="char") {
+    COLMEAN<char,BatchLab::MemoryColumn_char>(*column,val);return val;
+  } else if(column->type()=="boolean") {
+    COLMEAN<bool,BatchLab::MemoryColumn_bool>(*column,val);return val;
+
+  } else {
+    out() << "BatchLab::MemoryTuple::columnMean :"
+        << " make no sense on column type " << column->type() << "."
+        << std::endl;
+    return 0;
+  }
+}
+
+inline
+double BatchLab::MemoryTuple::columnRms(int aColumn) const { 
+  BaseColumn* column = findColumn1(aColumn);
+  if(!column) return 0;
+  double val;
+  if(column->type()=="double") {
+    COLRMS<double,BatchLab::MemoryColumn_double>(*column,val);return val;
+  } else if(column->type()=="float") {
+    COLRMS<float,BatchLab::MemoryColumn_float>(*column,val);return val;
+  } else if(column->type()=="int") {
+    COLRMS<int,BatchLab::MemoryColumn_int>(*column,val);return val;
+  } else if(column->type()=="short") {
+    COLRMS<short,BatchLab::MemoryColumn_short>(*column,val);return val;
+  } else if(column->type()=="long") {
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+    COLRMS<Slash::int64,BatchLab::MemoryColumn_int64>(*column,val);return val;
+#else
+    COLRMS<AIDA::int64,BatchLab::MemoryColumn_int64>(*column,val);return val;
+#endif
+  } else if(column->type()=="char") {
+    COLRMS<char,BatchLab::MemoryColumn_char>(*column,val);return val;
+  } else if(column->type()=="boolean") {
+    COLRMS<bool,BatchLab::MemoryColumn_bool>(*column,val);return val;
+  } else {
+    out() << "BatchLab::MemoryTuple::columnMean :"
+        << " make no sense on column type " << column->type() << "."
+        << std::endl;
+    return 0;
+  }
+}
+
+inline
+bool BatchLab::MemoryTuple::getBooking(std::string& aString) const {
+  // Faster version than amanip::tuple_getBooking
+  unsigned int coln = fColumns.size();
+  for(unsigned int index=0;index<coln;index++) {
+    if(index) aString += ",";
+    BaseColumn* column = fColumns[index];
+    std::string type = column->type();
+    aString += type + " ";
+    aString += column->name() + " = ";
+    if(type=="ITuple") {
+      BatchLab::MemoryColumn_tuple* col = 
+        inlib::cast<BaseColumn,MemoryColumn_tuple>(*column);
+      if(!col) {
+        out() << "BatchLab::MemoryTuple::getBooking :"
+              << " can't cast BaseColumn to MemoryColumn_typle."
+              << std::endl;
+        aString = "";
+        return false;
+      }
+      MemoryTuple subTuple(out(),col->name(),"",col->variables());
+      std::string s;
+      if(!subTuple.getBooking(s)) {
+        aString = "";
+        return false;
+      }
+      aString += "{"+s+"}";
+    } else {
+      aString += column->stringDefaultValue();
+    }
+  }
+  return true;
+}
+
+inline
+bool BatchLab::MemoryTuple::visit(Slash::Store::IConstVisitor& aVisitor) const{
+  SLASH_STORE_BEGIN(BatchLab::MemoryTuple)
+
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+
+  if(!aVisitor.visit("fAnnotation",fAnnotation)) return false;
+  if(!aVisitor.visit("fTitle",fTitle)) return false;
+
+  std::string sbooking;
+  if(!getBooking(sbooking)) return false;
+  if(!aVisitor.visit("fBooking",sbooking)) return false;
+
+  unsigned int coln = fColumns.size();
+  for(unsigned int index=0;index<coln;index++) {
+    std::string sindex = inlib::to<int>(index);
+    BaseColumn* column = fColumns[index];
+    Slash::Store::IStorable* v = INLIB_CAST(*column,Slash::Store::IStorable);
+    if(!aVisitor.visit("fColumn_"+sindex,*v)) return false;
+  }
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::MemoryTuple::read(Slash::Store::IVisitor& aVisitor) {
+  clear();
+
+  if(!aVisitor.begin(*this)) return false;
+
+  int version;
+  if(!aVisitor.visit(version)) return false;
+
+  if(!fAnnotation.read(aVisitor)) return false;
+
+  if(!aVisitor.visit(fTitle)) return false;
+
+  std::string sbooking;
+  if(!aVisitor.visit(sbooking)) return false;
+
+  std::list<Lib::Value> variables;
+  if(!booking(out(),sbooking,variables)) return false;
+  initialize(variables);
+  Lib::Columns::deleteColumns(variables);
+
+  unsigned int coln = fColumns.size();
+  for(unsigned int index=0;index<coln;index++) {
+    std::string sindex = inlib::to<int>(index);
+    BaseColumn* column = fColumns[index];
+    if(!column->read(aVisitor)) return false;
+  }
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+#undef MEMORY_COLUMN_SOURCE

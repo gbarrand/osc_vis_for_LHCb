@@ -1,0 +1,26 @@
+#!/bin/sh -f
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+. ${ourex_mgr}/build_header
+
+save_dir="`pwd`"
+
+cd ${inlib_mgr}
+./build ../apps/config.cpp
+cd ${save_dir}
+
+packs=
+packs="${packs} amanip Slash Rio Lib Minuit BatchLab"
+for pack in ${packs} ; do
+  cd ../../${pack}/mgr
+  ./build ${build_args}
+  cd ${save_dir}
+done
+
+cd ${save_dir}

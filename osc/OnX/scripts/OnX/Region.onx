@@ -1,0 +1,57 @@
+<widget class="CascadeButton" name="OnX_menu_Region">
+  <label>Region</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>clear region</label>
+      <activate exec="DLD">OnX region_clear @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Region to page</label>
+      <activate exec="DLD">OnX page_currentRegionToPage</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Region on top</label>
+      <activate exec="DLD">OnX page_currentRegionOnTop</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Black back</label>
+      <activate exec="DLD">OnX region_setParameter viewportRegion.backgroundColor 0 0 0</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>White back</label>
+      <activate exec="DLD">OnX region_setParameter viewportRegion.backgroundColor 1 1 1</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Light grey back</label>
+      <activate exec="DLD">OnX region_setParameter viewportRegion.backgroundColor 0.9 0.9 0.9</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Region verbose on/off</label>
+      <activate exec="DLD">OnX region_toggleParameter verbose</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Dress region with rulers</label>
+      <activate exec="DLD">OnX page_dressCurrentRegionWithRulers</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Remove rulers</label>
+      <activate exec="DLD">OnX page_removeRulers</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Add a SoCube</label>
+      <activate exec="DLD">OnX region_addSoNode SoCube</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Set A4H</label>
+      <activate exec="DLD">OnX region_setSize A4H</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Set A4V</label>
+      <activate exec="DLD">OnX region_setSize A4V</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Delete region</label>
+      <activate exec="DLD">OnX page_delete_region @current@</activate>
+    </widget>
+  </widget>
+</widget>

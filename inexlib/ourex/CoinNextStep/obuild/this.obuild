@@ -1,0 +1,119 @@
+
+<!-- 
+////////////////////////////////////////////////
+// This is a obuild / OpenScientist integration 
+// of the SC21 code.
+////////////////////////////////////////////////
+-->
+  
+<obuild>
+
+  <package name="CoinNextStep" version="v1r0p5">
+
+    <dont_produce_bat group="NextStep"/>
+
+    <repository>:pserver:@@user@@@cvsserver.lal.in2p3.fr:/projects/cvs</repository>
+
+    <reference package="CoinGL" path="../../CoinGL" file="obuild/export.obuild"/>  
+    <reference package="foreign" path="../../foreign" file="NextStep.obuild"/>  
+
+    <!-- this : -->
+
+    <library name="CoinNextStep">
+      <group>NextStep</group>
+
+      <files>../source/framework/*.mm</files>
+
+      <objcxx_include copy="c_include" from="CoinGL"/>
+      <objcxx_options copy="c_options" from="CoinGL"/>
+      <objcxx_macro copy="c_macro" from="CoinGL"/>
+
+    </library>
+
+    <application name="CoinNextStep_test_cube">
+      <group>NextStep</group>
+
+      <file>../tests/CoinNextStep_cube.mm</file>
+  
+      <objcxx_include>${obuild_CoinNextStep_path}/source/framework</objcxx_include>
+
+      <objcxx_include copy="c_include" from="CoinGL"/>
+      <objcxx_options copy="c_options" from="CoinGL"/>
+      <objcxx_macro copy="c_macro" from="CoinGL"/>
+
+      <objcxx_linker_options platform="Darwin">-lstdc++</objcxx_linker_options>
+
+      <lib>CoinNextStep</lib>
+      <lib copy="lib" from="CoinGL"/>
+      <lib copy="lib" from="NextStep"/>
+    </application>
+  
+    <darwin_app name="CoinNextStep_test_cube">
+      <group>NextStep</group>
+
+      <copy_dir>
+        <from>${obuild_CoinNextStep_path}/tests/nib.nib</from>
+        <to>@@dir_bin@@/@@component@@.app/Contents/Resources/.</to>
+source/NextStep
+        <new_name>CoinNextStep_test_cube.nib</new_name>
+      </copy_dir>
+
+    </darwin_app>
+  
+    <!-- pure Cocoa/OpenGL application. -->
+    <application name="CoinNextStep_test_GL">
+      <group>NextStep</group>
+      <not_in_main_build/>
+      <file>../tests/CoinNextStep_test_GL.m</file>
+      <lib copy="lib" from="NextStep"/>
+      <lib copy="lib" from="OpenGL"/>
+    </application>
+    <darwin_app name="CoinNextStep_test_GL">
+      <group>NextStep</group>
+      <not_in_main_build/>
+      <copy_dir>
+        <from>${obuild_CoinNextStep_path}/tests/nib.nib</from>
+        <to>@@dir_bin@@/@@component@@.app/Contents/Resources/.</to>
+source/NextStep
+        <new_name>CoinNextStep_test_GL.nib</new_name>
+      </copy_dir>
+    </darwin_app>
+  
+  
+    <!-- pure Cocoa/wii application. -->
+    <application name="CoinNextStep_test_wiimote">
+      <group>NextStep</group>
+      <not_in_main_build/>
+      <file>../tests/CoinNextStep_test_wiimote.m</file>
+      <lib copy="lib" from="NextStep"/>
+      <file>../tests/WiiRemote/WiiRemote.m</file>
+      <file>../tests/WiiRemote/WiiRemoteDiscovery.m</file>
+      <objc_include>${obuild_CoinNextStep_path}/tests</objc_include>
+<!-- arch x64 missing
+      <lib platform="Darwin" verbatim="yes">-framework WiiRemote</lib>
+-->
+      <lib platform="Darwin" verbatim="yes">-framework IOBluetooth</lib>
+    </application>
+    <darwin_app name="CoinNextStep_test_wiimote">
+      <group>NextStep</group>
+      <not_in_main_build/>
+      <copy_dir>
+        <from>${obuild_CoinNextStep_path}/tests/nib.nib</from>
+        <to>@@dir_bin@@/@@component@@.app/Contents/Resources/.</to>
+source/NextStep
+        <new_name>CoinNextStep_test_wiimote.nib</new_name>
+      </copy_dir>
+    </darwin_app>
+  
+<!-- FIXME
+    <release>
+      <copy_dir>
+        <from>include</from>
+        <to>Resources/CoinNextStep/.</to>
+      </copy_dir>
+    </release>
+-->
+
+  </package>
+
+</obuild>

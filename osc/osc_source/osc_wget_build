@@ -1,0 +1,394 @@
+#!/bin/sh -f
+
+#set -x
+
+obuild_kit=
+obuild_version=
+obuild_clean=yes
+obuild_options=
+obuild_debug=no
+obuild_os=
+obuild_contrib=no
+
+while test $# -ge 1 ; do
+  case $1 in
+    -h) 
+        echo "Arguments :"
+        echo "  -kit : [osc_batch,osc_vis,...]."
+        echo "  -version : version to build."
+        echo "  -no_clean : do not remove the build area when finished."
+        echo "  [-debug,-g] : build in debug mode."
+        echo "  [-verbose,-v] : build in verbose mode."
+        echo "  -os : for exa Linux_m32."
+        echo "  -contrib : on lxplus, build under ${HOME}/software/contrib with no clean at end."
+        echo ""
+        exit ;;
+    -kit) shift
+        if [ $# != 0 ] ; then
+          obuild_kit=$1 
+        else         
+          echo "give a name after the -kit option."
+          exit 
+        fi ;;
+    -version) shift
+        if [ $# != 0 ] ; then
+          obuild_version=$1 
+        else         
+          echo "give a version after the -version option."
+          exit 
+        fi ;;
+    -os) shift
+        if [ $# != 0 ] ; then
+          obuild_os=$1 
+        else         
+          echo "give a name after the -os option."
+          exit 
+        fi ;;
+    -no_clean) obuild_clean=no ;;
+    -contrib) obuild_contrib=yes ;;
+    -debug) obuild_options="${obuild_options} -g";obuild_debug=yes ;;
+    -g) obuild_options="${obuild_options} -g";obuild_debug=yes ;;
+    -verbose) obuild_options="${obuild_options} -v" ;;
+    -v) obuild_options="${obuild_options} -v" ;;
+    *) echo "unknown option : $1";exit ;;
+  esac
+  shift
+done
+
+if [ "${obuild_kit}" = "" ] ; then
+  echo 'No target given.'
+  exit
+fi
+
+if [ "${obuild_version}" = "" ] ; then
+  echo 'No version given.'
+  exit
+fi
+
+#///////////////////////////////////////////////////////
+find_app() {
+  find_arg_1=$1
+#  echo ${find_arg_1}
+  find_app_found=0
+  find_app_old_IFS="${IFS}"
+  IFS=:
+  for find_app_path in $PATH ; do
+    if [ -f ${find_app_path}/${find_arg_1} ] ; then
+      #echo "Found in ${find_app_path}"
+      find_app_found=1
+      break
+    fi
+  done
+  IFS="${find_app_old_IFS}"
+  return ${find_app_found}
+}
+#///////////////////////////////////////////////////////
+
+build_Qt=no
+# Now build gtk is decided in the <project>/this.obuild
+#build_gtk=no
+
+build_Zebra=no
+build_Python=no
+build_Geant4=no
+build_Geant3=no
+
+if [ "${obuild_kit}" = "osc_batch" ] ; then
+  build_Zebra=yes
+fi
+if [ "${obuild_kit}" = "osc_iv" ] ; then
+  build_Python=yes
+  build_Qt=yes
+  #build_gtk=yes
+fi
+if [ "${obuild_kit}" = "osc_vis" ] ; then
+  build_Zebra=yes
+  build_Python=yes
+  build_Qt=yes
+  #build_gtk=yes
+  build_Geant4=yes
+  build_Geant3=yes
+fi
+
+if [ "`uname -n`" = "pc-89182.lal.in2p3.fr" ] ; then
+  OBUILD_SITE=pc-panoramix
+  export OBUILD_SITE
+  echo "Set OBUILD_SITE to ${OBUILD_SITE}"
+fi
+
+if [ "`uname -n | grep lxplus`" != "" ] ; then
+  GCC_MAJOR=`g++ -v 2>&1 | grep " version " | cut -d ' ' -f 3  | cut -d '.' -f 1`
+  GCC_MINOR=`g++ -v 2>&1 | grep " version " | cut -d ' ' -f 3  | cut -d '.' -f 2`
+  gcc_vers="gcc${GCC_MAJOR}${GCC_MINOR}"
+  obuild_platform=none
+  if [ "`rpm -q sl-release | grep 'sl-release-4'`" != "" ] ; then
+    if [ `uname -m` = "x86_64" ] ; then
+      if [ "${obuild_os}" = "Linux_m32" ] ; then
+        obuild_platform=slc4_ia32_${gcc_vers}
+        OBUILD_SITE=lxplus_${obuild_platform}
+        export OBUILD_SITE
+        echo "Set OBUILD_SITE to ${OBUILD_SITE}"
+        OBUILD_PLATFORM_OS=Linux_m32
+        export OBUILD_PLATFORM_OS
+        echo "Set OBUILD_PLATFORM_OS to ${OBUILD_PLATFORM_OS}"
+      else
+        # CERNLIB under /afs/cern.ch/sw/lcg/external/cernlib.
+        obuild_platform=slc4_amd64_${gcc_vers}
+        OBUILD_SITE=lxplus_${obuild_platform}
+        export OBUILD_SITE
+        echo "Set OBUILD_SITE to ${OBUILD_SITE}"
+      fi
+    else
+      obuild_platform=slc4_ia32_${gcc_vers}
+      OBUILD_SITE=lxplus_${obuild_platform}
+      export OBUILD_SITE
+      echo "Set OBUILD_SITE to ${OBUILD_SITE}"
+    fi
+  else
+  if [ "`rpm -q sl-release | grep 'sl-release-5'`" != "" ] ; then
+    if [ `uname -m` = "x86_64" ] ; then
+      obuild_platform=x86_64-slc5-${gcc_vers}-opt
+      OBUILD_SITE=lxplus_${obuild_platform}
+      export OBUILD_SITE
+      echo "Set OBUILD_SITE to ${OBUILD_SITE}"
+      if [ ${gcc_vers} = gcc34 ] ; then
+        if [ ${build_Geant4} = yes ] ; then
+          build_Geant4=no
+          echo "WARNING : Geant4 drivers not build on this platform."
+        fi
+      fi
+      #if [ ${build_gtk} = yes ] ; then
+      #  build_gtk=no
+      #  echo "WARNING : gtk drivers not build on this platform."
+      #fi
+    else
+      echo "Operating system version not supported."
+    fi
+  else
+    echo "Operating system version not supported."
+    exit
+  fi
+  fi
+  if [ ${obuild_contrib} = yes ] ; then
+    if [ ${obuild_platform} = none ] ; then
+      echo "obuild_platform not defined."
+      exit
+    fi
+    obuild_dir=software/contrib/OpenScientist/build_${obuild_kit}_${obuild_version}_${obuild_platform}
+    obuild_clean=no
+  else
+    obuild_dir=software/OpenScientist/build_${obuild_kit}_${obuild_version}/${OBUILD_SITE}
+  fi
+else
+  obuild_dir=OpenScientist/build_${obuild_kit}_${obuild_version}
+fi
+
+if [ "${obuild_os}" != "" ] ; then
+  obuild_dir=${obuild_dir}_${obuild_os}
+fi
+
+if [ ${obuild_debug} = yes ] ; then
+  obuild_dir=${obuild_dir}_debug
+fi
+
+echo "Build directory is : ${obuild_dir}"
+
+pwd_dir="`pwd`"
+/bin/rm -R -f ${obuild_dir}
+/bin/mkdir -p ${obuild_dir};cd ${obuild_dir}
+
+file=${obuild_kit}_source_${obuild_version}.zip
+url="http://OpenScientist.lal.in2p3.fr/download/tmpup/${file}"
+
+web_getter=
+if [ `uname` = "Darwin" ] ; then
+  web_getter="curl -s -O"
+elif [ `uname` = "Linux" ] ; then
+  web_getter="wget -q"
+elif [ "`uname | grep CYGWIN`" != "" ] ; then
+  web_getter="wget -q"
+fi
+
+if [ "${web_getter}" = "" ] ; then
+  echo "No web getter."
+  exit
+fi
+
+${web_getter} ${url}
+if [ $? != 0 ] ; then
+  echo "Unable to get ${file}"
+  exit
+fi 
+
+if [ ! -e ${file} ] ; then
+  echo "Unable to get ${file}"
+  exit
+fi
+
+unzip -q ${file}
+cd OpenScientist/${obuild_kit}/obuild
+. ./setup.sh
+sh/build ${obuild_options}
+
+#if [ ${build_gtk} = yes ] ; then
+#  echo "////////////////////"
+#  echo "build group gtk..."
+#  echo "////////////////////"
+#  sh/build ${obuild_options} -group gtk
+#fi
+
+if [ `uname` = "Linux" ] ; then
+if [ ${build_Qt} = yes ] ; then
+  echo "////////////////////"
+  echo "build group Qt..."
+  echo "////////////////////"
+  sh/build ${obuild_options} -group Qt
+fi
+fi
+
+if [ ${build_Python} = yes ] ; then
+  echo "////////////////////"
+  echo "build group Python..."
+  echo "////////////////////"
+  sh/build ${obuild_options} -group Python
+fi
+
+if [ ${build_Geant4} = yes ] ; then
+  echo "////////////////////"
+  echo "build group Geant4..."
+  echo "////////////////////"
+  if [ "${G4INSTALL}" = "" ] ; then
+    echo "You have to source setup Geant4."
+    echo "Can't build Geant4 drivers."
+  else
+    sh/build ${obuild_options} -group Geant4
+  fi
+fi
+
+#/////////////////////////////////////////
+#// FORTRAN and CERNLIB related things ///
+#/////////////////////////////////////////
+if [ ${build_Zebra} = yes ] ; then
+  if [ `uname` = "Darwin" ] ; then     
+    if [ "`sysctl hw.optional.x86_64 | grep 1`" != "" ] ; then
+      # May 2011 : we don't have cernlib on 64 bits intel machines.
+      echo " We don't have cernlib on Mac 64 bits machines."
+      echo "Can't build Geant3 drivers."
+      build_Zebra=no
+    else
+      find_app gfortran
+      if [ $? = 0 ] ; then
+        echo "gfortran not found."
+        echo "Can't build Zebra drivers."
+        build_Zebra=no
+      fi
+    fi
+  fi
+  if [ `uname` = "Linux" ] ; then
+    find_app gfortran
+    if [ $? = 0 ] ; then
+      echo "gfortran not found."
+      echo "Can't build Zebra drivers."
+      build_Zebra=no
+    fi
+  fi
+  if [ ! -e /cern/pro ] ; then
+    echo "/cern/pro not found."
+    echo "Can't build Zebra drivers."
+    build_Zebra=no
+  fi
+fi
+
+if [ ${build_Zebra} = yes ] ; then
+  echo "////////////////////"
+  echo "build group Zebra..."
+  echo "////////////////////"
+  sh/build ${obuild_options} -group Zebra
+fi
+
+if [ ${build_Geant3} = yes ] ; then
+  if [ `uname` = "Darwin" ] ; then     
+    if [ "`sysctl hw.optional.x86_64 | grep 1`" != "" ] ; then
+      # May 2011 : we don't have cernlib on 64 bits intel machines.
+      echo " We don't have cernlib on Mac 64 bits machines."
+      echo "Can't build Geant3 drivers."
+      build_Geant3=no
+    else
+      find_app gfortran
+      if [ $? = 0 ] ; then
+        echo "gfortran not found."
+        echo "Can't build Geant3 drivers."
+        build_Geant3=no
+      fi
+    fi
+  fi
+  if [ `uname` = "Linux" ] ; then
+    find_app gfortran
+    if [ $? = 0 ] ; then
+      echo "gfortran not found."
+      echo "Can't build Geant3 drivers."
+      build_Geant3=no
+    fi
+  fi
+  if [ ! -e /cern/pro ] ; then
+    echo "/cern/pro not found."
+    echo "Can't build Geant3 drivers."
+    build_Geant3=no
+  fi
+fi
+if [ ${build_Geant3} = yes ] ; then
+  echo "////////////////////"
+  echo "build group Geant3..."
+  echo "////////////////////"
+  sh/build ${obuild_options} -group Geant3
+fi
+
+echo "////////////////////"
+echo "build release..."
+echo "////////////////////"
+sh/build_release ${obuild_options} 
+
+if [ ! -d ../bin_obuild ] ; then
+  echo "../bin_obuild directory not found."
+  exit
+fi
+
+cd ../bin_obuild
+
+if [ ${obuild_contrib} = yes ] ; then
+  echo "contrib mode. zip file not uploaded."
+  exit
+fi
+
+zip_file=`find . -name "${obuild_kit}*.zip" -print`
+if [ "${zip_file}" = "" ] ; then
+  echo "zip file not found."
+  exit
+fi
+
+#echo ${zip_file}
+
+remote=barrand@lx3.lal.in2p3.fr
+find . -name "${obuild_kit}*.zip" -exec scp {} ${remote}:tmpup/{} \;
+
+sz_local_1=`find . -name "${obuild_kit}*.zip" -exec wc -c {} \; | awk '{print $1;}'`
+sz_local=`echo ${sz_local_1} | tr -d '\n' | tr -d ' '` 
+#echo xxx${sz_local}xxx
+
+#FIXME : below find done in fact locally !
+sz_remote_1=`ssh ${remote} cd tmpup;find . -name "${obuild_kit}*.zip" -exec wc -c {} \; | awk '{print $1;}'`
+sz_remote=`echo ${sz_remote_1} | tr -d ' '` 
+
+#echo xxx${sz_remote}xxx
+
+if [ "${sz_local}" != "${sz_remote}" ] ; then
+  echo 'uploaded zip files mismatch.'
+else
+  echo 'uploaded zip files ok.'
+  # Done, cleanup :
+  cd "${pwd_dir}"
+  if [ ${obuild_clean} = yes ] ; then
+    /bin/rm -R -f ${obuild_dir}
+  fi
+fi
+

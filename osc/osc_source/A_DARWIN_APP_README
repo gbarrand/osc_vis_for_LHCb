@@ -1,0 +1,12 @@
+
+  The osc_vis-darwin-app kit contains some ".app" Mac
+ packing for various applications (for exa osc-plot).
+
+  After unziping simply click on the icon of a .app to start 
+ the application ! From a terminal you can use also the open command
+ to start a .app. For example :
+    Darwin> open osc-plot.app
+
+  The .apps are relocatable, you can copy them where
+ you want on your disk (for example under /Applications).
+

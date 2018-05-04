@@ -1,0 +1,24 @@
+
+  To use the Fitter palette you must
+ have at hand a "fittable" (in general an histogram)
+ and a function in the browsing tree widget.
+ (You can create a function by using the 
+ Tools/Function palette).
+
+  You select a fittable in the browsing tree
+ and then click on "Get a fittable". You
+ select a function in the browsing and then
+ click in "Get a function".
+
+  The "Get a function" will create a pair
+ (start, step) of entry widgets for each
+ function parameter. Give some resonable 
+ values to these.
+
+  When done apply the "fit" button.
+ It will fit the "fittable", dump the found
+ values in the console area, update the
+ function parameters and then plot the 
+ function on the current plotter.
+
+  

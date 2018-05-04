@@ -1,0 +1,7 @@
+#!/bin/sh -f
+#
+# usage :
+#    UNIX> ./strsubs <file>
+#
+sed -e 's|operator new(unsigned int nbytes)|operator new(size_t nbytes)|g' $1 > tmp;mv tmp $1
+sed -e 's|operator delete(void\* p, unsigned int|operator delete(void\* p, size_t|g' $1 > tmp;mv tmp $1

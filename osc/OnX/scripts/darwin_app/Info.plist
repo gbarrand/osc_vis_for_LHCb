@@ -1,0 +1,9 @@
+<plist>
+  <dict>
+    <key>LSEnvironment</key>
+    <dict>
+      <key>OSC_GUI_FILE</key>
+      <string>$OSC_HOME_DIR/Resources/main.onx</string>
+    </dict>
+  </dict>
+</plist>

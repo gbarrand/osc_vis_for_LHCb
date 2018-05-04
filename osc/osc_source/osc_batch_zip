@@ -1,0 +1,50 @@
+#!/bin/sh -f 
+
+dir_pwd="`pwd`"
+
+vers=`cat version`
+
+zip_file=osc_batch_source_${vers}.zip
+
+cd ..
+cp ${dir_pwd}/osc_batch_README README
+
+cd ..
+/bin/rm -f ${zip_file}
+
+packs=""
+
+# FIXME : handle the below list through a this.obuild.
+
+packs="${packs} OpenScientist/README"
+packs="${packs} OpenScientist/inlib"
+packs="${packs} OpenScientist/exlib"
+packs="${packs} OpenScientist/obuild"
+packs="${packs} OpenScientist/foreign"
+packs="${packs} OpenScientist/zlib"
+packs="${packs} OpenScientist/zip"
+packs="${packs} OpenScientist/expat"
+packs="${packs} OpenScientist/Slash"
+packs="${packs} OpenScientist/Lib"
+packs="${packs} OpenScientist/AIDA/v3r2p1/src/cpp"
+packs="${packs} OpenScientist/amanip"
+packs="${packs} OpenScientist/Minuit"
+packs="${packs} OpenScientist/Rio"
+packs="${packs} OpenScientist/HDF5"
+packs="${packs} OpenScientist/BatchLab"
+packs="${packs} OpenScientist/UseAIDA"
+packs="${packs} OpenScientist/osc_source"
+packs="${packs} OpenScientist/osc_batch"
+
+for pack in ${packs}
+do 
+  if [ ! -e ${pack} ] ; then
+    echo "${pack} not found."
+    exit
+  fi
+done
+
+zip -q -r ${zip_file} ${packs}
+
+cd ${dir_pwd}
+

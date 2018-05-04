@@ -1,0 +1,2687 @@
+
+#include <BatchLab/Core/FunctionCatalog.h>
+
+#include <BatchLab/Core/Array.h> //For Compiled.
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::BaseFunction::BaseFunction(
+ std::ostream& a_out
+,const std::string& aName
+,const std::string& aTitle
+)
+:BaseObject(a_out,aName)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  setTitle(aTitle);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::BaseFunction::BaseFunction(
+ const BaseFunction& aFrom
+)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::IFunction(aFrom)
+,Slash::Store::IStorable(aFrom)
+,BaseObject(aFrom)
+,fAnnotation(aFrom.fAnnotation)
+,fTitle(aFrom.fTitle)
+,fCodelet(aFrom.fCodelet)
+,fParams(aFrom.fParams)
+,fParamNames(aFrom.fParamNames)
+,fVariableNames(aFrom.fVariableNames)
+,fGradient(aFrom.fGradient)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+
+inline
+BatchLab::BaseFunction::~BaseFunction(){}
+
+inline
+void* BatchLab::BaseFunction::cast(const std::string& a_class) const {
+  INLIB_IF_CAST(AIDA::IFunction)
+  else INLIB_IF_CAST(Slash::Store::IStorable)
+  else INLIB_IF_CAST(BatchLab::BaseFunction)
+  else return BaseObject::cast(a_class);
+}
+
+inline
+BatchLab::Annotation& BatchLab::BaseFunction::getAnnotation() {
+  return fAnnotation;
+}
+
+inline
+void BatchLab::BaseFunction::setAnnotation(const BatchLab::Annotation& aFrom){
+  fAnnotation = aFrom;
+}
+
+inline
+std::string BatchLab::BaseFunction::type() const {return "AIDA::IFunction";}
+
+inline
+std::string BatchLab::BaseFunction::normalizationParameter() const {return "";}
+
+inline
+std::string BatchLab::BaseFunction::title() const {return fTitle;}
+
+inline
+bool BatchLab::BaseFunction::setTitle(const std::string& aTitle) { 
+  fTitle = aTitle;
+  fAnnotation.setValue("Title",aTitle);
+  return true;
+}
+
+inline
+AIDA::IAnnotation& BatchLab::BaseFunction::annotation() {return fAnnotation;}
+
+inline
+const AIDA::IAnnotation& BatchLab::BaseFunction::annotation() const {
+  return fAnnotation;
+}
+
+inline
+std::vector<std::string> BatchLab::BaseFunction::parameterNames() const {
+  return fParamNames;
+}
+
+inline
+bool BatchLab::BaseFunction::setParameter(const std::string& aName,
+                                          double aValue) { 
+  if(fParamNames.size()!=fParams.size()) return false;
+  unsigned int number = fParamNames.size();
+  for(unsigned int i=0;i<number;i++) {
+    if(fParamNames[i]==aName) {
+      fParams[i] = aValue;
+      return true;
+    }
+  }
+  return false;
+}
+
+inline
+const std::vector<double>& BatchLab::BaseFunction::parameters() const {
+  return fParams;
+}
+
+inline
+bool BatchLab::BaseFunction::isEqual(const IFunction&) const {return false;}
+
+inline
+const std::vector<double>& BatchLab::BaseFunction::gradient(
+  const std::vector<double>&
+) const 
+{
+  return fGradient;
+}
+
+inline
+bool BatchLab::BaseFunction::providesGradient() const {return false;}
+
+inline
+std::string BatchLab::BaseFunction::variableName(int aIndex) const {
+  if((aIndex<0)||(aIndex>=(int)fVariableNames.size())) return "";
+  return fVariableNames[aIndex];
+}
+
+inline
+std::vector<std::string> BatchLab::BaseFunction::variableNames() const {
+  return fVariableNames;
+}
+
+inline
+int BatchLab::BaseFunction::numberOfParameters() const {return fParams.size();}
+
+inline
+int BatchLab::BaseFunction::indexOfParameter(const std::string& aName) const {
+  unsigned int number = fParamNames.size();
+  for(unsigned int i=0;i<number;i++) {
+    if(fParamNames[i]==aName) return i;
+  }
+  return NotFound;
+}
+
+inline
+std::string BatchLab::BaseFunction::codeletString() const {return fCodelet;}
+
+inline
+double BatchLab::BaseFunction::value(const std::vector<double>& aPoint) const{ 
+  double d;
+  if(!value(aPoint,d)) {} //FIXME : throw
+  return d;
+}
+
+inline
+bool BatchLab::BaseFunction::visit(
+ Slash::Store::IConstVisitor& aVisitor
+) const
+{
+  SLASH_STORE_BEGIN(BatchLab::BaseFunction)
+
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+
+  if(!aVisitor.visit("fAnnotation",fAnnotation)) return false;
+  if(!aVisitor.visit("fTitle",fTitle)) return false;
+  if(!aVisitor.visit("fCodelet",fCodelet)) return false;
+  if(!aVisitor.visit("fParams",fParams)) return false;
+  if(!aVisitor.visit("fParamNames",fParamNames)) return false;
+  if(!aVisitor.visit("fVariableNames",fVariableNames)) return false;
+  if(!aVisitor.visit("fGradient",fGradient)) return false;
+
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::BaseFunction::read(Slash::Store::IVisitor& aVisitor) {
+  if(!aVisitor.begin(*this)) return false;
+
+  int version;
+  if(!aVisitor.visit(version)) return false;
+
+  if(!fAnnotation.read(aVisitor)) return false;
+  if(!aVisitor.visit(fTitle)) return false;
+  if(!aVisitor.visit(fCodelet)) return false;
+  if(!aVisitor.visit(fParams)) return false;
+  if(!aVisitor.visit(fParamNames)) return false;
+  if(!aVisitor.visit(fVariableNames)) return false;
+  if(!aVisitor.visit(fGradient)) return false;
+
+  if(!aVisitor.end(*this)) return false;
+
+  //FIXME : have to update the Lib functions !
+
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Gaussian::Gaussian(
+ std::ostream& a_out
+,const std::string& aName
+)
+:BaseFunction(a_out,aName,"")
+//,fFunction(aScale,aMean,aSigma)
+//////////////////////////////////////////////////////////////////////////////
+// Empty object used by IO readers.
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Gaussian::Gaussian(
+ std::ostream& a_out
+,const std::string& aName
+,const std::string& aTitle
+,double aScale
+,double aMean
+,double aSigma
+)
+:BaseFunction(a_out,aName,aTitle)
+,fFunction(aScale,aMean,aSigma)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  fParamNames.resize(3);
+  fParamNames[0] = "amplitude"; //AIDA convention.
+  fParamNames[1] = "mean";
+  fParamNames[2] = "sigma";
+  fParams.resize(3);
+  fParams[0] = aScale;
+  fParams[1] = aMean;
+  fParams[2] = aSigma;
+  fVariableNames.push_back("x[0]");
+  fCodelet = "class:Gaussian";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Gaussian::Gaussian(
+ const Gaussian& aFrom
+)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::IFunction(aFrom)
+,Slash::Store::IStorable(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseFunction(aFrom)
+,fFunction(aFrom.fFunction)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Gaussian::~Gaussian(
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+void* BatchLab::Function::Gaussian::cast(
+ const std::string& a_class
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  INLIB_IF_CAST(BatchLab::Function::Gaussian)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else return BaseFunction::cast(a_class);
+}
+
+inline
+bool BatchLab::Function::Gaussian::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+  int version;
+  if(!aVisitor.visit(version)) return false;
+  if(!BaseFunction::read(aVisitor)) return false;
+  if(!aVisitor.end(*this)) return false;
+  fFunction.set(fParams[0],fParams[1],fParams[2]);
+  return true;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+Slash::Store::IObject* BatchLab::Function::Gaussian::copy(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return new BatchLab::Function::Gaussian(*this);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+std::string BatchLab::Function::Gaussian::storeClassName(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return "BatchLab::Function::Gaussian";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+double BatchLab::Function::Gaussian::parameter(
+ const std::string& aName
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aName=="amplitude") return fParams[0];
+  else if(aName=="mean") return fParams[1];
+  else if(aName=="sigma") return fParams[2];
+  else {
+    out() << "BatchLab::Function::Gaussian::parameter :"
+        << " unknown parameter " << aName << "."
+        << std::endl;
+    return 0;
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Gaussian::setParameters(
+ const std::vector<double>& aParams
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aParams.size()!=3) {
+    out() << "BatchLab::Function::Gaussian::setParameter :"
+        << " bad input vector size."
+        << std::endl;
+    return false;
+  }
+  fParams = aParams;
+  fFunction.set(fParams[0],fParams[1],fParams[2]);
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Gaussian::setParameter(
+ const std::string& aName
+,double aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  int index = indexOfParameter(aName);
+  if(index==NotFound) {
+    out() << "BatchLab::Function::Gaussian::setParameter :"
+        << " parameter name " << inlib::sout(aName) << " not found."
+        << std::endl;
+    return false;
+  }
+  fParams[index] = aValue;
+  if(index==0) {
+    fFunction.scale(aValue);
+  } else if(index==1) {
+    fFunction.mean(aValue);
+  } else if(index==2) {
+    fFunction.sigma(aValue);
+  }
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+int BatchLab::Function::Gaussian::dimension(
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  return 1;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Gaussian::value(
+ const std::vector<double>& aPoint
+,double& aValue
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  if(aPoint.size()==0) {
+    aValue = 0;
+    return false;
+  }
+  aValue = fFunction.value(aPoint[0]);
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::BreitWigner::BreitWigner(
+ std::ostream& a_out
+,const std::string& aName
+)
+:BatchLab::BaseFunction(a_out,aName,"")
+//////////////////////////////////////////////////////////////////////////////
+// Empty object used by IO readers.
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::BreitWigner::BreitWigner(
+ std::ostream& a_out
+,const std::string& aName
+,const std::string& aTitle
+,double aHeight
+,double aCenter
+,double aWidth
+)
+:BatchLab::BaseFunction(a_out,aName,aTitle)
+,fFunction(aHeight,aCenter,aWidth)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  fParamNames.resize(3);
+  fParamNames[0] = "amplitude"; //AIDA convention.
+  fParamNames[1] = "origin";
+  fParamNames[2] = "width";
+  fParams.resize(3);
+  fParams[0] = aHeight;
+  fParams[1] = aCenter;
+  fParams[2] = aWidth;
+  fVariableNames.push_back("x[0]");
+  fCodelet = "class:BreitWigner";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::BreitWigner::BreitWigner(
+ const BreitWigner& aFrom
+)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::IFunction(aFrom)
+,Slash::Store::IStorable(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseFunction(aFrom)
+,fFunction(aFrom.fFunction)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::BreitWigner::~BreitWigner(
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+void* BatchLab::Function::BreitWigner::cast(
+ const std::string& a_class
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  INLIB_IF_CAST(BatchLab::Function::BreitWigner)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else return BaseFunction::cast(a_class);
+}
+
+inline
+bool BatchLab::Function::BreitWigner::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+  int version;
+  if(!aVisitor.visit(version)) return false;
+  if(!BaseFunction::read(aVisitor)) return false;
+  if(!aVisitor.end(*this)) return false;
+  fFunction.set(fParams[0],fParams[1],fParams[2]);
+  return true;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+Slash::Store::IObject* BatchLab::Function::BreitWigner::copy(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return new BatchLab::Function::BreitWigner(*this);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+std::string BatchLab::Function::BreitWigner::storeClassName(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return "BatchLab::Function::BreitWigner";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+double BatchLab::Function::BreitWigner::parameter(
+ const std::string& aName
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aName=="amplitude") return fParams[0];
+  else if(aName=="origin") return fParams[1];
+  else if(aName=="width") return fParams[2];
+  else {
+    out() << "BatchLab::Function::BreitWigner::parameter :"
+        << " unknown parameter " << aName << "."
+        << std::endl;
+    return 0;
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::BreitWigner::setParameters(
+ const std::vector<double>& aParams
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aParams.size()!=3) {
+    out() << "BatchLab::Function::BreitWigner::setParameter :"
+        << " bad input vector size."
+        << std::endl;
+    return false;
+  }
+  fParams = aParams;
+  fFunction.set(fParams[0],fParams[1],fParams[2]);
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::BreitWigner::setParameter(
+ const std::string& aName
+,double aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  int index = indexOfParameter(aName);
+  if(index==NotFound) {
+    out() << "BatchLab::Function::BreitWigner::setParameter :"
+        << " parameter name " << inlib::sout(aName) << " not found."
+        << std::endl;
+    return false;
+  }
+  fParams[index] = aValue;
+  if(index==0) {
+    fFunction.height(aValue);
+  } else if(index==1) {
+    fFunction.center(aValue);
+  } else if(index==2) {
+    fFunction.width(aValue);
+  }
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+int BatchLab::Function::BreitWigner::dimension(
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  return 1;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::BreitWigner::value(
+ const std::vector<double>& aPoint
+,double& aValue
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  if(aPoint.size()==0) {
+    aValue = 0;
+    return false;
+  }
+  aValue = fFunction.value(aPoint[0]);
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::ExpHBOOK::ExpHBOOK(
+ std::ostream& a_out
+,const std::string& aName
+)
+:BatchLab::BaseFunction(a_out,aName,"")
+//////////////////////////////////////////////////////////////////////////////
+// Empty object used by IO readers.
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::ExpHBOOK::ExpHBOOK(
+ std::ostream& a_out
+,const std::string& aName
+,const std::string& aTitle
+,double aA
+,double aB
+)
+:BatchLab::BaseFunction(a_out,aName,aTitle)
+,fFunction(aA,aB)
+//////////////////////////////////////////////////////////////////////////////
+// WARNING : 
+//   Lib, HBOOK, ROOT : exp(aA + aB * x)
+//   AIDA : par[0] * exp(par[1]*x)
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  fParamNames.resize(2);
+  fParamNames[0] = "A";
+  fParamNames[1] = "B";
+  fParams.resize(2);
+  fParams[0] = aA;
+  fParams[1] = aB;
+  fVariableNames.push_back("x[0]");
+  fCodelet = "class:ExpHBOOK";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::ExpHBOOK::ExpHBOOK(
+ const ExpHBOOK& aFrom
+)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::IFunction(aFrom)
+,Slash::Store::IStorable(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseFunction(aFrom)
+,fFunction(aFrom.fFunction)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::ExpHBOOK::~ExpHBOOK(
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+void* BatchLab::Function::ExpHBOOK::cast(
+ const std::string& a_class
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  INLIB_IF_CAST(BatchLab::Function::ExpHBOOK)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else return BaseFunction::cast(a_class);
+}
+
+inline
+bool BatchLab::Function::ExpHBOOK::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+  int version;
+  if(!aVisitor.visit(version)) return false;
+  if(!BaseFunction::read(aVisitor)) return false;
+  if(!aVisitor.end(*this)) return false;
+  fFunction.set(fParams[0],fParams[1]);
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+Slash::Store::IObject* BatchLab::Function::ExpHBOOK::copy(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return new BatchLab::Function::ExpHBOOK(*this);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+std::string BatchLab::Function::ExpHBOOK::storeClassName(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return "BatchLab::Function::ExpHBOOK";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+double BatchLab::Function::ExpHBOOK::parameter(
+ const std::string& aName
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aName=="A") return fParams[0];
+  else if(aName=="B") return fParams[1];
+  else {
+    out() << "BatchLab::Function::ExpHBOOK::parameter :"
+        << " unknown parameter " << aName << "."
+        << std::endl;
+    return 0;
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::ExpHBOOK::setParameters(
+ const std::vector<double>& aParams
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aParams.size()!=2) {
+    out() << "BatchLab::Function::ExpHBOOK::setParameter :"
+        << " bad input vector size."
+        << std::endl;
+    return false;
+  }
+  fParams = aParams;
+  fFunction.set(fParams[0],fParams[1]);
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::ExpHBOOK::setParameter(
+ const std::string& aName
+,double aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  int index = indexOfParameter(aName);
+  if(index==NotFound) {
+    out() << "BatchLab::Function::ExpHBOOK::setParameter :"
+        << " parameter name " << inlib::sout(aName) << " not found."
+        << std::endl;
+    return false;
+  }
+  fParams[index] = aValue;
+  if(index==0) {
+    fFunction.a(aValue);
+  } else if(index==1) {
+    fFunction.b(aValue);
+  }
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+int BatchLab::Function::ExpHBOOK::dimension(
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  return 1;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::ExpHBOOK::value(
+ const std::vector<double>& aPoint
+,double& aValue
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  if(aPoint.size()==0) {
+    aValue = 0;
+    return false;
+  }
+  aValue = fFunction.value(aPoint[0]);
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::ExpAIDA::ExpAIDA(
+ std::ostream& a_out
+,const std::string& aName
+)
+:BatchLab::BaseFunction(a_out,aName,"")
+//////////////////////////////////////////////////////////////////////////////
+// Empty object used by IO readers.
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::ExpAIDA::ExpAIDA(
+ std::ostream& a_out
+,const std::string& aName
+,const std::string& aTitle
+,double aP0
+,double aP1
+)
+:BatchLab::BaseFunction(a_out,aName,aTitle)
+,fFunction(::log(aP0),aP1)
+//////////////////////////////////////////////////////////////////////////////
+// WARNING : 
+//   Lib, HBOOK, ROOT : exp(aA + aB * x)
+//   AIDA : par[0] * exp(par[1]*x)
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  fParamNames.resize(2);
+  fParamNames[0] = "amplitude";
+  fParamNames[1] = "exponent";
+  fParams.resize(2);
+  fParams[0] = aP0;
+  fParams[1] = aP1;
+  fVariableNames.push_back("x[0]");
+  fCodelet = "class:ExpAIDA";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::ExpAIDA::ExpAIDA(
+ const ExpAIDA& aFrom
+)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::IFunction(aFrom)
+,Slash::Store::IStorable(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseFunction(aFrom)
+,fFunction(aFrom.fFunction)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::ExpAIDA::~ExpAIDA(
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+void* BatchLab::Function::ExpAIDA::cast(
+ const std::string& a_class
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  INLIB_IF_CAST(BatchLab::Function::ExpAIDA)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else return BaseFunction::cast(a_class);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::ExpAIDA::visit(
+ Slash::Store::IConstVisitor& aVisitor
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  SLASH_STORE_BEGIN(BatchLab::Function::ExpAIDA)
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+  if(!BaseFunction::visit(aVisitor)) return false;
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::Function::ExpAIDA::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+  int version;
+  if(!aVisitor.visit(version)) return false;
+  if(!BaseFunction::read(aVisitor)) return false;
+  if(!aVisitor.end(*this)) return false;
+  fFunction.set(::log(fParams[0]),fParams[1]);
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+Slash::Store::IObject* BatchLab::Function::ExpAIDA::copy(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return new BatchLab::Function::ExpAIDA(*this);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+std::string BatchLab::Function::ExpAIDA::storeClassName(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return "BatchLab::Function::ExpAIDA";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+double BatchLab::Function::ExpAIDA::parameter(
+ const std::string& aName
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aName=="amplitude") return fParams[0];
+  else if(aName=="exponent") return fParams[1];
+  else {
+    out() << "BatchLab::Function::ExpAIDA::parameter :"
+        << " unknown parameter " << aName << "."
+        << std::endl;
+    return 0;
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::ExpAIDA::setParameters(
+ const std::vector<double>& aParams
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aParams.size()!=2) {
+    out() << "BatchLab::Function::ExpAIDA::setParameter :"
+        << " bad input vector size."
+        << std::endl;
+    return false;
+  }
+  fParams = aParams;
+  fFunction.set(::log(fParams[0]),fParams[1]);
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::ExpAIDA::setParameter(
+ const std::string& aName
+,double aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  int index = indexOfParameter(aName);
+  if(index==NotFound) {
+    out() << "BatchLab::Function::ExpAIDA::setParameter :"
+        << " parameter name " << inlib::sout(aName) << " not found."
+        << std::endl;
+    return false;
+  }
+  fParams[index] = aValue;
+  if(index==0) {
+    fFunction.a(::log(aValue));
+  } else if(index==1) {
+    fFunction.b(aValue);
+  }
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+int BatchLab::Function::ExpAIDA::dimension(
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  return 1;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::ExpAIDA::value(
+ const std::vector<double>& aPoint
+,double& aValue
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  if(aPoint.size()==0) {
+    aValue = 0;
+    return false;
+  }
+  aValue = fFunction.value(aPoint[0]);
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Polynomial::Polynomial(
+ std::ostream& a_out
+,const std::string& aName
+)
+:BatchLab::BaseFunction(a_out,aName,"")
+,fFunction(std::vector<double>())
+//////////////////////////////////////////////////////////////////////////////
+// Empty object used by IO readers.
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Polynomial::Polynomial(
+ std::ostream& a_out
+,const std::string& aName
+,const std::string& aTitle
+,const std::vector<double>& aParams
+)
+:BatchLab::BaseFunction(a_out,aName,aTitle)
+,fFunction(aParams)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  fParamNames.resize(aParams.size()); 
+  unsigned int number = aParams.size(); //It is the degree.
+  for(unsigned int i=0;i<number;i++) {
+    std::string s;
+    inlib::sprintf(s,32,"p%d",i);
+    fParamNames[i] = s;
+  }
+  fParams = aParams;
+  fVariableNames.push_back("x[0]");
+  inlib::sprintf(fCodelet,9+32,"class:Polynomial:%d",number);
+  //fCodelet = "class:Polynomial";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Polynomial::Polynomial(
+ const Polynomial& aFrom
+)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::IFunction(aFrom)
+,Slash::Store::IStorable(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseFunction(aFrom)
+,fFunction(aFrom.fFunction)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Polynomial::~Polynomial(
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+void* BatchLab::Function::Polynomial::cast(
+ const std::string& a_class
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  INLIB_IF_CAST(BatchLab::Function::Polynomial)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else return BaseFunction::cast(a_class);
+}
+
+inline
+bool BatchLab::Function::Polynomial::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+  int version;
+  if(!aVisitor.visit(version)) return false;
+  if(!BaseFunction::read(aVisitor)) return false;
+  if(!aVisitor.end(*this)) return false;
+  fFunction.set(fParams);
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+Slash::Store::IObject* BatchLab::Function::Polynomial::copy(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return new BatchLab::Function::Polynomial(*this);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+std::string BatchLab::Function::Polynomial::storeClassName(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return "BatchLab::Function::Polynomial";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+double BatchLab::Function::Polynomial::parameter(
+ const std::string& aName
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aName.size()>=1) {
+    if(aName[0]=='p'){
+      std::string s = aName.substr(1,aName.size()-1);
+      unsigned int index;
+      if(inlib::to<unsigned int>(s,index)) {
+        if(index<fParams.size()) return fParams[index];
+      }
+    }
+  }
+  out() << "BatchLab::Function::Polynomial::parameter :"
+      << " unknown parameter " << aName << "."
+      << std::endl;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Polynomial::setParameter(
+ const std::string& aName
+,double aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  int index = indexOfParameter(aName);
+  if(index==NotFound) {
+    out() << "BatchLab::Function::Polynomial::setParameter :"
+        << " parameter name " << inlib::sout(aName) << " not found."
+        << std::endl;
+    return false;
+  }
+  fParams[index] = aValue;
+  fFunction.set_parameter(index,aValue);
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Polynomial::setParameters(
+ const std::vector<double>& aParams
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aParams.size()!=fParams.size()) {
+    out() << "BatchLab::Function::Polynomial::setParameter :"
+        << " bad input vector size."
+        << std::endl;
+    return false;
+  }
+  fParams = aParams;
+  fFunction.set(aParams);
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+int BatchLab::Function::Polynomial::dimension(
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  return 1;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Polynomial::value(
+ const std::vector<double>& aPoint
+,double& aValue
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  if(aPoint.size()==0) {
+    aValue = 0;
+    return false;
+  }
+  aValue = fFunction.value(aPoint[0]);
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Cauchy::Cauchy(
+ std::ostream& a_out
+,const std::string& aName
+)
+:BatchLab::BaseFunction(a_out,aName,"")
+//////////////////////////////////////////////////////////////////////////////
+// Empty object used by IO readers.
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Cauchy::Cauchy(
+ std::ostream& a_out
+,const std::string& aName
+,const std::string& aTitle
+,double aHeight
+,double aCenter
+,double aWidth
+)
+:BatchLab::BaseFunction(a_out,aName,aTitle)
+,fFunction(aHeight,aCenter,aWidth)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  fParamNames.resize(3);
+  fParamNames[0] = "amplitude"; //AIDA convention.
+  fParamNames[1] = "origin";
+  fParamNames[2] = "width";
+  fParams.resize(3);
+  fParams[0] = aHeight;
+  fParams[1] = aCenter;
+  fParams[2] = aWidth;
+  fVariableNames.push_back("x[0]");
+  fCodelet = "class:Cauchy";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Cauchy::Cauchy(
+ const Cauchy& aFrom
+)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::IFunction(aFrom)
+,Slash::Store::IStorable(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseFunction(aFrom)
+,fFunction(aFrom.fFunction)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Cauchy::~Cauchy(
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+void* BatchLab::Function::Cauchy::cast(
+ const std::string& a_class
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  INLIB_IF_CAST(BatchLab::Function::Cauchy)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else return BaseFunction::cast(a_class);
+}
+
+inline
+bool BatchLab::Function::Cauchy::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+  int version;
+  if(!aVisitor.visit(version)) return false;
+  if(!BaseFunction::read(aVisitor)) return false;
+  if(!aVisitor.end(*this)) return false;
+  fFunction.set(fParams[0],fParams[1],fParams[2]);
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+Slash::Store::IObject* BatchLab::Function::Cauchy::copy(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return new BatchLab::Function::Cauchy(*this);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+std::string BatchLab::Function::Cauchy::storeClassName(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return "BatchLab::Function::Cauchy";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+double BatchLab::Function::Cauchy::parameter(
+ const std::string& aName
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aName=="amplitude") return fParams[0];
+  else if(aName=="origin") return fParams[1];
+  else if(aName=="width") return fParams[2];
+  else {
+    out() << "BatchLab::Function::Cauchy::parameter :"
+        << " unknown parameter " << aName << "."
+        << std::endl;
+    return 0;
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Cauchy::setParameters(
+ const std::vector<double>& aParams
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aParams.size()!=3) {
+    out() << "BatchLab::Function::Cauchy::setParameter :"
+        << " bad input vector size."
+        << std::endl;
+    return false;
+  }
+  fParams = aParams;
+  fFunction.set(fParams[0],fParams[1],fParams[2]);
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Cauchy::setParameter(
+ const std::string& aName
+,double aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  int index = indexOfParameter(aName);
+  if(index==NotFound) {
+    out() << "BatchLab::Function::Cauchy::setParameter :"
+        << " parameter name " << inlib::sout(aName) << " not found."
+        << std::endl;
+    return false;
+  }
+  fParams[index] = aValue;
+  if(index==0) {
+    fFunction.height(aValue);
+  } else if(index==1) {
+    fFunction.center(aValue);
+  } else if(index==2) {
+    fFunction.width(aValue);
+  }
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+int BatchLab::Function::Cauchy::dimension(
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  return 1;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Cauchy::value(
+ const std::vector<double>& aPoint
+,double& aValue
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  if(aPoint.size()==0) {
+    aValue = 0;
+    return false;
+  }
+  aValue = fFunction.value(aPoint[0]);
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Scripted::Scripted(
+ std::ostream& a_out
+,const std::string& aName
+)
+:BatchLab::BaseFunction(a_out,aName,"")
+,fFunction("x*0.",a_out)
+//////////////////////////////////////////////////////////////////////////////
+// Empty object used by IO readers.
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Scripted::Scripted(
+ std::ostream& a_out
+,const std::string& aName
+,const std::string& aTitle
+,const std::string& aScript
+)
+:BatchLab::BaseFunction(a_out,aName,aTitle)
+,fFunction(aScript,a_out)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  fParamNames = fFunction.parameterNames();
+  fParams = std::vector<double>(fParamNames.size());
+  fVariableNames = fFunction.variableNames();
+  fCodelet = "scripted:" + aScript;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Scripted::Scripted(
+ const Scripted& aFrom
+)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::IFunction(aFrom)
+,Slash::Store::IStorable(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseFunction(aFrom)
+,fFunction(aFrom.fFunction)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Scripted::~Scripted(
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+int BatchLab::Function::Scripted::dimension(
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  return fFunction.dimension();
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Scripted::value(
+ const std::vector<double>& aPoint
+,double& aValue
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  std::string serror;
+  if(!fFunction.value(aPoint,aValue,serror)) {
+
+    if(serror!=Lib::Value::error_div_zero()) {
+
+      out() << "BatchLab::Function::Scripted::value :"
+          << " get value failed for codelet" 
+          << " " << inlib::sout(fCodelet) 
+          << " at point";   
+     {unsigned int number = aPoint.size();
+      for(unsigned int i=0;i<number;i++) {
+        out() << " " << aPoint[i];
+      }}
+      out() << std::endl;
+      out() << serror << std::endl;
+
+    }
+    return false;
+  } 
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+void* BatchLab::Function::Scripted::cast(
+ const std::string& a_class
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  INLIB_IF_CAST(BatchLab::Function::Scripted)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else return BaseFunction::cast(a_class);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Scripted::visit(
+ Slash::Store::IConstVisitor& aVisitor
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  SLASH_STORE_BEGIN(BatchLab::Function::Scripted)
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+  if(!BaseFunction::visit(aVisitor)) return false;
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::Function::Scripted::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+  int version;
+  if(!aVisitor.visit(version)) return false;
+  if(!BaseFunction::read(aVisitor)) return false;
+  if(!aVisitor.end(*this)) return false;
+
+  //fCodelet = "scripted:" + aScript;
+  std::string::size_type pos = fCodelet.find(':');
+  if(pos==std::string::npos) return false;
+  // ab:cdef
+  // 0123456
+  std::string script = fCodelet.substr(pos+1,fCodelet.length()-(pos+1));
+  fFunction.set(script);
+  fFunction.setParameters(fParams);
+
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+Slash::Store::IObject* BatchLab::Function::Scripted::copy(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return new BatchLab::Function::Scripted(*this);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+std::string BatchLab::Function::Scripted::storeClassName(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return "BatchLab::Function::Scripted";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+double BatchLab::Function::Scripted::parameter(
+ const std::string& aName
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  int index = indexOfParameter(aName);
+  if(index==NotFound) {
+    out() << "BatchLab::Function::Scripted::parameter :"
+        << " parameter name " << inlib::sout(aName) << " not found."
+        << std::endl;
+    return 0;
+  }
+  return fParams[index];
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Scripted::setParameter(
+ const std::string& aName
+,double aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  int index = indexOfParameter(aName);
+  if(index==NotFound) {
+    out() << "BatchLab::Function::Scripted::setParameter :"
+        << " parameter name " << inlib::sout(aName) << " not found."
+        << std::endl;
+    return false;
+  }
+  fParams[index] = aValue;
+  fFunction.setParameters(fParams);
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Scripted::setParameters(
+ const std::vector<double>& aParams
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aParams.size()!=fParams.size()) {
+    out() << "BatchLab::Function::Scripted::setParameters :"
+        << " parameter number mismatch. "
+        << (unsigned int)fParams.size() << " expected but " 
+        << (unsigned int)aParams.size() << " received."
+        << std::endl;
+    return false;
+  }
+  fFunction.setParameters(aParams);
+  fParams = aParams;
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Scripted::isValid(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return fFunction.isValid(); 
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Composite::Composite(
+ std::ostream& a_out
+,const std::string& aName
+)
+:BatchLab::BaseFunction(a_out,aName,"")
+,fFunction("",a_out)
+//////////////////////////////////////////////////////////////////////////////
+// Empty object used by IO readers.
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Composite::Composite(
+ std::ostream& a_out
+,const std::string& aName
+,const std::string& aTitle
+,const std::string& aScript
+)
+:BatchLab::BaseFunction(a_out,aName,aTitle)
+,fFunction(aScript,a_out)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  fParamNames = fFunction.parameterNames();
+  fParams = std::vector<double>(fParamNames.size());
+  fVariableNames = fFunction.variableNames();
+  fCodelet = "composite:" + aScript;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Composite::Composite(
+ const Composite& aFrom
+)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::IFunction(aFrom)
+,Slash::Store::IStorable(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseFunction(aFrom)
+,fFunction(aFrom.fFunction)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Composite::~Composite(
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+int BatchLab::Function::Composite::dimension(
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  return fFunction.dimension();
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Composite::value(
+ const std::vector<double>& aPoint
+,double& aValue
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  std::string serror;
+  if(!fFunction.value(aPoint,aValue,serror)) {
+    if(verboseLevel()) {
+      out() << "BatchLab::Function::Composite::value :"
+          << " get value failed for codelet" 
+          << " " << inlib::sout(fCodelet) 
+          << " at point";
+     {unsigned int number = aPoint.size();
+      for(unsigned int i=0;i<number;i++) {
+        out() << " " << aPoint[i];
+      }}
+      out() << std::endl;
+      out() << serror << std::endl;
+    }
+    return false;
+  }
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+void* BatchLab::Function::Composite::cast(
+ const std::string& a_class
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  INLIB_IF_CAST(BatchLab::Function::Composite)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else return BaseFunction::cast(a_class);
+}
+
+inline
+bool BatchLab::Function::Composite::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+  int version;
+  if(!aVisitor.visit(version)) return false;
+  if(!BaseFunction::read(aVisitor)) return false;
+  if(!aVisitor.end(*this)) return false;
+  fFunction.setParameters(fParams);
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+Slash::Store::IObject* BatchLab::Function::Composite::copy(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return new BatchLab::Function::Composite(*this);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+std::string BatchLab::Function::Composite::storeClassName(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return "BatchLab::Function::Composite";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+double BatchLab::Function::Composite::parameter(
+ const std::string& aName
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  int index = indexOfParameter(aName);
+  if(index==NotFound) {
+    out() << "BatchLab::Function::Composite::parameter :"
+        << " parameter name " << inlib::sout(aName) << " not found."
+        << std::endl;
+    return 0;
+  }
+  return fParams[index];
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Composite::setParameter(
+ const std::string& aName
+,double aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  int index = indexOfParameter(aName);
+  if(index==NotFound) {
+    out() << "BatchLab::Function::Composite::setParameter :"
+        << " parameter name " << inlib::sout(aName) << " not found."
+        << std::endl;
+    return false;
+  }
+  fParams[index] = aValue;
+  fFunction.setParameters(fParams);
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Composite::setParameters(
+ const std::vector<double>& aParams
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aParams.size()!=fParams.size()) {
+    out() << "BatchLab::Function::Composite::setParameters :"
+        << " parameter number mismatch. "
+        << (unsigned int)fParams.size() << " expected but " 
+        << (unsigned int)aParams.size() << " received."
+        << std::endl;
+    return false;
+  }
+  fFunction.setParameters(aParams);
+  fParams = aParams;
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Composite::isValid(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return fFunction.isValid(); 
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Compiled::Compiled(
+ std::ostream& a_out
+,const std::string& aName
+)
+:BatchLab::BaseFunction(a_out,aName,"")
+,fFunction(0)
+//////////////////////////////////////////////////////////////////////////////
+// Empty object used by IO readers.
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Compiled::Compiled(
+ std::ostream& a_out
+,const std::string& aName
+,const std::string& aTitle
+,Slash::Data::IFunction* aFunction
+,std::vector<Slash::Data::IArray*> aArrays //For OpenPAW/pafunc.
+,bool aRetainArrays
+)
+:BatchLab::BaseFunction(a_out,aName,aTitle)
+,fFunction(0)
+,fRetainArrays(aRetainArrays)
+//////////////////////////////////////////////////////////////////////////////
+// WARNING : aFunction probably already managed by the Lib::FunctionManager.
+// Used by BatchLab::BaseFunction* BatchLab::FFactory::create.
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aFunction->numberOfParameters()>aFunction->dimension()) {
+    out() << "BatchLab::Function::Compiled::Compiled :"
+        << " for model " << inlib::sout(aFunction->model())
+        << " in file " << inlib::sout(aFunction->file())
+//        << " with signature " << inlib::sout(aFunction->signature())
+        << ", dimension mismatch"
+        << " parameters = " << aFunction->numberOfParameters() 
+        << " > dimension = " << aFunction->dimension()
+        << "."
+        << std::endl;
+    return;
+  }
+
+ {fArrays.clear();
+  if(fRetainArrays) {
+    std::vector<Slash::Data::IArray*>::const_iterator it;
+    for(it=aArrays.begin();it!=aArrays.end();++it){
+      Slash::Data::IArray* from = *it;    
+      BatchLab::Array* to = 
+        new BatchLab::Array(out(),"","",from->orders());
+      to->copy(*from);
+      fArrays.push_back(to);
+    }
+  } else {
+    std::vector<Slash::Data::IArray*>::iterator it;
+    for(it=aArrays.begin();it!=aArrays.end();++it){
+      fArrays.push_back(*it);
+    }
+  }}
+
+  unsigned int parn = aFunction->numberOfParameters();
+  unsigned int varn = aFunction->dimension()-parn;
+  unsigned int an = fArrays.size();    
+  if(an) varn -= an;
+
+ {fVariableNames.resize(varn);
+  for(unsigned int i=0;i<varn;i++) {
+    std::string s;
+    inlib::sprintf(s,32,"x[%d]",i);
+    fVariableNames[i] = s;
+  }}
+
+ {fParamNames.resize(parn);
+  fParams.resize(parn,0);
+  for(unsigned int i=0;i<parn;i++) {
+    std::string s;
+    inlib::sprintf(s,32,"p%d",i);
+    fParamNames[i] = s;
+  }}
+
+  // codelet syntax is : compiled:<model>;<file>
+  // compiled:<file> alone is not sufficient since a 
+  // source file may contain multiple functions !
+  // For the second separator, we can't take ':', since
+  // it is part of the file path syntax on Windows (drive separator).
+
+  fFunction = aFunction;
+
+  fModel = aFunction->model();
+  fFile = aFunction->file();
+  //fSignature = aFunction->signature();
+  fCodelet = "compiled:" + fModel + ";" + fFile;
+
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Compiled::Compiled(
+ const Compiled& aFrom
+)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::IFunction(aFrom)
+,Slash::Store::IStorable(aFrom)
+,BaseFunction(aFrom)
+,fFunction(aFrom.fFunction)
+,fModel(aFrom.fModel)
+,fFile(aFrom.fFile)
+,fSignature(aFrom.fSignature)
+,fRetainArrays(aFrom.fRetainArrays)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  fArrays.clear();
+  if(fRetainArrays) {
+    std::vector<Slash::Data::IArray*>::const_iterator it;
+    for(it=aFrom.fArrays.begin();it!=aFrom.fArrays.end();++it){
+      const Slash::Data::IArray* from = *it;    
+      BatchLab::Array* to = 
+        new BatchLab::Array(out(),"","",from->orders());
+      to->copy(*from);
+      fArrays.push_back(to);
+    }
+  } else {     
+    Compiled& afrom = const_cast<Compiled&>(aFrom);
+    std::vector<Slash::Data::IArray*>::iterator it;
+    for(it=afrom.fArrays.begin();it!=afrom.fArrays.end();++it){
+      fArrays.push_back(*it);
+    }
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::Function::Compiled::~Compiled(
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(fRetainArrays) {
+    std::vector<Slash::Data::IArray*>::iterator it;
+    for(it=fArrays.begin();it!=fArrays.end();++it) delete *it;    
+  }
+  fArrays.clear();
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+void BatchLab::Function::Compiled::reset(
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  fParamNames.clear();
+  fParams.clear();
+  fVariableNames.clear();
+  fCodelet = "";
+  fModel = "";
+  fFile = "";
+  fSignature = "";
+  fFunction = 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+int BatchLab::Function::Compiled::dimension(
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  return fVariableNames.size();
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+Slash::Data::IFunction* BatchLab::Function::Compiled::slashFunction(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return fFunction;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Compiled::value(
+ const std::vector<double>& aPoint
+,double& aValue
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  if(!fFunction) {
+    if(verboseLevel()) {
+      out() << "BatchLab::Function::Compiled::value :"
+          << " not initailized."
+          << std::endl;
+    }
+    aValue = 0;
+    return false;
+  }
+
+  unsigned int xn = fVariableNames.size();
+  unsigned int pn = fParams.size();
+  if(aPoint.size()!=xn) {
+    if(verboseLevel()) {
+      out() << "BatchLab::Function::Compiled::value :"
+          << " dimension mismatch."
+          << " (" << (unsigned int)aPoint.size() << "," << xn << ")."
+          << std::endl;
+    }
+    aValue = 0;
+    return false;
+  }
+
+  unsigned int an = fArrays.size();    
+  if(an) {
+    // Handle OpenPAW/pafunc f77 function signature. (exa : urban/airclas.for).
+
+    unsigned int argn = xn+pn+an;
+    if(fFunction->dimension()!=argn) {
+      out() << "BatchLab::Function::Compiled::value :"
+          << " internal dimension mismatch."
+          << " (" << fFunction->dimension() << "," << argn << ")."
+          << std::endl;
+      aValue = 0;
+      return false;
+    }
+
+    Slash::Core::IValue* retsig;
+    std::vector<Slash::Core::IValue*> funcSig = fFunction->signature(retsig);
+    
+    double double_dummy;
+    float float_dummy;
+    int int_dummy;
+
+    std::vector<Slash::Core::IValue*> args;
+    args.resize(argn,0);
+    unsigned int argi = 0;
+   {for(unsigned int i=0;i<xn;i++) {
+      Slash::Core::IValue* argSig = funcSig[argi];
+      if(argSig->type()==Slash::Core::IValue::INT_STAR) {
+        int_dummy = (int)aPoint[i];
+        args[argi] = new Lib::Value(&int_dummy);
+      } else if(argSig->type()==Slash::Core::IValue::FLOAT_STAR) {
+        float_dummy = (float)aPoint[i];
+        args[argi] = new Lib::Value(&float_dummy);
+      } else if(argSig->type()==Slash::Core::IValue::DOUBLE_STAR) {
+        double_dummy = aPoint[i];
+        args[argi] = new Lib::Value(&double_dummy);
+      } else if(argSig->type()==Slash::Core::IValue::INT) {
+        args[argi] = new Lib::Value((int)aPoint[i]); //may loss infos.
+      } else if(argSig->type()==Slash::Core::IValue::FLOAT) {
+        args[argi] = new Lib::Value((float)aPoint[i]);
+      } else if(argSig->type()==Slash::Core::IValue::DOUBLE) {
+        args[argi] = new Lib::Value(aPoint[i]);
+      } else {
+        out() << "BatchLab::Function::Compiled::value :"
+            << " function arg type " << inlib::sout(argSig->stype()) 
+            << " not handled."
+            << std::endl;
+       {for(unsigned int i=0;i<args.size();i++) delete args[i];}
+        aValue = 0;
+        return false;
+      }
+      argi++;
+    }}
+   {for(unsigned int i=0;i<pn;i++) {
+      Slash::Core::IValue* argSig = funcSig[argi];
+      if(argSig->type()==Slash::Core::IValue::DOUBLE) {
+        args[argi] = new Lib::Value(fParams[i]);
+      } else {
+        out() << "BatchLab::Function::Compiled::value :"
+            << " function arg type " << inlib::sout(argSig->stype()) 
+            << " not handled."
+            << std::endl;
+       {for(unsigned int i=0;i<args.size();i++) delete args[i];}
+        aValue = 0;
+        return false;
+      }
+      argi++;
+    }}
+   {for(unsigned int i=0;i<an;i++) {
+      Slash::Core::IValue* argSig = funcSig[argi];
+      if(argSig->type()==Slash::Core::IValue::DOUBLE_STAR) {
+
+        std::vector<double>& va = fArrays[i]->vector();
+        if(!va.size()) {
+          out() << "BatchLab::Function::Compiled::value :"
+              << " IArray as an empty vector<double>."
+              << std::endl;
+         {for(unsigned int i=0;i<args.size();i++) delete args[i];}
+          aValue = 0;
+          return false;
+        }
+        double* p = &(va[0]); //FIXME : safe ?
+        args[argi] = new Lib::Value(p);
+
+      } else {
+        out() << "BatchLab::Function::Compiled::value :"
+            << " function arg type " << inlib::sout(argSig->stype()) 
+            << " not handled."
+            << std::endl;
+       {for(unsigned int i=0;i<args.size();i++) delete args[i];}
+        aValue = 0;
+        return false;
+      }
+      argi++;
+    }}
+    
+    Lib::Value ret;
+    if(!fFunction->value(args,ret)) {
+      if(verboseLevel()) {
+        out() << "BatchLab::Function::Compiled::value :"
+            << " get value failed for codelet" 
+            << " " << inlib::sout(fCodelet) 
+            << " at point";
+       {unsigned int number = aPoint.size();
+        for(unsigned int i=0;i<number;i++) {
+          out() << " " << aPoint[i];
+        }}
+        out() << std::endl;
+      }
+     {for(unsigned int i=0;i<args.size();i++) delete args[i];}
+      return false;
+    }
+   {for(unsigned int i=0;i<args.size();i++) delete args[i];}
+
+    if(ret.type()==Slash::Core::IValue::FLOAT) {
+      aValue = ret.get_float();
+    } else if(ret.type()==Slash::Core::IValue::DOUBLE) {
+      aValue = ret.get_double();
+    } else {
+      out() << "BatchLab::Function::Compiled::value :"
+          << " returned Lib::Value type " 
+          << inlib::sout(ret.stype()) 
+          << " not treated."
+          << std::endl;
+      return false;
+    }
+
+  } else {
+
+    std::vector<double> args;
+    args.resize(xn+pn,0);
+    unsigned int argi = 0;
+   {for(unsigned int i=0;i<xn;i++) {
+      args[argi] = aPoint[i];
+      argi++;
+    }}
+   {for(unsigned int i=0;i<pn;i++) {
+      args[argi] = fParams[i];
+      argi++;
+    }}
+
+    if(!fFunction->value(args,aValue)) {
+      if(verboseLevel()) {
+        out() << "BatchLab::Function::Compiled::value :"
+            << " get value failed for codelet" 
+            << " " << inlib::sout(fCodelet) 
+            << " at point";
+       {unsigned int number = aPoint.size();
+        for(unsigned int i=0;i<number;i++) {
+          out() << " " << aPoint[i];
+        }}
+        out() << std::endl;
+      }
+      return false;
+    }
+  }
+
+
+// out() << "BatchLab::Function::Compiled::value :"
+//     << " at point";
+// unsigned int number = aPoint.size();
+// for(unsigned int i=0;i<number;i++) {
+//   out() << " " << aPoint[i];
+// }
+// out() << " value : " << aValue;
+// out() << std::endl;}
+
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+void* BatchLab::Function::Compiled::cast(
+ const std::string& a_class
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  INLIB_IF_CAST(BatchLab::Function::Compiled)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else return BaseFunction::cast(a_class);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Compiled::visit(
+ Slash::Store::IConstVisitor& aVisitor
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  SLASH_STORE_BEGIN(BatchLab::Function::Compiled)
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+  if(!BaseFunction::visit(aVisitor)) return false;
+
+  //printf("debug : BatchLab::Function::Compiled::visit : %ld\n",this);
+  //printf("codelet : \"%s\"\n",fCodelet.c_str());
+  //printf("model : \"%s\"\n",fModel.c_str());
+  //printf("file : \"%s\"\n",fFile.c_str());
+  //printf("signature : \"%s\"\n",fSignature.c_str());
+
+  if(!aVisitor.visit("fModel",fModel)) return false;
+  if(!aVisitor.visit("fFile",fFile)) return false;
+  if(!aVisitor.visit("fSignature",fSignature)) return false;
+
+  if(!aVisitor.end(*this)) return false;
+
+  return true;
+}
+
+inline
+bool BatchLab::Function::Compiled::read(Slash::Store::IVisitor& aVisitor){
+  reset();
+
+  if(!aVisitor.begin(*this)) return false;
+  int version;
+  if(!aVisitor.visit(version)) return false;
+  if(!BaseFunction::read(aVisitor)) return false;
+
+  if(!aVisitor.visit(fModel)) return false;
+  if(!aVisitor.visit(fFile)) return false;
+  if(!aVisitor.visit(fSignature)) return false;
+
+  if(!aVisitor.end(*this)) return false;
+
+  //printf("debug : BatchLab::Function::Compiled::read : %ld\n",this);
+  //printf("codelet : \"%s\"\n",fCodelet.c_str());
+  //printf("model : \"%s\"\n",fModel.c_str());
+  //printf("file : \"%s\"\n",fFile.c_str());
+  //printf("signature : \"%s\"\n",fSignature.c_str());
+
+ //{unsigned int number = fParamNames.size();
+ // printf("debug : compiled : %d\n",number);
+ // for(unsigned int i=0;i<number;i++) {
+ //   printf("debug : compiled : %d : %s %g\n",
+ //     i,fParamNames[i].c_str(),fParams[i]);
+ //}}
+
+  Slash::Core::ISession& sess = aVisitor.session();
+
+  BatchLab::FunctionCatalog catalog(sess);
+  Slash::Data::IFunction* func = catalog.find(fFile,fModel);
+  if(!func) {
+    out() << "BatchLab::Function::Compiled::read :"
+        << " Problem creating " << inlib::sout(fModel)
+        << std::endl;
+    reset();
+    return true; //Do not stop the IO.
+  }
+
+  fFunction = func;
+
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+Slash::Store::IObject* BatchLab::Function::Compiled::copy(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return new BatchLab::Function::Compiled(*this);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+std::string BatchLab::Function::Compiled::storeClassName(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return "BatchLab::Function::Compiled";
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+double BatchLab::Function::Compiled::parameter(
+ const std::string& aName
+) const 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aName.size()>=1) {
+    if(aName[0]=='p'){
+      std::string s = aName.substr(1,aName.size()-1);
+      unsigned int index;
+      if(inlib::to<unsigned int>(s,index)) {
+        if(index<fParams.size()) return fParams[index];
+      }
+    }
+  }
+  out() << "BatchLab::Function::Compiled::parameter :"
+      << " unknown parameter " << aName << "."
+      << std::endl;
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Compiled::setParameter(
+ const std::string& aName
+,double aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{ 
+  int index = indexOfParameter(aName);
+  if(index==NotFound) {
+    out() << "BatchLab::Function::Compiled::setParameter :"
+        << " parameter name " << inlib::sout(aName) << " not found."
+        << std::endl;
+    return false;
+  }
+  fParams[index] = aValue;
+  emitUpdate();
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+bool BatchLab::Function::Compiled::setParameters(
+ const std::vector<double>& aParams
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aParams.size()!=fParams.size()) {
+    out() << "BatchLab::Function::Compiled::setParameters :"
+        << " bad input vector size."
+        << std::endl;
+    return false;
+  }
+  fParams = aParams;
+  emitUpdate();
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline
+std::string BatchLab::Function::InsidePolygon::codelet() {return "class:InsidePolygon";}
+
+// Empty object used by IO readers.
+inline
+BatchLab::Function::InsidePolygon::InsidePolygon(std::ostream& a_out
+,const std::string& aName)
+:BatchLab::BaseFunction(a_out,aName,"")
+{}
+
+inline
+BatchLab::Function::InsidePolygon::InsidePolygon(
+ std::ostream& a_out
+,const std::string& aName
+,const std::string& aTitle
+)
+:BatchLab::BaseFunction(a_out,aName,aTitle)
+{
+  fVariableNames.push_back("x[0]");
+  fVariableNames.push_back("x[1]");
+  fCodelet = codelet();
+}
+
+inline
+BatchLab::Function::InsidePolygon::InsidePolygon(const InsidePolygon& aFrom)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::IFunction(aFrom)
+,Slash::Store::IStorable(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseFunction(aFrom)
+,fFunction(aFrom.fFunction)
+{}
+
+inline
+BatchLab::Function::InsidePolygon::~InsidePolygon(){}
+
+inline
+void* BatchLab::Function::InsidePolygon::cast(const std::string& a_class) const{
+  INLIB_IF_CAST(BatchLab::Function::InsidePolygon)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else return BaseFunction::cast(a_class);
+}
+
+inline
+Slash::Store::IObject* BatchLab::Function::InsidePolygon::copy() const {
+  return new BatchLab::Function::InsidePolygon(*this);
+}
+
+inline
+std::string BatchLab::Function::InsidePolygon::storeClassName() const {
+  return "BatchLab::Function::InsidePolygon";
+}
+
+inline
+bool BatchLab::Function::InsidePolygon::value(const std::vector<double>& aPoint,double& aValue) const { 
+  if(aPoint.size()!=2) {aValue = 0;return false;}
+  //FIXME : OPTIMIZE : use a tmp f_Point ?
+  aValue = 
+    fFunction.value(inlib::func::in_polygon::point(aPoint[0],aPoint[1]));
+  return true;
+}
+
+// parameters are the polygon points.
+// To optimize memory we do not handle the BaseFunction::fParams,fParamNames
+inline
+std::vector<std::string> BatchLab::Function::InsidePolygon::parameterNames() const {
+  const std::vector<inlib::func::in_polygon::point>& pts = 
+    fFunction.points();
+  unsigned int paramn = 2*(pts.size()-1);
+  std::vector<std::string> v(paramn);
+  std::vector<std::string>::iterator vit = v.begin();
+  for(unsigned int index=0;index<paramn;index++) {
+    (*vit) = inlib::to<unsigned int>(index);
+    vit++;
+  }
+  return v;
+}
+
+inline
+const std::vector<double>& BatchLab::Function::InsidePolygon::parameters() const {
+  const std::vector<inlib::func::in_polygon::point>& pts = 
+    fFunction.points();
+  unsigned int ptn = pts.size()-1;
+  INLIB_SELF(InsidePolygon);
+  self.fParams.resize(2*ptn); //Have to use anyway fParams.
+  std::vector<Point>::const_iterator pit = pts.begin();
+  std::vector<double>::iterator fit = self.fParams.begin();
+  for(unsigned int index=0;index<ptn;index++) {
+    (*fit) = (*pit).first;fit++;
+    (*fit) = (*pit).second;fit++;
+    pit++;
+  }
+  return fParams;
+}
+
+
+inline
+int BatchLab::Function::InsidePolygon::numberOfParameters() const {
+  const std::vector<Point>& pts = fFunction.points();
+  return 2*(pts.size()-1);
+}
+
+inline
+int BatchLab::Function::InsidePolygon::indexOfParameter(const std::string& aString) const {
+  int index;
+  if(!inlib::to<int>(aString,index)) return NotFound;
+  if(index<0) return NotFound;
+  if(index>=numberOfParameters()) return NotFound;
+  return index;
+}
+
+inline
+bool BatchLab::Function::InsidePolygon::setParameter(const std::string& aString,double aValue){
+  unsigned int index;
+  if(!inlib::to<unsigned int>(aString,index)) return false;
+  const std::vector<Point>& pts = fFunction.points();
+  unsigned int paramn = 2*(pts.size()-1);
+  if(index>=paramn) return false;
+  unsigned int ipt = index/2;
+  Point p = pts[ipt];
+  if(ipt*2==index) {
+    p.first = aValue;
+  } else {
+    p.second = aValue;
+  }
+  if(!fFunction.set(ipt,p)) return false;
+  emitUpdate();
+  return true;
+}
+
+inline
+bool BatchLab::Function::InsidePolygon::setParameters(const std::vector<double>& aParams){
+
+  // aParams is the list of [x,y]
+  unsigned int number = aParams.size();
+  unsigned int pointn = number/2;
+  if(2*pointn!=number) return false; //not an even number of values.
+
+  std::vector<Point> pts(pointn);
+  std::vector<double>::const_iterator pit = aParams.begin();
+  std::vector<Point>::iterator it;
+  for(it=pts.begin();it!=pts.end();++it) {
+    (*it).first = (*pit);pit++;
+    (*it).second = (*pit);pit++;
+  }
+
+  if(!fFunction.set(pts)) return false;
+  emitUpdate();
+  return true; 
+}
+
+inline
+double BatchLab::Function::InsidePolygon::parameter(const std::string& aString) const {
+  unsigned int index;
+  if(!inlib::to<unsigned int>(aString,index)) return 0; //FIXME : throw
+  const std::vector<Point>& pts = fFunction.points();
+  unsigned int paramn = 2*(pts.size()-1);
+  if(index>=paramn) return 0; //FIXME : throw
+  unsigned int ipt = index/2;
+  if(ipt*2==index) {
+    return pts[ipt].first;
+  } else {
+    return pts[ipt].second;
+  }
+}
+
+inline
+bool BatchLab::Function::InsidePolygon::visit(Slash::Store::IConstVisitor& aVisitor) const {
+  SLASH_STORE_BEGIN(BatchLab::Function::InsidePolygon)
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+  INLIB_SELF(InsidePolygon);
+  self.fParams = parameters(); //local copy
+  self.fParamNames = parameterNames(); //local copy
+  if(!BaseFunction::visit(aVisitor)) return false;
+  self.fParams.clear();
+  self.fParamNames.clear();
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::Function::InsidePolygon::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+  int version;
+  if(!aVisitor.visit(version)) return false;
+  if(!BaseFunction::read(aVisitor)) return false;
+  if(!aVisitor.end(*this)) return false;
+  if(!setParameters(fParams)) return false; //FIXME : emit update ! ok ?
+  fParams.clear();
+  fParamNames.clear();
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline
+std::string BatchLab::Function::InsideEllipse::codelet() {return "class:InsideEllipse";}
+
+inline
+BatchLab::Function::InsideEllipse::InsideEllipse(std::ostream& a_out,const std::string& aName):BaseFunction(a_out,aName,""){}
+
+inline
+BatchLab::Function::InsideEllipse::InsideEllipse(std::ostream& a_out,const std::string& aName,const std::string& aTitle)
+:BaseFunction(a_out,aName,aTitle){
+  fParamNames.resize(2);
+  fParamNames[0] = "a";
+  fParamNames[1] = "b";
+  fParams.resize(2);
+  fParams[0] = 1;
+  fParams[1] = 1;
+  fVariableNames.push_back("x[0]");
+  fVariableNames.push_back("x[1]");
+  fCodelet = codelet();
+}
+
+inline
+BatchLab::Function::InsideEllipse::InsideEllipse(const InsideEllipse& aFrom)
+:AIDA::IManagedObject(aFrom)
+,Slash::Store::IObject(aFrom)
+,AIDA::IFunction(aFrom)
+,Slash::Store::IStorable(aFrom)
+,Slash::Meta::IObject(aFrom)
+,BaseFunction(aFrom)
+,fFunction(aFrom.fFunction)
+{}
+
+inline
+BatchLab::Function::InsideEllipse::~InsideEllipse(){}
+
+inline
+void* BatchLab::Function::InsideEllipse::cast(const std::string& a_class) const{
+  INLIB_IF_CAST(BatchLab::Function::InsideEllipse)
+  else INLIB_IF_CAST(Slash::Meta::IObject)
+  else return BaseFunction::cast(a_class);
+}
+
+//VISIT_SOURCE(BatchLab::Function::InsideEllipse)
+
+inline
+bool BatchLab::Function::InsideEllipse::visit(Slash::Store::IConstVisitor& aVisitor) const {
+  SLASH_STORE_BEGIN(BatchLab::Function::InsideEllipse)
+  int version = 1;
+  if(!aVisitor.visit("fVersion",version)) return false;
+  if(!BaseFunction::visit(aVisitor)) return false;
+  if(!aVisitor.end(*this)) return false;
+  return true;
+}
+
+inline
+bool BatchLab::Function::InsideEllipse::read(Slash::Store::IVisitor& aVisitor){
+  if(!aVisitor.begin(*this)) return false;
+  int version;
+  if(!aVisitor.visit(version)) return false;
+  if(!BaseFunction::read(aVisitor)) return false;
+  if(!aVisitor.end(*this)) return false;
+  if(!fFunction.set_from_a_b(fParams[0],fParams[1])) return false;
+  return true;
+}
+
+inline
+Slash::Store::IObject* BatchLab::Function::InsideEllipse::copy() const{return new BatchLab::Function::InsideEllipse(*this);}
+
+inline
+std::string BatchLab::Function::InsideEllipse::storeClassName() const{return "BatchLab::Function::InsideEllipse";}
+
+inline
+double BatchLab::Function::InsideEllipse::parameter(const std::string& aName) const {
+  if(aName=="a") return fParams[0];
+  else if(aName=="b") return fParams[1];
+  else {
+    out() << "BatchLab::Function::InsideEllipse::parameter :"
+        << " unknown parameter " << aName << "."
+        << std::endl;
+    return 0;
+  }
+}
+
+inline
+bool BatchLab::Function::InsideEllipse::setParameters(const std::vector<double>& aParams) {
+  if(aParams.size()!=2) {
+    out() << "BatchLab::Function::InsideEllipse::setParameter :"
+        << " bad input vector size."
+        << std::endl;
+    return false;
+  }
+  fParams = aParams;
+  if(!fFunction.set_from_a_b(fParams[0],fParams[1])) return false;
+  emitUpdate();
+  return true;
+}
+
+inline
+bool BatchLab::Function::InsideEllipse::setParameter(const std::string& aName,double aValue){ 
+  int index = indexOfParameter(aName);
+  if(index==NotFound) {
+    out() << "BatchLab::Function::InsideEllipse::setParameter :"
+        << " parameter name " << inlib::sout(aName) << " not found."
+        << std::endl;
+    return false;
+  }
+  if(index==0) {
+    if(!fFunction.set_from_a_b(aValue,fFunction.b())) return false;
+  } else if(index==1) {
+    if(!fFunction.set_from_a_b(fFunction.a(),aValue)) return false;
+  }
+  fParams[index] = aValue;
+  emitUpdate();
+  return true;
+}
+
+inline
+bool BatchLab::Function::InsideEllipse::value(const std::vector<double>& aPoint
+,double& aValue) const { 
+  if(aPoint.size()!=2) {aValue = 0;return false;}
+  aValue = fFunction.value(aPoint[0],aPoint[1]);
+  return true;
+}

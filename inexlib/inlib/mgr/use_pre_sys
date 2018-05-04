@@ -1,0 +1,22 @@
+
+
+#sdk_home=/usr/local/Android/android-sdk-mac_86
+#ndk_home=/usr/local/Android/android-ndk-r4b
+
+sdk_home=/usr/local/Android/android-sdk_r16-macosx
+ndk_home=/usr/local/Android/android-ndk-r7
+
+# pgex : plugin suffix.
+
+if [ `uname` = Darwin ] ; then
+  lib=lib
+  pgex=bundle
+else
+  if [ `uname -p` = x86_64 ] ; then
+    lib=lib64
+  else
+    lib=lib
+  fi
+  pgex=so
+fi
+

@@ -1,0 +1,561 @@
+// this :
+#include <Lib/Value.h>
+
+#include <Lib/Cast.h>
+#include <Lib/Debug.h>
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+void* Lib::Value::cast(const std::string& a_class) const {
+  if_Lib_SCast(Slash::Core::IValue)
+  else if_Lib_SCast(Lib::Value)
+  else return 0;
+}
+Slash::Core::IValue::Type Lib::Value::type() const {
+  return fType;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+unsigned char Lib::Value::get_unsigned_char() const {
+  return u.f_unsigned_char;
+}
+char Lib::Value::get_char() const {
+  return u.f_char;
+}
+Slash::int64 Lib::Value::get_int64() const {
+  return u.f_int64;
+}
+Slash::uint64 Lib::Value::get_unsigned_int64() const {
+  return u.f_unsigned_int64;
+}
+unsigned int Lib::Value::get_unsigned_int() const {
+  return u.f_unsigned_int;
+}
+int Lib::Value::get_int() const {
+  return u.f_int;
+}
+unsigned short Lib::Value::get_unsigned_short() const {
+  return u.f_unsigned_short;
+}
+short Lib::Value::get_short() const {
+  return u.f_short;
+}
+float Lib::Value::get_float() const {
+  return u.f_float;
+}
+double Lib::Value::get_double() const {
+  return u.f_double;
+}
+void* Lib::Value::get_void_star() const {
+  return u.f_void_star;
+}
+double* Lib::Value::get_double_star() const {
+  return u.f_double_star;
+}
+float* Lib::Value::get_float_star() const {
+  return u.f_float_star;
+}
+int* Lib::Value::get_int_star() const {
+  return u.f_int_star;
+}
+bool Lib::Value::get_bool() const {
+  return u.f_bool;
+}
+std::string Lib::Value::get_std_string() const {
+  return *u.f_std_string;
+}
+std::vector<double> Lib::Value::get_std_vector_double() const {
+  return *u.f_std_vector_double;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+Lib::Value::Value()
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = NONE;
+  u.f_unsigned_int64 = 0;
+}
+Lib::Value::Value(bool aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = BOOL;
+  u.f_bool = aValue;
+}
+Lib::Value::Value(char aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = CHAR;
+  u.f_char = aValue;
+}
+Lib::Value::Value(short aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = SHORT;
+  u.f_short = aValue;
+}
+Lib::Value::Value(int aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = INT;
+  u.f_int = aValue;
+}
+Lib::Value::Value(Slash::int64 aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = INT64;
+  u.f_int64 = aValue;
+}
+Lib::Value::Value(Slash::uint64 aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = UNSIGNED_INT64;
+  u.f_unsigned_int64 = aValue;
+}
+Lib::Value::Value(float aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = FLOAT;
+  u.f_float = aValue;
+}
+Lib::Value::Value(double aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = DOUBLE;
+  u.f_double = aValue;
+}
+
+Lib::Value::Value(unsigned char aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = UNSIGNED_CHAR;
+  u.f_unsigned_char = aValue;
+}
+Lib::Value::Value(unsigned short aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = UNSIGNED_SHORT;
+  u.f_unsigned_short = aValue;
+}
+Lib::Value::Value(unsigned int aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = UNSIGNED_INT;
+  u.f_unsigned_int = aValue;
+}
+Lib::Value::Value(void* aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = VOID_STAR;
+  u.f_void_star = aValue;
+}
+Lib::Value::Value(double* aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = DOUBLE_STAR;
+  u.f_double_star = aValue;
+}
+Lib::Value::Value(float* aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = FLOAT_STAR;
+  u.f_float_star = aValue;
+}
+Lib::Value::Value(int* aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = INT_STAR;
+  u.f_int_star = aValue;
+}
+Lib::Value::Value(const char* aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = STRING;
+  u.f_std_string = new std::string(aValue?aValue:"");
+}
+Lib::Value::Value(const std::string& aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = STRING;
+  u.f_std_string = new std::string(aValue);
+}
+Lib::Value::Value(const std::vector<double>& aValue)
+:fLabel(0)
+,fDimension(0){
+  Debug::increment("Lib::Value");
+  fType = STD_VECTOR_DOUBLE;
+  u.f_std_vector_double = new std::vector<double>(aValue);
+}
+Lib::Value::~Value(){ 
+  delete fLabel;
+  reset();
+  Debug::decrement("Lib::Value");
+}
+
+Lib::Value::Value(
+ const Value& aFrom
+) 
+:IValue()
+,fLabel(0)
+,fDimension(aFrom.fDimension)
+{
+  Debug::increment("Lib::Value");
+
+  if(aFrom.fLabel) fLabel = new std::string(*aFrom.fLabel);
+
+  fType = aFrom.fType;
+
+  if(aFrom.fType==STRING) {
+    u.f_std_string = new std::string(*aFrom.u.f_std_string);
+  } else if(aFrom.fType==STD_VECTOR_DOUBLE) {
+    u.f_std_vector_double = 
+      new std::vector<double>(*aFrom.u.f_std_vector_double);
+  } else {
+    u = aFrom.u;
+  }
+}
+Lib::Value& Lib::Value::operator=(const Value& aFrom) {
+
+  delete fLabel;
+  fLabel = 0;
+  if(aFrom.fLabel) fLabel = new std::string(*aFrom.fLabel);
+  fDimension = aFrom.fDimension;
+
+  reset();
+
+  fType = aFrom.fType;
+
+  if(aFrom.fType==STRING) {
+    u.f_std_string = new std::string(*aFrom.u.f_std_string);
+  } else if(aFrom.fType==STD_VECTOR_DOUBLE) {
+    u.f_std_vector_double = 
+      new std::vector<double>(*aFrom.u.f_std_vector_double);
+  } else {
+    u = aFrom.u;
+  }
+
+  return *this;
+}
+void Lib::Value::reset() {
+  if(fType==STRING) {
+    delete u.f_std_string;
+    u.f_std_string = 0;
+  } else if(fType==STD_VECTOR_DOUBLE) {
+    delete u.f_std_vector_double;
+    u.f_std_vector_double = 0;
+  } else {
+    u.f_unsigned_int64 = 0;
+  }
+}
+std::string Lib::Value::stype() const {
+  // Used in Lib/AccessorManager, OnXLab/TupleAction, OnXLab/HistogramAction.
+#define scase(a) case a:return #a;
+  switch(fType) {
+  scase(NONE)
+  scase(INT)
+  scase(INT64)
+  scase(DOUBLE)
+  scase(STRING)
+  scase(VOID_STAR)
+  scase(DOUBLE_STAR)
+  scase(FLOAT_STAR)
+  scase(INT_STAR)
+  scase(BOOL)
+  scase(SHORT)
+  scase(FLOAT)
+  scase(CHAR)
+  scase(UNSIGNED_CHAR)
+  scase(UNSIGNED_SHORT)
+  scase(UNSIGNED_INT)
+  scase(UNSIGNED_INT64)
+  scase(STD_VECTOR_DOUBLE)
+  }
+#undef scase
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::setNone(
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = NONE;
+  u.f_unsigned_int64 = 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ char aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = CHAR;
+  u.f_char = aValue;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ short aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+{
+  reset();
+  fType = SHORT;
+  u.f_short = aValue;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ int aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = INT;
+  u.f_int = aValue;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ float aValue
+)
+/////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = FLOAT;
+  u.f_float = aValue;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ double aValue
+)
+/////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = DOUBLE;
+  u.f_double = aValue;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ unsigned char aValue
+)
+/////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = UNSIGNED_CHAR;
+  u.f_unsigned_char = aValue;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ unsigned short aValue
+)
+/////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = UNSIGNED_SHORT;
+  u.f_unsigned_short  = aValue;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ unsigned int aValue
+)
+/////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = UNSIGNED_INT;
+  u.f_unsigned_int  = aValue;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ Slash::int64 aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = INT64;
+  u.f_int64 = aValue;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ Slash::uint64 aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = UNSIGNED_INT64;
+  u.f_unsigned_int64 = aValue;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ const std::string& aValue
+)
+/////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = STRING;
+  u.f_std_string = new std::string(aValue);
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ const std::vector<double>& aValue
+)
+/////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = STD_VECTOR_DOUBLE;
+  u.f_std_vector_double = new std::vector<double>(aValue);
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ void* aValue
+)
+/////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = VOID_STAR;
+  u.f_void_star = aValue;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ double* aValue
+)
+/////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = DOUBLE_STAR;
+  u.f_double_star = aValue;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ float* aValue
+)
+/////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = FLOAT_STAR;
+  u.f_float_star = aValue;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ int* aValue
+)
+/////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = INT_STAR;
+  u.f_int_star = aValue;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::set(
+ bool aValue
+)
+/////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = BOOL;
+  u.f_bool = aValue;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::setLabel(
+ const std::string& aString
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  delete fLabel;
+  fLabel = new std::string(aString);
+}
+//////////////////////////////////////////////////////////////////////////////
+std::string Lib::Value::label(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return fLabel?(*fLabel):"";
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::setDimension(
+ unsigned int aDimension
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  fDimension = aDimension;
+}
+//////////////////////////////////////////////////////////////////////////////
+unsigned int Lib::Value::dimension(
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return fDimension;
+}
+//////////////////////////////////////////////////////////////////////////////
+void Lib::Value::setType(
+ Type aType
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  reset();
+  fType = aType;
+  switch(aType) {
+  case NONE:      u.f_unsigned_int64 = 0;break;
+  case UNSIGNED_CHAR:    u.f_unsigned_char = 0;break;
+  case CHAR:      u.f_char = 0;break;
+  case UNSIGNED_SHORT:   u.f_unsigned_short = 0;break;
+  case SHORT:     u.f_short = 0;break;
+  case UNSIGNED_INT:     u.f_unsigned_int = 0;break;
+  case INT:       u.f_int = 0;break;
+  case UNSIGNED_INT64:   u.f_unsigned_int64 =0;break;
+  case INT64:     u.f_int64 = 0;break;
+  case FLOAT:     u.f_float = 0;break;
+  case DOUBLE:    u.f_double = 0;break;
+  case BOOL:      u.f_bool = false;break;
+  case VOID_STAR:        u.f_void_star = 0;break;
+  case DOUBLE_STAR:      u.f_double_star = 0;break;
+  case FLOAT_STAR:       u.f_float_star = 0;break;
+  case INT_STAR:         u.f_int_star = 0;break;
+  case STRING:       u.f_std_string = new std::string("");break;
+  case STD_VECTOR_DOUBLE:u.f_std_vector_double = new std::vector<double>();break;
+  }
+}

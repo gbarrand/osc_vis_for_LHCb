@@ -1,0 +1,86 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file exlib.license for terms.
+
+#ifndef exlib_iv_send
+#define exlib_iv_send
+
+#include <Inventor/SoOutput.h>
+#include <Inventor/nodes/SoNode.h>
+#include <Inventor/actions/SoWriteAction.h>
+
+#include <inlib/sys/file>
+#include <inlib/net/base_socket>
+//#include <inlib/net/protocol>
+
+#include <cstdio> //::remove
+
+namespace exlib {
+namespace iv {
+
+inline bool send(inlib::net::base_socket& a_socket,
+          std::ostream& a_out,
+          const std::string& a_viewer,
+          const std::string& a_placement,
+          SoNode* a_node) {
+
+  std::string inlib_net_protocol_doc("doc");
+
+  std::string file;
+  if(!inlib::tmpname("","exlib_iv_",".hiv",file)) {
+    a_out << "exlib::iv::send :"
+          << " can't get tmp file name."
+          << std::endl;
+    return false;
+  }
+
+  //FIXME : should write in binary.
+  //FIXME : compress with exlib ?
+  //FIXME : should be able to avoid file and use direct mem copy.
+ {SoOutput soOut;
+  //soOut.setCompression("GZIP",0.5F); //problems with G4 Trajectories.
+  soOut.openFile(file.c_str());
+  soOut.setBinary(FALSE); //FIXME
+  SoWriteAction writeAction(&soOut);
+  writeAction.apply(a_node);
+  soOut.closeFile();}
+
+  if(!a_socket.send_string(inlib_net_protocol_doc)) {
+    a_out << "exlib::iv::send :"
+          << " send_string() failed."
+          << std::endl;
+    ::remove(file.c_str());
+    return false;
+  }
+
+  if(!a_socket.send_string(a_viewer)) {
+    a_out << "exlib::iv::send :"
+          << " send_string() failed."
+          << std::endl;
+    ::remove(file.c_str());
+    return false;
+  }
+
+  if(!a_socket.send_string(a_placement)) {
+    a_out << "exlib::iv::send :"
+          << " send_string() failed."
+          << std::endl;
+    ::remove(file.c_str());
+    return false;
+  }
+
+  if(!a_socket.send_file(file)) {
+    a_out << "exlib::iv::send :"
+          << " send_file() failed."
+          << std::endl;
+    ::remove(file.c_str());
+    return false;
+  }
+
+  ::remove(file.c_str());
+
+  return true;
+}
+
+}}
+
+#endif

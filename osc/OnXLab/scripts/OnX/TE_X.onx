@@ -1,0 +1,56 @@
+<widget class="VContainer"> 
+  <tabLabel>X</tabLabel>
+      <widget class="ToggleButton" name="OnXLab_TupleExplorer_xauto">
+        <label>Automated</label>
+        <set>true</set>
+        <activate exec="DLD">OnXLab OnXLab_TupleExplorer_bind</activate>
+      </widget>
+      <widget class="HBox"> 
+        <expand>second</expand>
+        <sizeOfFixed>50</sizeOfFixed>
+        <widget class="Label">
+          <label>Xbins</label>
+        </widget>
+        <widget class="Entry" name="OnXLab_TupleExplorer_xnumber">
+          <activate exec="DLD">OnXLab OnXLab_TupleExplorer_represent</activate>
+        </widget>
+      </widget>
+      <widget class="HBox"> 
+        <expand>second</expand>
+        <sizeOfFixed>150</sizeOfFixed>
+        <widget class="HBox"> 
+          <expand>second</expand>
+          <sizeOfFixed>50</sizeOfFixed>
+          <widget class="Label">
+            <label>Xmin</label>
+          </widget>
+          <widget class="Entry" name="OnXLab_TupleExplorer_xmin">
+            <activate exec="DLD">OnXLab OnXLab_TupleExplorer_represent</activate>
+          </widget>
+        </widget>
+        <widget class="HScrollBar" name="OnXLab_TupleExplorer_xmin_scale">
+          <drag exec="DLD">OnXLab OnXLab_TupleExplorer_scale x min</drag>
+          <increment exec="DLD">OnXLab OnXLab_TupleExplorer_scale x min</increment>
+          <decrement exec="DLD">OnXLab OnXLab_TupleExplorer_scale x min</decrement>
+        </widget>
+      </widget>
+      <widget class="HBox"> 
+        <expand>second</expand>
+        <sizeOfFixed>150</sizeOfFixed>
+        <widget class="HBox"> 
+          <expand>second</expand>
+          <sizeOfFixed>50</sizeOfFixed>
+          <widget class="Label">
+            <label>Xmax</label>
+          </widget>
+          <widget class="Entry" name="OnXLab_TupleExplorer_xmax">
+            <activate exec="DLD">OnXLab OnXLab_TupleExplorer_represent</activate>
+          </widget>
+        </widget>
+        <widget class="HScrollBar" name="OnXLab_TupleExplorer_xmax_scale">
+          <drag exec="DLD">OnXLab OnXLab_TupleExplorer_scale x max</drag>
+          <increment exec="DLD">OnXLab OnXLab_TupleExplorer_scale x max</increment>
+          <decrement exec="DLD">OnXLab OnXLab_TupleExplorer_scale x max</decrement>
+        </widget>
+      </widget>
+</widget>

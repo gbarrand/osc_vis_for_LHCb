@@ -1,0 +1,31 @@
+
+ Controls on the SoXtExaminerViewer are :
+    - right mouse button : popup menu.
+    - right/popup/decorations : enable the Inventor "decorations".
+    - Click in the "pointer" : pass in picking mode. 
+    - Click in the "hand" : pass in viewing mode. 
+    - Click in the "eye" : map the scene to the window size.
+    - Click in the "target" (or "electric torch"): 
+       seek (center the scene over a picked point).
+    - left + ptr move : permits to rotate the scene.
+    - left + middle + ptr move : permit to scale the scene.
+    - ctrl + middle + ptr move : permits to scale the scene.
+    - ctrl + left + ptr move : permits to pane the scene.
+    - middle + ptr move : permit to pane the scene.
+    - s key in viewing mode : seek (center the scene over a picke point).
+    - esc : toggle viewing / picking mode.
+    - q : exit main loop (and OnX) !
+    - ctrl + shift + ptr move : 
+      o in viewing mode ; zoom on the selected area. Use backspace to
+        return to the previous camera setting.
+      o in picking mode ; collect objects in the selected area.
+    - backspace in viewing mode : return to the camera setting
+      stored at the moment of a "ctrl + shift + ptr move" zooming.
+
+ Controls when in picking mode :
+    - picking and dragging a region border permit to move it.
+    - picking and dragging a region corner permit to resize it.
+
+ WARNING :
+   On Mac with Qt, ctrl is on the Apple key. (This is wanted by Qt people).
+

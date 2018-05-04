@@ -1,0 +1,81 @@
+// included by GrafDictionary.cxx
+
+namespace Rio {
+
+class AttLine_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  AttLine_Class()
+  :BaseClass("Rio::AttLine","TAttLine",1),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TAttLine");
+    //members :
+    stringCheckSum(fCheckSum,"fLineColor");
+    stringCheckSum(fCheckSum,"Color_t");
+
+    stringCheckSum(fCheckSum,"fLineStyle");
+    stringCheckSum(fCheckSum,"Style_t");
+
+    stringCheckSum(fCheckSum,"fLineWidth");
+    stringCheckSum(fCheckSum,"Width_t");
+
+    //Should be : 1369587346U
+  }
+  virtual ~AttLine_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class AttFill_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  AttFill_Class()
+  :BaseClass("Rio::AttFill","TAttFill",1),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TAttFill");
+    //members :
+    stringCheckSum(fCheckSum,"fFillColor");
+    stringCheckSum(fCheckSum,"Color_t");
+
+    stringCheckSum(fCheckSum,"fFillStyle");
+    stringCheckSum(fCheckSum,"Style_t");
+
+    //Should be : 1204118360U
+  }
+  virtual ~AttFill_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class AttMarker_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  AttMarker_Class()
+  :BaseClass("Rio::AttMarker","TAttMarker",1),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TAttMarker");
+    //members :
+    stringCheckSum(fCheckSum,"fMarkerColor");
+    stringCheckSum(fCheckSum,"Color_t");
+
+    stringCheckSum(fCheckSum,"fMarkerStyle");
+    stringCheckSum(fCheckSum,"Style_t");
+
+    stringCheckSum(fCheckSum,"fMarkerSize");
+    stringCheckSum(fCheckSum,"Size_t");
+
+    //Should be 4207747460U
+  }
+  virtual ~AttMarker_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+}
+

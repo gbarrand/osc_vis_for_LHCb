@@ -1,0 +1,87 @@
+
+ Patch release over 16.11.
+
+ Touched files compared to 16.11 :
+ - HEPVis/source/SoPlotter.cxx : 
+   correct updateLayout. It permits to correct the
+   shear aspect of lego/3D layout.
+
+ - HEPVis/source/SbTessContour.cxx :
+   correct the conbineCallback signature.
+   This was the source of the osc-plot/"func2d curve"
+   crash on Mac/SnowLeopard.
+
+ - BatchLab/source/Core/DataPointSet.cxx :
+   have emitUpdate(). It permits to have an auto update
+   of a plot whence filling the data point set.
+
+ - BatchLab/source/Core/DataPointSetFactory.cxx :
+   create() : THREAD_SAFETY for AIDA/v3r2p1 code.
+   To be able to fill in one thread whilst plotting
+   in another thread.
+
+ - BatchLab/source/XML/XML_DataReader.cxx :
+   readHistogramData() : handle the case in which
+   no "height" had been given in <bin[1,2]d> for histograms.
+   In this case we assume that at fill time the weight
+   argument had always been 1 and then that :
+     height = entries.
+   This permits to handle .aida files coming from jaida.
+
+ - BatchLab/source/XML/XML_DataWrite.cxx : get_booking() :
+   have :
+     a_string += "{";
+   and not :
+     a_string = "{";
+   (Else the booking string in jec.aida is wrong).
+
+ - OnXLab/source/Inventor/PlottableThings.cxx
+   PlottableDataPointSet class : protect return of point(i).
+
+ - UseAIDA/examples/osc/cpp/pure_thread_dps.cxx
+   A stand alone example of a data point set filled
+   in a thread whilst plotted in the main thread.
+
+ - OnXLab/examples/Callbacks/Included.cxx,
+   OnXLab/examples/OnX/monitor.onx :
+   take into account pure_thread_dps example.
+   take into account pure_thread_dps example.
+
+ - foreign/osc_vis.obuild
+   osc_source/version
+   [osc_source,osc_obuid,osc_batch,osc_iv,osc_vis]/obuild/this.obuild :
+   have 16.11.2. To tag the release.
+
+ - BatchLab/BatchLab/DataReader.h
+   BatchLab/BatchLab/ROOT.h
+   BatchLab/source/Rio/Rio_DataReader.cxx
+   BatchLab/source/Rio/Rio_Manager.cxx
+   BatchLab/source/Rio/Rio_ROOT.cxx
+   BatchLab/source/Rio/Rio_Tree.cxx
+   Modifications in 16.11.2 to handle Profile1D ROOT streaming.
+
+ Touched files compared to 16.11.2 :
+ - foreign/gtk2.obuild
+   -I${gtk_home}/include/gdk-pixbuf-2.0
+ - CoinGL/include/Inventor/system/inttypes_[linux,macosx].h :
+   #ifndef HAVE_STDDEF_H
+   #define HAVE_STDDEF_H 1
+   #endif
+ - CoinGL/include/Inventor/fields/SoSubField.h :
+   avoid some ";" in order to compile with -pedantic.
+   
+ Touched files compared to 16.11.3 :
+ - BatchLab/source/Rio/Rio_Classes.icxx : have TH2_Class.
+ - BatchLab/source/Rio/Rio_Dictionary.cxx : have TH1F,TH2,TH2F,TH2D streamer.
+ - foreign/CLHEP.obuild, Geant4.obuild : use CLHEP_HOME_DIR,
+   G4INSTALL, G4SYSTEM. Then if building "-group Geant4", it is expected
+   that the "source setup" of Geant4 had been done.
+ - UseAIDA/examples/cpp/osc/A2R.cpp : to test TH[1,2], TProfile in .root.
+ - G4Lab/obuild/this.obuild : <setup> rm CLHEP,G4 <load_library_path>.
+ - obuild/source/Builder.cxx/out_check_foreigns_sh : "check_env"
+   done before other checks. Permit to have a more clear message if
+   CLHEP_BASE_DIR not defined.
+ - obuild/source/Builder.cxx : subs_var, subs_path, out_save_[sh,bat] : to have
+   the string "${CLHEP_BASE_DIR}" in the .save files.
+
+  01 Mar 2011. G.Barrand.

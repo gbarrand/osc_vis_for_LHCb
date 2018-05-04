@@ -1,0 +1,94 @@
+WEB
+  http://OpenScientist.lal.in2p3.fr
+
+USAGE
+      OS> osc-plot <options> [<data file>]
+  (OS is for Operating System). The upper command assumes that 
+  the setup script of OpenScientist had been executed and that
+  the OSC_HOME_DIR environment variable points to your
+  OpenScientist installation. (For historical reasons osc-plot
+  can be lauched also as onxlab).
+
+  Some various little data file at various formats can be found under :
+      $OSC_HOME_DIR/Resources/OnXLab/examples/data
+    ( %OSC_HOME_DIR%\Resources\OnXLab\examples\data on a Windows)
+
+OPTIONS
+ -version : 
+    osc-plot version.
+
+ -toolkit=[Xt, Gtk, Qt, Win, NS] :
+    GUI toolkit to be used when creating the GUI.
+    The GUI hierarchy is described from the file :
+      $OSC_HOME_DIR/Resources/OnXLab/scripts/OnX/main.onx
+    This assumes that the corresponding OnX GUI driver / DLL had 
+    been installed.
+    For example :
+      OS> osc-plot -toolkit=Xt
+
+ -Xt -xt -Xm -xm -motif -Motif :
+    use Motif GUI toolkit. It is the default on a UNIX system.
+
+ -Gtk -gtk :
+    use gtk.
+    For example :
+      OS> osc-plot -gtk
+
+ -Qt -qt :
+    use Qt.
+
+ -Win -win :
+    use WIN32 GUI toolkit. It is the default on a Windows system.
+
+ -stdout :
+    redirect all output to the terminal. In this mode the session.printer, 
+    std[out,err] and also std::[cout,cerr] write on the terminal.
+    (In particular, there is no tentative to redirect the std channels
+    to the "UI console" ; see below).
+
+ -defout :
+    redirect only the session.printer to the "UI console".
+    The "UI console" is the first widget named "consoleText"
+    found in the GUI hierarchy. In this mode the std[out,err] and 
+    std::[cout,cerr] are still on the terminal (no redirection
+    is attempted).
+
+ -uiout :
+    redirect all the output to the "UI console"
+    It is the default of the program.
+    In this mode the session.printer, std[out,err] and 
+    also std::[cout,cerr] are redirected to the UI console.
+
+ [-verbose,-verbose=<manager>] :
+    enable verbose mode. Convenient to debug.
+    For example :
+      OS> osc-plot -verbose -stdout
+      OS> osc-plot -verbose=UI_Manager -stdout -gtk
+
+ -balance : 
+ -debug_check_class : 
+    enable object balance counting per class.
+
+ -style=[windows,motif,cde,motifplus,platinum,sgi]
+ -style=[compact,windowsxp,aqua,macintosh] : 
+    passed to some GUI (for exa Qt) that supports multiple GUI styles.
+    For example :
+      OS> osc-plot -qt -style=windows
+
+ -thread : 
+    enable multithreading in case the (GUI, scripting) drivers support it.
+
+ -session=<file> :
+    session parameters xml file. The default is :
+      $OSC_HOME_DIR/Resources/OnX/scripts/OnX/Session.onx
+
+ENVIRONMENT
+  Some environment variables permits to customize applications :
+    ONX_ARGS : to pass arguments.
+
+FILES 
+  Under $OSC_HOME_DIR/Resources/OnXLab :
+    examples/data
+    examples/Python
+    scripts/OnX/main.onx
+    etc...

@@ -1,0 +1,55 @@
+replace\n<widget class="Reference"\n<reference
+replace\nsecondHistogramContext\nhistogramContext.1
+replace\nsecondFunctionContext\nfunctionContext.1
+replace\nsecondCloudContext\ncloudContext.1
+replace\n<OnX version="11">\n<OnX version="v15r0">
+replace\n<OnX version="12">\n<OnX version="v15r0">
+replace\n<OnX version="13">\n<OnX version="v15r0">
+replace\n<OnX version="13.0">\n<OnX version="v15r0">
+replace\nmodeling solid\nmodeling boxes
+replace\nSbModelingSolid\nSbModelingBoxes
+replace\nSbModelingWireFrame\nSbModelingLines
+warn\nxyModeling\nxyModeling no more supported (use modeling and painting in context).
+warn\nXV\nXV no more supported.
+warn\nXYV\nXYV no more supported.
+warn\nSoHighlightMaterial\nSoHighlightMaterial can be avoided
+replace\nSbGraphicContext\nSbStyle
+replace\nhistogramContext\nhistogramStyle
+replace\ncloudContext\ncloudStyle
+replace\nfunctionContext\nfunctionStyle
+replace\ntextContext\ntextStyle
+replace\ninfosContext\ninfosStyle
+replace\nwallContext\nwallStyle
+replace\ngridContext\ngridStyle
+replace\ninnerFrameContext\ninnerFrameStyle
+replace\nhatchContext\nhatchStyle
+replace\nsecondHatchContext\nsecondHatchStyle
+replace\nsDefaultHistogramContext\ns_histogramStyle
+replace\nsDefaultCloudContext\ns_cloudStyle
+replace\nsDefaultFunctionContext\ns_functionStyle
+replace\nsDefaultTextContext\ns_textStyle
+replace\nsDefaultInfosContext\ns_infosStyle
+replace\nsDefaultWallContext\ns_wallStyle
+replace\nsDefaultGridContext\ns_gridStyle
+replace\nsDefaultInnerFrameContext\ns_innerFrameStyle
+replace\nsDefaultHatchContext\ns_hatchStyle
+replace\nsDefaultHatch2Context\ns_secondHatchStyle
+replace\naGraphicContext\naStyle
+replace\ngraphicContext\ngraphicStyle
+replace\ndefaultContext\ndefaultStyle
+replace\nchangeContext\nchangeStyle
+warn\nSbPlottableHistogram\nSbPlottableHistogram deprecated, use SbPlottableBins[1,2]D
+warn\nSbPlottableCloud\nSbPlottableCloud deprecated, use SbPlottablePoints[2,3]D
+replace\nhistogramStyle\nbinsStyle
+replace\ncloudStyle\npointsStyle
+replace\nhistogramsSeparator\nbinsSeparator
+replace\ncloudsSeparator\npointsSeparator
+replace\nsuperposeHistograms\nsuperposeBins
+replace\nHEPVisAnalysis\nHEPVisPlotter
+warn\ntextStyle\ntextStyle deprecated. Use titleStyle, [x,y,z]AxisStyle.
+warn\nCurrent region\nCurrent region item no more supported. Remove it.
+warn\nfileName\nfileName on SoTextTTF is now fontName.
+warn\n"viewer.viewing","2D"\nviewer.viewing 2D/3D deprecated.
+warn\n"viewer.viewing","3D"\nviewer.viewing 2D/3D deprecated.
+replace\nLib_linkopts\nLibCore_linkopts
+replace\nLib_static\nLibCore_static

@@ -1,0 +1,24 @@
+#!/bin/sh -f
+
+if test -z $RIOROOT ;
+then
+  echo "Rio setup not executed."
+  exit
+fi
+
+#set -x
+
+package=Rio
+version=${RIO_VERSION}
+
+doxygen
+cd ../latex
+cp ../doxygen/${package}.tex refman.tex
+make
+make ps
+cp refman.ps ${package}-${version}.ps
+cp ${package}-${version}.ps ../ps/${package}-${version}.ps
+gzip ${package}-${version}.ps
+mv ${package}-${version}.ps.gz ../ps
+cd ../doxygen
+find ../latex -name "*" -maxdepth 1 -type f -exec /bin/rm -f {} \;

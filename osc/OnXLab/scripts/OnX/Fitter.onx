@@ -1,0 +1,86 @@
+<widget class="Dialog" name="OnXLab_Fitter_dialog">
+  <geometry>300x300</geometry>
+  <title>Fitter</title>
+  <show>no</show>
+
+  <widget class="VBox"> 
+    <expand>second</expand>
+    <sizeOfFixed>175</sizeOfFixed> <!-- 5 * 35 = 175 -->
+
+    <widget class="VContainer"> 
+
+        <widget class="HBox"> 
+          <expand>second</expand>
+          <sizeOfFixed>80</sizeOfFixed>
+          <widget class="PushButton" name="OnXLab_Fitter_get_fittable">
+            <label>Get fittable</label>
+            <activate exec="DLD">OnXLab OnXLab_Fitter_get_fittable</activate>
+          </widget>
+          <widget class="Entry" name="OnXLab_Fitter_fittable"/>
+        </widget>
+
+        <widget class="HBox"> 
+          <expand>second</expand>
+          <sizeOfFixed>80</sizeOfFixed>
+          <widget class="PushButton" name="OnXLab_Fitter_get_function">
+            <label>Get function</label>
+            <!-- NOTE : the below does some destroy/create widgets
+                        in the OnXLab_Fitter_params container.
+                        Then it is better to do it in background mode. -->
+            <activate exec="DLD" background="yes">OnXLab OnXLab_Fitter_get_function</activate>
+          </widget>
+          <widget class="Entry" name="OnXLab_Fitter_function"/>
+        </widget>
+
+        <widget class="HBox"> 
+          <expand>second</expand>
+          <sizeOfFixed>50</sizeOfFixed>
+          <widget class="Label">
+            <label>Engine</label>
+          </widget>
+          <widget class="ComboBox" name="OnXLab_Fitter_engine">
+            <default>midnight</default>
+            <items>midnight\nminuitc++</items>
+          </widget>
+        </widget>
+
+        <widget class="HBox"> 
+          <expand>second</expand>
+          <sizeOfFixed>50</sizeOfFixed>
+          <widget class="Label">
+            <label>Plot</label>
+          </widget>
+          <widget class="OptionMenu" name="OnXLab_Fitter_plot">
+            <default>true</default>
+            <items>true\nfalse</items>
+          </widget>
+        </widget>
+
+        <widget class="PushButton">
+          <label>Fit</label>
+          <activate exec="DLD">OnXLab OnXLab_Fitter_fit</activate>
+        </widget>
+
+    </widget>
+
+    <widget class="VBox"> 
+      <expand>first</expand>
+      <sizeOfFixed>35</sizeOfFixed>
+
+      <widget class="VBox" name="OnXLab_Fitter_params"/>
+
+      <widget class="HContainer"> 
+        <widget class="PushButton">
+          <label>Cancel</label>
+          <activate exec="DLD">OnX ui_hide OnXLab_Fitter_dialog</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Help</label>
+          <activate exec="DLD">OnX ui_help_file @{ONXLAB_HOME}@ @cat@ /scripts/Help/Fitter.help</activate>
+        </widget>
+      </widget>
+
+    </widget>
+  </widget>
+</widget>
+

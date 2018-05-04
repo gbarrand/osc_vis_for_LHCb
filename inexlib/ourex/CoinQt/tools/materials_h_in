@@ -1,0 +1,18 @@
+#!/bin/sh -f
+
+from=$2
+to=$3
+
+dirname=`dirname $1`
+basename=`basename $1`
+
+todir=`echo $dirname | sed -e "s|${from}|${to}|g"`
+toname=`echo $basename | sed -e "s|\.in||g"`
+
+#echo '--------------'
+#echo $todir
+#echo $toname
+#exit
+
+sed -e "s|@gui@|qt|g" $1 | sed -e "s|@GUI@|QT|g" | sed -e "s|@Gui@|Qt|g" > tmp
+/bin/mv tmp ${todir}/${toname}

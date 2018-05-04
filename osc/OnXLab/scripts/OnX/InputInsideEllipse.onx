@@ -1,0 +1,18 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnXLab_InputInsideEllipse">
+    <label>Inside polygon function editor</label>
+
+    <input name="name" label="Name" type="text" default="my_function"/>
+    <input name="title" label="Title" type="text" default="My function"/>
+    <input name="a" label="a" type="text" default="1"/>
+    <input name="b" label="b" type="text" default="0.5"/>
+
+    <input name="plot" label="Plot" type="option" default="true" items="true\nfalse"/>
+    <input name="editable" label="Editable" type="option" default="true" items="true\nfalse"/>
+
+    <ok exec="DLD">OnXLab OnXLab_InputInsideEllipse_ok @current@</ok>
+  </widget>
+
+</OnX>
+

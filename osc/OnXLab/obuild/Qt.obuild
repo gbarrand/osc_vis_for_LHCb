@@ -1,0 +1,18 @@
+
+<!-- to build Qt related components. -->
+
+<obuild>
+
+  <reference package="foreign" path="../../foreign" file="Qt.obuild"/>  
+
+  <darwin_app template="osc-plot-T" name="osc-plot-qt"> 
+    <group>Qt</group>
+    <check_foreign>Qt</check_foreign>
+    <replace name="@@driver@@">Qt</replace>
+    <copy_dir>
+      <from>${Qt_fmk}/QtGui.framework/Resources/qt_menu.nib</from>
+      <to>@@dir_bin@@/@@component@@.app/Contents/Resources/.</to>
+    </copy_dir>
+  </darwin_app>
+
+</obuild>

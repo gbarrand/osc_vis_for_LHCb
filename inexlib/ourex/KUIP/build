@@ -1,0 +1,33 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+. ../mgr/build_header
+
+. ../mgr/build_generic
+
+if [ ${build_app} = "yes" ] ; then
+
+  if [ ${build_visual} = "yes" ] ; then
+    ccflags="${ccflags} /I./include"
+  else
+    ccflags="${ccflags} -I./include"
+  fi
+
+  libs="${libs} ${build_path}/${libname}.a"
+
+  objs=
+  app_exe=kuipcc
+  app_src=./applications/kuipcc.c
+  . ${inlib_mgr}/build_app
+
+  objs=
+  cfiles=./applications/uprogcdf.c
+  app_exe=kuipsh
+  app_src=./applications/kuipsh.c
+  . ${inlib_mgr}/build_app
+
+fi

@@ -1,0 +1,10 @@
+#!/bin/sh -f
+
+current=`pwd`
+
+owrap ../scripts/OnX/SimplePlotter.onx ../OnXLab/Inventor/SimplePlotter_onx.h
+
+owrap ../scripts/Help/osc_plot.help ../applications/osc_plot_help.h
+
+cd "${current}"
+

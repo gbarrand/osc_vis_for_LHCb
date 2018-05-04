@@ -1,0 +1,20 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnXLab_InputHistogram">
+    <label>Histogram editor</label>
+    <input name="name" label="Name" type="text" default="myHisto"/>
+    <input name="title" label="Title" type="text" default="My Histo"/>
+    <input name="xnumber" label="Bins" type="text" default="100"/>
+    <input name="xmin" label="Minimum" type="text" default="0"/>
+    <input name="xmax" label="Maximum" type="text" default="10"/>
+    <input name="fill" label="Fill with random" type="option" items="no\nyes"/>
+    <input name="entries" label="Entries (if filling)" type="text" default="10000"/>
+    <ok exec="DLD">OnXLab OnXLab_InputHistogram_ok @current@</ok>
+
+    <ok exec="DLD">OnX ui_set_parameter OnXLab_tree.items @session@hierarchy@</ok>
+
+    <help file="@{ONXLAB_HOME}@ @cat@ /scripts/Help/InputHistogram.help"/>
+  </widget>
+
+</OnX>
+

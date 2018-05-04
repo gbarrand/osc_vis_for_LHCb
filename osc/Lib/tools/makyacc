@@ -1,0 +1,112 @@
+#!/bin/sh -f
+
+#set -x
+
+if test `uname` = "CYGWIN32_NT" ; then
+cmd='byacc'
+else
+#cmd='yacc'
+cmd='/usr/local/byacc/20050813/bin/yacc'
+fi
+
+#///////////////////////////////////////////////////
+#///////////////////////////////////////////////////
+#///////////////////////////////////////////////////
+# Processor lexer :
+echo "flex ProcessorLexer.l..."
+flex ../source/ProcessorLexer.l
+
+# Remove include unistd.h that does not compile on NT :
+sed 's|#include <unistd.h>||g' lex.yy.c > tmp
+sed 's|static int yy_get_next_buffer (void );|//static int yy_get_next_buffer (void );|g' tmp > tmp1
+sed 's|static int yy_get_next_buffer (void)|static int yy_get_next_buffer(Lib::ProcessorLexer\& aLexer)|g' tmp1 > tmp2
+sed 's|yy_get_next_buffer(  )|yy_get_next_buffer(aLexer)|g' tmp2 > tmp3
+sed 's|yy|ProcessorLexer_|g' tmp3 > ../source/ProcessorLexer.cxx
+rm -f lex.yy.c
+rm -f tmp tmp1 tmp2 tmp3
+
+# Processor parser :
+echo "${cmd} Processor.y..."
+$cmd -d ../source/Processor.y
+
+sed 's|yylex()|yylex(aParser.lexer())|g' y.tab.c > tmp
+sed 's|extern int yyparse(void)|//extern int yyparse(void)|g' tmp > tmp1
+sed 's|yyparse(void)|yyparse(Lib::Processor\& aParser)|g' tmp1 > tmp2
+sed 's|yyerror("|yyerror(aParser,"|g' tmp2 > tmp3
+# change names :
+sed 's|yylex|ProcessorLexer_lex|g' tmp3 > tmp4
+#sed 's|yylval|Processor_lval|g' y.tab.c > tmp
+sed 's|yy|Processor_|g' tmp4 > ../source/Processor.cxx
+
+sed 's/yy/Processor_/g' y.tab.h > ../include/Lib/ProcessorTokens.h
+rm -f y.tab.c
+rm -f y.tab.h
+rm -f tmp tmp1 tmp2 tmp3 tmp4 tmp5
+
+#///////////////////////////////////////////////////
+#///////////////////////////////////////////////////
+#///////////////////////////////////////////////////
+# Columns lexer :
+echo "flex ColumnsLexer.l..."
+flex ../source/ColumnsLexer.l
+
+
+sed 's|#include <unistd.h>||g' lex.yy.c > tmp
+sed 's|static int yy_get_next_buffer (void );|//static int yy_get_next_buffer (void );|g' tmp > tmp1
+sed 's|static int yy_get_next_buffer (void)|static int yy_get_next_buffer(Lib::ColumnsLexer\& aLexer)|g' tmp1 > tmp2
+sed 's|yy_get_next_buffer(  )|yy_get_next_buffer(aLexer)|g' tmp2 > tmp3
+sed 's|yy|ColumnsLexer_|g' tmp3 > ../source/ColumnsLexer.cxx
+rm -f lex.yy.c
+rm -f tmp tmp1 tmp2 tmp3
+
+# Columns parser :
+echo "${cmd} Columns.y..."
+$cmd -d ../source/Columns.y
+
+sed 's|yylex()|yylex(aParser.lexer())|g' y.tab.c > tmp
+sed 's|extern int yyparse(void)|//extern int yyparse(void)|g' tmp > tmp1
+sed 's|yyparse(void)|yyparse(Lib::Columns\& aParser)|g' tmp1 > tmp2
+sed 's|yyerror("|yyerror(aParser,"|g' tmp2 > tmp3
+# change names :
+sed 's|yylex|ColumnsLexer_lex|g' tmp3 > tmp4
+#sed 's|yylval|Columns_lval|g' y.tab.c > tmp
+sed 's|yy|Columns_|g' tmp4 > ../source/Columns.cxx
+
+sed 's/yy/Columns_/g' y.tab.h > ../include/Lib/ColumnsToken.h
+
+rm -f y.tab.c
+rm -f y.tab.h
+rm -f tmp tmp1 tmp2 tmp3
+
+#///////////////////////////////////////////////////
+#///////////////////////////////////////////////////
+#///////////////////////////////////////////////////
+# FortranFormat lexer :
+echo "flex FortranFormatLexer.l..."
+flex ../source/FortranFormatLexer.l
+
+
+sed 's|#include <unistd.h>||g' lex.yy.c > tmp
+sed 's|static int yy_get_next_buffer (void );|//static int yy_get_next_buffer (void );|g' tmp > tmp1
+sed 's|static int yy_get_next_buffer (void)|static int yy_get_next_buffer(Lib::FortranFormatLexer\& aLexer)|g' tmp1 > tmp2
+sed 's|yy_get_next_buffer(  )|yy_get_next_buffer(aLexer)|g' tmp2 > tmp3
+sed 's|yy|FortranFormatLexer_|g' tmp3 > ../source/FortranFormatLexer.cxx
+rm -f lex.yy.c
+rm -f tmp tmp1 tmp2 tmp3
+
+# FortranFormat parser :
+echo "${cmd} FortranFormat.y..."
+$cmd -d ../source/FortranFormat.y
+
+sed 's|yylex()|yylex(aParser.lexer())|g' y.tab.c > tmp
+sed 's|extern int yyparse(void)|//extern int yyparse(void)|g' tmp > tmp1
+sed 's|yyparse(void)|yyparse(Lib::FortranFormat\& aParser)|g' tmp1 > tmp2
+sed 's|yyerror("|yyerror(aParser,"|g' tmp2 > tmp3
+# change names :
+sed 's|yylex|FortranFormatLexer_lex|g' tmp3 > tmp4
+#sed 's|yylval|FortranFormat_lval|g' y.tab.c > tmp
+sed 's|yy|FortranFormat_|g' tmp4 > ../source/FortranFormat.cxx
+
+rm -f y.tab.c
+rm -f y.tab.h
+rm -f tmp tmp1 tmp2 tmp3

@@ -1,0 +1,27 @@
+<widget class="Dialog" name="OnX_MenubarEditor_dialog">
+  <geometry>300x140-0+0</geometry>
+  <title>OnX/Menubar editor</title>
+  <show>no</show>
+  <widget class="VContainer"> 
+    <widget class="OptionMenu" name="OnX_MenubarEditor_option_menubar">
+      <create exec="DLD">OnX ui_setParameter OnX_MenubarEditor_option_menubar.items @children@menuBar@labelFromClass@CascadeButton@</create>
+    </widget>
+    <widget class="PushButton" name="OnX_MenubarEditor_option_update">
+      <label>Show menu.</label>
+      <activate exec="DLD">OnX session_setParameter OnX_MenubarEditor_menuLabel_0 @child@menuBar@nameFromLabel@[OnX_MenubarEditor_option_menubar.value]@0@</activate>
+      <activate exec="DLD">OnX ui_setParameter OnX_MenubarEditor_option_menu.items @children@{OnX_MenubarEditor_menuLabel_0}@labelFromClass@MenuItem@</activate>
+    </widget>
+    <widget class="OptionMenu" name="OnX_MenubarEditor_option_menu"/>
+    <widget class="PushButton">
+      <label>Show script</label>
+      <activate exec="DLD">OnX session_setParameter OnX_MenubarEditor_item_0 @child@menuBar@nameFromLabel@[OnX_MenubarEditor_option_menu.value]@0@</activate>
+      <activate exec="DLD">OnX session_setParameter cbk @{OnX_MenubarEditor_item_0}@ @cat@ .activate</activate>
+      <activate exec="DLD">OnX ui_echo @[{cbk}]@</activate>
+    </widget>
+    <widget class="PushButton">
+      <label>Cancel</label>
+      <activate exec="DLD">OnX ui_hide @shell@this@</activate>
+    </widget>
+  </widget>
+</widget>
+

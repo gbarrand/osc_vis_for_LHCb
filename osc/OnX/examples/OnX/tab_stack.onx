@@ -1,0 +1,56 @@
+<OnX>
+  <widget class="Window">
+    <geometry>400x200</geometry>
+    <title>Example of a TabStack</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>second</expand>
+      <sizeOfFixed>60</sizeOfFixed>
+
+      <widget class="TabStack" name="tab_stack">
+        <!-- with some toolkit (gtk), a direct <select> would be executed
+             at creation when inserting children. And as the IUI is still
+             not known by the session, then the callback would issue 
+             somw warnings. To sort out that, we install the select callback
+             after the creation of the widgets. -->
+
+        <create exec="DLD">OnX ui_set_callback @this@ select DLD OnX ui_set_parameter text_widget.value @ @cat@ this.value@</create>
+
+        <widget class="PushButton">
+          <tabLabel>Tab 1</tabLabel>
+          <label>Create a new tab xxx_[num]</label>
+          <label>Next event</label>
+          <create exec="DLD">OnX session_set_parameter num 0</create>
+          <activate exec="DLD">OnX session_set_parameter num @calc@num+1@{num}@</activate>
+          <activate exec="DLD">OnX ui_create_component xxx_ @cat@ @{num}@ PushButton tab_stack</activate>
+        </widget>
+      </widget>
+  
+      <widget class="VBox">
+        <expand>first</expand>
+        <sizeOfFixed>30</sizeOfFixed>
+
+        <widget class="VBox">
+          <expand>second</expand>
+          <sizeOfFixed>30</sizeOfFixed>
+
+          <widget class="PushButton">
+            <label>Delete tab item</label>
+            <activate exec="DLD">OnX ui_destroy_widget @[tab_stack.selection]@</activate>
+          </widget>
+
+          <widget class="ScrolledText" name="text_widget"/>
+        </widget>
+
+        <widget class="PushButton">
+         <label>Quit</label>
+          <activate exec="DLD">OnX ui_exit</activate>
+        </widget>
+      </widget>
+
+    </widget>
+
+  </widget>
+</OnX>

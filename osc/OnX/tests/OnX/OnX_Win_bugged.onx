@@ -1,0 +1,91 @@
+<OnX>
+<!--
+  <create exec="DLD">OnX OnX_Initialize</create>
+  <comment text="We can have multiple callbacks...">
+    <create exec="system">ls</create>
+  </comment>
+-->
+  <widget class="Window" name="main">
+    <geometry>900x750+0+0</geometry>
+    <title>OnX/Main</title>
+    <widget class="VBox">
+      <splitPosition>30</splitPosition>
+      <widget class="VBox">
+        <widget class="MenuBar" name="menuBar">
+          <reference file="$ONXROOT/scripts/OnX/File.onx"/>
+          <reference file="$ONXROOT/scripts/OnX/Examples.onx"/>
+          <reference file="$ONXROOT/scripts/OnX/Test/Test.onx"/>
+          <reference file="$ONXROOT/scripts/OnX/Scene.onx"/>
+          <reference file="$ONXROOT/scripts/OnX/Camera.onx"/>
+          <reference file="$ONXROOT/scripts/OnX/Page.onx"/>
+          <reference file="$ONXROOT/scripts/OnX/GUI.onx"/>
+          <reference file="$ONXROOT/scripts/OnX/Viewers.onx"/>
+          <reference file="$ONXROOT/scripts/OnX/Help.onx"/>
+        </widget>
+        <widget class="ToolBar">
+          <widget class="ToolBarItem">
+            <label>Print...</label>
+            <pixmap>$ONXROOT/scripts/images/fileprint.xpm</pixmap>
+            <tooltip>Map print dialog</tooltip>
+            <activate exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/InputPrint.onx OnX_InputPrint_dialog</activate>
+          </widget>
+          <widget class="ToolBarItem">
+            <label>Clear region</label>
+            <pixmap>$ONXROOT/scripts/images/editdelete.xpm</pixmap>
+            <tooltip>Clear region</tooltip>
+            <activate exec="DLD">OnX region_clear</activate>
+          </widget>
+        </widget>
+      </widget>
+      <widget class="VPaned">
+        <splitPosition>450</splitPosition>
+        <widget class="HPaned">
+          <splitPosition>200</splitPosition>
+          <widget class="VBox">
+            <splitPosition>35</splitPosition>
+            <widget class="OptionMenu">
+              <label>Tree actions</label>
+              <items>Load a tree from file\nManagers\nEcho selection</items>
+              <default>Load a tree</default>
+              <valueChanged exec="DLD">OnXTests OnX_Test_tree_option</valueChanged>
+            </widget>
+            <widget class="ScrolledTree" name="mainTree">
+              <select exec="DLD">OnX OnX_mainTree_select</select>
+            </widget>
+          </widget>
+          <widget class="PushButton">
+          </widget>
+<!--
+          <widget class="PageViewer">
+          </widget>
+          <reference file="$ONXROOT/scripts/OnX/Pages.onx"/>
+-->
+        </widget>
+        <widget class="VBox">
+          <expand>first</expand>
+          <splitPosition>30</splitPosition>
+          <widget class="ScrolledText" name="consoleText"/>
+          <widget class="HBox">
+            <splitPosition>80</splitPosition>
+            <widget class="OptionMenu" name="consolePrompt">
+              <label>Interpreter</label>
+              <default>DLD</default>
+              <items>DLD\nsystem\nPython\nCINT\nTcl\nJava</items>
+            </widget>
+            <widget class="CommandLine" name="consoleCommandLine">
+              <activate exec="DLD">OnX console_execute</activate>
+            </widget>
+          </widget>
+        </widget>
+      </widget>
+    </widget>
+    <widget class="FileSelection" name="fileChooser">
+      <title>File selection</title>
+      <show>no</show>
+    </widget>
+    <widget class="ColorSelection" name="colorChooser">
+      <title>Color selection</title>
+      <show>no</show>
+    </widget>
+  </widget>
+</OnX>

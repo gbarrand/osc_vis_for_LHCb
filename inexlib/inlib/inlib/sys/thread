@@ -1,0 +1,30 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file inlib.license for terms.
+
+#ifndef inlib_sys_thread
+#define inlib_sys_thread
+
+#ifdef WIN32
+
+#include <windows.h>
+
+class pthread_t {
+public:
+  pthread_t():m_id(0),m_handle(0){}
+public:
+  DWORD  m_id;
+  HANDLE m_handle;
+};
+
+inline void pthread_create(pthread_t* a_thread,void*,void*(*a_func)(void*),void* a_tag){
+  a_thread->m_handle = ::CreateThread(0,0,
+    (LPTHREAD_START_ROUTINE)a_func,a_tag,0,(DWORD*)&(a_thread->m_id));
+}
+
+#else
+
+#include <pthread.h>
+
+#endif
+
+#endif

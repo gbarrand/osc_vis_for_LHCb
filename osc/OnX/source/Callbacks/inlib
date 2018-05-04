@@ -1,0 +1,226 @@
+
+#include <Slash/Core/ISession.h>
+#include <Slash/UI/IUI.h>
+#include <Slash/UI/IWidget.h>
+#include <Slash/Tools/Managers.h>
+
+#include <inlib/srep>
+#include <inlib/file>
+#include <inlib/system>
+#include <inlib/scolor>
+
+#include "../Core/inlib"
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline void out_args(Slash::UI::IUI& aUI,const std::vector<std::string>& aArgs){
+  std::ostream& out = aUI.session().cout();
+  out << "number of arguments : " << (int)aArgs.size() << std::endl;
+  for(unsigned int index=0;index<aArgs.size();index++) {
+    out << inlib::sout(aArgs[index]) << std::endl;
+  }
+}
+
+inline void ui_echo_file(Slash::UI::IUI& aUI,const std::string& aFile) {
+  std::vector<std::string> text;
+  std::string name;
+  inlib::file_name(aFile,name);
+  if(!inlib::file::read(name,text)) return;
+  std::ostream& out = aUI.session().cout();
+  unsigned int textn = text.size();
+  for(unsigned int index=0;index<textn;index++) {
+    out << text[index] << std::endl;
+  }
+}
+
+inline void ui_help_text(Slash::UI::IUI& aUI,const std::string& aString) {
+  // aString : text to output in the help dialog (or terminal).
+  //           It is a list of strings separated by \n.
+  Slash::Core::ISession& session = aUI.session();
+  std::string svalue;
+  if(!session.parameterValue("session.helpOnDialog",svalue)) return;
+  if(svalue=="yes") {
+    // Output on the Help window (that does not need a parent) :
+    std::string name;
+    inlib::file_name("$ONXROOT/scripts/OnX/HelpWindow.onx",name);
+    aUI.load("",name);
+    aUI.setParameter("OnX_HelpWindow_text.value",aString);
+    Slash::UI::IWidget* w = aUI.findWidget("OnX_HelpWindow_window");
+    if(w) w->show();
+  } else {
+    std::vector<std::string> text;
+    inlib::words(aString,"\n",true,text);
+    // Output on console :
+    std::ostream& out = aUI.session().cout();
+    unsigned int textn = text.size();
+    for(unsigned int index=0;index<textn;index++) {
+      out << text[index] << std::endl;
+    }
+  }
+}
+
+inline void ui_execute_file(Slash::UI::IUI& aUI,const std::string& aAction,const std::string& aFile){
+  //::printf("debug : ui_execute_file : %s %s\n",
+  //    aAction.c_str(),aFile.c_str());
+  if(aAction=="Styles") {
+    Slash::UI::IStyleManager* sm = Slash::styleManager(aUI.session());
+    if(!sm) return;
+    sm->loadFile(aFile);
+  } else if(aAction=="view_ps") {
+    std::string cmd;
+    if(inlib::check_getenv(aUI.session().cout(),
+                           "ONX_PS_VIEWER","ONXPSVIEW",cmd)) {
+      inlib::execute(cmd+" "+inlib::file::quote(aFile));
+    } else {
+#ifdef __APPLE__
+      inlib::execute("open "+inlib::file::quote(aFile));
+#elif WIN32
+      inlib::execute("gsview32.exe "+inlib::file::quote(aFile));
+#else
+      inlib::execute("ghostview "+inlib::file::quote(aFile));
+#endif
+    }
+  } else if(aAction=="view_gif") {
+    std::string cmd;
+    if(inlib::check_getenv(aUI.session().cout(),
+                       "ONX_GIF_VIEWER","ONXGIFVIEW",cmd)) {
+      inlib::execute(cmd+" "+inlib::file::quote(aFile));
+    } else {
+#ifdef __APPLE__
+      inlib::execute("open "+inlib::file::quote(aFile));
+#elif WIN32
+      inlib::execute("mspaint "+inlib::file::quote(aFile));
+#else
+      inlib::execute("xv "+inlib::file::quote(aFile));
+#endif
+    }
+  } else if(aAction=="view_jpeg") {
+    std::string cmd;
+    if(inlib::check_getenv(aUI.session().cout(),
+                       "ONX_JPEG_VIEWER","ONXJPEGVIEW",cmd)) {
+      inlib::execute(cmd+" "+inlib::file::quote(aFile));
+    } else {
+#ifdef __APPLE__
+      inlib::execute("open "+inlib::file::quote(aFile));
+#elif WIN32
+      inlib::execute("mspaint "+inlib::file::quote(aFile));
+#else
+      inlib::execute("xv "+inlib::file::quote(aFile));
+#endif
+    }
+
+  } else if(aAction=="view_pdf") {
+    std::string cmd;
+    if(inlib::check_getenv(aUI.session().cout(),
+                       "ONX_PDF_VIEWER","ONXPDFVIEW",cmd)) {
+      inlib::execute(cmd+" "+inlib::file::quote(aFile));
+    } else {
+#ifdef __APPLE__
+      inlib::execute("open "+inlib::file::quote(aFile));
+#elif WIN32
+      inlib::execute("AcroRd32.exe "+inlib::file::quote(aFile));
+#else
+      inlib::execute("xpdf "+inlib::file::quote(aFile));
+#endif
+    }
+  } else if(aAction=="view_iv") {
+    std::string cmd;
+    if(inlib::check_getenv(aUI.session().cout(),
+                       "ONX_IV_VIEWER","ONXIVVIEW",cmd)) {
+      inlib::execute(cmd+" "+inlib::file::quote(aFile));
+    } else {
+#ifdef WIN32
+      inlib::execute("ivview.exe "+inlib::file::quote(aFile));
+#else
+      inlib::execute("ivview "+inlib::file::quote(aFile));
+#endif
+    }
+
+  } else {
+    Slash::UI::IScriptManager* sm = Slash::scriptManager(aUI.session());
+    if(!sm) return;
+    Slash::UI::IInterpreter* interp = sm->findInterpreter(aAction);
+    if(!interp) return;
+    std::string scmd = interp->execFileCommand();
+    std::string name;
+    inlib::file_name(aFile,name);
+    inlib::replace(scmd,"@onx_file@",name);
+    sm->record(aAction,scmd);
+    Slash::UI::IInterpreter::Options opts;
+    interp->executeScript(scmd,opts);
+  }
+}
+
+inline void ui_help_file(Slash::UI::IUI& aUI,const std::string& aFile) {
+  // aArgs[0] : file name.
+  std::vector<std::string> text;
+  std::string name;
+  inlib::file_name(aFile,name);
+  if(!inlib::file::read(name,text)) {
+    std::ostream& out = aUI.session().cout();
+    out << "ui_help_file : can't read " << inlib::sout(aFile) << "."
+        << std::endl;
+    return;
+  }
+  ui_help_text(aUI,inlib::tos<std::string>(text,"\n"));
+}
+
+inline bool ui_check_rgb(Slash::UI::IUI& aUI,const std::string& aString,double& a_r,double& a_g,double& a_b){
+  if(!inlib::to_rgb(aString,a_r,a_g,a_b)) {
+    std::ostream& out = aUI.session().cout();
+    out << "Argument " << inlib::sout(aString) << " not a color."
+        << std::endl;
+    return false;
+  }
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline void set_current_widget(Slash::UI::IUI& aUI,const std::string& aString){
+  Slash::UI::IWidget* widget = aUI.findWidget(aString);
+  if(!widget) {
+    std::ostream& out = aUI.session().cout();
+    out << "set_current_widget :" 
+        << "Can't find widget " << inlib::sout(aString)
+        << std::endl;
+    return;
+  }
+  aUI.setCurrentWidget(widget);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/// tree /////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline void tree_set_with_strings(Slash::UI::IUI& aUI,const std::string& aParameter,const std::vector<std::string>& aList) {
+  std::string sout = "<tree>";
+  for(unsigned int index=0;index<aList.size();index++) {
+    sout += "<treeItem><label>"+aList[index]+"</label></treeItem>";
+  }
+  sout += "</tree>";
+  aUI.setParameter(aParameter,sout);
+}
+
+inline void tree_set(Slash::UI::IUI& aUI,const std::string& aParameter,const std::string& aString) {
+  // Example : tree_set(aUI,"mainTree.items","aa\nbb")
+  std::vector<std::string> items;
+  smanip_lines(aString,items);
+  tree_set_with_strings(aUI,aParameter,items);
+}
+
+inline void tree_set_with_file(Slash::UI::IUI& aUI,const std::string& aParameter,const std::string& aFile) {
+  std::vector<std::string> lines;
+  std::string name;
+  inlib::file_name(aFile,name);
+  if(!inlib::file::read(name,lines)) {
+    aUI.echo("Can't open "+inlib::sout(aFile)+" file.");
+  } else {
+    aUI.setParameter(aParameter,inlib::tos<std::string>(lines,""));
+  }
+}
+

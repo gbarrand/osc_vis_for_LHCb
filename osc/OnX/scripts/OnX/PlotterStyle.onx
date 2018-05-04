@@ -1,0 +1,41 @@
+<widget class="CascadeButton" name="OnX_Plotter_casc">
+  <label>Plotter style</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Lab / Default</label>
+      <activate exec="DLD">OnX plotter_set_style @current@ Lab_Default</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>PAW / Default</label>
+      <activate exec="DLD">OnX plotter_set_style @current@ PAW_Default</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Hippo / Default</label>
+      <activate exec="DLD">OnX plotter_set_style @current@ Hippo_Default</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>ROOT / Default</label>
+      <activate exec="DLD">OnX plotter_set_style @current@ ROOT_Default</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>ROOT / Plain</label>
+      <activate exec="DLD">OnX plotter_set_style @current@ ROOT_Plain</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>ROOT / Bold</label>
+      <activate exec="DLD">OnX plotter_set_style @current@ ROOT_Bold</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>ROOT / Video</label>
+      <activate exec="DLD">OnX plotter_set_style @current@ ROOT_Video</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>ROOT / Pub</label>
+      <activate exec="DLD">OnX plotter_set_style @current@ ROOT_Pub</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>ROOT / LHCb</label>
+      <activate exec="DLD">OnX plotter_set_style @current@ ROOT_LHCb</activate>
+    </widget>
+  </widget>
+</widget>

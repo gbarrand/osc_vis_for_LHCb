@@ -1,0 +1,21 @@
+<widget class="Dialog" name="OnX_AskDialog_dialog">
+  <geometry>400x100</geometry>
+  <title>Ask dialog</title>
+  <show>no</show> 
+  <widget class="VBox"> 
+    <expand>first</expand>
+    <sizeOfFixed>30</sizeOfFixed>
+    <widget class="VBox"> 
+      <expand>second</expand>
+      <sizeOfFixed>30</sizeOfFixed>
+      <widget class="Label" name="OnX_AskDialog_prompt"/>
+      <widget class="Entry" name="OnX_AskDialog_entry"/>
+    </widget>
+    <widget class="PushButton">
+      <label>Ok</label>
+      <activate exec="DLD">OnX ui_break_modal</activate>
+      <activate exec="DLD">OnX ui_hide OnX_AskDialog_dialog</activate>
+    </widget>
+  </widget>
+</widget>
+

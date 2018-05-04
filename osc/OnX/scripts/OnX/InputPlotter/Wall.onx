@@ -1,0 +1,34 @@
+<widget class="VContainer">
+  <tabLabel>wall</tabLabel>
+  <widget class="HBox">
+    <widget class="PushButton">
+      <label>Color</label>
+      <activate exec="DLD">OnX ui_set_callback colorChooser ok DLD OnX ui_set_parameter OnX_InputPlotter_wall_color.default @ @cat@ this.value @cat@ @</activate>
+      <activate exec="DLD">OnX ui_show colorChooser</activate>
+    </widget>
+    <widget class="ComboBox" name="OnX_InputPlotter_wall_color">
+      <items>unchanged\ndarkslategrey\nred\ngreen\nblue\nyellow\nmagenta\ncyan\ngrey\nlightgrey\nwhite\nblack</items>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <widget class="Label">
+      <label>Transparency</label>
+    </widget>
+    <widget class="Entry" name="OnX_InputPlotter_wall_transparency">
+      <value>unchanged</value>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <widget class="Label">
+      <label>Area style</label>
+    </widget>
+    <widget class="OptionMenu" name="OnX_InputPlotter_wall_areaStyle">
+      <items>unchanged\nSOLID\nHATCHED\nCHECKER\nEDGED</items>
+    </widget>
+  </widget>
+  <widget class="Label"><label/></widget> <!-- FIXME : DUMMY -->
+  <widget class="Label"><label/></widget> <!-- FIXME : DUMMY -->
+  <widget class="Label"><label/></widget> <!-- FIXME : DUMMY -->
+  <widget class="Label"><label/></widget> <!-- FIXME : DUMMY -->
+  <widget class="Label"><label/></widget> <!-- FIXME : DUMMY -->
+</widget>

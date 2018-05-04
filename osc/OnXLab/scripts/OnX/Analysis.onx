@@ -1,0 +1,37 @@
+<widget class="CascadeButton">
+  <label>Tools</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Tuple explorer</label>
+      <activate exec="DLD">OnX ui_show_dialog @{ONXLAB_HOME}@ @cat@ /scripts/OnX/TupleExplorer.onx OnXLab_TupleExplorer_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Cloud explorer</label>
+      <activate exec="DLD">OnX ui_show_dialog @{ONXLAB_HOME}@ @cat@ /scripts/OnX/CloudExplorer.onx OnXLab_CloudExplorer_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Fitter</label>
+      <activate exec="DLD">OnX ui_show_dialog @{ONXLAB_HOME}@ @cat@ /scripts/OnX/Fitter.onx OnXLab_Fitter_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Create histogram 1D...</label>
+      <activate exec="DLD">OnX ui_show_dialog @{ONXLAB_HOME}@ @cat@ /scripts/OnX/InputHistogram.onx OnXLab_InputHistogram_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Create function...</label>
+      <activate exec="DLD">OnX ui_show_dialog @{ONXLAB_HOME}@ @cat@ /scripts/OnX/InputFunction.onx OnXLab_InputFunction_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Create InsidePolygon function...</label>
+      <activate exec="DLD">OnX ui_show_dialog @{ONXLAB_HOME}@ @cat@ /scripts/OnX/InputInsidePolygon.onx OnXLab_InputInsidePolygon_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Create InsideEllipse function...</label>
+      <activate exec="DLD">OnX ui_show_dialog @{ONXLAB_HOME}@ @cat@ /scripts/OnX/InputInsideEllipse.onx OnXLab_InputInsideEllipse_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Legend editor</label>
+      <activate exec="DLD">OnX ui_show_dialog @{ONXLAB_HOME}@ @cat@ /scripts/OnX/LegendEditor.onx OnXLab_LegendEditor_dialog</activate>
+    </widget>
+  </widget>
+</widget>

@@ -1,0 +1,86 @@
+<OnX>
+  <widget class="Window">
+    <geometry>400x400</geometry>
+    <title>OnX/IvViewer</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <!-- A simple menu bar with a 
+         "File" and "Scene" pull down menus (PDM). -->
+
+    <widget class="MenuBar">
+
+      <!-- A File PDM.  -->
+      <widget class="CascadeButton">
+        <label>File</label>
+        <widget class="Menu">
+          <widget class="MenuItem">
+            <label>Open...</label>
+            <variable name="OnX_Scene_read_iv.script">OnX viewer_read_scene @current@ @this.value@ @suffix@this.value@ staticScene</variable>
+            <activate exec="DLD">OnX ui_set_fileChooser . *.iv;*.hiv;*.wrl open DLD @{OnX_Scene_read_iv.script}@</activate>
+            <activate exec="DLD">OnX ui_show fileChooser</activate>
+          </widget>
+          <widget class="MenuItem">
+            <label>Exit</label>
+            <accelerator>Ctrl+q</accelerator>
+            <activate exec="DLD">OnX ui_exit</activate>
+          </widget>
+        </widget>
+      </widget>
+
+      <!-- A Scene PDM.  -->
+      <widget class="CascadeButton">
+        <label>Scene</label>
+        <widget class="Menu">
+          <widget class="MenuItem">
+            <label>Clear</label>
+            <activate exec="DLD">OnX viewer_clear @current@ all</activate>
+          </widget>
+          <widget class="MenuItem">
+            <label>View all</label>
+            <activate exec="DLD">OnX viewer_view_all @current@</activate>
+          </widget>
+
+          <widget class="MenuItem">
+            <label>Black back</label>
+            <activate exec="DLD">OnX viewer_set_color @current@ black</activate>
+          </widget>
+          <widget class="MenuItem">
+            <label>White back</label>
+            <activate exec="DLD">OnX viewer_set_color @current@ white</activate>
+          </widget>
+
+        </widget>
+      </widget>
+
+    </widget>
+
+    <widget class="SoExaminerViewer">
+      <create exec="DLD">OnX viewer_read_scene @this@ $ONXROOT/examples/OnX/web.hiv iv none</create>
+<!--
+      <create exec="DLD">OnX viewer_read_scene @this@ $ONXROOT/examples/OnX/HelloOnX.iv iv none</create>
+-->
+<!--
+      <create exec="DLD">OnX viewer_read_scene @this@ $ONXROOT/examples/OnX/bird.iv iv none</create>
+-->
+<!-- to view *iv files passed on the command line as in :
+        OS> onx *iv iv_viewer.onx
+
+      <create exec="DLD">OnX set_variable tmp @session@command_files@</create>
+      <create exec="DLD">OnX set_variable tmp @filter@*iv@{tmp}@</create>
+      <create exec="DLD">OnX ui_echo @{tmp}@</create>
+      <create exec="DLD">OnX viewer_read_scene @this@ @{tmp}@  guessed staticScene</create>
+-->
+      <create exec="DLD">OnX viewer_view_all @this@</create>
+      <create exec="DLD">OnX viewer_set_background_color @this@ 0.3 0.2 0.2</create>
+      <create exec="DLD">OnX ui_set_current_widget @this@</create>
+    </widget>
+
+
+  <widget class="FileSelection" name="fileChooser">
+    <title>File selection</title>
+    <show>no</show>
+  </widget>
+
+  </widget>
+</OnX>

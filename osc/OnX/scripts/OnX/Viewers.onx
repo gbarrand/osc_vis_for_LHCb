@@ -1,0 +1,6 @@
+<widget class="CascadeButton" save="false">
+  <label>Viewers</label>
+  <comment text="Below menu is filled dynamically by OnX."/>
+  <widget class="Menu" name="OnX_viewers">
+  </widget>
+</widget>

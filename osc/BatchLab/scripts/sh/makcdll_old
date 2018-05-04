@@ -1,0 +1,109 @@
+#!/bin/sh -f
+
+#set -x
+
+#//////////////////////////////////////////////////////////
+#// Used by :                                            //
+#//   Lib::FunctionManager::load                         //
+#// to produce a dll for a C function.                   //
+#//////////////////////////////////////////////////////////
+
+this_dir_bin=.
+
+NAME=$1
+SUFFIX=$2
+
+#echo ${NAME}
+
+#
+# Note : can't use xxx-config because of Mac .apps.
+#
+
+# To find include files :
+if [ "${SLASHROOT}" = "" ] ; then
+  echo "Environment variable SLASHROOT not defined."
+  exit
+fi
+if [ "${LIBROOT}" = "" ] ; then
+  echo "Environment variable LIBROOT not defined."
+  exit
+fi
+if [ "${BATCHLABROOT}" = "" ] ; then
+  echo "Environment variable BATCHLABROOT not defined."
+  exit
+fi
+
+# To find libraries :
+if [ "${LIBDIRLIB}" = "" ] ; then
+  echo "Environment variable LIBDIRLIB not defined."
+  exit
+fi
+if [ "${BATCHLABDIRLIB}" = "" ] ; then
+  echo "Environment variable BATCHLABDIRLIB not defined."
+  exit
+fi
+
+if [ "${LIBDIRLIB}" = "" ] ; then
+  echo "LIBDIRLIB variable not defined."
+  exit
+fi
+
+if [ "${BATCHLABDIRLIB}" = "" ] ; then
+  echo "BATCHLABDIRLIB variable not defined."
+  exit
+fi
+
+/bin/rm -f "${this_dir_bin}/${NAME}.o"
+
+compiler=""
+if test `uname` = "Linux" ; then
+  compiler=g++
+elif test `uname` = "Darwin" ; then
+  compiler=c++
+elif test `uname` = "CYGWIN_NT-5.1" ; then
+  compiler=g++
+elif test `uname` = "OSF1" ; then
+  compiler=cxx
+fi
+
+if [ "${compiler}" = "" ] ; then
+  echo "BatchLab : makcdll : compiler not found."
+  exit
+fi
+
+${compiler} -c -I"${SLASHROOT}" -I"${LIBROOT}/include" -I"${BATCHLABROOT}" -o "${this_dir_bin}/${NAME}.o" ${NAME}.${SUFFIX}
+if [ $? != 0 ] ; then
+  echo "mackcdll : compilation of ${NAME}.${SUFFIX} failed."
+  exit
+fi
+
+if test `uname` = "Linux" ; then
+/bin/rm -f "${this_dir_bin}/lib${NAME}.so"
+g++ -shared -o "${this_dir_bin}/lib${NAME}.so" "${this_dir_bin}/${NAME}.o" "${BATCHLABDIRLIB}/libBatchLabHBOOK.so" "${LIBDIRLIB}/libLibUtils.so"
+status=$?
+fi
+
+if test `uname` = "Darwin" ; then
+/bin/rm -f "${this_dir_bin}/${NAME}.bundle"
+c++ -bundle -twolevel_namespace -o "${this_dir_bin}/${NAME}.bundle" "${this_dir_bin}/${NAME}.o" "${BATCHLABDIRLIB}/libBatchLabHBOOK.dylib" "${LIBDIRLIB}/libLibUtils.dylib"
+status=$?
+fi
+
+if test `uname` = "CYGWIN_NT-5.1" ; then
+/bin/rm -f "${this_dir_bin}/${NAME}.dll"
+g++ -shared -o "${this_dir_bin}/${NAME}.dll" "${this_dir_bin}/${NAME}.o" "${BATCHLABDIRLIB}/BatchLabHBOOK.a" "${LIBDIRLIB}/LibUtils.a"
+status=$?
+fi
+
+if test `uname` = "OSF1" ; then
+/bin/rm -f "${this_dir_bin}"/lib${NAME}.so
+cxx -shared -o "${this_dir_bin}"/lib${NAME}.so "${this_dir_bin}"/${NAME}.o "${BATCHLABDIRLIB}"/libBatchLabHBOOK.so "${LIBDIRLIB}"/libLibUtils.so
+status=$?
+fi
+
+if [ ${status} != 0 ] ; then
+  echo "mackcdll : building of DLL ${NAME} failed."
+  exit
+fi
+
+/bin/rm -f "${this_dir_bin}/${NAME}.o"

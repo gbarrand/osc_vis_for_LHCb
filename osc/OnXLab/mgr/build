@@ -1,0 +1,30 @@
+#!/bin/sh -f
+
+build_args=
+while test $# -ge 1 ; do
+  case $1 in
+    -group*) build_group="${1:7}";;
+          *) build_args="${build_args} $1";;
+  esac
+  shift
+done
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+if [ "${build_group}" = Python ] ; then
+  ./build_plugin_OnXLab_SWIG_Python ${build_args}
+
+else
+  ./build_lib_OnXLabAIDA        ${build_args}
+
+  ./build_plugin_OnXLab         ${build_args}
+  ./build_plugin_OnXLabInventor ${build_args}
+  ./build_plugin_OnXLabExas     ${build_args}
+  ./build_plugin_OnXLabKUIP     ${build_args}
+
+  ./build_app_OnXLab_onx        ${build_args}
+  ./build_app_aida_config       ${build_args}
+
+fi

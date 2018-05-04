@@ -1,0 +1,23 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_InputPage">
+    <label>Page layout editor</label>
+    <input name="action" label="Action" type="option" items="Set color\nSet grid\nConnect region"/>
+    <input name="color" label="Color" type="colorChooser" items="white\nblack\ngrey\nlightgrey\ndimgrey\nred\ngreen\nblue\nyellow\nmagenta\ncyan"/>
+    <input name="cols" label="Grid columns" type="combo" items="1\n2\n3"/>
+    <input name="rows" label="Grid rows" type="combo" items="1\n2\n3"/>
+    <input name="class" label="Region type" type="option" items="SoDisplayRegion\nSoPlotterRegion\nSoTextRegion\nSoFormulaRegion\nSoImageRegion\nSoRulerRegion"/>
+    <input name="connect" label="Connect current to" type="text" default="0"/>
+
+    <variable name="OnX_InputPage_options">
+      Set color\nOnX region_set_color @current@ @[OnX_InputPage_input_color.value]@\n
+      Set grid\nOnX page_add_regions @current@ @[OnX_InputPage_input_class.value]@ @[OnX_InputPage_input_cols.value]@ @[OnX_InputPage_input_rows.value]@\n
+      Connect region\nOnX region_view_scene_of @current@ @[OnX_InputPage_input_connect.value]@
+    </variable>
+
+    <ok exec="DLD">OnX ui_execute_script DLD @next@[OnX_InputPage_input_action.value]@{OnX_InputPage_options}@strip_key@</ok>
+
+    <help file="$ONXROOT/scripts/Help/InputPage.help"/>
+  </widget>
+
+</OnX>

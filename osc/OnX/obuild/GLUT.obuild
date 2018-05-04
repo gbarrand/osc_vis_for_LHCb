@@ -1,0 +1,26 @@
+
+<!-- to build GLUT related components. -->
+
+<obuild>
+
+  <!-- not this : -->
+
+  <reference package="foreign" path="../../foreign" file="GLUT.obuild"/>  
+  <reference package="foreign" path="../../foreign" file="OpenGL.obuild"/>  
+
+  <!-- this : -->
+
+  <application name="OnX_test_GLUT">
+    <group>GLUT</group>
+    <file>../tests/GL/OnX_test_GLUT.c</file>
+    <!-- not this : -->
+    <c_include copy="c_include" from="GLUT"/>
+    <lib copy="lib" from="GLUT"/>
+    <lib copy="lib" from="OpenGL"/>
+  </application>
+
+  <darwin_app name="OnX_test_GLUT">
+    <group>GLUT</group>
+  </darwin_app>
+
+</obuild>

@@ -1,0 +1,8 @@
+#!/bin/sh -f
+
+from=/home/barrand/Coin/SoGtk
+to=/projects/CoinGtk/v1
+
+find ${from}/data/materials -name "*.h.in" -exec ./materials_h_in {} ${from} ${to} \;
+
+find ${from}/data/materials -name "*.[0-9]*" -exec ./materials {} ${from} ${to} \;

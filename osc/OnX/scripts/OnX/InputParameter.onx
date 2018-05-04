@@ -1,0 +1,23 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_InputParameter">
+    <label>Session modeling parameter editor</label>
+
+    <input name="action" label="Set" type="option" items="modeling\ncolor\ntransparency\nlinePattern\nlineWidth" />
+
+    <input name="modeling" label="Modeling" type="option" items="solid\nwire_frame\nnone"/>
+
+    <input name="color" label="Color" type="colorChooser" items="red\ngreen\nblue\nyellow\nmagenta\ncyan\nwhite\nblack\nnone"/>
+
+    <input name="transparency" label="Transparency" type="text" default="0"/>
+
+    <input name="linePattern" label="Line pattern" type="combo" items="solid\ndashed\ndotted\ndash_dotted\nnone"/>
+
+    <input name="lineWidth" label="Line width" type="text" default="0"/>
+
+    <ok exec="DLD">OnX session_setParameter OnX_InputParameter_widget OnX_InputParameter_input_ @cat@ @[OnX_InputParameter_input_action.value]@</ok>
+    <ok exec="DLD">OnX session_setParameter modeling. @cat@ @[OnX_InputParameter_input_action.value]@ @[{OnX_InputParameter_widget}.value]@</ok>
+
+  </widget>
+
+</OnX>

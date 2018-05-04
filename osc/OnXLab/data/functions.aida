@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE aida SYSTEM "http://aida.freehep.org/schemas/3.0/aida.dtd">
+<aida version="3.2">
+  <implementation version="10.0" package="Lab"/>
+  <function name="Lab_G" path="/examples/functions/" title="G">
+    <codelet>codelet:composite:G</codelet>
+    <arguments>
+      <argument name="x"/>
+    </arguments>
+    <parameters>
+      <parameter name="mean_0" value="0"/>
+      <parameter name="sigma_0" value="2"/>
+      <parameter name="amp_0" value="3"/>
+    </parameters>
+  </function>
+  <function name="Lab_P2" path="/examples/functions/" title="2(x*x)+x+0.5">
+    <codelet>codelet:composite:P2</codelet>
+    <arguments>
+      <argument name="x"/>
+    </arguments>
+    <parameters>
+      <parameter name="a0_0" value="0.5"/>
+      <parameter name="a1_0" value="1"/>
+      <parameter name="a2_0" value="2"/>
+    </parameters>
+  </function>
+</aida>

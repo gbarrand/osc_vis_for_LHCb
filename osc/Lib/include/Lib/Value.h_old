@@ -1,0 +1,212 @@
+#ifndef Lib_Value_h
+#define Lib_Value_h
+
+// Inheritance :
+#include <Slash/Core/IValue.h>
+
+namespace inlib { template <class T> class array;}
+
+namespace Lib {
+
+class Value : public virtual Slash::Core::IValue {
+public: //IValue
+  virtual void* cast(const std::string&) const;
+  virtual void setType(Type);
+  virtual Type type() const;
+  virtual std::string stype() const;
+
+  virtual unsigned char get_unsigned_char() const;
+  virtual char get_char() const;
+  virtual unsigned int get_unsigned_int() const;
+
+  virtual Slash::int64 get_int64() const;
+  virtual Slash::uint64 get_unsigned_int64() const;
+
+  virtual int get_int() const;
+  virtual unsigned short get_unsigned_short() const;
+  virtual short get_short() const;
+  virtual float get_float() const;
+  virtual double get_double() const;
+  virtual void* get_void_star() const;
+  virtual double* get_double_star() const;
+  virtual float* get_float_star() const;
+  virtual int* get_int_star() const;
+  virtual bool get_bool() const;
+  virtual std::string get_string() const;
+
+  virtual void setNone();
+  virtual void set(unsigned char);
+  virtual void set(char);
+  virtual void set(unsigned short);
+  virtual void set(unsigned int);
+  virtual void set(int);
+  virtual void set(Slash::int64);
+  virtual void set(Slash::uint64);
+  virtual void set(short);
+  virtual void set(float);
+  virtual void set(double);
+  virtual void set(bool);
+  virtual void set(const std::string&);
+  virtual void set(const char*);
+  virtual void set(void*);
+  virtual void set(double*);
+  virtual void set(float*);
+  virtual void set(int*);
+
+  virtual void set(const std::vector<unsigned int>&,
+                   const std::vector<unsigned char>&);
+  virtual const std::vector<unsigned char>&
+            get_array_unsigned_char(std::vector<unsigned int>&) const;
+  virtual void set(const std::vector<unsigned int>&,
+                   const std::vector<char>&);
+  virtual const std::vector<char>&
+            get_array_char(std::vector<unsigned int>&) const;
+  virtual void set(const std::vector<unsigned int>&,
+                   const std::vector<unsigned short>&);
+  virtual const std::vector<unsigned short>&
+            get_array_unsigned_short(std::vector<unsigned int>&) const;
+  virtual void set(const std::vector<unsigned int>&,
+                   const std::vector<short>&);
+  virtual const std::vector<short>&
+            get_array_short(std::vector<unsigned int>&) const;
+  virtual void set(const std::vector<unsigned int>&,
+                   const std::vector<unsigned int>&);
+  virtual const std::vector<unsigned int>&
+            get_array_unsigned_int(std::vector<unsigned int>&) const;
+  virtual void set(const std::vector<unsigned int>&,
+                   const std::vector<int>&);
+  virtual const std::vector<int>&
+            get_array_int(std::vector<unsigned int>&) const;
+  virtual void set(const std::vector<unsigned int>&,
+                   const std::vector<Slash::uint64>&);
+  virtual const std::vector<Slash::uint64>&
+            get_array_unsigned_int64(std::vector<unsigned int>&) const;
+  virtual void set(const std::vector<unsigned int>&,
+                   const std::vector<Slash::int64>&);
+  virtual const std::vector<Slash::int64>&
+            get_array_int64(std::vector<unsigned int>&) const;
+  virtual void set(const std::vector<unsigned int>&,
+                   const std::vector<float>&);
+  virtual const std::vector<float>&
+            get_array_float(std::vector<unsigned int>&) const;
+  virtual void set(const std::vector<unsigned int>&,
+                   const std::vector<double>&);
+  virtual const std::vector<double>&
+            get_array_double(std::vector<unsigned int>&) const;
+  virtual void set(const std::vector<unsigned int>&,
+                   const std::vector<bool>&);
+  virtual const std::vector<bool>&
+            get_array_bool(std::vector<unsigned int>&) const;
+  virtual void set(const std::vector<unsigned int>&,
+                   const std::vector<std::string>&);
+  virtual const std::vector<std::string>&
+            get_array_string(std::vector<unsigned int>&) const;
+
+public:
+  // Not (yet) in IValue.
+  virtual void set(const std::vector<unsigned char>&);
+  virtual void set(const std::vector<char>&);
+  virtual void set(const std::vector<unsigned short>&);
+  virtual void set(const std::vector<short>&);
+  virtual void set(const std::vector<unsigned int>&);
+  virtual void set(const std::vector<int>&);
+  virtual void set(const std::vector<Slash::uint64>&);
+  virtual void set(const std::vector<Slash::int64>&);
+  virtual void set(const std::vector<float>&);
+  virtual void set(const std::vector<double>&);
+  virtual void set(const std::vector<bool>&);
+  virtual void set(const std::vector<std::string>&);
+
+  virtual void setLabel(const std::string&);
+  virtual std::string label() const;
+  virtual void setDimension(unsigned int);
+  virtual unsigned int dimension() const;
+public:
+  static std::string stype(Slash::Core::IValue::Type);
+  static bool arrayType(Slash::Core::IValue::Type,Slash::Core::IValue::Type&);
+public:
+  Value();
+  virtual ~Value();
+
+  Value(bool);
+  Value(char);
+  Value(short);
+  Value(int);
+  Value(unsigned char);
+  Value(unsigned short);
+  Value(unsigned int);
+  Value(Slash::int64);
+  Value(Slash::uint64);
+  Value(float);
+  Value(double);
+  Value(void*);
+  Value(double*);
+  Value(float*);
+  Value(int*);
+  Value(const char*);
+  Value(const std::string&);
+  Value(const std::vector<double>&);
+
+  Value(const std::vector<unsigned int>&,const std::vector<unsigned char>&);
+  Value(const std::vector<unsigned int>&,const std::vector<char>&);
+  Value(const std::vector<unsigned int>&,const std::vector<unsigned short>&);
+  Value(const std::vector<unsigned int>&,const std::vector<short>&);
+  Value(const std::vector<unsigned int>&,const std::vector<unsigned int>&);
+  Value(const std::vector<unsigned int>&,const std::vector<int>&);
+  Value(const std::vector<unsigned int>&,const std::vector<Slash::uint64>&);
+  Value(const std::vector<unsigned int>&,const std::vector<Slash::int64>&);
+  Value(const std::vector<unsigned int>&,const std::vector<float>&);
+  Value(const std::vector<unsigned int>&,const std::vector<double>&);
+  Value(const std::vector<unsigned int>&,const std::vector<bool>&);
+  Value(const std::vector<unsigned int>&,const std::vector<std::string>&);
+  
+  Value(const Value&);
+  Value& operator=(const Value&);
+
+  // For Expression :
+  virtual std::vector<double>& array_double();
+private:
+  void reset();
+private:
+  std::string* fLabel;
+  unsigned int fDimension;
+private:
+  Type fType;
+  union {
+    bool f_bool;
+    char f_char;
+    int f_int;
+    short f_short;
+    Slash::int64 f_int64;
+    float f_float;
+    double f_double;
+    unsigned char f_unsigned_char;
+    unsigned short f_unsigned_short;
+    unsigned int f_unsigned_int;
+    Slash::uint64 f_unsigned_int64;
+    void* f_void_star;
+    double* f_double_star;
+    float* f_float_star;
+    int* f_int_star;
+    std::string* f_string;
+
+    inlib::array<unsigned char>* f_array_unsigned_char;
+    inlib::array<char>* f_array_char;
+    inlib::array<unsigned short>* f_array_unsigned_short;
+    inlib::array<short>* f_array_short;
+    inlib::array<Slash::uint64>* f_array_unsigned_int64;
+    inlib::array<Slash::int64>* f_array_int64;
+    inlib::array<unsigned int>* f_array_unsigned_int;
+    inlib::array<int>* f_array_int;
+    inlib::array<float>* f_array_float;
+    inlib::array<double>* f_array_double;
+    inlib::array<bool>* f_array_bool;
+    inlib::array<std::string>* f_array_string;
+  } u;
+
+  friend class valuemanip;
+};
+
+}
+
+#endif

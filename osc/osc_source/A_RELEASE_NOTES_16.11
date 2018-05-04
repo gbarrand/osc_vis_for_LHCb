@@ -1,0 +1,72 @@
+
+ Snow Leopard :
+ ------------
+  The main feature of this release is to have done
+ modifications to run on Mac Snow Leopard. Most of drivers
+ are here on this platform except the BatchLab/Zebra
+ because we have not the CERNLIB for Mac 64 bits.
+
+ Cocoa :
+ -----
+  We have restore the "NextStep" drivers that permits
+ to use Cocoa directly on a Mac.
+ By default now, on a Mac, OnX builds the GUI by using Cocoa.
+ Then Motif is no more mendatory on this platform.
+ Then the osc-plot.app application uses Cocoa now. Someone
+ has to use osc-plot-Xt.app to run the Motif version.
+ On a Mac we have used "foreign" packages installed by Darwinport
+ (then under /opt) and no more by using Fink.
+
+ Linux / gtk2 :
+ ------------
+  On a Linux, the default GUI toolkit (for osc-gui-viewer,
+ osc-plot, etc...) is now gtk-2 and no more OpenMotif.
+ This seems more natural since gtk is the GUI toolkit of GNU.
+ This simplify the default build since gtk-2 is found at
+ a standard place on all Linuxes (which is not the case
+ of Qt4). We have introduced the gtkglarea package. It appeared
+ that gtkglarea is not defacto installed on Linuxes, then 
+ having it coming with the source kits simplify a local
+ build and installation.
+
+ Motif :
+ -----
+  Then Motif is no more mendatory by default. The default
+ GUIs are now :
+ - Cocoa on a Mac.
+ - gtk-2 on Linuxes.
+ - WIN32 on Windows.
+  But the Xt/Motif code is still here and you can build
+ it with :
+     build -group Xt
+  At run time, to have Motif as GUI for osc-plot do :
+     osc-plot -Xt
+  You can also change the GUI toolkit by setting the
+ OSC_GUI_TOOLKIT environment variable to Xt and running
+ osc-plot without the -Xt argument.
+
+ Qt-4 :
+ ----
+  We have get rid of the Qt4 code. And we do not need
+ anymore the "Qt3Support" to build the Qt drivers.
+
+ G4Lab :
+ -----
+  osc-g4-vis produce the build_Darwin_app shell script
+ that permit to build a clickable ".app" for a G4 example.
+
+ Rio :
+ ---
+  Correct the StreamerInfo for TArray[I,F] that refrained
+ to read a file produced with Rio with jas.
+
+ build :
+ -----
+  In the source kit, we get rid of the version directory
+ under packages. Having them complicate the release procedure.
+ But we had keep the versioning tagging logic in the
+ repository. The version appearing in the this.obuild file
+ of a package is in sync with the tag in the repository.
+  
+  
+ 

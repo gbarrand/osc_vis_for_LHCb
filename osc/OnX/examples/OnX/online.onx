@@ -1,0 +1,34 @@
+<OnX>
+
+  <widget class="Window">
+    <geometry>400x40</geometry>
+    <title>Online</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="HBox">
+      <expand>second</expand>
+      <sizeOfFixed>30</sizeOfFixed>
+
+      <widget class="PushButton">
+        <pixmap>logo_LHCb.xpm</pixmap>
+        <create exec="DLD">OnX session_set_parameter event 0</create>
+        <activate exec="DLD">OnX session_set_parameter event @calc@event+1@{event}@</activate>
+        <activate exec="DLD">OnX ui_set_parameter entry.value Run 0 Event @{event}@</activate>
+      </widget>
+
+      <widget class="HBox">
+        <expand>first</expand>
+        <sizeOfFixed>30</sizeOfFixed>
+
+        <widget class="Entry" name="entry"/>
+
+        <widget class="Label">
+          <pixmap>logo_LAL.xpm</pixmap>
+        </widget>
+
+      </widget>
+
+    </widget>
+  </widget>
+</OnX>

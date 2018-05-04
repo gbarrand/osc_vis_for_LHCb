@@ -1,0 +1,4 @@
+
+if [ ${build_visual} = "yes" ] ; then
+  libs="${libs} wsock32.lib"
+fi

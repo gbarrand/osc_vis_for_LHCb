@@ -1,0 +1,39 @@
+<widget class="CascadeButton" name="OnX_menu_File">
+  <label>File</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>About OnX...</label>
+      <activate exec="DLD">OnX dld_exec_file $ONXROOT/scripts/OnX/About.dld</activate>
+    </widget>
+    <reference file="Execute.onx"/>
+    <widget class="MenuItem">
+      <label>Print</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/InputPrint.onx OnX_InputPrint_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Session toggle verbose</label>
+      <activate exec="DLD">OnX session_toggle_verbose</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Session parameters</label>
+      <activate exec="DLD">OnX session_dump_parameters</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>output -&gt; OnX </label>
+      <activate exec="DLD">OnX session_redirectOutput true</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>output -&gt; terminal </label>
+      <activate exec="DLD">OnX session_redirectOutput false</activate>
+    </widget>
+    <widget class="MenuItem" name="OnX_File_exit">
+      <label>Exit</label>
+      <accelerator>Ctrl+q</accelerator>
+      <activate exec="DLD">OnX ui_exit</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Fast exit</label>
+      <activate exec="DLD">OnX session_exit 0</activate>
+    </widget>
+  </widget>
+</widget>

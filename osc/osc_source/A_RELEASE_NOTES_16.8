@@ -1,0 +1,76 @@
+
+ web pages :
+ ---------
+  The first thing to note is that with the 16.8 we come with a strong revision
+ of the web pages. Now the pages present themselves as tutorial and "how to"
+ to quickly start the various programs. In particular all considerations about
+ architectures (and sociology) which are more internal things had been casted
+ at the end of the pages (if not suppressed !).
+
+ Geant4 :
+ ------
+  The osc_vis kits come now with the material to have quickly high level GUI
+ and visualization to work with Geant4. (A direct consequence of the
+ 2008 Geant4 Annecy school). (In fact the 16.8 release could be named
+ the "Annecy" release :-) ) It had been long to find the right way to do that
+ but we have the conviction to be now "on track" with this problem. 
+ To do that we have introduced a new program : osc-g4-vis. The osc-g4-vis
+ program permits to instrument automatically some of the Geant4 examples
+ (novice, A01, TestEm1) and, by code cloning, someone can quickly have
+ the same working with its Geant4 program.
+
+  We get rid of the idea of having the osc_g4 kit that embarqued CLEHP
+ and Geant4. Clearly people prefer to install themselves CLHEP and Geant4
+ outside OpenScientist. Now Geant4 is considered as a "driver" of an osc_vis
+ kit in the same way that CERNLIB is a driver to a osc_batch kit and that
+ gtk, Qt, Python are drivers too of an osc_vis kit. In particular if building
+ from source there is now a "-group Geant4" that builds the code related
+ to Geant4 (in fact only the G4Lab package) (Then CLHEP and Geant4 are
+ considered "foreign" according the obuild terminology).
+
+  As for all the other drivers related to a foreign package, if installing
+ a osc_vis binary kit, you must check the binary compatibilty of your installed CLHEP and Geant4 versus what comes with the kit. (The 16.8 kits had been built with CLHEP-2.0.3.2 and Geant4-9.1.p02).
+
+ Naming of programs :
+ ------------------
+  We have converged also about the naming of programs. (A long story too).
+ It is clear that the namespace "osc" imposed itself now. The program
+ osc-plot replaces onxlab, osc-gui-viewer replaces onx and osc-paw replaces
+ opaw. osc-config replaces onx-config and suppersed all the other various
+ xxx-config.
+
+  Now there is six main programs : osc-plot, osc-gui-viewer, osc-gui-server,
+ osc-g4-vis, osc-paw, osc-config. And the pages had been strongly revisited
+ to concentrate on the usage of them.
+
+ The osc-server :
+ --------------
+  The osc-gui-server is the first version of a "GUI server". The idea here
+ is to have on your local computer a "super X11" server to which someone
+ can send the whole GUI of an appliction. and also graphics scene graphs.
+ With that you can run on a remote machine a client that will send to the
+ GUI server the GUI specifications (in fact the .onx XML files) but will
+ do also some physics and then build some graphics scene graphs that it
+ can send also to the super server for visualization. As the callbacks
+ are scripted then a click on a local computer GUI button send back the
+ script to the client. The client then executes it on its remote machine.
+ All this is possible in an easy way because in OpenScientist the GUIs are
+ described in XML files but also because we have file format for the graphics
+ too (for graphics the client send compressed Inventor file to the server).
+
+ AIDA :
+ ----
+  The 16.8 is still on AIDA-3.2.1. And the "AIDA environment" like
+ the various aida-setup and the aida-config program are still here.
+
+  Note anyway that there is now the new "FS" AIDA::ITree type that
+ permits at commit/write of the tree to map the tree hierarchy to
+ an equivalent hierarchy on the file system. A "leaf" data being
+ then written into a file in the FS directory.
+
+ Else :
+ ----
+  Else there is a lot of internal modifications that we are not going
+ to exhaust ourselves to describe here because most of people... don't
+ care of them ! :-) 
+

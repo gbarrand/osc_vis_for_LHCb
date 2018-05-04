@@ -1,0 +1,17 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_InputWrite">
+    <label>Write</label>
+    <input name="file" label="File name" type="fileSaver" default="out.hiv"/>
+    <input name="format" label="Format" type="option" items="hiv\niv\nwrl\npov"/>
+<!--
+    <input name="binary" label="Binary" type="option" items="false\ntrue" />
+-->
+    <input name="what" label="What" type="option" items="scene\nstaticScene\ndynamicScene\nregion\npage" />
+
+    <ok exec="DLD">OnX widget_write @current@ @[OnX_InputWrite_input_file.value]@ @[OnX_InputWrite_input_format.value]@ what= @cat@ @[OnX_InputWrite_input_what.value]@</ok>
+
+    <help file="$ONXROOT/scripts/Help/InputWrite.help"/>
+  </widget>
+
+</OnX>

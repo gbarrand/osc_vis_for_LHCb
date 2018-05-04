@@ -1,0 +1,49 @@
+<OnX>
+  <widget class="Window">
+    <geometry>300x350</geometry>
+    <title>Tree widget</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>90</sizeOfFixed>
+
+      <widget class="VPaned">
+        <splitPosition>200</splitPosition>
+        <widget class="ScrolledTree" name="tree_widget">
+          <select exec="DLD">OnX ui_set_parameter text_widget.value @this.value@</select>
+          <selectBranch exec="DLD">OnX ui_set_parameter text_widget.value select @cat_space@ branch @cat_space@  @this.value@</selectBranch>
+          <open exec="DLD">OnX ui_set_parameter text_widget.value open branch @cat_space@ @this.value@</open>
+          <close exec="DLD">OnX ui_set_parameter text_widget.value close branch @cat_space@ @this.value@</close>
+
+          <open exec="DLD">OnX ui_echo open branch</open>
+          <close exec="DLD">OnX ui_echo close branch</close>
+          <selectBranch exec="DLD">OnX ui_echo select branch</selectBranch>
+          <select exec="DLD">OnX ui_echo select leaf</select>
+        </widget>
+
+        <widget class="ScrolledText" name="text_widget"/>
+
+      </widget>
+
+
+      <widget class="VContainer">
+        <widget class="PushButton">
+          <label>Load the tree with the tree.xml file</label>
+          <activate exec="DLD">OnX tree_set_with_file tree_widget.items $ONXROOT/examples/OnX/tree.xml</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Dump items</label>
+          <activate exec="DLD">OnX ui_echo @[tree_widget.items]@</activate>
+   -      <activate exec="DLD">OnX ui_set_parameter text_widget.value @[tree_widget.items]@</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Quit</label>
+          <activate exec="DLD">OnX ui_exit</activate>
+        </widget>
+      </widget>
+
+    </widget>
+  </widget>
+</OnX>

@@ -1,0 +1,591 @@
+// included by CoreDictionary.cxx
+
+#include <Rio/Interfaces/IBuffer.h>
+
+#include <Rio/Core/BaseClass.h>
+#include <Rio/Core/File.h>
+#include <Rio/Core/Directory.h>
+#include <Rio/Core/Array_int.h>
+#include <Rio/Core/Array_float.h>
+#include <Rio/Core/Array_double.h>
+#include <Rio/Core/List.h>
+#include <Rio/Core/ObjArray.h>
+
+namespace Rio {
+
+class IDirectory_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) {return 0;}
+  virtual unsigned int checkSum() const {return 0;}
+public:
+  IDirectory_Class()
+  :BaseClass("Rio::IDirectory","Rio::IDirectory",0){}
+  virtual ~IDirectory_Class(){}
+};
+
+class Directory_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    IDirectory* directory = (IDirectory*)Args_findDirectory(aArgs);
+    if(!directory) {
+      fOut << "Rio::DirectoryClass::create : no directory given." << std::endl;
+      return 0;
+    }
+    File* file = Rio::cast<File>(directory->file());
+    Directory* parent = Rio::cast<Directory>(*directory);
+    Directory* dir = new Directory(*file,parent);
+    if(!dir->isValid()) {
+      fOut << "Rio::DirectoryClass::create : directory badly created." 
+           << std::endl;
+      delete dir;
+      return 0;
+    }
+    return dir;
+  }
+  virtual unsigned int checkSum() const { return 0;}
+public:
+  Directory_Class(std::ostream& aOut)
+  :BaseClass("Rio::Directory","TDirectory",1),fOut(aOut){}
+  virtual ~Directory_Class(){}
+private:
+  std::ostream& fOut;
+};
+
+class List_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) {return new List(fDictionary);}
+  virtual unsigned int checkSum() const {return 0;}
+public:
+  List_Class(const IDictionary& aDictionary)
+  :BaseClass("Rio::List","TList",4),fDictionary(aDictionary){}
+  virtual ~List_Class(){}
+private:
+  const IDictionary& fDictionary;
+};
+
+class ObjArray_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    ObjArray* obj = new ObjArray(fDictionary);
+    obj->setReadArguments(aArgs);
+    return obj;
+  }
+  virtual unsigned int checkSum() const {return 0;}
+public:
+  ObjArray_Class(const IDictionary& aDictionary)
+  :BaseClass("Rio::ObjArray","TObjArray",3),fDictionary(aDictionary){}
+  virtual ~ObjArray_Class(){}
+private:
+  const IDictionary& fDictionary;
+};
+
+class Named_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  Named_Class()
+  :BaseClass("Rio::Named","TNamed",1),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TNamed");
+    //bases :
+    stringCheckSum(fCheckSum,"TObject");
+    //members :
+    stringCheckSum(fCheckSum,"fName");
+    stringCheckSum(fCheckSum,"TString");
+
+    stringCheckSum(fCheckSum,"fTitle");
+    stringCheckSum(fCheckSum,"TString");
+  }
+  virtual ~Named_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class StreamerInfo_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  StreamerInfo_Class()
+  :BaseClass("Rio::StreamerInfo","TStreamerInfo",2),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TStreamerInfo");
+    //bases :
+    stringCheckSum(fCheckSum,"TNamed");
+    //members :
+    stringCheckSum(fCheckSum,"fCheckSum");
+    stringCheckSum(fCheckSum,"UInt_t");
+
+    stringCheckSum(fCheckSum,"fClassVersion");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fElements");
+    stringCheckSum(fCheckSum,"TObjArray*");
+  }
+  virtual ~StreamerInfo_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class StreamerElement_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  StreamerElement_Class()
+  :BaseClass("Rio::StreamerElement","TStreamerElement",2),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TStreamerElement");
+    //bases :
+    stringCheckSum(fCheckSum,"TNamed");
+    //members :
+    stringCheckSum(fCheckSum,"fType");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fSize");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fArrayLength");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fArrayDim");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fMaxIndex");
+    stringCheckSum(fCheckSum,"Int_t");
+    int dim = 5;
+    arrayCheckSum(fCheckSum,1,&dim);
+
+    stringCheckSum(fCheckSum,"fTypeName");
+    stringCheckSum(fCheckSum,"TString");
+
+    //Should be : 2369818458U
+  }
+  virtual ~StreamerElement_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class StreamerBase_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  StreamerBase_Class()
+  :BaseClass("Rio::StreamerBase","TStreamerBase",3),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TStreamerBase");
+    //bases :
+    stringCheckSum(fCheckSum,"TStreamerElement");
+    //members :
+    stringCheckSum(fCheckSum,"fBaseVersion");
+    stringCheckSum(fCheckSum,"Int_t");
+    //Should be : 2671078514U
+  }
+  virtual ~StreamerBase_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class StreamerBasicType_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  StreamerBasicType_Class()
+  :BaseClass("Rio::StreamerBasicType","TStreamerBasicType",2),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TStreamerBasicType");
+    //bases :
+    stringCheckSum(fCheckSum,"TStreamerElement");
+    //Should be : 3001875966U;
+  }
+  virtual ~StreamerBasicType_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class StreamerBasicPointer_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  StreamerBasicPointer_Class()
+  :BaseClass("Rio::StreamerBasicPointer","TStreamerBasicPointer",2)
+  ,fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TStreamerBasicPointer");
+    //bases :
+    stringCheckSum(fCheckSum,"TStreamerElement");
+    //members :
+    stringCheckSum(fCheckSum,"fCountVersion");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fCountName");
+    stringCheckSum(fCheckSum,"TString");
+
+    stringCheckSum(fCheckSum,"fCountClass");
+    stringCheckSum(fCheckSum,"TString");
+
+    //Should be : 1587298059U
+  }
+  virtual ~StreamerBasicPointer_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class StreamerString_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  StreamerString_Class()
+  :BaseClass("Rio::StreamerString","TStreamerString",2),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TStreamerString");
+    //bases :
+    stringCheckSum(fCheckSum,"TStreamerElement");
+    //Should be : 2525579865U
+  }
+  virtual ~StreamerString_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class StreamerObjectPointer_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  StreamerObjectPointer_Class()
+  :BaseClass("Rio::StreamerObjectPointer","TStreamerObjectPointer",2)
+  ,fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TStreamerObjectPointer");
+    //bases :
+    stringCheckSum(fCheckSum,"TStreamerElement");
+    //Should be : 720556968U
+  }
+  virtual ~StreamerObjectPointer_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class StreamerObject_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  StreamerObject_Class()
+  :BaseClass("Rio::StreamerObject","TStreamerObject",2),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TStreamerObject");
+    //bases :
+    stringCheckSum(fCheckSum,"TStreamerElement");
+    //Should be : 2177456715U
+  }
+  virtual ~StreamerObject_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class StreamerObjectAny_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  StreamerObjectAny_Class()
+  :BaseClass("Rio::StreamerObjectAny","TStreamerObjectAny",2),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TStreamerObjectAny");
+    //bases :
+    stringCheckSum(fCheckSum,"TStreamerElement");
+    //Should be : 3108880127U
+  }
+  virtual ~StreamerObjectAny_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class StreamerSTL_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  StreamerSTL_Class()
+  :BaseClass("Rio::StreamerSTL","TStreamerSTL",2),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TStreamerSTL");
+    //bases :
+    stringCheckSum(fCheckSum,"TStreamerElement");
+    //members :
+    stringCheckSum(fCheckSum,"fSTLtype");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fCtype");
+    stringCheckSum(fCheckSum,"Int_t");
+  }
+  virtual ~StreamerSTL_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class Array_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  Array_Class()
+  :BaseClass("Rio::Array","TArray",1),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TArray");
+    //members :
+    stringCheckSum(fCheckSum,"fN");
+    stringCheckSum(fCheckSum,"Int_t");
+  }
+  virtual ~Array_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class Array_int_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual void* createOpaque(const Arguments&) { 
+    return new Array_int(fDictionary);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+  virtual bool writeBuffer(IBuffer& aBuffer,void* aPointer) const {
+    //FIXME : should not know the Rio::Array_int class at this point.
+    //        We should use the streamer infos.
+    Rio::Array_int* obj = (Rio::Array_int*)aPointer;
+    //WARNING : the streaming is not the same than Array_int::stream !
+    if(!obj->Array::stream(aBuffer)) return false;
+    // Emulate : TStreamerInfo / WriteBasicPointer.
+    char isArray = 1;
+    if(!aBuffer.write(isArray)) return false;
+    if(!aBuffer.writeFastArray(obj->array(),obj->size())) return false;
+    return true;
+  }
+public:
+  Array_int_Class(const IDictionary& aDictionary)
+  :BaseClass("Rio::Array_int","TArrayI",1)
+  ,fDictionary(aDictionary)
+  ,fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TArrayI");
+    //base :
+    stringCheckSum(fCheckSum,"TArray");
+    //members :
+    stringCheckSum(fCheckSum,"fArray");
+    stringCheckSum(fCheckSum,"Int_t*");
+  }
+  virtual ~Array_int_Class(){}
+private:
+  const IDictionary& fDictionary;
+  unsigned int fCheckSum;
+};
+
+class Array_double_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual void* createOpaque(const Arguments&) { 
+    return new Array_double(fDictionary);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+  virtual bool writeBuffer(IBuffer& aBuffer,void* aPointer) const {
+    //FIXME : should not know the Rio::Array_double class at this point.
+    //        We should use the streamer infos.
+    Rio::Array_double* obj = (Rio::Array_double*)aPointer;
+    //WARNING : the streaming is not the same than Array_double::stream !
+    if(!obj->Array::stream(aBuffer)) return false;
+    // Emulate : TStreamerInfo / WriteBasicPointer.
+    char isArray = 1;
+    if(!aBuffer.write(isArray)) return false;
+    if(!aBuffer.writeFastArray(obj->array(),obj->size())) return false;
+    return true;
+  }
+  virtual bool readBuffer(IBuffer& aBuffer,void* aPointer) const {
+    Rio::Array_double* obj = (Rio::Array_double*)aPointer;
+    // Array::stream :
+    short v;
+    unsigned int s, c;
+    if(!aBuffer.readVersion(v,s,c)) return false;
+    int number;
+    if(!aBuffer.read(number)) return false; //fN
+    if(!aBuffer.checkByteCount
+         (s,c,Array::is(fDictionary).inStoreName())) return false;
+    //
+    char isArray;
+    if(!aBuffer.read(isArray)) return false;
+    //
+    obj->resize(number);
+    if(number>0) {
+      double* vec = obj->array();
+      if(!aBuffer.readFastArray(vec,number)) return false;
+    }
+    return true;
+  }
+public:
+  Array_double_Class(const IDictionary& aDictionary)
+  :BaseClass("Rio::Array_double","TArrayD",1)
+  ,fDictionary(aDictionary)
+  ,fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TArrayD");
+    //base :
+    stringCheckSum(fCheckSum,"TArray");
+    //members :
+    stringCheckSum(fCheckSum,"fArray");
+    stringCheckSum(fCheckSum,"Double_t*");
+  }
+  virtual ~Array_double_Class(){}
+private:
+  const IDictionary& fDictionary;
+  unsigned int fCheckSum;
+};
+
+class Array_float_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual void* createOpaque(const Arguments&) { 
+    return new Array_float(fDictionary);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+  virtual bool writeBuffer(IBuffer& aBuffer,void* aPointer) const {
+    //FIXME : should not know the Rio::Array_float class at this point.
+    //        We should use the streamer infos.
+    Rio::Array_float* obj = (Rio::Array_float*)aPointer;
+    //WARNING : the streaming is not the same than Array_float::stream !
+    if(!obj->Array::stream(aBuffer)) return false;
+    // Emulate : TStreamerInfo / WriteBasicPointer.
+    char isArray = 1;
+    if(!aBuffer.write(isArray)) return false;
+    if(!aBuffer.writeFastArray(obj->array(),obj->size())) return false;
+    return true;
+  }
+public:
+  Array_float_Class(const IDictionary& aDictionary)
+  :BaseClass("Rio::Array_float","TArrayF",1)
+  ,fDictionary(aDictionary)
+  ,fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TArrayF");
+    //base :
+    stringCheckSum(fCheckSum,"TArray");
+    //members :
+    stringCheckSum(fCheckSum,"fArray");
+    stringCheckSum(fCheckSum,"Float_t*");
+  }
+  virtual ~Array_float_Class(){}
+private:
+  const IDictionary& fDictionary;
+  unsigned int fCheckSum;
+};
+
+class File_Class : public BaseClass {
+public://Rio::IClass
+  virtual Rio::IObject* create(const Arguments&) {return 0;}
+  virtual unsigned int checkSum() const {return fCheckSum;}
+public:
+  File_Class()
+  :BaseClass("Rio::File","TFile",0),fCheckSum(0){}
+  virtual ~File_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+
+class Object_Class : public BaseClass {
+public://Rio::IClass
+  virtual Rio::IObject* create(const Arguments&) {return 0;}
+  virtual unsigned int checkSum() const {return fCheckSum;}
+public:
+  Object_Class()
+  :BaseClass("Rio::Object","TObject",1),fCheckSum(0){}
+  virtual ~Object_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+
+}
+
+
+// They below are used in BranchElement.
+#define RIO_STD_VECTOR_CLASS(aClass,aType) \
+class aClass : public BaseClass {\
+public: /*Rio::IClass*/\
+  virtual IObject* create(const Arguments&) { return 0;}\
+  virtual void* createOpaque(const Arguments&) {\
+    return new std::vector<aType>();\
+  }\
+  virtual unsigned int checkSum() const { return fCheckSum;}\
+  virtual bool writeBuffer(IBuffer& aBuffer,void* aPointer) const {\
+    std::vector<aType>* obj = (std::vector<aType>*)aPointer;\
+    unsigned int c;\
+    if(!aBuffer.writeVersion(version(),c)) return false;\
+    if(!aBuffer.write((int)obj->size())) return false;\
+    if(obj->size()) {\
+      /*aType* vec = &((*obj)[0]);*/\
+      /* The awfull below is to pass aType=bool : */\
+      const aType& vr = (*obj)[0];\
+      if(!aBuffer.writeFastArray(&vr,(int)obj->size())) return false;\
+    }\
+    if(!aBuffer.setByteCount(c,true)) return false;\
+    return true;\
+  }\
+  virtual bool readBuffer(IBuffer& aBuffer,void* aPointer) const {\
+    std::vector<aType>* obj = (std::vector<aType>*)aPointer;\
+    short v;\
+    unsigned int s, c;\
+    if(!aBuffer.readVersion(v,s,c)) return false;\
+    int number;\
+    if(!aBuffer.read(number)) return false;\
+    if(number>0) {\
+      obj->resize(number);\
+      /*aType* vec = &((*obj)[0]);*/\
+      /* The awfull below is to pass aType=bool : */\
+      const aType& vr = (*obj)[0];\
+      aType* vec = (aType*)&vr;\
+      if(!aBuffer.readFastArray(vec,number)) return false;\
+    } else {\
+      obj->clear();\
+    }\
+    if(!aBuffer.checkByteCount(s,c,inStoreName())) return false;\
+    return true;\
+  }\
+public:\
+  aClass(const IDictionary& aDictionary)\
+  :BaseClass(std::string("std::vector<")+#aType+">",\
+             std::string("vector<")+#aType+">",4)\
+  ,fDictionary(aDictionary)\
+  ,fCheckSum(0){\
+    fCheckSum = 196608;\
+  }\
+  virtual ~aClass(){}\
+private:\
+  const IDictionary& fDictionary;\
+  unsigned int fCheckSum;\
+};
+
+
+namespace Rio {
+RIO_STD_VECTOR_CLASS(std_vector_char_Class,char)
+RIO_STD_VECTOR_CLASS(std_vector_short_Class,short)
+RIO_STD_VECTOR_CLASS(std_vector_int_Class,int)
+RIO_STD_VECTOR_CLASS(std_vector_unsigned_char_Class,unsigned char)
+RIO_STD_VECTOR_CLASS(std_vector_unsigned_short_Class,unsigned short)
+RIO_STD_VECTOR_CLASS(std_vector_unsigned_int_Class,unsigned int)
+RIO_STD_VECTOR_CLASS(std_vector_float_Class,float)
+RIO_STD_VECTOR_CLASS(std_vector_double_Class,double)
+
+//FIXME : not tested (also by reading with ROOT)
+RIO_STD_VECTOR_CLASS(std_vector_bool_Class,bool)
+//FIXME
+//RIO_STD_VECTOR_CLASS(std_vector_int64_Class,Rio::int64)
+//RIO_STD_VECTOR_CLASS(std_vector_std_string_Class,std::string)
+}
+
+

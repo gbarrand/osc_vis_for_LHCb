@@ -1,0 +1,89 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+build_pack=backcomp
+
+. ${ourex_mgr}/build_header
+
+if [ ${build_compile} = "yes" ] ; then
+
+#/////////////////////////////////////////////
+#/////////////////////////////////////////////
+#/////////////////////////////////////////////
+
+old_cppflags="${cppflags}"
+
+cppflags="${cppflags} -I${inlib_mgr}/.."
+cppflags="${cppflags} -I.."
+cppflags="${cppflags} -I../../Slash"
+cppflags="${cppflags} -I../../Lib/include"
+
+cxxfiles=
+cxxfiles="${cxxfiles} ../Lib/Check.cxx"
+. ${inlib_mgr}/build_compile
+objs=
+cppflags="${old_cppflags}"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+old_cppflags="${cppflags}"
+
+cppflags="${cppflags} -I${inlib_mgr}/.."
+#cppflags="${cppflags} -I${exlib_mgr}/.."
+
+cppflags="${cppflags} -I.."
+cppflags="${cppflags} -I../../Slash"
+cppflags="${cppflags} -I../../Lib/include"
+
+cxxfiles=
+cppflags="${cppflags} -I${ourex_mgr}/../CoinGL/include"
+cppflags="${cppflags} -I${ourex_mgr}/../HEPVis/include"
+cxxfiles="${cxxfiles} ../OnX/Check.cxx"
+
+. ${inlib_mgr}/build_compile
+objs=
+cppflags="${old_cppflags}"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+use_expat=yes
+expat_home=${ourex_mgr}/../expat
+. ${exlib_mgr}/use_expat
+
+#use_zlib=yes
+#zlib_home=${ourex_mgr}/../zlib
+#. ${exlib_mgr}/use_zlib
+
+cppflags="${cppflags} -I${inlib_mgr}/.."
+
+cppflags="${cppflags} -I.."
+cppflags="${cppflags} -I../../Slash"
+#cppflags="${cppflags} -I../../Lib/include"
+
+cxxfiles=
+cxxfiles="${cxxfiles} ../Lib/BaseML.cxx"
+cxxfiles="${cxxfiles} ../Lib/Element.cxx"
+cxxfiles="${cxxfiles} ../Lib/ItemML.cxx"
+
+. ${inlib_mgr}/build_compile
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+fi # end build_compile
+
+libname=libLibXML 
+if [ ${build_archive} = "yes" ] ; then . ${inlib_mgr}/build_archive; fi
+
+. ${inlib_mgr}/build_clean

@@ -1,0 +1,11 @@
+* This line is a comment.
+
+PAGE/SET/PARAMETER title 'OnX::Detector'
+
+REGION/SET/PARAMETER color '0.8 0.8 0.8'
+
+DET/NEW det 
+DET/SHOW det
+DET/DELETE det
+
+UI/SET/PARAMETER viewer.view all

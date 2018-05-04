@@ -1,0 +1,62 @@
+#!/bin/sh -f
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+. ${ourex_mgr}/build_header
+
+plugin=OnXLab_SWIG_Python
+pyname=OnXLab_SWIG_Python
+
+if [ ${build_compile} = "yes" ] ; then
+
+cppflags="${cppflags} -I.."
+cppflags="${cppflags} -I../../Slash"
+cppflags="${cppflags} -I../../AIDA/v3r2p1"
+cppflags="${cppflags} -I../../amanip/src/cpp"
+cppflags="${cppflags} -I../../OnX/include"
+cppflags="${cppflags} -I../../BatchLab"
+cppflags="${cppflags} -I../../Lib/include"
+cppflags="${cppflags} -I../../Minuit"
+
+cppflags="${cppflags} -I${inlib_mgr}/.."
+cppflags="${cppflags} -I${exlib_mgr}/.."
+
+cxxfiles="${cxxfiles} ../source/Python/OnXLab_SWIG_Python.cxx"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+libs="${libs} -L../../OnX/mgr/${build_dir} -lOnXCore"
+libs="${libs} -L../../BatchLab/mgr/${build_dir} -lBatchLabAIDA"
+libs="${libs} -L../../Minuit/mgr/${build_dir} -losc_Minuit"
+libs="${libs} -L../../Lib/mgr/${build_dir} -lLibUtils"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+use_Python=yes
+use_zlib=yes
+use_expat=yes
+
+. ${exlib_mgr}/use_Python
+. ${exlib_mgr}/use_zlib
+. ${exlib_mgr}/use_expat
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+. ${inlib_mgr}/build_compile
+
+fi # end build_compile
+ 
+if [ ${build_plugin} = "yes" ] ; then . ${inlib_mgr}/build_plugin; fi
+
+. ${inlib_mgr}/build_clean

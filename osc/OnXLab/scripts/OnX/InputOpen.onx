@@ -1,0 +1,18 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnXLab_InputOpen">
+    <label>Open a data file</label>
+
+    <input name="fileName" dirMask="*. @cat@ @[OnXLab_InputOpen_input_format.value]@" label="File" type="fileChooser"/>
+    <input name="format" label="Format" type="combo" default="*" items="*\naida\nhdf5\nascii\ntnt\nroot\nhbook"/>
+
+    <input name="examples" label="Examples" type="option" items="exampleHistogram.aida\ndata.ascii\nanalysis.hdf5\nRootW.root\nanalysis.root\naptuple.tnt.gz\nglast.tnt.gz\ncloud.root"/>
+
+    <variable name="OnXLab_InputOpen_tmp">@cat@ @this.value@</variable>
+    <create exec="DLD">OnX ui_set_callback OnXLab_InputOpen_input_examples valueChanged DLD OnX ui_set_parameter OnXLab_InputOpen_input_fileName.value @env@OSC_HOME_DIR@ @cat@ /Resources/AIDA/examples/data/ @{OnXLab_InputOpen_tmp}@</create>
+
+    <ok exec="DLD">OnXLab OnXLab_open_file @[OnXLab_InputOpen_input_fileName.value]@ @[OnXLab_InputOpen_input_format.value]@</ok>
+
+  </widget>
+
+</OnX>

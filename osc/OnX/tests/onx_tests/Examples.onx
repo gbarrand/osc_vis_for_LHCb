@@ -1,0 +1,242 @@
+<widget class="CascadeButton" name="OnX_menu_Examples">
+  <label>Examples</label>
+  <cascading exec="DLD">OnX ui_echo Examples cascading</cascading>  
+  <widget class="Menu">
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// DLD ///////////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <comment text="////////////////////////////////////">
+      <create exec="DLD">OnX ui_echo should never pass here</create>
+      <widget class="MenuItem">
+        <label>Commented widget</label>
+      </widget>
+    </comment>
+    <widget class="MenuItem">
+      <label>DLD&gt; Banner</label>
+      <activate exec="DLD">OnX dld_exec_file $ONXROOT/tests/onx_tests/banner.dld</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>DLD&gt; shape initialize</label>
+      <activate exec="DLD" where="remote">OnXExas shape_initialize</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>DLD&gt; shapes</label>
+      <activate exec="DLD" where="remote">OnXExas shape_visualize @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Add a shape</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/tests/onx_tests/InputShape.onx OnX_InputShape_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>DLD&gt; exa picked objects</label>
+      <activate exec="DLD">OnXTests OnX_exa_picked_objects</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>DLD&gt; Next event (exec update *)</label>
+      <activate exec="DLD">OnX ui_executeCallbacks * update</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>DLD&gt; Cones</label>
+      <activate exec="DLD">OnX region_resetUndo</activate>
+      <activate exec="DLD">OnX data_collect OnX_Shape type=="Cone"</activate>
+      <activate exec="DLD">OnX data_visualize</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>DLD&gt; Detector</label>
+      <activate exec="DLD">OnXExas detector_visualize @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>DLD&gt; Old shapes</label>
+      <activate exec="DLD">OnX data_collect OnX_Shape_old type=="Cone"</activate>
+      <activate exec="DLD">OnX data_visualize</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>DLD&gt; New plotter</label>
+      <activate exec="DLD">OnX ui_load tab_stack $ONXROOT/tests/onx_tests/Plotter.onx</activate>
+      <activate exec="DLD">OnX ui_set_parameter tab_stack.selection @current_name@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>DLD&gt; Plot in cur region</label>
+      <activate exec="DLD">OnXTests OnX_Plotter_test</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>DLD&gt; New OpenGLArea (contour)</label>
+      <activate exec="DLD">OnX set_variable tmp @name@@OpenGLArea_@</activate>
+      <activate exec="DLD">OnX ui_create_component @{tmp}@ OpenGLArea tab_stack</activate>
+      <activate exec="DLD">OnX ui_set_callback @{tmp}@ paint DLD OnXExas @cat_space@ opengl_contour_paint</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>DLD&gt; New OpenGLArea (cube)</label>
+      <activate exec="DLD">OnX set_variable tmp @name@@OpenGLArea_@</activate>
+      <activate exec="DLD">OnX ui_create_component @{tmp}@ OpenGLArea tab_stack</activate>
+      <activate exec="DLD">OnX ui_set_callback @{tmp}@ paint DLD OnXExas @cat_space@ opengl_cube_paint</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>DLD&gt; A display region with rulers</label>
+      <activate exec="DLD">OnXTests OnX_ruler</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>DLD&gt; Dump highlighted SoNode names</label>
+      <activate exec="DLD">OnX region_dump_highlighted</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Tree dialog...</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/tests/onx_tests/TreeDialog.onx OnX_Tree_dialog</activate>
+    </widget>
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// Python ////////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuSeparator" if="exec.Python"/>
+    <widget class="MenuItem" if="exec.Python">
+      <label>Redirect Python output to session printer</label>
+      <activate exec="Python">import OnX;OnX.sys2onx()</activate>
+    </widget>
+    <widget class="MenuItem" if="exec.Python">
+      <label>Python&gt;print 'hello'</label>
+      <activate exec="Python">print 'hello'</activate>
+    </widget>
+    <widget class="MenuItem" if="exec.Python">
+      <label>Execute OnX/examples/Python/hello.py</label>
+      <activate exec="Python">import OnX;OnX.x_exa('hello')</activate>
+    </widget>
+    <widget class="MenuItem" if="exec.Python">
+      <label>Execute Python script in the xml</label>
+      <activate exec="Python">
+        import string\n\
+        print string.uppercase\n\
+        x = string.uppercase\n\
+        print string.lower(x)
+      </activate>
+    </widget>
+    <widget class="MenuItem" if="exec.Python">
+      <label>Python&gt; Detector</label>  
+      <activate exec="Python">import OnX;OnX.import_py('$ONXROOT/tests/onx_tests','detector')</activate>
+    </widget>
+    <widget class="MenuItem" if="exec.Python">
+      <label>Python&gt; Collect cubes</label>
+      <activate exec="Python">
+        import OnX\n\
+        da = OnX.session().accessorManager()\n\
+        da.collect('OnX_Shape','type=="Cube"')\n\
+        da.visualize('@current@')
+      </activate>
+    </widget>
+    <widget class="MenuItem" if="exec.Python">
+      <label>Python&gt; picked objects</label>
+      <activate exec="Python">import OnX;OnX.import_py('$ONXROOT/tests/onx_tests','picked')</activate>
+    </widget>
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// Tcl ///////////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuSeparator" if="exec.Tcl"/>
+    <widget class="MenuItem" if="exec.Tcl">
+      <label>Tcl&gt; Shapes</label>
+      <activate exec="Tcl">source $env(ONXROOT)/examples/Tcl/OnX_exa_shapes.tcl</activate>
+    </widget>
+    <widget class="MenuItem" if="exec.Tcl">
+      <label>Tcl&gt; Detector</label>
+      <activate exec="Tcl">source $env(ONXROOT)/examples/Tcl/OnX_exa_detector.tcl</activate>
+    </widget>
+    <widget class="MenuItem" if="exec.Tcl">
+      <label>Tcl&gt; Cube and frame</label>
+      <activate exec="Tcl">source $env(ONXROOT)/examples/Tcl/OnX_exa_cube.tcl</activate>
+    </widget>
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// KUIP //////////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuSeparator" if="exec.KUIP">
+      <create exec="Session">OnXKUIP set_UI</create>
+    </widget>
+    <widget class="MenuItem" if="exec.KUIP">
+      <label>DLD&gt; Detector with KUIP</label>
+      <activate exec="DLD">OnX sys_copy $ONXROOT/examples/KUIP/detector.kumac .</activate>
+      <activate exec="kuip">exec detector.kumac</activate>
+      <activate exec="DLD">OnX sys_remove detector.kumac</activate>
+    </widget>
+    <widget class="MenuItem" if="exec.KUIP">
+      <label>KUIP&gt; Detector</label>
+      <activate exec="KUIP">
+        * This line is a comment.\n\
+        PAGE/SET/PARAMETER title 'OnX::Detector'\n\
+        REGION/SET/PARAMETER color '0.8 0.8 0.8'\n\
+        DET/NEW det \n\
+        DET/SHOW det\n\
+        DET/DELETE det\n\
+        VIEWER/VIEW_ALL !
+      </activate>
+    </widget>
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// java //////////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuSeparator" if="exec.java"/>
+    <widget class="MenuItem" if="exec.java">
+      <label>java&gt; Hello</label>
+      <activate exec="java">
+        String s = "Hello java";\n\
+        System.out.println(s);  \n\
+        System.out.println("Test System.out redirection.");\n\
+        System.out.println("Test System.err redirection.");\n\
+      </activate>
+    </widget>
+    <widget class="MenuItem" if="exec.java">
+      <label>java&gt; Cube</label>
+      <activate exec="java">
+        long session = getSession();                                     \n\
+        long manager = Native.ISession_findManager(session,"UI_Manager");\n\
+        long ui = Native.IManager_to_IUI(manager);                       \n\
+        long s = Native.IUI_currentViewer(ui);                           \n\
+        long w = Native.IUI_findWidget(ui,Native.std_string_c_str(s));   \n\
+        long pageViewer = Native.IWidget_to_IPageViewer(w);              \n\
+        long soPage = Native.IPageViewer_soPage(pageViewer);             \n\
+        Native.SoNode_set(soPage,"title \"Java/Inventor\"");             \n\
+        long soRegion = Native.SoCanvas_getHighlightedRegion(soPage);    \n\
+        if(Native.SoCanvas_isRootRegion(soPage,soRegion)==0) return;     \n\
+        Native.SoNode_set(soRegion,"color 0.8 0.8 0.8");                 \n\
+        Native.SoRegion_clear(soRegion,Native.new_SbString(""));         \n\
+        long root = Native.new_SoSeparator();                            \n\
+        long material = Native.new_SoMaterial();                         \n\
+        Native.SoNode_set(material,"diffuseColor 1 0 0");                \n\
+        Native.SoSeparator_addChild(root,material);                      \n\
+        long cube = Native.new_SoCube();                                 \n\
+        Native.SoSeparator_addChild(root,cube);                          \n\
+        long sbAddNode =                                                 \n\
+          Native.new_SbAddNode(root,Native.new_SbString("staticScene")); \n\
+        Native.SoRegion_doIt(soRegion,sbAddNode);                        \n\
+        Native.delete_SbAddNode(sbAddNode);                              \n\
+        Native.IUI_setParameter(ui,"viewer.view","all");
+      </activate>
+      <comment text="We can execute a compiled java code...">
+        <activate exec="java">x cube</activate>
+      </comment>
+    </widget>
+    <widget class="MenuItem" if="exec.java">
+      <label>java&gt; Detector</label>
+      <activate exec="java">x detector</activate>
+    </widget>
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// system ////////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>system&gt; list directory</label>
+      <activate exec="sh">ls</activate>
+      <activate exec="DOS">dir</activate>
+    </widget>
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// net ///////////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>net&gt; list directory</label>
+      <activate exec="sh" where="remote">ls</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>net&gt; Detector</label>
+      <activate exec="DLD" where="remote">OnXExas detector_visualize @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>net&gt; read LHCb_velo.hiv</label>
+      <activate exec="DLD" where="remote">OnX region_readScene $ONXROOT/scripts/Inventor/LHCb_velo.hiv</activate>
+    </widget>
+  </widget>
+</widget>

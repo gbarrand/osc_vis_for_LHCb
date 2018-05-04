@@ -1,0 +1,34 @@
+
+if [ "${use_gldum}" = "yes" ] ; then
+  if [ "${gldum_home}" = "" ] ; then
+    gldum_home=../../ourex/gldum
+  fi
+
+  if [ ${build_visual} = "yes" ] ; then
+    cppflags="${cppflags} /I${gldum_home}"
+  else  
+    cppflags="${cppflags} -I${gldum_home}"
+  fi
+ 
+  gldum_build_dir="${gldum_home}/${build_dir}"
+
+  if [ ! -d ${gldum_build_dir} ] ; then
+    gldum_old_dir=`pwd`
+    cd ${gldum_home}
+    ./build ${args_ourex}
+    cd ${gldum_old_dir}
+  fi
+
+  if [ ! -d ${gldum_build_dir} ] ; then
+    echo "directory ${gldum_build_dir} not found."
+    exit
+  fi
+
+  if [ "${use_archive}" = "yes" ] ; then
+    libs="${libs} ${gldum_build_dir}/libourex_gldum.a"
+  else
+    libs="${libs} -L${gldum_build_dir} -lourex_gldum"
+  fi
+
+fi
+

@@ -1,0 +1,9 @@
+#!/bin/sh -f
+
+from=/Users/barrand/Downloads/darwiin-remote/WiiRemoteFramework/tags/version-0.6
+
+cp ${from}/WiiRemote.h WiiRemote/.
+cp ${from}/WiiRemote.m WiiRemote/.
+cp ${from}/WiiRemotePrivate.h WiiRemote/.
+cp ${from}/WiiRemoteDiscovery.h WiiRemote/.
+cp ${from}/WiiRemoteDiscovery.m WiiRemote/.

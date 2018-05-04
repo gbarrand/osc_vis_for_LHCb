@@ -1,0 +1,34 @@
+<widget class="CascadeButton">
+  <label>Examples</label>
+  <widget class="Menu">
+
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// AIDA //////////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+
+    <widget class="MenuSeparator"/>
+    <reference file="AIDA.onx"/>
+
+    <widget class="MenuSeparator" if="exec.Python"/>
+    <reference file="Python.onx" if="exec.Python"/>
+
+    <widget class="MenuSeparator"/>
+    <reference file="monitor.onx"/>
+
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// KUIP //////////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>AIDA KUIP&gt; init</label>
+      <activate exec="DLD">OnX session_load OnXLabKUIP OnXLabKuip</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>AIDA KUIP&gt; exec analysis.kumac</label>
+      <activate exec="DLD">OnX sys_copy @{ONXLAB_HOME}@ @cat@ /examples/KUIP/analysis.kumac .</activate>
+      <activate exec="kuip">exec analysis.kumac</activate>
+      <activate exec="DLD">OnX sys_remove analysis.kumac</activate>
+    </widget>
+
+  </widget>
+</widget>

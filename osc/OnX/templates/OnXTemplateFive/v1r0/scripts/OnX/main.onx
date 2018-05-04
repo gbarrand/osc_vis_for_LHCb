@@ -1,0 +1,14 @@
+<OnX>
+
+  <create exec="DLD">OnXTemplateFive OnXTemplateFive_initialize</create>
+
+  <widget class="Window">
+    <geometry>500x300+0+0</geometry>
+    <title>OnXTemplateFive/Main</title>
+    <destroy exec="DLD">OnX ui_exit</destroy>
+    <widget class="MenuBar">
+      <reference file="File.onx"/>
+    </widget>
+    <widget class="ScrolledText" name="consoleText"/>
+  </widget>
+</OnX>

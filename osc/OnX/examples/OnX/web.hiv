@@ -1,0 +1,150 @@
+#Inventor V2.1 ascii
+
+  # front looking -z
+  #position 0 2 20
+  #orientation 0 1 0 0
+
+  # behind looking +z
+  #position 0 2 -20
+  #orientation 0 1 0 3.14
+
+  # side with +z at right
+  #position -30 2 10
+  #orientation 0 1 0 4.7124
+
+SoSeparator {
+
+  SoPointLight {
+    location 0 100 0 # y = 100.
+  }
+
+  # Floor :
+  SoSeparator {
+    SoMaterial {
+      #diffuseColor 0.8 0.8 0.8
+      diffuseColor 0.5 0.5 0.5
+    }
+
+    #SoSphere {
+    #}
+
+#    SoGrid {
+#      position -1000 0 1000
+#      X 1 0 0
+#      Y 0 0 -1
+#      width 2000
+#      height 2000
+#      rows 1
+#      columns 1
+#    }
+
+    SoScale {
+      scaleFactor 10 10 10
+    }
+
+    SoGrid {
+      position -4.5 0 4.5
+      X 1 0 0
+      Y 0 0 -1
+      width 0.95
+      height 0.95
+      rows 9
+      columns 9
+    }
+
+
+  }
+  
+  SoSeparator {
+
+    SoTransform { translation -10 0 0 }
+    SoRotationXYZ { 
+      axis Y
+      angle 1.57
+    }
+
+    # sarah :
+    SoSeparator { 
+      SoTransform { translation 0 1.4 0 }
+      HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/wrl/sarah.wrl"}
+    }
+    # dog :
+    SoSeparator { 
+      SoTransform { 
+        translation -1 0.6 -0.6 
+        scaleFactor 0.8 0.8 0.8
+      }
+      HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/wrl/dog.wrl"}
+    }
+    # computer :
+    SoSeparator { 
+      SoTransform { translation 0 0.8 1 }
+      SoRotationXYZ {
+        axis Y
+        angle 3.14
+      }
+      HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/wrl/computer.wrl"}
+    }
+    # piano :
+    SoSeparator { 
+      SoTransform { translation -5 1.6 -3 }
+      HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/wrl/piano2.wrl"}
+    }
+    # flower :
+    SoSeparator { 
+      SoTransform { 
+        translation 1.5 1 -1 
+        scaleFactor 0.6 0.6 0.6
+      }
+      HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/wrl/rose2.wrl"}
+#        name magnolia2.wrl
+#        name plant.wrl
+    }
+    # couch :
+    SoSeparator { 
+      SoTransform { 
+        translation 4 1.1 -3 
+        scaleFactor 0.6 0.6 0.6
+      }
+      SoRotationXYZ {
+        axis Y
+        angle -1.57
+      }
+      HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/wrl/couch.wrl"}
+    }
+    # chair :
+    SoSeparator { 
+      SoTransform { translation 1 0.9 -6 }
+      SoScale { scaleFactor 0.5 0.5 0.5 }
+      HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/wrl/chair.wrl"}
+    }
+
+  }
+
+  SoSeparator {
+
+    SoTranslation {
+      translation 0 5 0 # y = 5
+    }
+
+    SoScale {
+      scaleFactor 0.001 0.001 0.001 # LHCb scenes are in millimeters.
+    }
+
+#    HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/hiv/LHCb_cavern.hiv"}
+
+#    HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/hiv/LHCb_beam_pipe.hiv"}
+
+#    HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/hiv/LHCb_velo.hiv"}
+
+#    HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/hiv/LHCb_rich1.hiv"}
+
+    HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/hiv/LHCb_magnet.hiv"}
+
+#    HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/hiv/LHCb_rich2.hiv"}
+#    HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/hiv/det_view_1.hiv"}
+
+#    HEPVis_SoFile { name "http://OpenScientist.lal.in2p3.fr/download/exp/LHCb/hiv/LHCb_prplot1.hiv"}
+
+  }
+}

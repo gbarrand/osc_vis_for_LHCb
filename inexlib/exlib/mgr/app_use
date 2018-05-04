@@ -1,0 +1,20 @@
+# to be sources.
+
+#//////////////////////////////////////////////////////////
+#/// look for an //exlib_build_use in the app main cpp ////
+#//////////////////////////////////////////////////////////
+
+app_uses=`grep 'exlib_build_use' ${app_use_main}`
+if [ "${app_uses}" != "" ] ; then
+  app_uses=`echo ${app_uses} | sed -e 's:exlib_build_use::g'`
+  for app_use in ${app_uses} ; do
+    #echo "set use_${app_use}"
+    if [ ${app_use} = "//" ] ; then
+      echo dummy > /dev/null
+    else
+      use_var="use_${app_use}"
+      eval ${use_var}=yes
+    fi
+  done
+fi
+

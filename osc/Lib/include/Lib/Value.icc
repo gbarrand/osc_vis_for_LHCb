@@ -1,0 +1,3273 @@
+
+#include <inlib/array>
+#include <inlib/sto>
+#include <inlib/sprintf>
+#include <inlib/tos>
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Value::assign(
+ Lib::Value& aThis
+,const Lib::Value& aV
+,std::string& aError
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(aThis.fType==aV.fType) {
+    aThis.reset();
+    if(aV.fType==Slash::Core::IValue::STRING) {
+      aThis.u.f_string = new std::string(*aV.u.f_string);
+
+    } else if(aV.fType==Slash::Core::IValue::ARRAY_UNSIGNED_CHAR) {
+      aThis.u.f_array_unsigned_char = 
+        new inlib::array<unsigned char>(*aV.u.f_array_unsigned_char);
+    } else if(aV.fType==Slash::Core::IValue::ARRAY_CHAR) {
+      aThis.u.f_array_char = new inlib::array<char>(*aV.u.f_array_char);
+
+    } else if(aV.fType==Slash::Core::IValue::ARRAY_UNSIGNED_SHORT) {
+      aThis.u.f_array_unsigned_short = 
+        new inlib::array<unsigned short>(*aV.u.f_array_unsigned_short);
+    } else if(aV.fType==Slash::Core::IValue::ARRAY_SHORT) {
+      aThis.u.f_array_short = new inlib::array<short>(*aV.u.f_array_short);
+
+    } else if(aV.fType==Slash::Core::IValue::ARRAY_UNSIGNED_INT) {
+      aThis.u.f_array_unsigned_int = 
+        new inlib::array<unsigned int>(*aV.u.f_array_unsigned_int);
+    } else if(aV.fType==Slash::Core::IValue::ARRAY_INT) {
+      aThis.u.f_array_int = new inlib::array<int>(*aV.u.f_array_int);
+
+    } else if(aV.fType==Slash::Core::IValue::ARRAY_UNSIGNED_INT64) {
+      aThis.u.f_array_unsigned_int64 = 
+        new inlib::array<Slash::uint64>(*aV.u.f_array_unsigned_int64);
+    } else if(aV.fType==Slash::Core::IValue::ARRAY_INT64) {
+      aThis.u.f_array_int64 = 
+        new inlib::array<Slash::int64>(*aV.u.f_array_int64);
+
+    } else if(aV.fType==Slash::Core::IValue::ARRAY_FLOAT) {
+      aThis.u.f_array_float = new inlib::array<float>(*aV.u.f_array_float);
+    } else if(aV.fType==Slash::Core::IValue::ARRAY_DOUBLE) {
+      aThis.u.f_array_double = new inlib::array<double>(*aV.u.f_array_double);
+    } else if(aV.fType==Slash::Core::IValue::ARRAY_BOOL) {
+      aThis.u.f_array_bool = new inlib::array<bool>(*aV.u.f_array_bool);
+
+    } else if(aV.fType==Slash::Core::IValue::ARRAY_STRING) {
+      aThis.u.f_array_string = 
+        new inlib::array<std::string>(*aV.u.f_array_string);
+
+    } else {
+      aThis.u = aV.u;
+    }
+    return true;
+  } else {
+    switch(aThis.fType) {
+    case Slash::Core::IValue::INT:
+      break;
+    case Slash::Core::IValue::DOUBLE:
+      switch(aV.fType) {
+      case Slash::Core::IValue::INT:
+        aThis.u.f_double = aV.u.f_int;
+        return true;
+      case Slash::Core::IValue::UNSIGNED_SHORT :
+        aThis.u.f_double = aV.u.f_unsigned_short;
+        return true;
+      case Slash::Core::IValue::UNSIGNED_INT:
+        aThis.u.f_double = aV.u.f_unsigned_int;
+        return true;
+      case Slash::Core::IValue::NONE:
+      case Slash::Core::IValue::DOUBLE:
+      case Slash::Core::IValue::VOID_STAR:
+      case Slash::Core::IValue::BOOL:
+      case Slash::Core::IValue::SHORT:
+      case Slash::Core::IValue::INT64:
+      case Slash::Core::IValue::FLOAT:
+      case Slash::Core::IValue::UNSIGNED_CHAR:
+      case Slash::Core::IValue::CHAR:
+      case Slash::Core::IValue::UNSIGNED_INT64 :
+      case Slash::Core::IValue::DOUBLE_STAR:
+      case Slash::Core::IValue::FLOAT_STAR:
+      case Slash::Core::IValue::INT_STAR:
+      case Slash::Core::IValue::STRING:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+      case Slash::Core::IValue::ARRAY_CHAR:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+      case Slash::Core::IValue::ARRAY_SHORT:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+      case Slash::Core::IValue::ARRAY_INT:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+      case Slash::Core::IValue::ARRAY_INT64:
+      case Slash::Core::IValue::ARRAY_FLOAT:
+      case Slash::Core::IValue::ARRAY_DOUBLE:
+      case Slash::Core::IValue::ARRAY_BOOL:
+      case Slash::Core::IValue::ARRAY_STRING:
+        break;
+      }
+      break;
+    case Slash::Core::IValue::STRING:
+      break;
+    case Slash::Core::IValue::VOID_STAR:
+      break;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      break;
+    case Slash::Core::IValue::BOOL:
+      break;
+    case Slash::Core::IValue::SHORT:
+      switch(aV.fType) {
+      case Slash::Core::IValue::INT:
+        aThis.u.f_short = (short)aV.u.f_int;
+        return true;
+      case Slash::Core::IValue::NONE:
+      case Slash::Core::IValue::DOUBLE:
+      case Slash::Core::IValue::VOID_STAR:
+      case Slash::Core::IValue::BOOL:
+      case Slash::Core::IValue::SHORT:
+      case Slash::Core::IValue::INT64:
+      case Slash::Core::IValue::FLOAT:
+      case Slash::Core::IValue::UNSIGNED_CHAR:
+      case Slash::Core::IValue::CHAR:
+      case Slash::Core::IValue::UNSIGNED_SHORT :
+      case Slash::Core::IValue::UNSIGNED_INT:
+      case Slash::Core::IValue::UNSIGNED_INT64 :
+      case Slash::Core::IValue::DOUBLE_STAR:
+      case Slash::Core::IValue::FLOAT_STAR:
+      case Slash::Core::IValue::INT_STAR:
+      case Slash::Core::IValue::STRING:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+      case Slash::Core::IValue::ARRAY_CHAR:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+      case Slash::Core::IValue::ARRAY_SHORT:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+      case Slash::Core::IValue::ARRAY_INT:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+      case Slash::Core::IValue::ARRAY_INT64:
+      case Slash::Core::IValue::ARRAY_FLOAT:
+      case Slash::Core::IValue::ARRAY_DOUBLE:
+      case Slash::Core::IValue::ARRAY_BOOL:
+      case Slash::Core::IValue::ARRAY_STRING:
+        break;
+      }
+      break;
+    case Slash::Core::IValue::FLOAT:
+      switch(aV.fType) {
+      case Slash::Core::IValue::INT:
+        aThis.u.f_float = (float)aV.u.f_int;
+        return true;
+      case Slash::Core::IValue::DOUBLE:
+        aThis.u.f_float = (float)aV.u.f_double;
+        return true;
+      case Slash::Core::IValue::NONE:
+      case Slash::Core::IValue::VOID_STAR:
+      case Slash::Core::IValue::BOOL:
+      case Slash::Core::IValue::SHORT:
+      case Slash::Core::IValue::INT64:
+      case Slash::Core::IValue::FLOAT:
+      case Slash::Core::IValue::UNSIGNED_CHAR:
+      case Slash::Core::IValue::CHAR:
+      case Slash::Core::IValue::UNSIGNED_SHORT :
+      case Slash::Core::IValue::UNSIGNED_INT:
+      case Slash::Core::IValue::UNSIGNED_INT64 :
+      case Slash::Core::IValue::DOUBLE_STAR:
+      case Slash::Core::IValue::FLOAT_STAR:
+      case Slash::Core::IValue::INT_STAR:
+      case Slash::Core::IValue::STRING:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+      case Slash::Core::IValue::ARRAY_CHAR:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+      case Slash::Core::IValue::ARRAY_SHORT:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+      case Slash::Core::IValue::ARRAY_INT:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+      case Slash::Core::IValue::ARRAY_INT64:
+      case Slash::Core::IValue::ARRAY_FLOAT:
+      case Slash::Core::IValue::ARRAY_DOUBLE:
+      case Slash::Core::IValue::ARRAY_BOOL:
+      case Slash::Core::IValue::ARRAY_STRING:
+        break;
+      }
+      break;
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+      switch(aV.fType) {
+      case Slash::Core::IValue::INT:
+        aThis.u.f_unsigned_char = (unsigned char)aV.u.f_int;
+        return true;
+      case Slash::Core::IValue::NONE:
+      case Slash::Core::IValue::DOUBLE:
+      case Slash::Core::IValue::VOID_STAR:
+      case Slash::Core::IValue::BOOL:
+      case Slash::Core::IValue::SHORT:
+      case Slash::Core::IValue::INT64:
+      case Slash::Core::IValue::FLOAT:
+      case Slash::Core::IValue::UNSIGNED_CHAR:
+      case Slash::Core::IValue::CHAR:
+      case Slash::Core::IValue::UNSIGNED_SHORT :
+      case Slash::Core::IValue::UNSIGNED_INT:
+      case Slash::Core::IValue::UNSIGNED_INT64 :
+      case Slash::Core::IValue::DOUBLE_STAR:
+      case Slash::Core::IValue::FLOAT_STAR:
+      case Slash::Core::IValue::INT_STAR:
+      case Slash::Core::IValue::STRING:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+      case Slash::Core::IValue::ARRAY_CHAR:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+      case Slash::Core::IValue::ARRAY_SHORT:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+      case Slash::Core::IValue::ARRAY_INT:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+      case Slash::Core::IValue::ARRAY_INT64:
+      case Slash::Core::IValue::ARRAY_FLOAT:
+      case Slash::Core::IValue::ARRAY_DOUBLE:
+      case Slash::Core::IValue::ARRAY_BOOL:
+      case Slash::Core::IValue::ARRAY_STRING:
+        break;
+      }
+      break;
+    case Slash::Core::IValue::CHAR:
+      switch(aV.fType) {
+      case Slash::Core::IValue::INT:
+        aThis.u.f_char = (char)aV.u.f_int;
+        return true;
+      case Slash::Core::IValue::STRING:
+        if(aV.u.f_string->size()!=1) break;
+        aThis.u.f_char = (*aV.u.f_string)[0];
+        return true;
+      case Slash::Core::IValue::NONE:
+      case Slash::Core::IValue::DOUBLE:
+      case Slash::Core::IValue::VOID_STAR:
+      case Slash::Core::IValue::BOOL:
+      case Slash::Core::IValue::SHORT:
+      case Slash::Core::IValue::INT64:
+      case Slash::Core::IValue::FLOAT:
+      case Slash::Core::IValue::UNSIGNED_CHAR:
+      case Slash::Core::IValue::CHAR:
+      case Slash::Core::IValue::UNSIGNED_SHORT :
+      case Slash::Core::IValue::UNSIGNED_INT:
+      case Slash::Core::IValue::UNSIGNED_INT64 :
+      case Slash::Core::IValue::DOUBLE_STAR:
+      case Slash::Core::IValue::FLOAT_STAR:
+      case Slash::Core::IValue::INT_STAR:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+      case Slash::Core::IValue::ARRAY_CHAR:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+      case Slash::Core::IValue::ARRAY_SHORT:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+      case Slash::Core::IValue::ARRAY_INT:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+      case Slash::Core::IValue::ARRAY_INT64:
+      case Slash::Core::IValue::ARRAY_FLOAT:
+      case Slash::Core::IValue::ARRAY_DOUBLE:
+      case Slash::Core::IValue::ARRAY_BOOL:
+      case Slash::Core::IValue::ARRAY_STRING:
+        break;
+      }
+      break;
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+      switch(aV.fType) {
+      case Slash::Core::IValue::INT:
+        aThis.u.f_int64 = aV.u.f_int;
+        return true;
+      case Slash::Core::IValue::UNSIGNED_SHORT :
+        aThis.u.f_int64 = aV.u.f_unsigned_short;
+        return true;
+      case Slash::Core::IValue::UNSIGNED_INT:
+        aThis.u.f_int64 = aV.u.f_unsigned_int;
+        return true;
+      case Slash::Core::IValue::NONE:
+      case Slash::Core::IValue::DOUBLE:
+      case Slash::Core::IValue::VOID_STAR:
+      case Slash::Core::IValue::BOOL:
+      case Slash::Core::IValue::SHORT:
+      case Slash::Core::IValue::INT64:
+      case Slash::Core::IValue::FLOAT:
+      case Slash::Core::IValue::UNSIGNED_CHAR:
+      case Slash::Core::IValue::CHAR:
+      case Slash::Core::IValue::UNSIGNED_INT64 :
+      case Slash::Core::IValue::DOUBLE_STAR:
+      case Slash::Core::IValue::FLOAT_STAR:
+      case Slash::Core::IValue::INT_STAR:
+      case Slash::Core::IValue::STRING:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+      case Slash::Core::IValue::ARRAY_CHAR:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+      case Slash::Core::IValue::ARRAY_SHORT:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+      case Slash::Core::IValue::ARRAY_INT:
+      case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+      case Slash::Core::IValue::ARRAY_INT64:
+      case Slash::Core::IValue::ARRAY_FLOAT:
+      case Slash::Core::IValue::ARRAY_DOUBLE:
+      case Slash::Core::IValue::ARRAY_BOOL:
+      case Slash::Core::IValue::ARRAY_STRING:
+        break;
+      }
+      break;
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    aError = std::string("Lib::Value::assign :")
+           + " unable to assign " + aV.stype() 
+           + " to " + aThis.stype();
+    aThis.setNone();
+    return false;
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Value::minus(
+ Lib::Value& aThis
+,std::string& aError
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  Slash::Core::IValue::Type oType = aThis.fType;
+  switch(aThis.fType) {
+  case Slash::Core::IValue::INT:
+    aThis.u.f_int = -aThis.u.f_int;
+    return true;
+  case Slash::Core::IValue::DOUBLE:
+    aThis.u.f_double = -aThis.u.f_double;
+    return true;
+  case Slash::Core::IValue::SHORT:
+    aThis.u.f_short = -aThis.u.f_short;
+    return true;
+  case Slash::Core::IValue::INT64:
+    aThis.u.f_int64 = -aThis.u.f_int64;
+    return true;
+  case Slash::Core::IValue::CHAR:
+    aThis.u.f_char = -aThis.u.f_char;
+    return true;
+  case Slash::Core::IValue::FLOAT:
+    aThis.u.f_float = -1.0F * aThis.u.f_float;
+    return true;
+  case Slash::Core::IValue::ARRAY_DOUBLE:{
+    std::vector<double>& stdv = aThis.u.f_array_double->vector();
+    unsigned int number = stdv.size();
+    for(unsigned int index=0;index<number;index++) stdv[index] = -stdv[index];
+    return true;}
+  case Slash::Core::IValue::UNSIGNED_CHAR:{
+    char tmp = -1*aThis.u.f_unsigned_char;
+    aThis.set(tmp); //this becomes a Slash::Core::IValue::CHAR.
+    return true;}
+  case Slash::Core::IValue::UNSIGNED_SHORT:{
+    short tmp = -1*aThis.u.f_unsigned_short;
+    aThis.set(tmp); //this becomes a Slash::Core::IValue::SHORT.
+    return true;}
+  case Slash::Core::IValue::UNSIGNED_INT:{
+    int tmp = -1*aThis.u.f_unsigned_int;
+    aThis.set(tmp); //this becomes a Slash::Core::IValue::INT.
+    return true;}
+  case Slash::Core::IValue::UNSIGNED_INT64 :{
+    Slash::int64 tmp = -1*aThis.u.f_unsigned_int64;
+    aThis.set(tmp); //this becomes a Slash::Core::IValue::INT64.
+    return true;}
+  case Slash::Core::IValue::BOOL:
+  case Slash::Core::IValue::NONE:
+  case Slash::Core::IValue::STRING:
+  case Slash::Core::IValue::VOID_STAR:
+  case Slash::Core::IValue::DOUBLE_STAR:
+  case Slash::Core::IValue::FLOAT_STAR:
+  case Slash::Core::IValue::INT_STAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+  case Slash::Core::IValue::ARRAY_CHAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+  case Slash::Core::IValue::ARRAY_SHORT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+  case Slash::Core::IValue::ARRAY_INT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+  case Slash::Core::IValue::ARRAY_INT64:
+  case Slash::Core::IValue::ARRAY_FLOAT:
+  //case Slash::Core::IValue::ARRAY_DOUBLE:
+  case Slash::Core::IValue::ARRAY_BOOL:
+  case Slash::Core::IValue::ARRAY_STRING:
+    break;
+  }
+  aError = std::string("Lib::Value::minus :")
+         + " can't apply on type " + aThis.stype(oType);
+  aThis.setNone();
+  return false;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Value::do_not(
+ Lib::Value& aThis
+,std::string& aError
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  Slash::Core::IValue::Type oType = aThis.fType;
+  switch(aThis.fType) {
+  case Slash::Core::IValue::BOOL:
+    aThis.u.f_bool = aThis.u.f_bool?false:true;
+    return true;
+  case Slash::Core::IValue::INT:
+  case Slash::Core::IValue::DOUBLE:
+  case Slash::Core::IValue::STRING:
+  case Slash::Core::IValue::VOID_STAR:
+  case Slash::Core::IValue::UNSIGNED_SHORT :
+  case Slash::Core::IValue::UNSIGNED_INT:
+  case Slash::Core::IValue::SHORT:
+  case Slash::Core::IValue::FLOAT:
+  case Slash::Core::IValue::UNSIGNED_CHAR:
+  case Slash::Core::IValue::CHAR:
+  case Slash::Core::IValue::NONE:
+  case Slash::Core::IValue::INT64:
+  case Slash::Core::IValue::UNSIGNED_INT64 :
+  case Slash::Core::IValue::DOUBLE_STAR:
+  case Slash::Core::IValue::FLOAT_STAR:
+  case Slash::Core::IValue::INT_STAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+  case Slash::Core::IValue::ARRAY_CHAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+  case Slash::Core::IValue::ARRAY_SHORT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+  case Slash::Core::IValue::ARRAY_INT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+  case Slash::Core::IValue::ARRAY_INT64:
+  case Slash::Core::IValue::ARRAY_FLOAT:
+  case Slash::Core::IValue::ARRAY_DOUBLE:
+  case Slash::Core::IValue::ARRAY_BOOL:
+  case Slash::Core::IValue::ARRAY_STRING:
+    break;
+  }
+  aError = std::string("Lib::Value::do_not :")
+         + " can't apply on type " + aThis.stype(oType);
+  aThis.setNone();
+  return false;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Value::add(
+ Lib::Value& aThis
+,const Value& aV
+,std::string& aError
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  Slash::Core::IValue::Type oType = aThis.fType;
+  switch(aThis.fType) {
+  case Slash::Core::IValue::INT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::INT:
+      aThis.u.f_int += aV.u.f_int;
+      return true;
+    case Slash::Core::IValue::FLOAT:{
+      float tmp = aThis.u.f_int + aV.u.f_float;
+      aThis.set(tmp);
+      return true;}
+    case Slash::Core::IValue::DOUBLE:{
+      double tmp = aThis.u.f_int + aV.u.f_double;
+      aThis.set(tmp);
+      return true;}
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      int tmp = aThis.u.f_int;
+      //In the below, this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      aThis.u.f_array_double->add(double(tmp));
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::FLOAT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+      aThis.u.f_float += aV.u.f_unsigned_short;
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.u.f_float += aV.u.f_unsigned_int;
+      return true;
+    case Slash::Core::IValue::SHORT:
+      aThis.u.f_float += aV.u.f_short;
+      return true;
+    case Slash::Core::IValue::INT:
+      aThis.u.f_float += aV.u.f_int;
+      return true;
+    case Slash::Core::IValue::FLOAT:
+      aThis.u.f_float += aV.u.f_float;
+      return true;
+    case Slash::Core::IValue::DOUBLE:
+      aThis.u.f_float += (float)aV.u.f_double;
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      double tmp = aThis.u.f_float;
+      //In the below this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      aThis.u.f_array_double->add(tmp);
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::DOUBLE:
+    switch(aV.fType) {
+    case Slash::Core::IValue::SHORT:
+      aThis.u.f_double += aV.u.f_short;
+      return true;
+    case Slash::Core::IValue::INT:
+      aThis.u.f_double += aV.u.f_int;
+      return true;
+    case Slash::Core::IValue::FLOAT:
+      aThis.u.f_double += aV.u.f_float;
+      return true;
+    case Slash::Core::IValue::DOUBLE:
+      aThis.u.f_double += aV.u.f_double;
+      return true;
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+      aThis.u.f_double += aV.u.f_unsigned_short;
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.u.f_double += aV.u.f_unsigned_int;
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      double tmp = aThis.u.f_double;
+      //In the below this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      aThis.u.f_array_double->add(tmp);
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::UNSIGNED_INT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.u.f_unsigned_int += aV.u.f_unsigned_int;
+      return true;
+    case Slash::Core::IValue::INT:{
+      int tmp = aThis.u.f_unsigned_int + aV.u.f_int;
+      aThis.set(tmp);
+      return true;}
+    case Slash::Core::IValue::FLOAT:{
+      float tmp = float(aThis.u.f_unsigned_int) + aV.u.f_float;
+      aThis.set(tmp);
+      return true;}
+    case Slash::Core::IValue::DOUBLE:{
+      double tmp = double(aThis.u.f_unsigned_int) + aV.u.f_double;
+      aThis.set(tmp);
+      return true;}
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      unsigned int tmp = aThis.u.f_unsigned_int;
+      //In the below this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      aThis.u.f_array_double->add(double(tmp));
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::STRING:
+    switch(aV.fType) {
+    case Slash::Core::IValue::STRING:
+      aThis.set((*aThis.u.f_string)+(*aV.u.f_string));
+      return true;
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::INT:
+    case Slash::Core::IValue::DOUBLE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::FLOAT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::ARRAY_DOUBLE:
+    switch(aV.fType) {
+    case Slash::Core::IValue::INT:
+      aThis.u.f_array_double->add(aV.u.f_int);
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.u.f_array_double->add(aV.u.f_unsigned_int);
+      return true;
+    case Slash::Core::IValue::DOUBLE:
+      aThis.u.f_array_double->add(aV.u.f_double);
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:
+      if(aThis.u.f_array_double->orders()!=aV.u.f_array_double->orders()) {
+        aError = "Value::add : vector orders mismatch.";
+        aThis.setNone();
+        return false;
+      }
+      aThis.u.f_array_double->add(*aV.u.f_array_double);
+      return true;
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::FLOAT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::NONE:
+  case Slash::Core::IValue::VOID_STAR:
+  case Slash::Core::IValue::BOOL:
+  case Slash::Core::IValue::SHORT:
+  case Slash::Core::IValue::INT64:
+  case Slash::Core::IValue::UNSIGNED_CHAR:
+  case Slash::Core::IValue::CHAR:
+  case Slash::Core::IValue::UNSIGNED_SHORT :
+  case Slash::Core::IValue::UNSIGNED_INT64 :
+  case Slash::Core::IValue::DOUBLE_STAR:
+  case Slash::Core::IValue::FLOAT_STAR:
+  case Slash::Core::IValue::INT_STAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+  case Slash::Core::IValue::ARRAY_CHAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+  case Slash::Core::IValue::ARRAY_SHORT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+  case Slash::Core::IValue::ARRAY_INT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+  case Slash::Core::IValue::ARRAY_INT64:
+  case Slash::Core::IValue::ARRAY_FLOAT:
+  //case Slash::Core::IValue::ARRAY_DOUBLE:
+  case Slash::Core::IValue::ARRAY_BOOL:
+  case Slash::Core::IValue::ARRAY_STRING:
+    break;
+  }
+  aError = std::string("Value::add :" )
+         + " can't apply on type " + aThis.stype(oType)
+         + " and type " + aV.stype();
+  aThis.setNone();
+  return false;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Value::subtract(
+ Lib::Value& aThis
+,const Value& aV
+,std::string& aError
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  Slash::Core::IValue::Type oType = aThis.fType;
+  switch(aThis.fType) {
+  case Slash::Core::IValue::INT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::INT:
+      aThis.u.f_int -= aV.u.f_int;
+      return true;
+    case Slash::Core::IValue::DOUBLE:{
+      double tmp = aThis.u.f_int - aV.u.f_double;
+      aThis.set(tmp);
+      return true;}
+    case Slash::Core::IValue::FLOAT:{
+      float tmp = aThis.u.f_int - aV.u.f_float;
+      aThis.set(tmp);
+      return true;}
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      int tmp = aThis.u.f_int;
+      //In the below, this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      aThis.u.f_array_double->multiply(-1);
+      aThis.u.f_array_double->add(double(tmp));
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::FLOAT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::DOUBLE:
+      aThis.u.f_float -= (float)aV.u.f_double;
+      return true;
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+      aThis.u.f_float -= aV.u.f_unsigned_short;
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.u.f_float -= aV.u.f_unsigned_int;
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      double tmp = aThis.u.f_float;
+      //In the below, this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      aThis.u.f_array_double->multiply(-1);
+      aThis.u.f_array_double->add(tmp);
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::INT:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::FLOAT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::DOUBLE:
+    switch(aV.fType) {
+    case Slash::Core::IValue::DOUBLE:
+      aThis.u.f_double -= aV.u.f_double;
+      return true;
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+      aThis.u.f_double -= aV.u.f_unsigned_short;
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.u.f_double -= aV.u.f_unsigned_int;
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      double tmp = aThis.u.f_double;
+      //In the below, this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      aThis.u.f_array_double->multiply(-1);
+      aThis.u.f_array_double->add(tmp);
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::INT:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::FLOAT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::UNSIGNED_INT:
+    switch(aV.fType) {
+//uuu
+    //case Slash::Core::IValue::UNSIGNED_INT:
+    //  aThis.u.f_unsigned_int -= aV.u.f_unsigned_int;
+    //  return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      unsigned int tmp = aThis.u.f_unsigned_int;
+      //In the below, this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      aThis.u.f_array_double->multiply(-1);
+      aThis.u.f_array_double->add(double(tmp));
+      return true;}
+    case Slash::Core::IValue::DOUBLE:{
+      double d = double(aThis.u.f_unsigned_int) - aV.u.f_double;
+      aThis.set(d); //this becomes a Slash::Core::IValue::DOUBLE.
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::INT:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::FLOAT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::ARRAY_DOUBLE:
+    switch(aV.fType) {
+    case Slash::Core::IValue::INT:
+      aThis.u.f_array_double->add(-aV.u.f_int);
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.u.f_array_double->add(-((double)aV.u.f_unsigned_int));
+      return true;
+    case Slash::Core::IValue::DOUBLE:
+      aThis.u.f_array_double->add(-aV.u.f_double);
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      if(aThis.u.f_array_double->orders()!=aV.u.f_array_double->orders()) {
+        aError = "Value::subtract : vector orders mismatch.";
+        aThis.setNone();
+        return false;
+      }
+      std::vector<double>& stdv = aThis.u.f_array_double->vector();
+      const std::vector<double>& stdv2 = aV.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) { 
+        stdv[index] -= stdv2[index];
+      }
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::FLOAT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::NONE:
+  case Slash::Core::IValue::VOID_STAR:
+  case Slash::Core::IValue::BOOL:
+  case Slash::Core::IValue::SHORT:
+  case Slash::Core::IValue::INT64:
+  case Slash::Core::IValue::UNSIGNED_CHAR:
+  case Slash::Core::IValue::CHAR:
+  case Slash::Core::IValue::UNSIGNED_SHORT :
+  case Slash::Core::IValue::UNSIGNED_INT64 :
+  case Slash::Core::IValue::DOUBLE_STAR:
+  case Slash::Core::IValue::FLOAT_STAR:
+  case Slash::Core::IValue::INT_STAR:
+  case Slash::Core::IValue::STRING:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+  case Slash::Core::IValue::ARRAY_CHAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+  case Slash::Core::IValue::ARRAY_SHORT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+  case Slash::Core::IValue::ARRAY_INT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+  case Slash::Core::IValue::ARRAY_INT64:
+  case Slash::Core::IValue::ARRAY_FLOAT:
+  //case Slash::Core::IValue::ARRAY_DOUBLE:
+  case Slash::Core::IValue::ARRAY_BOOL:
+  case Slash::Core::IValue::ARRAY_STRING:
+    break;
+  }
+  aError = std::string("Value::subtract :" )
+         + " can't apply on type " + aThis.stype(oType)
+         + " and type " + aV.stype();
+  aThis.setNone();
+  return false;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Value::multiply(
+ Lib::Value& aThis
+,const Value& aV
+,std::string& aError
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  Slash::Core::IValue::Type oType = aThis.fType;
+  switch(aThis.fType) {
+  case Slash::Core::IValue::INT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::INT:
+      aThis.u.f_int *= aV.u.f_int;
+      return true;
+    case Slash::Core::IValue::DOUBLE:
+      aThis.u.f_int *= (int)aV.u.f_double;
+      return true;
+    case Slash::Core::IValue::FLOAT:
+      aThis.u.f_int *= (int)aV.u.f_float;
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      int tmp = aThis.u.f_int;
+      //In the below, this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      aThis.u.f_array_double->multiply(double(tmp));
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::UNSIGNED_INT:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::FLOAT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::SHORT:
+      aThis.u.f_float *= aV.u.f_short;
+      return true;
+    case Slash::Core::IValue::INT:
+      aThis.u.f_float *= aV.u.f_int;
+      return true;
+    case Slash::Core::IValue::FLOAT:
+      aThis.u.f_float *= aV.u.f_float;
+      return true;
+    case Slash::Core::IValue::DOUBLE:
+      aThis.u.f_float *= (float)aV.u.f_double;
+      return true;
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+      aThis.u.f_float *= aV.u.f_unsigned_short;
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.u.f_float *= aV.u.f_unsigned_int;
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      double tmp = aThis.u.f_float;
+      //In the below, this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      aThis.u.f_array_double->multiply(tmp);
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::DOUBLE:
+    switch(aV.fType) {
+    case Slash::Core::IValue::SHORT:
+      aThis.u.f_double *= aV.u.f_short;
+      return true;
+    case Slash::Core::IValue::INT:
+      aThis.u.f_double *= aV.u.f_int;
+      return true;
+    case Slash::Core::IValue::INT64:
+      aThis.u.f_double *= aV.u.f_int64;
+      return true;
+    case Slash::Core::IValue::FLOAT:
+      aThis.u.f_double *= aV.u.f_float;
+      return true;
+    case Slash::Core::IValue::DOUBLE:
+      aThis.u.f_double *= aV.u.f_double;
+      return true;
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+      aThis.u.f_double *= aV.u.f_unsigned_short;
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.u.f_double *= aV.u.f_unsigned_int;
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      double tmp = aThis.u.f_double;
+      //In the below, this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      aThis.u.f_array_double->multiply(tmp);
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::UNSIGNED_INT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::FLOAT:{
+      float tmp = aThis.u.f_unsigned_int * aV.u.f_float;
+      aThis.set(tmp); //this becomes a Slash::Core::IValue::FLOAT.
+      return true;}
+    case Slash::Core::IValue::DOUBLE:{
+      double tmp = aThis.u.f_unsigned_int * aV.u.f_double;
+      aThis.set(tmp); //this becomes a Slash::Core::IValue::DOUBLE.
+      return true;}
+    case Slash::Core::IValue::INT:{
+      int tmp = aThis.u.f_unsigned_int * aV.u.f_int;
+      aThis.set(tmp); //this becomes a Slash::Core::IValue::INT.
+      return true;}
+    case Slash::Core::IValue::INT64:{
+      Slash::int64 tmp = aThis.u.f_unsigned_int * aV.u.f_int64;
+      aThis.set(tmp); //this becomes a Slash::Core::IValue::INT64.
+      return true;}
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.u.f_unsigned_int *= aV.u.f_unsigned_int;
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      unsigned int tmp = aThis.u.f_unsigned_int;
+      //In the below, this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      aThis.u.f_array_double->multiply(double(tmp));
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::ARRAY_DOUBLE:
+    switch(aV.fType) {
+    case Slash::Core::IValue::INT:
+      aThis.u.f_array_double->multiply(aV.u.f_int);
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.u.f_array_double->multiply(aV.u.f_unsigned_int);
+      return true;
+    case Slash::Core::IValue::DOUBLE:
+      aThis.u.f_array_double->multiply(aV.u.f_double);
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      if(aThis.u.f_array_double->orders()!=aV.u.f_array_double->orders()) {
+        aError = "Value::multiply : vector orders mismatch.";
+        aThis.setNone();
+        return false;
+      }
+      std::vector<double>& stdv = aThis.u.f_array_double->vector();
+      const std::vector<double>& stdv2 = aV.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) { 
+        stdv[index] *= stdv2[index];
+      }
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::FLOAT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::NONE:
+  case Slash::Core::IValue::STRING:
+  case Slash::Core::IValue::VOID_STAR:
+  case Slash::Core::IValue::BOOL:
+  case Slash::Core::IValue::SHORT:
+  case Slash::Core::IValue::INT64:
+  case Slash::Core::IValue::UNSIGNED_CHAR:
+  case Slash::Core::IValue::CHAR:
+  case Slash::Core::IValue::UNSIGNED_SHORT :
+  case Slash::Core::IValue::UNSIGNED_INT64 :
+  case Slash::Core::IValue::DOUBLE_STAR:
+  case Slash::Core::IValue::FLOAT_STAR:
+  case Slash::Core::IValue::INT_STAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+  case Slash::Core::IValue::ARRAY_CHAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+  case Slash::Core::IValue::ARRAY_SHORT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+  case Slash::Core::IValue::ARRAY_INT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+  case Slash::Core::IValue::ARRAY_INT64:
+  case Slash::Core::IValue::ARRAY_FLOAT:
+  //case Slash::Core::IValue::ARRAY_DOUBLE:
+  case Slash::Core::IValue::ARRAY_BOOL:
+  case Slash::Core::IValue::ARRAY_STRING:
+    break;
+  }
+  aError = std::string("Value::multiply :" )
+         + " can't apply on type " + aThis.stype(oType)
+         + " and type " + aV.stype();
+  aThis.setNone();
+  return false;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Value::divide(
+ Lib::Value& aThis
+,const Value& aV
+,std::string& aError
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  Slash::Core::IValue::Type oType = aThis.fType;
+  switch(aThis.fType) {
+  case Slash::Core::IValue::INT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::FLOAT:
+      if(aV.u.f_float==0.0F) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        float tmp = float(aThis.u.f_int)/aV.u.f_float;
+        aThis.set(tmp);
+        return true;
+      }
+    case Slash::Core::IValue::DOUBLE:
+      if(aV.u.f_double==0) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        double tmp = double(aThis.u.f_int)/aV.u.f_double;
+        aThis.set(tmp);
+        return true;
+      }
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      int tmp = aThis.u.f_int;
+      //In the below, this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      if(!aThis.u.f_array_double->invert()) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      }
+      aThis.u.f_array_double->multiply((double)tmp);
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::INT:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::FLOAT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::INT:
+      if(aV.u.f_int==0) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        aThis.u.f_float /= aV.u.f_int;
+        return true;
+      }
+    case Slash::Core::IValue::FLOAT:
+      if(aV.u.f_float==0.0F) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        aThis.u.f_float /= aV.u.f_float;
+        return true;
+      }
+    case Slash::Core::IValue::DOUBLE:
+      if(aV.u.f_float==0.0F) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        aThis.u.f_float /= (float)aV.u.f_double;
+        return true;
+      }
+    case Slash::Core::IValue::UNSIGNED_INT:
+      if(aV.u.f_unsigned_int==0) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        aThis.u.f_float /= aV.u.f_unsigned_int;
+        return true;
+      }
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      double tmp = aThis.u.f_float;
+      //In the below, this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      if(!aThis.u.f_array_double->invert()) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      }
+      aThis.u.f_array_double->multiply(tmp);
+      return true;}
+
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::DOUBLE:
+    switch(aV.fType) {
+    case Slash::Core::IValue::SHORT:
+      if(aV.u.f_short==0) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        aThis.u.f_double /= aV.u.f_short;
+        return true;
+      }
+    case Slash::Core::IValue::INT:
+      if(aV.u.f_int==0) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        aThis.u.f_double /= aV.u.f_int;
+        return true;
+      }
+    case Slash::Core::IValue::FLOAT:
+      if(aV.u.f_float==0.0F) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        aThis.u.f_double /= aV.u.f_float;
+        return true;
+      }
+    case Slash::Core::IValue::DOUBLE:
+      if(aV.u.f_double==0) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        aThis.u.f_double /= aV.u.f_double;
+        return true;
+      }
+    case Slash::Core::IValue::UNSIGNED_INT:
+      if(aV.u.f_unsigned_int==0) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        aThis.u.f_double /= aV.u.f_unsigned_int;
+        return true;
+      }
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      double tmp = aThis.u.f_double;
+      //In the below, this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      if(!aThis.u.f_array_double->invert()) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      }
+      aThis.u.f_array_double->multiply(tmp);
+      return true;}
+
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::UNSIGNED_INT:
+    switch(aV.fType) {
+    //case Slash::Core::IValue::UNSIGNED_INT:
+    //  if(aV.u.f_unsigned_int==0) {
+    //    aError = Lib::Value::error_div_zero();
+    //    aThis.setNone();
+    //    return false;
+    //  } else {
+    //    //FIXME : ???
+    //    aThis.set((double)(aThis.u.f_unsigned_int  / aV.u.f_unsigned_int ));
+    //    return true;
+    //  }
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      unsigned int tmp = aThis.u.f_unsigned_int;
+      //In the below, this becomes a Slash::Core::IValue::ARRAY_DOUBLE.
+      aThis.set(aV.u.f_array_double->orders(),
+                aV.u.f_array_double->vector());
+      if(!aThis.u.f_array_double->invert()) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      }
+      aThis.u.f_array_double->multiply(double(tmp));
+      return true;}
+
+    case Slash::Core::IValue::FLOAT:
+      if(aV.u.f_float==0) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        float d = float(aThis.u.f_unsigned_int)/aV.u.f_float;
+        aThis.set(d); //this becomes a Slash::Core::IValue::FLOAT.
+        return true;
+      }
+    case Slash::Core::IValue::DOUBLE:
+      if(aV.u.f_double==0) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        double d = double(aThis.u.f_unsigned_int)/aV.u.f_double;
+        aThis.set(d); //this becomes a Slash::Core::IValue::DOUBLE.
+        return true;
+      }
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::INT:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::ARRAY_DOUBLE:
+    switch(aV.fType) {
+    case Slash::Core::IValue::INT:
+      if(aV.u.f_int==0) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        double value = 1./aV.u.f_int;
+        aThis.u.f_array_double->multiply(value);
+        return true;
+      }
+    case Slash::Core::IValue::UNSIGNED_INT:
+      if(aV.u.f_unsigned_int==0) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        double value = 1./aV.u.f_unsigned_int;
+        aThis.u.f_array_double->multiply(value);
+        return true;
+      }
+    case Slash::Core::IValue::DOUBLE:
+      if(aV.u.f_double==0) {
+        aError = Lib::Value::error_div_zero();
+        aThis.setNone();
+        return false;
+      } else {
+        aThis.u.f_array_double->multiply(1./aV.u.f_double);
+        return true;
+      }
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      if(aThis.u.f_array_double->orders()!=aV.u.f_array_double->orders()) {
+        aError = Lib::Value::error_div_zero(); //FIXME : error_mismatch_orders
+        aThis.setNone();
+        return false;
+      }
+      std::vector<double>& stdv = aThis.u.f_array_double->vector();
+      const std::vector<double>& stdv2 = aV.u.f_array_double->vector();
+      bool has_div_zero = false;
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) { 
+        if(stdv2[index]==0) {
+          //FIXME : stdv[index] = nan;
+          stdv[index] = 0; //PAW convention.
+          has_div_zero = true;
+        } else {
+          stdv[index] /= stdv2[index];
+        }
+      }
+      if(has_div_zero) {
+        aError = Lib::Value::error_div_zero();
+        // For OpenPAW/pasigm::SIGMA, continue anyway in case of /0 errors.
+        //aThis.setNone();
+        //return false; //FIXME : is so, then it will stop Processor.
+        return true; //FIXME : do we want that ?
+      }
+
+      return true;}
+
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::FLOAT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+
+  case Slash::Core::IValue::NONE:
+  case Slash::Core::IValue::STRING:
+  case Slash::Core::IValue::VOID_STAR:
+  case Slash::Core::IValue::BOOL:
+  case Slash::Core::IValue::SHORT:
+  case Slash::Core::IValue::UNSIGNED_CHAR:
+  case Slash::Core::IValue::CHAR:
+  case Slash::Core::IValue::INT64:
+  case Slash::Core::IValue::UNSIGNED_SHORT :
+  case Slash::Core::IValue::UNSIGNED_INT64 :
+  case Slash::Core::IValue::DOUBLE_STAR:
+  case Slash::Core::IValue::FLOAT_STAR:
+  case Slash::Core::IValue::INT_STAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+  case Slash::Core::IValue::ARRAY_CHAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+  case Slash::Core::IValue::ARRAY_SHORT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+  case Slash::Core::IValue::ARRAY_INT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+  case Slash::Core::IValue::ARRAY_INT64:
+  case Slash::Core::IValue::ARRAY_FLOAT:
+  //case Slash::Core::IValue::ARRAY_DOUBLE:
+  case Slash::Core::IValue::ARRAY_BOOL:
+  case Slash::Core::IValue::ARRAY_STRING:
+    break;
+  }
+  aError = std::string("Value::divide :")
+         + " can't apply on type " + aThis.stype(oType)
+         + " and type " + aV.stype();
+  aThis.setNone();
+  return false;
+}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Value::if_gt(
+ Lib::Value& aThis
+,const Lib::Value& aV
+,std::string& aError
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  Slash::Core::IValue::Type oType = aThis.fType;
+  switch(aThis.fType) {
+  case Slash::Core::IValue::INT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::INT:
+      aThis.set((bool)(aThis.u.f_int>aV.u.f_int?true:false));
+      return true;
+    case Slash::Core::IValue::FLOAT:
+      aThis.set((bool)(aThis.u.f_int>aV.u.f_float?true:false));
+      return true;
+    case Slash::Core::IValue::DOUBLE:
+      aThis.set((bool)(aThis.u.f_int>aV.u.f_double?true:false));
+      return true;
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+      aThis.set((bool)(aThis.u.f_int>(int)aV.u.f_unsigned_short?true:false));
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.set((bool)(aThis.u.f_int>(int)aV.u.f_unsigned_int?true:false));
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      const std::vector<double>& stdv = aV.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(aThis.u.f_int<=stdv[index]) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::DOUBLE:
+    switch(aV.fType) {
+    case Slash::Core::IValue::DOUBLE:
+      aThis.set((bool)(aThis.u.f_double>aV.u.f_double?true:false));
+      return true;
+    case Slash::Core::IValue::FLOAT:
+      aThis.set((bool)(aThis.u.f_double>aV.u.f_float?true:false));
+      return true;
+    case Slash::Core::IValue::INT:
+      aThis.set((bool)(aThis.u.f_double>aV.u.f_int?true:false));
+      return true;
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+      aThis.set((bool)(aThis.u.f_double>aV.u.f_unsigned_short?true:false));
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.set((bool)(aThis.u.f_double>aV.u.f_unsigned_int?true:false));
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      const std::vector<double>& stdv = aV.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(aThis.u.f_double<=stdv[index]) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::FLOAT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::DOUBLE:
+      aThis.set((bool)(aThis.u.f_float>aV.u.f_double?true:false));
+      return true;
+    case Slash::Core::IValue::FLOAT:
+      aThis.set((bool)(aThis.u.f_float>aV.u.f_float?true:false));
+      return true;
+    case Slash::Core::IValue::INT:
+      aThis.set((bool)(aThis.u.f_float>aV.u.f_int?true:false));
+      return true;
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+      aThis.set((bool)(aThis.u.f_float>aV.u.f_unsigned_short?true:false));
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.set((bool)(aThis.u.f_float>aV.u.f_unsigned_int?true:false));
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      const std::vector<double>& stdv = aV.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(aThis.u.f_float<=stdv[index]) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::VOID_STAR:
+    switch(aV.fType) {
+    case Slash::Core::IValue::VOID_STAR:
+      aThis.set((bool)(aThis.u.f_void_star>aV.u.f_void_star?true:false));
+      return true;
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::INT:
+    case Slash::Core::IValue::DOUBLE:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::FLOAT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::UNSIGNED_INT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.set((bool)(aThis.u.f_unsigned_int >aV.u.f_unsigned_int ?true:false));
+      return true;
+    case Slash::Core::IValue::INT:
+      aThis.set((bool)((int)aThis.u.f_unsigned_int >aV.u.f_int?true:false));
+      return true;
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::DOUBLE:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::FLOAT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::ARRAY_DOUBLE:
+    switch(aV.fType) {
+    case Slash::Core::IValue::INT:{
+      const std::vector<double>& stdv = aThis.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]<=aV.u.f_int) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::FLOAT:{
+      const std::vector<double>& stdv = aThis.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]<=aV.u.f_float) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::DOUBLE:{
+      const std::vector<double>& stdv = aThis.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]<=aV.u.f_double) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::UNSIGNED_INT:{
+      const std::vector<double>& stdv = aThis.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]<=aV.u.f_unsigned_int ) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      const std::vector<double>& stdv = aThis.u.f_array_double->vector();
+      const std::vector<double>& stdv2 = aV.u.f_array_double->vector();
+      if(stdv.size()!=stdv2.size()) break;
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]<=stdv2[index]) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::NONE:
+  case Slash::Core::IValue::BOOL:
+  case Slash::Core::IValue::SHORT:
+  case Slash::Core::IValue::UNSIGNED_CHAR:
+  case Slash::Core::IValue::CHAR:
+  case Slash::Core::IValue::STRING:
+  case Slash::Core::IValue::INT64:
+  case Slash::Core::IValue::UNSIGNED_SHORT :
+  case Slash::Core::IValue::UNSIGNED_INT64 :
+  case Slash::Core::IValue::DOUBLE_STAR:
+  case Slash::Core::IValue::FLOAT_STAR:
+  case Slash::Core::IValue::INT_STAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+  case Slash::Core::IValue::ARRAY_CHAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+  case Slash::Core::IValue::ARRAY_SHORT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+  case Slash::Core::IValue::ARRAY_INT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+  case Slash::Core::IValue::ARRAY_INT64:
+  case Slash::Core::IValue::ARRAY_FLOAT:
+//case Slash::Core::IValue::ARRAY_DOUBLE:
+  case Slash::Core::IValue::ARRAY_BOOL:
+  case Slash::Core::IValue::ARRAY_STRING:
+    break;
+  }
+  aError = std::string("Value::if_gt() :")
+         + " can't compare type " + aThis.stype(oType) 
+         + " with type " + aV.stype();
+  aThis.setNone();
+  return false;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Value::if_eq(
+ Lib::Value& aThis
+,const Value& aV
+,std::string& aError
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  Slash::Core::IValue::Type oType = aThis.fType;
+  switch(aThis.fType) {
+  case Slash::Core::IValue::INT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::INT:
+      aThis.set((bool)(aThis.u.f_int==aV.u.f_int?true:false));
+      return true;
+    case Slash::Core::IValue::DOUBLE:
+      aThis.set((bool)(aThis.u.f_int==aV.u.f_double?true:false));
+      return true;
+    case Slash::Core::IValue::FLOAT:
+      aThis.set((bool)(aThis.u.f_int==aV.u.f_float?true:false));
+      return true;
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+      aThis.set((bool)(aThis.u.f_int==(int)aV.u.f_unsigned_short?true:false));
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.set((bool)(aThis.u.f_int==(int)aV.u.f_unsigned_int ?true:false));
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      const std::vector<double>& stdv = aV.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(aThis.u.f_int!=stdv[index]) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::FLOAT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::FLOAT:
+      aThis.set((bool)(aThis.u.f_float==aV.u.f_float?true:false));
+      return true;
+    case Slash::Core::IValue::DOUBLE:
+      aThis.set((bool)(aThis.u.f_float==aV.u.f_double?true:false));
+      return true;
+    case Slash::Core::IValue::INT:
+      aThis.set((bool)(aThis.u.f_float==aV.u.f_int?true:false));
+      return true;
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+      aThis.set((bool)(aThis.u.f_float==aV.u.f_unsigned_short?true:false));
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.set((bool)(aThis.u.f_float==aV.u.f_unsigned_int?true:false));
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      const std::vector<double>& stdv = aV.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(aThis.u.f_float!=stdv[index]) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::DOUBLE:
+    switch(aV.fType) {
+    case Slash::Core::IValue::DOUBLE:
+      aThis.set((bool)(aThis.u.f_double==aV.u.f_double?true:false));
+      return true;
+    case Slash::Core::IValue::FLOAT:
+      aThis.set((bool)(aThis.u.f_double==aV.u.f_float?true:false));
+      return true;
+    case Slash::Core::IValue::INT:
+      aThis.set((bool)(aThis.u.f_double==aV.u.f_int?true:false));
+      return true;
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+      aThis.set((bool)(aThis.u.f_double==aV.u.f_unsigned_short?true:false));
+      return true;
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.set((bool)(aThis.u.f_double==aV.u.f_unsigned_int ?true:false));
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      const std::vector<double>& stdv = aV.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(aThis.u.f_double!=stdv[index]) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::STRING:
+    switch(aV.fType) {
+    case Slash::Core::IValue::STRING:
+      aThis.set((bool)((*aThis.u.f_string)==(*aV.u.f_string)?true:false));
+      return true;
+    case Slash::Core::IValue::INT:
+     {int v;
+      if(!inlib::to<int>(*aThis.u.f_string,v)) break;
+      aThis.set((bool)(v==aV.u.f_int?true:false));
+      return true;}
+    case Slash::Core::IValue::FLOAT:
+     {float v;
+      if(!inlib::to<float>(*aThis.u.f_string,v)) break;
+      aThis.set((bool)(v==aV.u.f_float?true:false));
+      return true;}
+    case Slash::Core::IValue::DOUBLE:
+     {double v;
+      if(!inlib::to<double>(*aThis.u.f_string,v)) break;
+      aThis.set((bool)(v==aV.u.f_double?true:false));
+      return true;}
+    case Slash::Core::IValue::UNSIGNED_INT:
+     {typedef unsigned int uint_t;
+      uint_t v;
+      if(!inlib::to<uint_t>(*aThis.u.f_string,v)) break;
+      aThis.set((bool)(v==aV.u.f_unsigned_int ?true:false));
+      return true;}
+    case Slash::Core::IValue::BOOL:
+     {bool v;
+      if(!inlib::to(*aThis.u.f_string,v)) break;
+      aThis.set((bool)(v==aV.u.f_bool?true:false));
+      return true;}
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::VOID_STAR:
+    switch(aV.fType) {
+    case Slash::Core::IValue::VOID_STAR:
+      aThis.set((bool)(aThis.u.f_void_star==aV.u.f_void_star?true:false));
+      return true;
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::INT:
+    case Slash::Core::IValue::DOUBLE:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::FLOAT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::UNSIGNED_INT:
+    switch(aV.fType) {
+    case Slash::Core::IValue::UNSIGNED_INT:
+      aThis.set((bool)(aThis.u.f_unsigned_int ==aV.u.f_unsigned_int ?true:false));
+      return true;
+    case Slash::Core::IValue::INT:
+      aThis.set((bool)((int)aThis.u.f_unsigned_int ==aV.u.f_int?true:false));
+      return true;
+    case Slash::Core::IValue::FLOAT:
+      aThis.set((bool)((int)aThis.u.f_unsigned_int ==aV.u.f_float?true:false));
+      return true;
+    case Slash::Core::IValue::DOUBLE:
+      aThis.set((bool)((int)aThis.u.f_unsigned_int ==aV.u.f_double?true:false));
+      return true;
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      const std::vector<double>& stdv = aV.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(aThis.u.f_unsigned_int !=stdv[index]) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::BOOL:
+    switch(aV.fType) {
+    case Slash::Core::IValue::BOOL:
+      aThis.u.f_bool = ((aThis.u.f_bool==aV.u.f_bool)?true:false);
+      return true;
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::INT:
+    case Slash::Core::IValue::DOUBLE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::FLOAT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT:
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::ARRAY_DOUBLE:
+    switch(aV.fType) {
+    case Slash::Core::IValue::INT:{
+      const std::vector<double>& stdv = aThis.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]!=aV.u.f_int) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::FLOAT:{
+      const std::vector<double>& stdv = aThis.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]!=aV.u.f_float) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::DOUBLE:{
+      const std::vector<double>& stdv = aThis.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]!=aV.u.f_double) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::UNSIGNED_INT:{
+      const std::vector<double>& stdv = aThis.u.f_array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]!=aV.u.f_unsigned_int ) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::ARRAY_DOUBLE:{
+      const std::vector<double>& stdv = aThis.u.f_array_double->vector();
+      const std::vector<double>& stdv2 = aV.u.f_array_double->vector();
+      if(stdv.size()!=stdv2.size()) {
+        aThis.set(false);
+        return true;
+      }
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]!=stdv2[index]) {
+          aThis.set(false);
+          return true;
+        }
+      }
+      aThis.set(true);
+      return true;
+    }
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::BOOL:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    //case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::NONE:
+  case Slash::Core::IValue::SHORT:
+  case Slash::Core::IValue::INT64:
+  case Slash::Core::IValue::UNSIGNED_CHAR:
+  case Slash::Core::IValue::CHAR:
+  case Slash::Core::IValue::UNSIGNED_SHORT :
+  case Slash::Core::IValue::UNSIGNED_INT64 :
+  case Slash::Core::IValue::DOUBLE_STAR:
+  case Slash::Core::IValue::FLOAT_STAR:
+  case Slash::Core::IValue::INT_STAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+  case Slash::Core::IValue::ARRAY_CHAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+  case Slash::Core::IValue::ARRAY_SHORT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+  case Slash::Core::IValue::ARRAY_INT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+  case Slash::Core::IValue::ARRAY_INT64:
+  case Slash::Core::IValue::ARRAY_FLOAT:
+//case Slash::Core::IValue::ARRAY_DOUBLE:
+  case Slash::Core::IValue::ARRAY_BOOL:
+  case Slash::Core::IValue::ARRAY_STRING:
+    break;
+  }
+  aError = std::string("Value::if_eq() :")
+         + " can't compare type " + aThis.stype(oType) 
+         + " with type " + aV.stype();
+  aThis.setNone();
+  return false;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Value::if_and(
+ Lib::Value& aThis
+,const Value& aV
+,std::string& aError
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  Slash::Core::IValue::Type oType = aThis.fType;
+  switch(aThis.fType) {
+  case Slash::Core::IValue::BOOL:
+    switch(aV.fType) {
+    case Slash::Core::IValue::BOOL:
+      aThis.u.f_bool = ((aThis.u.f_bool && aV.u.f_bool)?true:false);
+      return true;
+    case Slash::Core::IValue::INT:
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::DOUBLE:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::FLOAT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::NONE:
+  case Slash::Core::IValue::INT:
+  case Slash::Core::IValue::DOUBLE:
+  case Slash::Core::IValue::VOID_STAR:
+  case Slash::Core::IValue::SHORT:
+  case Slash::Core::IValue::INT64:
+  case Slash::Core::IValue::FLOAT:
+  case Slash::Core::IValue::UNSIGNED_CHAR:
+  case Slash::Core::IValue::CHAR:
+  case Slash::Core::IValue::UNSIGNED_SHORT :
+  case Slash::Core::IValue::UNSIGNED_INT:
+  case Slash::Core::IValue::UNSIGNED_INT64 :
+  case Slash::Core::IValue::DOUBLE_STAR:
+  case Slash::Core::IValue::FLOAT_STAR:
+  case Slash::Core::IValue::INT_STAR:
+  case Slash::Core::IValue::STRING:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+  case Slash::Core::IValue::ARRAY_CHAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+  case Slash::Core::IValue::ARRAY_SHORT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+  case Slash::Core::IValue::ARRAY_INT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+  case Slash::Core::IValue::ARRAY_INT64:
+  case Slash::Core::IValue::ARRAY_FLOAT:
+  case Slash::Core::IValue::ARRAY_DOUBLE:
+  case Slash::Core::IValue::ARRAY_BOOL:
+  case Slash::Core::IValue::ARRAY_STRING:
+    break;
+  }
+  aError = std::string("Value::if_and :")
+         + " can't apply on type " + aThis.stype(oType) 
+         + " and type " + aV.stype();
+  aThis.setNone();
+  return false;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Value::if_or(
+ Lib::Value& aThis
+,const Value& aV
+,std::string& aError
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  Slash::Core::IValue::Type oType = aThis.fType;
+  switch(aThis.fType) {
+  case Slash::Core::IValue::BOOL:
+    switch(aV.fType) {
+    case Slash::Core::IValue::BOOL:
+      aThis.u.f_bool = ((aThis.u.f_bool || aV.u.f_bool)?true:false);
+      return true;
+    case Slash::Core::IValue::INT:
+    case Slash::Core::IValue::NONE:
+    case Slash::Core::IValue::DOUBLE:
+    case Slash::Core::IValue::STRING:
+    case Slash::Core::IValue::VOID_STAR:
+    case Slash::Core::IValue::SHORT:
+    case Slash::Core::IValue::INT64:
+    case Slash::Core::IValue::FLOAT:
+    case Slash::Core::IValue::UNSIGNED_CHAR:
+    case Slash::Core::IValue::CHAR:
+    case Slash::Core::IValue::UNSIGNED_SHORT :
+    case Slash::Core::IValue::UNSIGNED_INT64 :
+    case Slash::Core::IValue::DOUBLE_STAR:
+    case Slash::Core::IValue::FLOAT_STAR:
+    case Slash::Core::IValue::INT_STAR:
+    case Slash::Core::IValue::UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    case Slash::Core::IValue::ARRAY_CHAR:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+    case Slash::Core::IValue::ARRAY_SHORT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    case Slash::Core::IValue::ARRAY_INT:
+    case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    case Slash::Core::IValue::ARRAY_INT64:
+    case Slash::Core::IValue::ARRAY_FLOAT:
+    case Slash::Core::IValue::ARRAY_DOUBLE:
+    case Slash::Core::IValue::ARRAY_BOOL:
+    case Slash::Core::IValue::ARRAY_STRING:
+      break;
+    }
+    break;
+  case Slash::Core::IValue::NONE:
+  case Slash::Core::IValue::INT:
+  case Slash::Core::IValue::DOUBLE:
+  case Slash::Core::IValue::VOID_STAR:
+  case Slash::Core::IValue::SHORT:
+  case Slash::Core::IValue::INT64:
+  case Slash::Core::IValue::FLOAT:
+  case Slash::Core::IValue::UNSIGNED_CHAR:
+  case Slash::Core::IValue::CHAR:
+  case Slash::Core::IValue::UNSIGNED_SHORT :
+  case Slash::Core::IValue::UNSIGNED_INT:
+  case Slash::Core::IValue::UNSIGNED_INT64 :
+  case Slash::Core::IValue::DOUBLE_STAR:
+  case Slash::Core::IValue::FLOAT_STAR:
+  case Slash::Core::IValue::INT_STAR:
+  case Slash::Core::IValue::STRING:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+  case Slash::Core::IValue::ARRAY_CHAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+  case Slash::Core::IValue::ARRAY_SHORT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+  case Slash::Core::IValue::ARRAY_INT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+  case Slash::Core::IValue::ARRAY_INT64:
+  case Slash::Core::IValue::ARRAY_FLOAT:
+  case Slash::Core::IValue::ARRAY_DOUBLE:
+  case Slash::Core::IValue::ARRAY_BOOL:
+  case Slash::Core::IValue::ARRAY_STRING:
+    break;
+  }
+  aError = std::string("Value::if_or :")
+         + " can't apply on type " + aThis.stype(oType) 
+         + " and type " + aV.stype();
+  aThis.setNone();
+  return false;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Value::to_double(
+ const Lib::Value& aThis
+,double& aValue
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  switch(aThis.fType) {
+  case Slash::Core::IValue::INT:
+    aValue = aThis.u.f_int;
+    return true;
+  case Slash::Core::IValue::DOUBLE:
+    aValue = aThis.u.f_double;
+    return true;
+  case Slash::Core::IValue::UNSIGNED_SHORT:
+    aValue = aThis.u.f_unsigned_short;
+    return true;
+  case Slash::Core::IValue::UNSIGNED_INT:
+    aValue = aThis.u.f_unsigned_int;
+    return true;
+  case Slash::Core::IValue::SHORT:
+    aValue = aThis.u.f_short;
+    return true;
+  case Slash::Core::IValue::INT64:
+    aValue = (double)aThis.u.f_int64;
+    return true;
+  case Slash::Core::IValue::UNSIGNED_INT64:
+    aValue = (double)aThis.u.f_unsigned_int64;
+    return true;
+  case Slash::Core::IValue::FLOAT:
+    aValue = aThis.u.f_float;
+    return true;
+  case Slash::Core::IValue::UNSIGNED_CHAR:
+    aValue = aThis.u.f_unsigned_char;
+    return true;
+  case Slash::Core::IValue::CHAR:
+    aValue = aThis.u.f_char;
+    return true;
+  case Slash::Core::IValue::BOOL:
+    aValue = aThis.u.f_bool?1:0;
+    return true;
+  case Slash::Core::IValue::NONE:
+  case Slash::Core::IValue::STRING:
+  case Slash::Core::IValue::VOID_STAR:
+  case Slash::Core::IValue::DOUBLE_STAR:
+  case Slash::Core::IValue::FLOAT_STAR:
+  case Slash::Core::IValue::INT_STAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+  case Slash::Core::IValue::ARRAY_CHAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+  case Slash::Core::IValue::ARRAY_SHORT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+  case Slash::Core::IValue::ARRAY_INT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+  case Slash::Core::IValue::ARRAY_INT64:
+  case Slash::Core::IValue::ARRAY_FLOAT:
+  case Slash::Core::IValue::ARRAY_DOUBLE:
+  case Slash::Core::IValue::ARRAY_BOOL:
+  case Slash::Core::IValue::ARRAY_STRING:
+    break;
+  }
+  aValue = 0;
+  return false;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Value::cxx_type(
+ const Lib::Value& aThis
+,std::string& aValue 
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  switch(aThis.fType) {
+  case Slash::Core::IValue::INT: 
+    aValue = "int";
+    return true;
+  case Slash::Core::IValue::DOUBLE: 
+    aValue = "double";
+    return true;
+  case Slash::Core::IValue::STRING: 
+    aValue = "std::string";
+    return true;
+  case Slash::Core::IValue::BOOL: 
+    aValue = "bool";
+    return true;
+  case Slash::Core::IValue::SHORT: 
+    aValue = "short";
+    return true;
+  case Slash::Core::IValue::FLOAT: 
+    aValue = "float";
+    return true;
+  case Slash::Core::IValue::CHAR: 
+    aValue = "char";
+    return true;
+  case Slash::Core::IValue::UNSIGNED_CHAR: 
+    aValue = "unsigned char";
+    return true;
+  case Slash::Core::IValue::UNSIGNED_SHORT: 
+    aValue = "unsigned short";
+    return true;
+  case Slash::Core::IValue::UNSIGNED_INT: 
+    aValue = "unsigned int";
+    return true;
+  case Slash::Core::IValue::VOID_STAR: 
+    aValue = "void*";
+    return true;
+  case Slash::Core::IValue::DOUBLE_STAR: 
+    aValue = "double*";
+    return true;
+  case Slash::Core::IValue::FLOAT_STAR: 
+    aValue = "float*";
+    return true;
+  case Slash::Core::IValue::INT_STAR: 
+    aValue = "int*";
+    return true;
+  case Slash::Core::IValue::NONE:
+  case Slash::Core::IValue::INT64:
+  case Slash::Core::IValue::UNSIGNED_INT64:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+  case Slash::Core::IValue::ARRAY_CHAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+  case Slash::Core::IValue::ARRAY_SHORT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+  case Slash::Core::IValue::ARRAY_INT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+  case Slash::Core::IValue::ARRAY_INT64:
+  case Slash::Core::IValue::ARRAY_FLOAT:
+  case Slash::Core::IValue::ARRAY_DOUBLE:
+  case Slash::Core::IValue::ARRAY_BOOL:
+  case Slash::Core::IValue::ARRAY_STRING:
+    aValue = "";
+    return false;
+  }
+  return false;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Value::i_set(
+ Lib::Value& aThis
+,const Slash::Core::IValue& aValue
+)
+/////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  aThis.reset();
+
+  aThis.fType = aValue.type();
+
+  switch(aValue.type()) {
+  case Slash::Core::IValue::NONE:
+    aThis.u.f_unsigned_int64 = 0;
+    return true;
+  case Slash::Core::IValue::CHAR:
+    aThis.u.f_char = aValue.get_char();
+    return true;
+  case Slash::Core::IValue::SHORT:
+    aThis.u.f_short = aValue.get_short();
+    return true;
+  case Slash::Core::IValue::INT:
+    aThis.u.f_int = aValue.get_int();
+    return true;
+  case Slash::Core::IValue::INT64:
+    aThis.u.f_int64 = aValue.get_int64();
+    return true;
+  case Slash::Core::IValue::UNSIGNED_INT64:
+    aThis.u.f_unsigned_int64 = aValue.get_unsigned_int64();
+    return true;
+  case Slash::Core::IValue::UNSIGNED_CHAR:
+    aThis.u.f_unsigned_char = aValue.get_unsigned_char();
+    return true;
+  case Slash::Core::IValue::UNSIGNED_SHORT:
+    aThis.u.f_unsigned_short  = aValue.get_unsigned_short();
+    return true;
+  case Slash::Core::IValue::UNSIGNED_INT:
+    aThis.u.f_unsigned_int  = aValue.get_unsigned_int();
+    return true;
+  case Slash::Core::IValue::DOUBLE_STAR:
+    aThis.u.f_double_star  = aValue.get_double_star();
+    return true;
+  case Slash::Core::IValue::FLOAT_STAR:
+    aThis.u.f_float_star  = aValue.get_float_star();
+    return true;
+  case Slash::Core::IValue::INT_STAR:
+    aThis.u.f_int_star  = aValue.get_int_star();
+    return true;
+  case Slash::Core::IValue::FLOAT:
+    aThis.u.f_float = aValue.get_float();
+    return true;
+  case Slash::Core::IValue::DOUBLE:
+    aThis.u.f_double = aValue.get_double();
+    return true;
+  case Slash::Core::IValue::VOID_STAR:
+    aThis.u.f_void_star = aValue.get_void_star();
+    return true;
+  case Slash::Core::IValue::BOOL:
+    aThis.u.f_bool = aValue.get_bool();
+    return true;
+  case Slash::Core::IValue::STRING:
+    aThis.u.f_string = new std::string(aValue.get_string());
+    return true;
+
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+   {std::vector<unsigned int> is;
+    const std::vector<unsigned char>& vd = aValue.get_array_unsigned_char(is);
+    aThis.u.f_array_unsigned_char = new inlib::array<unsigned char>();
+    if(!aThis.u.f_array_unsigned_char->configure(is)){
+      aThis.setNone();return false;
+    }
+    if(!aThis.u.f_array_unsigned_char->fill(vd)){aThis.setNone();return false;}
+    return true;}
+
+  case Slash::Core::IValue::ARRAY_CHAR:
+   {std::vector<unsigned int> is;
+    const std::vector<char>& vd = aValue.get_array_char(is);
+    aThis.u.f_array_char = new inlib::array<char>();
+    if(!aThis.u.f_array_char->configure(is)){
+      aThis.setNone();return false;
+    }
+    if(!aThis.u.f_array_char->fill(vd)){aThis.setNone();return false;}
+    return true;}
+
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+   {std::vector<unsigned int> is;
+    const std::vector<unsigned short>& vd = 
+      aValue.get_array_unsigned_short(is);
+    aThis.u.f_array_unsigned_short = new inlib::array<unsigned short>();
+    if(!aThis.u.f_array_unsigned_short->configure(is)){
+      aThis.setNone();return false;
+    }
+    if(!aThis.u.f_array_unsigned_short->fill(vd)){
+      aThis.setNone();return false;
+    }
+    return true;}
+
+  case Slash::Core::IValue::ARRAY_SHORT:
+   {std::vector<unsigned int> is;
+    const std::vector<short>& vd = aValue.get_array_short(is);
+    aThis.u.f_array_short = new inlib::array<short>();
+    if(!aThis.u.f_array_short->configure(is)){aThis.setNone();return false;}
+    if(!aThis.u.f_array_short->fill(vd)){aThis.setNone();return false;}
+    return true;}
+
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+   {std::vector<unsigned int> is;
+    const std::vector<unsigned int>& vd = aValue.get_array_unsigned_int(is);
+    aThis.u.f_array_unsigned_int = new inlib::array<unsigned int>();
+    if(!aThis.u.f_array_unsigned_int->configure(is)){
+      aThis.setNone();return false;
+    }
+    if(!aThis.u.f_array_unsigned_int->fill(vd)){
+      aThis.setNone();return false;
+    }
+    return true;}
+
+  case Slash::Core::IValue::ARRAY_INT:
+   {std::vector<unsigned int> is;
+    const std::vector<int>& vd = aValue.get_array_int(is);
+    aThis.u.f_array_int = new inlib::array<int>();
+    if(!aThis.u.f_array_int->configure(is)){aThis.setNone();return false;}
+    if(!aThis.u.f_array_int->fill(vd)){aThis.setNone();return false;}
+    return true;}
+
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+   {std::vector<unsigned int> is;
+    const std::vector<Slash::uint64>& vd = aValue.get_array_unsigned_int64(is);
+    aThis.u.f_array_unsigned_int64 = new inlib::array<Slash::uint64>();
+    if(!aThis.u.f_array_unsigned_int64->configure(is)){
+      aThis.setNone();return false;
+    }
+    if(!aThis.u.f_array_unsigned_int64->fill(vd)){
+      aThis.setNone();return false;
+    }
+    return true;}
+
+  case Slash::Core::IValue::ARRAY_INT64:
+   {std::vector<unsigned int> is;
+    const std::vector<Slash::int64>& vd = aValue.get_array_int64(is);
+    aThis.u.f_array_int64 = new inlib::array<Slash::int64>();
+    if(!aThis.u.f_array_int64->configure(is)){aThis.setNone();return false;}
+    if(!aThis.u.f_array_int64->fill(vd)){aThis.setNone();return false;}
+    return true;}
+
+  case Slash::Core::IValue::ARRAY_FLOAT:
+   {std::vector<unsigned int> is;
+    const std::vector<float>& vd = aValue.get_array_float(is);
+    aThis.u.f_array_float = new inlib::array<float>();
+    if(!aThis.u.f_array_float->configure(is)){aThis.setNone();return false;}
+    if(!aThis.u.f_array_float->fill(vd)){aThis.setNone();return false;}
+    return true;}
+
+  case Slash::Core::IValue::ARRAY_DOUBLE:
+   {std::vector<unsigned int> is;
+    const std::vector<double>& vd = aValue.get_array_double(is);
+    aThis.u.f_array_double = new inlib::array<double>();
+    if(!aThis.u.f_array_double->configure(is)){aThis.setNone();return false;}
+    if(!aThis.u.f_array_double->fill(vd)){aThis.setNone();return false;}
+    return true;}
+
+  case Slash::Core::IValue::ARRAY_BOOL:
+   {std::vector<unsigned int> is;
+    const std::vector<bool>& vd = aValue.get_array_bool(is);
+    aThis.u.f_array_bool = new inlib::array<bool>();
+    if(!aThis.u.f_array_bool->configure(is)){aThis.setNone();return false;}
+    if(!aThis.u.f_array_bool->fill(vd)){aThis.setNone();return false;}
+    return true;}
+
+  case Slash::Core::IValue::ARRAY_STRING:
+   {std::vector<unsigned int> is;
+    const std::vector<std::string>& vd = aValue.get_array_string(is);
+    aThis.u.f_array_string = new inlib::array<std::string>();
+    if(!aThis.u.f_array_string->configure(is)){aThis.setNone();return false;}
+    if(!aThis.u.f_array_string->fill(vd)){aThis.setNone();return false;}
+    return true;}
+
+  }
+
+  aThis.setNone();
+  return false;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline std::string Lib::Value::toString(
+ const Lib::Value& aThis
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  std::string s;
+  switch(aThis.fType) {
+  case Slash::Core::IValue::NONE:
+    inlib::sprintf(s,5,"(nil)");
+    return s;
+  case Slash::Core::IValue::INT:
+    inlib::sprintf(s,16,"%d",aThis.u.f_int);
+    return s;
+  case Slash::Core::IValue::DOUBLE:
+    inlib::sprintf(s,16,"%g",aThis.u.f_double);
+    return s;
+  case Slash::Core::IValue::VOID_STAR:
+    inlib::sprintf(s,16,"0x%lx",(unsigned long)aThis.u.f_void_star);
+    return s;
+  case Slash::Core::IValue::UNSIGNED_SHORT:
+    inlib::sprintf(s,16,"%u",aThis.u.f_unsigned_short);
+    return s;
+  case Slash::Core::IValue::UNSIGNED_INT:
+    inlib::sprintf(s,16,"%u",aThis.u.f_unsigned_int);
+    return s;
+  case Slash::Core::IValue::BOOL:
+    inlib::sprintf(s,5,"%s",aThis.u.f_bool?"true":"false");
+    return s;
+  case Slash::Core::IValue::SHORT:
+    inlib::sprintf(s,16,"%d",aThis.u.f_short);
+    return s;
+  case Slash::Core::IValue::INT64:{
+    inlib::sprintf(s,16,inlib::int64_format(),aThis.u.f_int64);
+   }return s;
+  case Slash::Core::IValue::UNSIGNED_INT64:{
+    inlib::sprintf(s,16,inlib::int64_format(),aThis.u.f_unsigned_int64);
+   }return s;
+  case Slash::Core::IValue::FLOAT:
+    inlib::sprintf(s,16,"%g",aThis.u.f_float);
+    return s;
+  case Slash::Core::IValue::UNSIGNED_CHAR:
+    inlib::sprintf(s,16,"%c",aThis.u.f_unsigned_char);
+    return s;
+  case Slash::Core::IValue::CHAR:
+    inlib::sprintf(s,16,"%c",aThis.u.f_char);
+    return s;
+  case Slash::Core::IValue::DOUBLE_STAR:
+    inlib::sprintf(s,16,"0x%lx",(unsigned long)aThis.u.f_double_star);
+    return s;
+  case Slash::Core::IValue::FLOAT_STAR:
+    inlib::sprintf(s,16,"0x%lx",(unsigned long)aThis.u.f_float_star);
+    return s;
+  case Slash::Core::IValue::INT_STAR:
+    inlib::sprintf(s,16,"0x%lx",(unsigned long)aThis.u.f_int_star);
+    return s;
+  case Slash::Core::IValue::STRING:
+    return *aThis.u.f_string;
+
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+    return inlib::tos<unsigned char>(aThis.u.f_array_unsigned_char->vector());
+  case Slash::Core::IValue::ARRAY_CHAR:
+    return inlib::tos<char>(aThis.u.f_array_char->vector());
+
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+   return inlib::tos<unsigned short>(aThis.u.f_array_unsigned_short->vector());
+  case Slash::Core::IValue::ARRAY_SHORT:
+    return inlib::tos<short>(aThis.u.f_array_short->vector());
+
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+    return inlib::tos<unsigned int>(aThis.u.f_array_unsigned_int->vector());
+  case Slash::Core::IValue::ARRAY_INT:
+    return inlib::tos<int>(aThis.u.f_array_int->vector());
+
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+    return inlib::tos<Slash::uint64>(aThis.u.f_array_unsigned_int64->vector());
+  case Slash::Core::IValue::ARRAY_INT64:
+    return inlib::tos<Slash::int64>(aThis.u.f_array_int64->vector());
+
+  case Slash::Core::IValue::ARRAY_FLOAT:
+    return inlib::tos<float>(aThis.u.f_array_float->vector());
+  case Slash::Core::IValue::ARRAY_DOUBLE:
+    return inlib::tos<double>(aThis.u.f_array_double->vector());
+  case Slash::Core::IValue::ARRAY_BOOL:
+    return inlib::tos<bool>(aThis.u.f_array_bool->vector());
+  case Slash::Core::IValue::ARRAY_STRING:
+    return inlib::tos<std::string>(aThis.u.f_array_string->vector());
+
+  }
+}

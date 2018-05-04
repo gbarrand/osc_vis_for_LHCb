@@ -1,0 +1,90 @@
+
+
+#include <inlib/cstr>
+
+inline void smanip_lines(const std::string& a_string,std::vector<std::string>& a_lines){
+  //FIXME : have to use inline::words
+
+  // a_string is a list separated by "\n" or "\\n".
+  // For "xxx\n\nxxx", {"xxx","","xxx"} will be created.
+  // WARNING : if a_string is a Windows file name, it may 
+  //  contains a \n which is not a delimiter ; like ..\data\ntuples.hbook.
+  a_lines.clear();
+  int length = a_string.length();
+  if(length<=0) return;
+  char* cstring = inlib::str_dup(a_string.c_str());
+  if(!cstring) return;
+  int pos = 0;
+  length++;
+  for(int count=0;count<length;count++) {
+    if( (cstring[count]=='\n') || 
+        (cstring[count]=='\0') || 
+        ( (cstring[count]=='\\') && (cstring[count+1]=='n') ) ) { 
+      char shift_one = (cstring[count]=='\n' ? 1 : 0);
+      cstring[count] = '\0';
+      a_lines.push_back(cstring+pos);
+      if(shift_one==1) {
+        pos = count+1;
+      } else {
+        pos = count+2;
+        count++;
+      }
+    }
+  }
+  inlib::str_del(cstring);
+}
+
+#include <cstdio>
+
+inline bool to_geometry(const std::string& a_string,int& aX,int& aY,int& aW,int& aH) {
+  // Decode string : <int:w>x<int:h>[+<int:x>+<int:y>] 
+  // (which is the Xt geometry resource format).
+  aX = 0;
+  aY = 0;
+  aW = 0;
+  aH = 0;
+  int x,y,w,h;        
+  if(::sscanf(a_string.c_str(),"%dx%d+%d+%d",&w,&h,&x,&y)==4) {
+    aX = x;
+    aY = y;
+    aW = w;
+    aH = h;
+    return true;
+  } else if(::sscanf(a_string.c_str(),"%dx%d",&w,&h)==2) {
+    aW = w;
+    aH = h;
+    return true;
+  } else {
+    return false;
+  }
+}
+
+inline void new_argcv(const std::vector<std::string>& a_args,int& a_argc,char**& a_argv){
+  // delete with delete_argcv
+  a_argc = (int)a_args.size();
+  if(a_argc<=0) {
+    a_argc = 0;
+    a_argv = 0;
+    return;
+  }
+  typedef char* cstring;
+  a_argv = new cstring[a_argc];
+  for(int index=0;index<a_argc;index++) {
+    const std::string& arg = a_args[index];
+    a_argv[index] = new char[arg.size()+1];
+    ::strcpy(a_argv[index],arg.c_str());
+  }
+}
+
+inline void delete_argcv(int& a_argc,char**& a_argv) {
+  for(int index=0;index<a_argc;index++) delete [] a_argv[index];
+  delete [] a_argv;
+  a_argc = 0;
+  a_argv = 0;
+}
+
+#include <inlib/words>
+
+inline std::vector<std::string> smanip_text(const std::string& a_string){
+  return inlib::words(a_string,"\n",true);
+}

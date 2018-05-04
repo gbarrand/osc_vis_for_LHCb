@@ -1,0 +1,880 @@
+#!/bin/sh -f
+
+#set -x
+
+if [ "${OSC_HOME_DIR}" = "" ] ; then
+  echo "You have to 'source setup' OpenScientist."
+  exit
+fi
+
+osc_batch_kit=no
+if [ `echo ${OSC_HOME_DIR} | sed -e 's:/osc_batch/::g'` != ${OSC_HOME_DIR} ] ; then
+  osc_batch_kit=yes
+fi
+
+osc_iv_kit=no
+if [ `echo ${OSC_HOME_DIR} | sed -e 's:/osc_iv/::g'` != ${OSC_HOME_DIR} ] ; then
+  osc_iv_kit=yes
+fi
+
+osc_vis_kit=no
+if [ `echo ${OSC_HOME_DIR} | sed -e 's:/osc_vis/::g'` != ${OSC_HOME_DIR} ] ; then
+  osc_vis_kit=yes
+fi
+
+/bin/rm -R -f osc_tmp
+
+/bin/mkdir -p osc_tmp
+cd osc_tmp
+
+OSC_ARGS="-balance"
+OSC_ARGS="-balance -debug_check_class"
+export OSC_ARGS
+
+do_osc_plot=no
+do_AIDA_Store=no
+do_AIDA_slac=no
+do_AIDA_anaphe=no
+do_AIDA_osc=no
+do_OnX_cpp=no
+do_osc_gui_viewer=no
+do_osc_viewer=no
+do_osc_new_app=no
+do_osc_server=no
+do_opaw=no
+do_oroot=no
+do_darwin_app=no
+do_iv=no
+do_CERN_ROOT=no
+
+# only through a specific argument :
+do_OnX_py=no
+do_AIDA_py=no
+do_g4=no
+do_g3=no
+
+do_specific=no
+
+gui_toolkit=
+
+obuild_args=""
+while test $# -ge 1 ; do
+  case $1 in
+    -h) 
+        echo "Usage :"
+        echo "  UNIX> /check_install [option] [what]"
+        echo "what :"
+        echo "  all"
+        echo "  AIDA_slac"
+        echo "  AIDA_anaphe"
+        echo "  AIDA_osc"
+        echo "  iv"
+        echo "  osc-plot"
+        echo "  osc-gui-viewer"
+        echo "  osc-viewer"
+        echo "  osc-new-app"
+        echo "  osc-server"
+        echo "  opaw"
+        echo "  oroot"
+        echo "  OnX_cpp"
+        echo "  darwin_app"
+        echo "  py"
+        echo "  OnX_py"
+        echo "  AIDA_py"
+        echo "  CERN-ROOT"
+        echo "  g4"
+        echo "  g3"
+        echo "options :"
+        echo "  -h : print help"
+        echo "  -Qt,-Gtk,-Xt : choose the default GUI toolkit."
+        echo ""
+        exit ;;
+    all)  do_specific=yes;
+          do_AIDA_Store=yes;
+          do_AIDA_slac=yes;
+          do_AIDA_anaphe=yes;
+          do_AIDA_osc=yes;
+          do_iv=yes;
+          do_osc_plot=yes;
+          do_OnX_cpp=yes;
+          do_osc_new_app=yes;
+          do_opaw=yes;
+          do_oroot=yes;
+          do_osc_viewer=yes;
+          do_osc_gui_viewer=yes;
+          do_osc_server=yes;
+          do_darwin_app=yes;;
+    py) do_specific=yes;
+        do_OnX_py=yes;
+        do_AIDA_py=yes;;
+    osc-plot) do_specific=yes;
+              do_AIDA_Store=yes;
+              do_osc_plot=yes;;
+    osc-gui-viewer) do_specific=yes;
+                    do_osc_gui_viewer=yes;;
+    osc-viewer) do_specific=yes;
+                do_osc_viewer=yes;;
+    osc-new-app) do_specific=yes;
+                 do_osc_new_app=yes;;
+    osc-server) do_specific=yes;
+                do_osc_server=yes;;
+    opaw) do_specific=yes;
+          do_opaw=yes;;
+    oroot) do_specific=yes;
+           do_oroot=yes;;
+    AIDA_slac) do_specific=yes;
+               do_AIDA_slac=yes;;
+    AIDA_anaphe) do_specific=yes;
+                 do_AIDA_anaphe=yes;;
+    AIDA_osc) do_specific=yes;
+              do_AIDA_osc=yes;;
+    OnX_cpp) do_specific=yes;
+             do_OnX_cpp=yes;;
+    OnX_py) do_specific=yes;
+            do_OnX_py=yes;;
+    AIDA_py) do_specific=yes;
+             do_AIDA_py=yes;;
+    g4) do_specific=yes;
+        do_g4=yes;;
+    g3) do_specific=yes;
+        do_g3=yes;;
+    darwin_app) do_specific=yes;
+                do_darwin_app=yes;;
+    iv) do_specific=yes;
+        do_iv=yes;;
+    CERN-ROOT) do_specific=yes;
+               do_CERN_ROOT=yes;;
+
+    -Xt) gui_toolkit=Xt;;
+    -gtk) gui_toolkit=Gtk;;
+    -Qt) gui_toolkit=Qt;;
+  esac
+  shift
+done
+
+#/////////////////////////////////////
+#/////////////////////////////////////
+#/////////////////////////////////////
+if [ "${gui_toolkit}" != "" ] ; then
+  OSC_GUI_TOOLKIT=${gui_toolkit}
+  export OSC_GUI_TOOLKIT
+fi
+
+#/////////////////////////////////////
+#/////////////////////////////////////
+#/////////////////////////////////////
+
+# in case of a not specific check, we raise 
+# the check flags according the kind of kit.
+
+if [ ${do_specific} = no ] ; then
+
+if [ ${osc_batch_kit} = yes ] ; then
+  echo "Check an osc_batch kit..."
+
+  do_AIDA_Store=yes
+  do_AIDA_slac=yes
+  do_AIDA_anaphe=yes
+  do_AIDA_osc=yes
+
+fi
+
+if [ ${osc_iv_kit} = yes ] ; then
+  echo "Check an osc_iv kit..."
+
+  do_iv=yes
+fi
+
+if [ ${osc_vis_kit} = yes ] ; then
+  echo "Check an osc_vis kit..."
+
+  do_AIDA_Store=yes
+  do_AIDA_slac=yes
+  do_AIDA_anaphe=yes
+  do_AIDA_osc=yes
+
+  do_iv=yes
+
+  do_osc_plot=yes
+  do_OnX_cpp=yes
+  do_osc_gui_viewer=yes
+  do_osc_viewer=yes
+  do_osc_new_app=yes
+  do_osc_server=yes
+  do_opaw=yes
+  do_oroot=yes
+  do_darwin_app=yes
+
+#  do_AIDA_py=yes
+#  do_OnX_py=yes
+#  do_g4=yes
+#  do_g3=yes
+fi
+
+fi # end if do_specific
+
+#/////////////////////////////////////
+#/// osc_batch kit : /////////////////
+#/////////////////////////////////////
+
+# compile and run AIDA_example_Store :
+
+if [ ${do_AIDA_Store} = yes ] ; then
+
+/bin/cp -R "${OSC_HOME_DIR}"/Resources/AIDA/examples/cpp/slac .
+cd slac
+./build Store
+./AIDA_example_Store
+if [ ! -e AIDA_example_Store.aida ] ; then
+  echo "AIDA_example_Store.aida not produced."
+else
+  /bin/mv AIDA_example_Store.aida ..
+fi
+
+./AIDA_example_Store hdf5
+if [ ! -e AIDA_example_Store.hdf5 ] ; then
+  echo "AIDA_example_Store.hdf5 not produced."
+else
+  /bin/mv AIDA_example_Store.hdf5 ..
+fi
+
+./AIDA_example_Store root
+if [ ! -e AIDA_example_Store.root ] ; then
+  echo "AIDA_example_Store.root not produced."
+else
+  /bin/mv AIDA_example_Store.root ..
+fi
+
+osc_zebra_plugin=none
+if [ `uname` = Darwin ] ; then
+  osc_zebra_plugin=BatchLabZebra.bundle
+else
+  osc_zebra_plugin=libBatchLabZebra.so
+fi
+
+if [ ! -e "${OSC_HOME_DIR}"/bin/${osc_zebra_plugin} ] ; then
+  echo "Zebra storage plugin not found."
+else
+  ./AIDA_example_Store hbook
+  if [ ! -e aida_example_store.hbook ] ; then
+    echo "aida_example_store.hbook not produced."
+  else
+    /bin/mv aida_example_store.hbook ..
+  fi
+fi
+
+cd ..
+/bin/rm -R -f slac
+
+fi
+
+#/////////////////////////////////////
+#/// AIDA/examples/cpp/slac //////////
+#/////////////////////////////////////
+if [ ${do_AIDA_slac} = yes ] ; then
+/bin/cp -R "${OSC_HOME_DIR}"/Resources/AIDA/examples/cpp/slac .
+cd slac
+./build
+./run
+cd ..
+/bin/rm -R -f slac
+fi
+
+#/////////////////////////////////////
+#/// AIDA/examples/cpp/anaphe ////////
+#/////////////////////////////////////
+if [ ${do_AIDA_anaphe} = yes ] ; then
+/bin/cp -R "${OSC_HOME_DIR}"/Resources/AIDA/examples/cpp/anaphe .
+cd anaphe
+./build
+./run
+cd ..
+/bin/rm -R -f anaphe
+fi
+
+#/////////////////////////////////////
+#/// AIDA/examples/cpp/osc ///////////
+#/////////////////////////////////////
+if [ ${do_AIDA_osc} = yes ] ; then
+/bin/cp -R "${OSC_HOME_DIR}"/Resources/AIDA/examples/cpp/osc .
+cd osc
+./build
+./run
+cd ..
+/bin/rm -R -f osc
+fi
+
+#/////////////////////////////////////
+#/// AIDA/examples/Python ////////////
+#/////////////////////////////////////
+if [ ${do_AIDA_py} = yes ] ; then
+
+if [ "${PYTHONPATH}" = "" ] ; then
+  echo "You have to 'source Python-setup'."
+else
+  /bin/cp -R "${OSC_HOME_DIR}"/Resources/AIDA/examples/Python AIDA_Python
+  cd AIDA_Python
+  ./run
+  cd ..
+  /bin/rm -R -f AIDA_Python
+fi
+
+fi
+
+#/////////////////////////////////////
+#/// osc_iv kit : ////////////////////
+#/////////////////////////////////////
+#/////////////////////////////////////
+#/// Inventor/HEPVis examples ////////
+#/////////////////////////////////////
+if [ ${do_iv} = yes ] ; then
+if [ ! -x "${OSC_HOME_DIR}"/bin/hepvis-config ] ; then
+  echo "hepvis-config program not found."
+else
+
+/bin/cp -R "${OSC_HOME_DIR}"/Resources/HEPVis/examples/cpp iv_exas
+cd iv_exas
+./build
+./run
+
+cd ..
+/bin/rm -R -f iv_exas
+
+fi
+fi
+
+#/////////////////////////////////////
+#/// osc_vis kit : ///////////////////
+#/////////////////////////////////////
+#/////////////////////////////////////
+#/// OnX/examples/cpp ////////////////
+#/////////////////////////////////////
+if [ ${do_OnX_cpp} = yes ] ; then
+if [ ! -x "${OSC_HOME_DIR}"/bin/osc-config ] ; then
+  echo "osc-config program not found."
+else
+
+  /bin/cp -R "${OSC_HOME_DIR}"/Resources/OnX/examples/cpp .
+  cd cpp
+  ./build
+  ./run
+  cd ..
+  /bin/rm -R -f cpp
+fi
+fi
+
+#/////////////////////////////////////
+#/// osc-plot ////////////////////////
+#/////////////////////////////////////
+if [ ${do_osc_plot} = yes ] ; then
+if [ ! -x "${OSC_HOME_DIR}"/bin/osc-plot ] ; then
+  echo "osc-plot program not found."
+else
+
+  "${OSC_HOME_DIR}"/bin/osc-plot
+  "${OSC_HOME_DIR}"/bin/osc-plot ./AIDA_example_Store.aida
+  "${OSC_HOME_DIR}"/bin/osc-plot ./AIDA_example_Store.root
+  "${OSC_HOME_DIR}"/bin/osc-plot ./AIDA_example_Store.hdf5
+  if [ ! -e ./aida_example_store.hbook ] ; then
+    echo "aida_example_store.hbook not found."
+  else
+    "${OSC_HOME_DIR}"/bin/osc-plot ./aida_example_store.hbook
+  fi
+
+fi
+fi
+
+#/////////////////////////////////////
+#/// osc-gui-viewer //////////////////
+#/////////////////////////////////////
+
+if [ ${do_osc_gui_viewer} = yes ] ; then
+if [ ! -x "${OSC_HOME_DIR}"/bin/osc-gui-viewer ] ; then
+  echo "osc-gui-viewer program not found."
+else
+
+  /bin/cp -R "${OSC_HOME_DIR}"/Resources/OnX/examples/OnX .
+  cd OnX
+  ./run
+  cd ..
+  /bin/rm -R -f OnX
+
+fi
+fi
+
+#/////////////////////////////////////
+#/// CERN_ROOT ///////////////////////
+#/////////////////////////////////////
+
+if [ ${do_CERN_ROOT} = yes ] ; then
+
+if [ "${ROOTSYS}" = "" ] ; then
+  echo "You have to 'source setup' CERN-ROOT."
+else
+  /bin/cp -R "${OSC_HOME_DIR}"/Resources/AIDA/examples/ROOT CERN_ROOT
+  cd CERN_ROOT
+
+  ./build_A2R
+  root -l -q load_A2R.C A2R_write.C
+  root -l load_A2R.C A2R_read.C
+
+  # compiled version of A2R_read :
+  ./build_A2R_read
+  ./A2R_read
+
+  # produce jec.root file :
+  /bin/cp -R "${OSC_HOME_DIR}"/Resources/AIDA/examples/cpp/osc/jec.cpp .
+  /bin/cp -R "${OSC_HOME_DIR}"/Resources/AIDA/examples/cpp/osc/build build_one
+  ./build_one jec
+  ./AIDA_example_jec -write -root
+  
+  # read jec.root file with jec.C :
+  root -l load_A2R.C jec.C
+
+  cd ..
+  /bin/rm -R -f CERN_ROOT
+fi
+
+fi
+
+#/////////////////////////////////////
+#/// osc-viewer //////////////////////
+#/////////////////////////////////////
+
+if [ ${do_osc_viewer} = yes ] ; then
+if [ ! -x "${OSC_HOME_DIR}"/bin/osc-viewer ] ; then
+  echo "osc-viewer program not found."
+else
+
+  cp "${OSC_HOME_DIR}"/Resources/OnX/examples/OnX/bird.iv .
+  "${OSC_HOME_DIR}"/bin/osc-viewer
+  /bin/rm -f bird.iv
+  "${OSC_HOME_DIR}"/bin/osc-viewer "${OSC_HOME_DIR}"/Resources/OnX/examples/OnX/LHCb_magnet.hiv
+  "${OSC_HOME_DIR}"/bin/osc-viewer "${OSC_HOME_DIR}"/Resources/OnX/examples/OnX/piano2.wrl
+
+fi
+fi
+
+#/////////////////////////////////////
+#/// osc-server //////////////////////
+#/////////////////////////////////////
+
+if [ ${do_osc_server} = yes ] ; then
+if [ ! -x "${OSC_HOME_DIR}"/bin/osc-gui-server ] ; then
+  echo "osc-gui-server program not found."
+else
+if [ "${OSC_DISPLAY}" = "" ] ; then
+  echo "OSC_DISPLAY not defined."
+else
+
+  /bin/cp -R "${OSC_HOME_DIR}"/Resources/OnX/examples/OnX OnX_server
+  /bin/mkdir -p OnX_server_tmp
+
+  cd OnX_server_tmp
+  osc-gui-server &  
+  cd ..  
+  cd OnX_server
+  osc-gui-viewer -net LHCb.onx
+  cd ..
+
+  cd OnX_server_tmp
+  osc-gui-server &  
+  cd ..  
+  cd OnX_server
+  osc-gui-viewer -net shapes.onx
+  cd ..
+
+  /bin/rm -R -f OnX_server
+  /bin/rm -R -f OnX_server_tmp
+
+fi
+fi
+fi
+
+#/////////////////////////////////////
+#/// osc-new-app ...//////////////////
+#/////////////////////////////////////
+if [ ${do_osc_new_app} = yes ] ; then
+if [ ! -x "${OSC_HOME_DIR}"/bin/osc-new-app ] ; then
+  echo "osc-new-app program not found."
+else
+
+"${OSC_HOME_DIR}"/bin/osc-new-app -name=my_app -template="${OSC_HOME_DIR}/Resources/OnX/templates/OnXTemplateOne"
+cd my_app/v1r0/build
+sh ./build
+"${OSC_HOME_DIR}"/bin/osc-gui-viewer ../scripts/OnX/main.onx
+cd ../../..
+/bin/rm -R -f my_app
+
+"${OSC_HOME_DIR}"/bin/osc-new-app -name=my_app -template="${OSC_HOME_DIR}/Resources/OnX/templates/OnXTemplateThree"
+cd my_app/v1r0/build
+sh ./build
+"${OSC_HOME_DIR}"/bin/osc-gui-viewer ../scripts/OnX/main.onx
+cd ../../..
+/bin/rm -R -f my_app
+
+"${OSC_HOME_DIR}"/bin/osc-new-app -name=my_app -template="${OSC_HOME_DIR}/Resources/OnX/templates/OnXTemplateFour"
+cd my_app/v1r0/build
+sh ./build
+"${OSC_HOME_DIR}"/bin/osc-gui-viewer ../scripts/OnX/main.onx
+cd ../../..
+/bin/rm -R -f my_app
+
+"${OSC_HOME_DIR}"/bin/osc-new-app -name=my_app -template="${OSC_HOME_DIR}/Resources/OnX/templates/OnXTemplateFive"
+cd my_app/v1r0/build
+sh ./build
+"${OSC_HOME_DIR}"/bin/osc-gui-viewer ../scripts/OnX/main.onx
+cd ../../..
+/bin/rm -R -f my_app
+
+"${OSC_HOME_DIR}"/bin/osc-new-app -name=my_app -template="${OSC_HOME_DIR}/Resources/OnX/templates/OnXTemplateSix"
+cd my_app/v1r0/build
+sh ./build
+"${OSC_HOME_DIR}"/bin/osc-gui-viewer ../scripts/OnX/main.onx
+cd ../../..
+/bin/rm -R -f my_app
+
+fi
+fi
+
+#/////////////////////////////////////
+#/// opaw ////////////////////////////
+#/////////////////////////////////////
+
+if [ ${do_opaw} = yes ] ; then
+if [ ! -x "${OSC_HOME_DIR}"/bin/opaw ] ; then
+  echo "opaw program not found."
+else
+
+/bin/cp -R "${OSC_HOME_DIR}"/Resources/OpenPAW/examples opaw
+cd opaw
+
+cd osc
+./run
+cd ..
+
+cd users
+./run
+cd ..
+
+cd PAW_C
+./run
+cd ..
+
+cd ..
+/bin/rm -R -f opaw
+
+fi
+fi
+
+#/////////////////////////////////////
+#/// oroot ///////////////////////////
+#/////////////////////////////////////
+
+if [ ${do_oroot} = yes ] ; then
+if [ ! -x "${OSC_HOME_DIR}"/bin/oroot ] ; then
+  echo "oroot program not found."
+else
+
+/bin/cp -R "${OSC_HOME_DIR}"/Resources/oroot/examples oroot
+cd oroot
+
+oroot
+oroot plotHisto.C
+find . -name 'oroot_plotHisto.*' -exec /bin/rm -f {} \;
+./build 
+./run
+
+cd ..
+/bin/rm -R -f oroot
+
+fi
+fi
+
+#/////////////////////////////////////
+#/// OnX/examples/Python /////////////
+#/////////////////////////////////////
+if [ ${do_OnX_py} = yes ] ; then
+
+if [ "${PYTHONPATH}" = "" ] ; then
+  echo "You have to 'source Python-setup'."
+else
+
+/bin/cp -R "${OSC_HOME_DIR}"/Resources/OnX/examples/Python OnX_Python
+cd OnX_Python
+./run
+cd ..
+
+"${OSC_HOME_DIR}"/bin/osc-new-app -name=my_app -template="${OSC_HOME_DIR}/Resources/OnX/templates/OnXTemplateTwo"
+cd my_app/v1r0/build
+sh ./build
+py_path=`printenv PYTHONPATH`
+. ./setup.sh
+"${OSC_HOME_DIR}"/bin/osc-gui-viewer ../scripts/OnX/main.onx
+PYTHONPATH="${py_path}"
+cd ../../..
+/bin/rm -R -f my_app
+
+fi
+
+fi
+
+#/////////////////////////////////////
+#/// Geant4 //////////////////////////
+#/////////////////////////////////////
+
+if [ ${do_g4} = yes ] ; then
+if [ ! -x "${OSC_HOME_DIR}"/bin/osc-g4-vis ] ; then
+  echo "osc-g4-vis program not found."
+else
+
+if [ "${G4INSTALL}" = "" ] ; then
+  echo "Environment variable G4INSTALL not defined."
+  echo "You have to 'source setup' Geant4."
+else
+  /bin/mkdir g4
+  cd g4
+
+  if [ ! -d "${G4INSTALL}/examples/novice/N02" ] ; then
+    echo "${G4INSTALL}/examples/novice/N02 not found."
+  else
+    cp -R "${G4INSTALL}/examples/novice/N02" .
+    cd N02
+    osc-g4-vis
+    make
+    ${G4BIN}/${G4SYSTEM}/exampleN02
+    if [ `uname` = Darwin ] ; then
+      ./build_Darwin_app
+      old_OSC_HOME_DIR=`printenv OSC_HOME_DIR`
+      unset OSC_HOME_DIR
+      old_DYLD_LIBRARY_PATH=`printenv DYLD_LIBRARY_PATH`
+      unset DYLD_LIBRARY_PATH
+      old_OSC_GUI_TOOLKIT=`printenv OSC_GUI_TOOLKIT`
+      unset OSC_GUI_TOOLKIT
+      echo "open exampleN02.app..."
+      open -W exampleN02.app
+      if [ -e ./exampleN02.app/Contents/bin/OnXQt.bundle ] ; then
+        echo "open exampleN02.app with Qt..."
+        OSC_GUI_TOOLKIT=Qt;export OSC_GUI_TOOLKIT
+        open -W exampleN02.app
+      fi
+      OSC_HOME_DIR=${old_OSC_HOME_DIR};export OSC_HOME_DIR
+      DYLD_LIBRARY_PATH=${old_DYLD_LIBRARY_PATH};export DYLD_LIBRARY_PATH
+      OSC_GUI_TOOLKIT=${old_OSC_GUI_TOOLKIT};export OSC_GUI_TOOLKIT
+    fi
+    cd ..
+  fi
+
+  if [ ! -d "${G4INSTALL}/examples/extended/analysis/AnaEx01" ] ; then
+    echo "${G4INSTALL}/examples/extended/analysis/AnaEx01 not found."
+  else
+    cp -R "${G4INSTALL}/examples/extended/analysis/AnaEx01" .
+    cd AnaEx01
+    osc-g4-vis
+    G4ANALYSIS_USE=1;export G4ANALYSIS_USE
+    make
+
+cat > ./run.mac <<AnaEx01_run_mac_end
+/gun/particle e+
+/gun/energy 300 MeV
+/run/beamOn 100   
+AnaEx01_run_mac_end
+
+    ${G4BIN}/${G4SYSTEM}/AnaEx01 run.mac
+    unset G4ANALYSIS_USE
+    if [ ! -e AnaEx01.aida ] ; then
+      echo "AnaEx01.xml not produced."
+    else
+      osc-plot AnaEx01.aida
+    fi    
+
+    cd ..
+  fi
+
+  if [ ! -d "${G4INSTALL}/examples/extended/analysis/A01" ] ; then
+    echo "${G4INSTALL}/examples/extended/analysis/A01 not found."
+  else
+    cp -R "${G4INSTALL}/examples/extended/analysis/A01" .
+    cd A01
+    osc-g4-vis
+    make
+    ${G4BIN}/${G4SYSTEM}/A01app
+
+    if [ `uname` = Darwin ] ; then
+      ./build_Darwin_app
+      old_OSC_HOME_DIR=`printenv OSC_HOME_DIR`
+      unset OSC_HOME_DIR
+      old_DYLD_LIBRARY_PATH=`printenv DYLD_LIBRARY_PATH`
+      unset DYLD_LIBRARY_PATH
+      old_OSC_GUI_TOOLKIT=`printenv OSC_GUI_TOOLKIT`
+      unset OSC_GUI_TOOLKIT
+      echo "open A01app.app..."
+      open -W A01app.app
+      if [ -e ./A01app.app/Contents/bin/OnXQt.bundle ] ; then
+        echo "open A01app.app with Qt..."
+        OSC_GUI_TOOLKIT=Qt;export OSC_GUI_TOOLKIT
+        open -W A01app.app
+      fi
+      OSC_HOME_DIR=${old_OSC_HOME_DIR};export OSC_HOME_DIR
+      DYLD_LIBRARY_PATH=${old_DYLD_LIBRARY_PATH};export DYLD_LIBRARY_PATH
+      OSC_GUI_TOOLKIT=${old_OSC_GUI_TOOLKIT};export OSC_GUI_TOOLKIT
+    fi
+
+    cd ..
+  fi
+
+  if [ ! -d "${G4INSTALL}/examples/extended/electromagnetic/TestEm1" ] ; then
+    echo "${G4INSTALL}/examples/extended/electromagnetic/TestEm1 not found."
+  else
+    cp -R "${G4INSTALL}/examples/extended/electromagnetic/TestEm1" .
+    cd TestEm1
+    osc-g4-vis
+    make
+    ${G4BIN}/${G4SYSTEM}/TestEm1
+
+    if [ `uname` = Darwin ] ; then
+      ./build_Darwin_app
+      old_OSC_HOME_DIR=`printenv OSC_HOME_DIR`
+      unset OSC_HOME_DIR
+      old_DYLD_LIBRARY_PATH=`printenv DYLD_LIBRARY_PATH`
+      unset DYLD_LIBRARY_PATH
+      old_OSC_GUI_TOOLKIT=`printenv OSC_GUI_TOOLKIT`
+      unset OSC_GUI_TOOLKIT
+      echo "open TestEm1.app..."
+      open -W TestEm1.app
+      if [ -e ./TestEm1.app/Contents/bin/OnXQt.bundle ] ; then
+        echo "open TestEm1.app with Qt..."
+        OSC_GUI_TOOLKIT=Qt;export OSC_GUI_TOOLKIT
+        open -W TestEm1.app
+      fi
+      OSC_HOME_DIR=${old_OSC_HOME_DIR};export OSC_HOME_DIR
+      DYLD_LIBRARY_PATH=${old_DYLD_LIBRARY_PATH};export DYLD_LIBRARY_PATH
+      OSC_GUI_TOOLKIT=${old_OSC_GUI_TOOLKIT};export OSC_GUI_TOOLKIT
+    fi
+
+    cd ..
+  fi
+
+  cd ..
+  /bin/rm -R -f g4
+
+fi
+
+fi
+
+fi
+
+#/////////////////////////////////////
+#/// Geant3 //////////////////////////
+#/////////////////////////////////////
+
+if [ ${do_g3} = yes ] ; then
+
+/bin/cp -R "${OSC_HOME_DIR}"/Resources/G3Lab/applications/VOLU .
+cd VOLU
+"${OSC_HOME_DIR}"/bin/osc-gui-viewer main.onx
+cd ..
+/bin/rm -R -f VOLU
+
+# It needs a fortran compiler.
+/bin/cp -R "${OSC_HOME_DIR}"/Resources/G3Lab/examples/G3Simple .
+cd G3Simple/build
+sh ./build
+"${OSC_HOME_DIR}"/bin/osc-gui-viewer ../scripts/OnX/main.onx
+cd ../..
+/bin/rm -R -f G3Simple
+
+#/bin/cp -R "${OSC_HOME_DIR}"/Resources/G3Lab/applications/Corne .
+#cd Corne
+#"${OSC_HOME_DIR}"/bin/osc-gui-viewer main.onx
+#cd ..
+#/bin/rm -R -f Corne
+
+fi
+
+#/////////////////////////////////////
+#/// darwin_app //////////////////////
+#/////////////////////////////////////
+
+#WARNING : because of the below unset OSC_HOME_DIR,DYLD_LIBRARY_PATH, 
+#          do_darwin_app must be the last.
+#          We unset these variables to be sure that the .apps are
+#          standalone kits.
+
+if [ ${do_darwin_app} = yes ] ; then
+
+if [ `uname` = Darwin ] ; then
+
+  /bin/cp -R "${OSC_HOME_DIR}"/Resources/AIDA/examples/cpp/slac .
+  cd slac
+  ./build PlotExample
+  ./build_Darwin_app AIDA_example_PlotExample
+  osc_home=`printenv OSC_HOME_DIR`
+  unset OSC_HOME_DIR
+  unset DYLD_LIBRARY_PATH
+
+  old_OSC_GUI_TOOLKIT=`printenv OSC_GUI_TOOLKIT`
+
+  if [ -e ./AIDA_example_PlotExample.app/Contents/bin/OnXNextStep.bundle ] ; then
+    echo "open AIDA_example_PlotExample.app with NextStep..."
+    OSC_GUI_TOOLKIT=NextStep;export OSC_GUI_TOOLKIT
+    open -W AIDA_example_PlotExample.app
+  else
+    echo "Driver NextStep not found in AIDA_example_PlotExample.app."
+  fi
+
+  if [ -e ./AIDA_example_PlotExample.app/Contents/bin/OnXXt.bundle ] ; then
+    echo "open AIDA_example_PlotExample.app with Xt..."
+    OSC_GUI_TOOLKIT=Xt;export OSC_GUI_TOOLKIT
+    # With Xt, "open -W" induces a message :
+    #    Unable to block on application (GetProcessPID() 
+    open AIDA_example_PlotExample.app
+  else
+    echo "Driver Xt not found in AIDA_example_PlotExample.app."
+  fi
+
+  if [ -e ./AIDA_example_PlotExample.app/Contents/bin/OnXQt.bundle ] ; then
+    echo "open AIDA_example_PlotExample.app with Qt..."
+    OSC_GUI_TOOLKIT=Qt;export OSC_GUI_TOOLKIT
+    open -W AIDA_example_PlotExample.app
+  else
+    echo "Driver Qt not found in AIDA_example_PlotExample.app."
+  fi
+
+  OSC_GUI_TOOLKIT=${old_OSC_GUI_TOOLKIT};export OSC_GUI_TOOLKIT
+
+  cd ..
+  /bin/rm -R -f slac
+
+  # Cocoa version :
+  if [ -e ${osc_home}/darwin_app/osc-plot.app ] ; then
+    echo "open osc-plot.app..."
+    open ${osc_home}/darwin_app/osc-plot.app
+  else
+    echo "osc-plot.app not found."
+  fi  
+
+  if [ -e ${osc_home}/darwin_app/osc-plot-xt.app ] ; then
+    echo "open osc-plot-xt.app..."
+    open ${osc_home}/darwin_app/osc-plot-xt.app
+  else
+    echo "osc-plot-xt.app not found."
+  fi  
+
+  if [ -e ${osc_home}/darwin_app/osc-plot-qt.app ] ; then
+    echo "open osc-plot-qt.app..."
+    open -W ${osc_home}/darwin_app/osc-plot-qt.app
+  else
+    echo "osc-plot-qt.app not found."
+  fi  
+
+fi
+
+fi
+
+#/////////////////////////////////////
+#/////////////////////////////////////
+#/////////////////////////////////////
+
+cd ..
+/bin/rm -R -f osc_tmp

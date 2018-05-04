@@ -1,0 +1,11 @@
+#!/bin/sh -f
+find . -name '#*' -exec /bin/rm -f {} \;   
+find . -name '*~' -exec /bin/rm -f {} \;   
+find . -name '.#*' -exec /bin/rm -f {} \;   
+find . -name 'core.*' -exec /bin/rm -f {} \;   
+find . -name 'OnX_*.err' -exec /bin/rm -f {} \;   
+find . -name 'OnX_*.out' -exec /bin/rm -f {} \;   
+find . -name 'OnX_*.log' -exec /bin/rm -f {} \;   
+find . -name '*.pyc' -exec /bin/rm -f {} \;   
+find . -name '.gdb_history' -exec /bin/rm -f {} \;   
+

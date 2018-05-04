@@ -1,0 +1,24 @@
+<widget class="Window" name="OnX_TestButtons_window">
+  <!-- height = number of buttons * 35 (pixels) is fine. Here 4 * 35 = 140 -->
+  <geometry>100x140+0+0</geometry>
+  <title>OnX/Buttons</title>
+  <show>no</show>
+  <widget class="VContainer"> 
+    <widget class="PushButton">
+      <label>Item 1</label>
+      <activate exec="DLD">OnX ui_echo Item 1</activate>
+    </widget>
+    <widget class="PushButton">
+      <label>Item 2</label>
+      <activate exec="DLD">OnX ui_echo Item 2</activate>
+    </widget>
+    <widget class="PushButton">
+      <label>Item 3</label>
+      <activate exec="DLD">OnX ui_echo Item 3</activate>
+    </widget>
+    <widget class="PushButton">
+      <label>Cancel</label>
+      <activate exec="DLD">OnX ui_hide OnX_TestButtons_window</activate>
+    </widget>
+  </widget>
+</widget>

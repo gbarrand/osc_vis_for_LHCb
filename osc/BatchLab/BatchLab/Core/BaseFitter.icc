@@ -1,0 +1,812 @@
+
+#include <AIDA/IProfile1D.h>
+#include <AIDA/IHistogram1D.h>
+#include <AIDA/IHistogram2D.h>
+#include <AIDA/IAnnotation.h>
+#include <AIDA/ITupleFactory.h>
+
+#include <BatchLab/Core/FitData.h>
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+void BatchLab::BaseFitter::setFitInfos(
+ AIDA::IAnnotation& aAnnotation
+,AIDA::IFitResult& aResult
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  aAnnotation.removeItem("fit.quality");
+  aAnnotation.addItem("fit.quality",inlib::to<double>(aResult.quality()));
+
+  aAnnotation.removeItem("fit.ndf");
+  aAnnotation.addItem("fit.ndf",inlib::to<int>(aResult.ndf()));
+
+  std::vector<std::string> names = aResult.fittedParameterNames();
+  std::vector<double> values = aResult.fittedParameters();
+  std::vector<double> errs = aResult.errors();
+  if(names.size()!=values.size()) return;
+  if(names.size()!=errs.size()) return;
+
+  unsigned int namen = names.size();
+  for(unsigned index=0;index<namen;index++){
+    std::string key = "fit.param."+names[index];
+    aAnnotation.removeItem(key);
+    aAnnotation.addItem(key,
+      inlib::to<double>(values[index])+" "+
+      inlib::to<double>(errs[index]));
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::BaseFitter::BaseFitter(
+ std::ostream& a_out
+,AIDA::IFunctionFactory& aFunctionFactory
+,AIDA::ITupleFactory& aTupleFactory
+,const std::string& aEngine
+)
+:f_out(a_out)
+,fFunctionFactory(aFunctionFactory)
+,fTupleFactory(aTupleFactory)
+,fEngineName(aEngine)
+,fCounter(0)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  Lib::Debug::increment("BatchLab::BaseFitter");
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+BatchLab::BaseFitter::~BaseFitter(
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  Lib::Debug::decrement("BatchLab::BaseFitter");
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+void* BatchLab::BaseFitter::cast(
+ const std::string& a_class
+) const
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  INLIB_IF_CAST(AIDA::IFitter)
+  else INLIB_IF_CAST(BatchLab::BaseFitter)
+  else return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IFitResult* BatchLab::BaseFitter::fit(
+ AIDA::IBaseHistogram& aHistogram
+,AIDA::IFunction& aFunction
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+#else
+,const std::string& //aRange
+#endif
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(AIDA::IHistogram1D* histo = INLIB_CAST(aHistogram,AIDA::IHistogram1D)) {
+    return _fit1D_(*this,f_out,*histo,aFunction);
+  } else if(AIDA::IProfile1D* prof = INLIB_CAST(aHistogram,AIDA::IProfile1D)) {
+    return _fit1D_(*this,f_out,*prof,aFunction);
+  } else if(AIDA::ICloud1D* cloud = INLIB_CAST(aHistogram,AIDA::ICloud1D)) {
+    return cloud_fit(*this,f_out,*cloud,aFunction);
+  } else if(AIDA::ICloud2D* cloud = INLIB_CAST(aHistogram,AIDA::ICloud2D)) {
+    return cloud_fit(*this,f_out,*cloud,aFunction);
+  } else {
+    f_out << "BatchLab::BaseFitter::fit :"
+        << " base histogram " << inlib::sout(aHistogram.title())
+        << " is not an AIDA::IHistogram1D, AIDA::IProfile1D,"
+        << " AIDA::ICloud1D, an AIDA::ICloud2D." 
+        << std::endl;
+    return 0;
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IFitResult* BatchLab::BaseFitter::fit(
+ AIDA::IBaseHistogram& aHistogram
+,const std::string& aModel
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+#else
+,const std::string& //aRange
+#endif
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  if(AIDA::IHistogram1D* histo = INLIB_CAST(aHistogram,AIDA::IHistogram1D)) {
+    return _fit_(*this,f_out,fFunctionFactory,fCounter,*histo,aModel);
+  } else if(AIDA::IProfile1D* prof = INLIB_CAST(aHistogram,AIDA::IProfile1D)) {
+    return _fit_(*this,f_out,fFunctionFactory,fCounter,*prof,aModel);
+
+  } else if(AIDA::ICloud1D* cloud = INLIB_CAST(aHistogram,AIDA::ICloud1D)) {
+    return cloud_fit(*this,f_out,fFunctionFactory,fCounter,*cloud,aModel);
+//} else if(AIDA::ICloud2D* cloud = INLIB_CAST(aHistogram,AIDA::ICloud2D)) {
+  } else {
+    f_out << "BatchLab::BaseFitter::fit(model) :"
+        << " base histogram " << inlib::sout(aHistogram.title())
+        << " is not an AIDA::IHistogram1D, AIDA::IProfile1D,"
+        << " AIDA::ICloud1D." 
+        << std::endl;
+    return 0;
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IFitResult* BatchLab::BaseFitter::fit(
+ AIDA::IDataPointSet& aDataPointSet
+,AIDA::IFunction& aFunction
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+#else
+,const std::string& //aRange
+#endif
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return dps_fit(*this,f_out,aDataPointSet,0,1,aFunction);
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IFitResult* BatchLab::BaseFitter::fit(
+ AIDA::IDataPointSet& aDataPointSet
+,const std::string& aModel
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+#else
+,const std::string& //aRange
+#endif
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  // Build a name :
+  std::string name;
+  inlib::sprintf(name,128,"fitDataPointSet_%d",fCounter);
+  fCounter++;
+  std::string title = name; //FIXME
+  std::string model = aModel;
+  inlib::touppercase(model);
+  int degree;
+
+  if( (model=="G") || (model=="GAUSSIAN") ) {
+
+    double h = 1; //FIXME
+    double m = 0;
+    double w = 0;
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,"G");
+    if(!function) return 0;
+    std::vector<double> ps(3);
+    ps[0] = h;
+    ps[1] = m;
+    ps[2] = w;
+    function->setParameters(ps);
+
+    return fit(aDataPointSet,*function);
+
+  } else if( (model=="BW") || (model=="BREITWIGNER") ) {
+
+    double h = 1; //FIXME
+    double m = 0;
+    double w = 0;
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,"BW");
+    if(!function) return 0;
+    std::vector<double> ps(3);
+    ps[0] = h;
+    ps[1] = m;
+    ps[2] = w;
+    function->setParameters(ps);
+
+    return fit(aDataPointSet,*function);
+
+  } else if( (model=="E") || (model=="EXPONENTIAL") ) {
+
+    double p0 = 1;
+    double p1 = 1;
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,"E");
+    if(!function) return 0;
+    std::vector<double> ps(2);
+    ps[0] = p0;
+    ps[1] = p1;
+    function->setParameters(ps);
+
+    return fit(aDataPointSet,*function);
+
+  } else if(model=="EHBOOK") {
+
+    double a = 0;
+    double b = 1;
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,"EHBOOK");
+    if(!function) return 0;
+    std::vector<double> ps(2);
+    ps[0] = a;
+    ps[1] = b;
+    function->setParameters(ps);
+
+    return fit(aDataPointSet,*function);
+
+  } else if(inlib::polynomial_degree(model,degree)) {
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,model);
+    if(!function) return 0;
+    std::vector<double> ps;
+    ps.resize(degree+1,1);
+    function->setParameters(ps);
+    return fit(aDataPointSet,*function);
+
+  } 
+
+  f_out << "BatchLab::BaseFitter::fit : unknown fit model " << inlib::sout(model)
+      << std::endl;
+
+  return 0;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IFitResult* BatchLab::BaseFitter::fit(
+ AIDA::IBaseHistogram& aHistogram
+,const std::string& aModel
+,const std::vector<double>& aParams
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+#else
+,const std::string& //aRange
+#endif
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  AIDA::IHistogram1D* histo = INLIB_CAST(aHistogram,AIDA::IHistogram1D);
+  if(!histo) {
+    f_out << "BatchLab::BaseFitter::fit :"
+        << " histogram " << inlib::sout(aHistogram.title())
+        << " is not an AIDA::IHistogram1D." 
+        << std::endl;
+    return 0;
+  }
+
+  // Build a name :
+  std::string name;
+  inlib::sprintf(name,128,"fitHistogram_%d",fCounter);
+  fCounter++;
+  std::string title = name; //FIXME
+  std::string model = aModel;
+  inlib::touppercase(model);
+  int degree;
+
+  if( (model=="G") || (model=="GAUSSIAN") ) {
+
+    if(aParams.size()!=3) {
+      f_out << "BatchLab::BaseFitter::fit :"
+          << " bad number of parameters (3 expected)."
+          << std::endl;
+      return 0;
+    }
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,"G");
+    if(!function) return 0;
+    function->setParameters(aParams);
+
+    return fit(aHistogram,*function);
+
+  } else if( (model=="BW") || (model=="BREITWIGNER") ) {
+
+    if(aParams.size()!=3) {
+      f_out << "BatchLab::BaseFitter::fit :"
+          << " bad number of parameters (3 expected)"
+          << std::endl;
+      return 0;
+    }
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,"BW");
+    if(!function) return 0;
+    function->setParameters(aParams);
+
+    return fit(aHistogram,*function);
+
+  } else if( (model=="E") || (model=="EXPONENTIAL") ) {
+
+    if(aParams.size()!=2) {
+      f_out << "BatchLab::BaseFitter::fit :"
+          << " bad number of parameters (2 expected)"
+          << std::endl;
+      return 0;
+    }
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,"E");
+    if(!function) return 0;
+    function->setParameters(aParams);
+
+    return fit(aHistogram,*function);
+
+  } else if(model=="EHBOOK") {
+
+    if(aParams.size()!=2) {
+      f_out << "BatchLab::BaseFitter::fit :"
+          << " bad number of parameters (2 expected)"
+          << std::endl;
+      return 0;
+    }
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,"EBOOK");
+    if(!function) return 0;
+    function->setParameters(aParams);
+
+    return fit(aHistogram,*function);
+
+  } else if(inlib::polynomial_degree(model,degree)) {
+
+    if((int)aParams.size()!=(degree+1)) {
+      f_out << "BatchLab::BaseFitter::fit :"
+          << " bad number of parameters (" << (degree+1) << " expected)"
+          << std::endl;
+      return 0;
+    }
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,model);
+    if(!function) return 0;
+    function->setParameters(aParams);
+
+    return fit(aHistogram,*function);
+
+  } else {
+    f_out << "BatchLab::BaseFitter::fit :"
+        << " unknown fit model " << inlib::sout(model)
+        << std::endl;
+    return 0;
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IFitResult* BatchLab::BaseFitter::fit(
+ AIDA::IDataPointSet& aDataPointSet
+,const std::string& aModel
+,const std::vector<double>& aParams
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+#else
+,const std::string& //aRange
+#endif
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  // Build a name :
+  std::string name;
+  inlib::sprintf(name,128,"fitDataPointSet_%d",fCounter);
+  fCounter++;
+  std::string title = name; //FIXME
+  std::string model = aModel;
+  inlib::touppercase(model);
+  int degree;
+
+  if( (model=="G") || (model=="GAUSSIAN") ) {
+
+    if(aParams.size()!=3) {
+      f_out << "BatchLab::BaseFitter::fit :"
+          << " bad number of parameters (3 expected)"
+          << std::endl;
+      return 0;
+    }
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,"G");
+    if(!function) return 0;
+    function->setParameters(aParams);
+
+    return fit(aDataPointSet,*function);
+
+  } else if( (model=="BW") || (model=="BREITWIGNER") ) {
+
+    if(aParams.size()!=3) {
+      f_out << "BatchLab::BaseFitter::fit :"
+          << " bad number of parameters (3 expected)"
+          << std::endl;
+      return 0;
+    }
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,"BW");
+    if(!function) return 0;
+    function->setParameters(aParams);
+
+    return fit(aDataPointSet,*function);
+
+  } else if( (model=="E") || (model=="EXPONENTIAL") ) {
+
+    if(aParams.size()!=2) {
+      f_out << "BatchLab::BaseFitter::fit :"
+          << " bad number of parameters (2 expected)"
+          << std::endl;
+      return 0;
+    }
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,"E");
+    if(!function) return 0;
+    function->setParameters(aParams);
+
+    return fit(aDataPointSet,*function);
+
+  } else if(model=="EHBOOK") {
+
+    if(aParams.size()!=2) {
+      f_out << "BatchLab::BaseFitter::fit :"
+          << " bad number of parameters (2 expected)"
+          << std::endl;
+      return 0;
+    }
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,"EHBOOK");
+    if(!function) return 0;
+    function->setParameters(aParams);
+
+    return fit(aDataPointSet,*function);
+
+  } else if(inlib::polynomial_degree(model,degree)) {
+
+    if((int)aParams.size()!=(degree+1)) {
+      f_out << "BatchLab::BaseFitter::fit :"
+          << " bad number of parameters (" << (degree+1) << " expected)"
+          << std::endl;
+      return 0;
+    }
+
+    AIDA::IFunction* function = 
+      fFunctionFactory.createFunctionByName(name,model);
+    if(!function) return 0;
+    function->setParameters(aParams);
+    return fit(aDataPointSet,*function);
+
+  } else {
+    f_out << "BatchLab::BaseFitter::fit : unknown fit model " << inlib::sout(model)
+        << std::endl;
+    return 0;
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+AIDA::IFitParameterSettings& BatchLab::BaseFitter::fitParameterSettings(
+ const std::string& aName
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  unsigned int number = fFitParameterSettings.size();
+  for(unsigned int index=0;index<number;index++) {
+    if(fFitParameterSettings[index].name()==aName) {
+      return fFitParameterSettings[index];
+    }
+  }
+  // Not found, create one :
+  fFitParameterSettings.push_back(FitParameterSettings(aName));
+  return fFitParameterSettings[fFitParameterSettings.size()-1];
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+std::vector<std::string> BatchLab::BaseFitter::listParameterSettings(
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  unsigned int number = fFitParameterSettings.size();
+  std::vector<std::string> names(number);
+  for(unsigned int index=0;index<number;index++) {
+    names[index] = fFitParameterSettings[index].name();
+  }
+  return names;
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+void BatchLab::BaseFitter::resetParameterSettings(
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  fParameterSettings.clear(); //FIXME : is it what AIDA semanticly wants ?
+}
+//////////////////////////////////////////////////////////////////////////////
+inline
+std::string BatchLab::BaseFitter::engineName(
+) 
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  return fEngineName;
+}
+
+inline
+bool BatchLab::BaseFitter::setEngine(
+ const std::string& /*name*/
+) 
+{
+  return false;
+}
+
+inline
+bool BatchLab::BaseFitter::setConstraint(
+ const std::string& /*expr*/
+) 
+{
+  return false;
+}
+
+inline
+std::vector<std::string> BatchLab::BaseFitter::constraints(
+) 
+{
+  return fConstraints;
+}
+
+inline
+void BatchLab::BaseFitter::resetConstraints(
+) 
+{
+}
+
+inline
+bool BatchLab::BaseFitter::setFitMethod(
+ const std::string& /*name*/
+) 
+{
+  return false;
+}
+
+inline
+std::string BatchLab::BaseFitter::fitMethodName(
+) 
+{
+  return fFitMethodName;
+}
+
+inline
+AIDA::IDataPointSet* BatchLab::BaseFitter::createScan1D(
+ AIDA::IFitData& /*d*/
+,AIDA::IFunction& /*f*/
+,const std::string& /*par*/
+,int /*npts*/
+,double /*pmin*/
+,double /*pmax*/
+) 
+{
+  return 0;
+}
+
+inline
+AIDA::IDataPointSet* BatchLab::BaseFitter::createContour(
+ AIDA::IFitData& /*d*/
+,AIDA::IFitResult& /*r*/
+,const std::string& /*par1*/
+,const std::string& /*par2*/
+,int /*npts*/
+,double /*up*/
+) 
+{
+  return 0;
+}
+
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+inline
+void BatchLab::BaseFitter::setUseFunctionGradient(bool /*useGrad*/) 
+{
+}
+#else
+inline
+bool BatchLab::BaseFitter::setUseFunctionGradient(bool /*useGrad*/) 
+{
+  return false;
+}
+#endif
+
+inline
+bool BatchLab::BaseFitter::useFunctionGradient(
+) 
+{
+  return false;
+}
+
+//FIXME
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+inline
+AIDA::IFitResult* BatchLab::BaseFitter::fit(AIDA::IFitData& aFitData,AIDA::IFunction& aFunction){
+  //FIXME : there is no IFitData::cast !
+  //BatchLab::FitData* fitData = INLIB_CAST(aFitData,BatchLab::FitData);
+  BatchLab::FitData* fitData = dynamic_cast<BatchLab::FitData*>(&aFitData);
+  if(!fitData) {
+    f_out << "BatchLab::BaseFitter::fit :" 
+        << " passed AIDA::IFitData is not a BatchLab::FitData."
+        << std::endl;
+    return 0;
+  }
+
+ {const AIDA::IHistogram1D* histo = fitData->histogram1D();
+  if(histo) {
+    return _fit1D_(*this,f_out,
+              *const_cast<AIDA::IHistogram1D*>(histo),aFunction);
+  }}
+
+ {const AIDA::IHistogram2D* histo = fitData->histogram2D();
+  if(histo) {
+    return _fit2D_(*this,f_out,
+              *const_cast<AIDA::IHistogram2D*>(histo),aFunction);
+  }}
+
+ {int x,v;
+  const AIDA::IDataPointSet* dps = fitData->dps(x,v);
+  if(dps) {
+    return dps_fit(*this,f_out,
+              *const_cast<AIDA::IDataPointSet*>(dps),x,v,aFunction);
+  }}
+
+ {std::vector<std::string> cols;
+  const AIDA::ITuple* tuple = fitData->tuple(cols);
+  if(tuple) {
+    if(cols.size()!=1) {
+      f_out << "BatchLab::BaseFitter::fit :" 
+          << " can't handle today more than one column."
+          << std::endl;
+      return 0;
+    }
+    AIDA::IEvaluator* evaluator = fTupleFactory.createEvaluator(cols[0]);
+    if(!evaluator) {
+      f_out << "BatchLab::BaseFitter::fit :" 
+          << " can't create evaluator."
+          << std::endl;
+      return 0;
+    }
+    AIDA::IFilter* filter = fTupleFactory.createFilter("");
+    if(!filter) {
+      f_out << "BatchLab::BaseFitter::fit :" 
+          << " can't create filter."
+          << std::endl;
+      return 0;
+    }
+    AIDA::IFitResult* res = tuple_fit(*this,f_out,
+      const_cast<AIDA::ITuple&>(*tuple),*evaluator,*filter,aFunction);
+    delete evaluator;
+    delete filter;
+    return res;
+  }}
+
+  f_out << "BatchLab::BaseFitter::fit :" 
+      << " passed AIDA::IFitData connected to an unknown source."
+      << std::endl;
+  return 0;
+}
+
+inline
+AIDA::IFitResult* BatchLab::BaseFitter::fit(
+ AIDA::IFitData& aFitData
+,const std::string& aModel
+) 
+{
+  //FIXME : there is no IFitData::cast !
+  //BatchLab::FitData* fitData = INLIB_CAST(aFitData,BatchLab::FitData);
+  BatchLab::FitData* fitData = dynamic_cast<BatchLab::FitData*>(&aFitData);
+  if(!fitData) {
+    f_out << "BatchLab::BaseFitter::fit :" 
+        << " passed AIDA::IFitData is not a BatchLab::FitData."
+        << std::endl;
+    return 0;
+  }
+
+ {const AIDA::IHistogram1D* histo = fitData->histogram1D();
+  if(histo) {
+    return _fit_(*this,f_out,
+              fFunctionFactory,fCounter,
+              *const_cast<AIDA::IHistogram1D*>(histo),aModel);
+  }}
+
+/* FIXME
+ {const AIDA::IHistogram2D* histo = fitData->histogram2D();
+  if(histo) {
+    return BatchLab_BaseFitter_fit(*this,f_out,
+              fFunctionFactory,fCounter,
+              *const_cast<AIDA::IHistogram2D*>(histo),aModel);
+  }}
+
+ {int x,v;
+  const AIDA::IDataPointSet* dps = fitData->dps(x,v);
+  if(dps) {
+    return dps_fit(*this,f_out,
+              fFunctionFactory,fCounter,
+              *const_cast<AIDA::IDataPointSet*>(dps),x,v,aModel);
+  }}
+*/
+
+  std::vector<std::string> cols;
+  const AIDA::ITuple* tuple = fitData->tuple(cols);
+  if(tuple) {
+    if(cols.size()!=1) {
+      f_out << "BatchLab::BaseFitter::fit :" 
+          << " can't handle today more than one column."
+          << std::endl;
+      return 0;
+    }
+    AIDA::IEvaluator* evaluator = fTupleFactory.createEvaluator(cols[0]);
+    if(!evaluator) {
+      f_out << "BatchLab::BaseFitter::fit :" 
+          << " can't create evaluator."
+          << std::endl;
+      return 0;
+    }
+    AIDA::IFilter* filter = fTupleFactory.createFilter("");
+    if(!filter) {
+      f_out << "BatchLab::BaseFitter::fit :" 
+          << " can't create filter."
+          << std::endl;
+      return 0;
+    }
+    AIDA::IFitResult* res = tuple_fit(*this,f_out,
+                  fFunctionFactory,fCounter,
+                  const_cast<AIDA::ITuple&>(*tuple),*evaluator,*filter,aModel);
+    delete evaluator;
+    delete filter;
+    return res;
+  }
+  f_out << "BatchLab::BaseFitter::fit :" 
+      << " passed AIDA::IFitData connected to an unknown source."
+      << std::endl;
+  return 0;
+}
+
+inline
+AIDA::IFitResult* BatchLab::BaseFitter::fit(
+ AIDA::IFitData& /*d*/
+,const std::string& /*model*/
+,const std::vector<double>& /*initialParameters*/
+) 
+{
+  return 0;
+}
+#else
+
+inline
+AIDA::IFitResult* BatchLab::BaseFitter::fit(
+ AIDA::IFitData& //fitData
+,AIDA::IFunction& //func
+,const std::string& //range
+) {
+  return 0;
+}
+
+inline
+AIDA::IFitResult* BatchLab::BaseFitter::fit(
+ AIDA::IFitData& //fitData
+,const std::string& //model
+,const std::string& //range
+) {
+  return 0;
+}
+
+inline
+AIDA::IFitResult* BatchLab::BaseFitter::fit(
+ AIDA::IFitData& //fitData
+,const std::string& //model
+,const std::vector<double>& //initialParams
+,const std::string& //range
+) {
+  return 0;
+}
+
+#endif

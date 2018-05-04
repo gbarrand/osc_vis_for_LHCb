@@ -1,0 +1,98 @@
+#!/bin/sh -f
+
+from=/barrand/externals/SoXt_1_2_2/SoXt
+sogui=${from}/src/Inventor/Xt/common
+to=/barrand/OpenScientist/dev/CoinXt/v1r122p0
+
+# Template devices :
+./gui_in ${sogui}/devices/SoGuiDevice.h.in ${from}  ${to}/include/Inventor/Xt/devices Xt
+./gui_in ${sogui}/devices/SoGuiDeviceP.h.in ${from}  ${to}/include/Inventor/Xt/devices Xt SoGuiDeviceP.h
+./gui_in ${sogui}/devices/SoGuiMouse.h.in ${from}  ${to}/include/Inventor/Xt/devices Xt
+./gui_in ${sogui}/devices/SoGuiKeyboard.h.in ${from}  ${to}/include/Inventor/Xt/devices Xt
+./gui_in ${sogui}/devices/SoGuiSpaceball.h.in ${from}  ${to}/include/Inventor/Xt/devices Xt
+./gui_in ${sogui}/devices/SoGuiInputFocus.h.in ${from}  ${to}/include/Inventor/Xt/devices Xt
+./gui_in ${sogui}/devices/SoGuiInputFocusP.h.in ${from}  ${to}/include/Inventor/Xt/devices Xt SoGuiInputFocusP.h
+./gui_in ${sogui}/spwinput.h.in ${from}  ${to}/include/Inventor/Xt/devices Xt
+./gui_in ${sogui}/devices/SoGuiKeyboardP.h.in ${from}  ${to}/include/Inventor/Xt/devices Xt SoGuiKeyboardP.h
+./gui_in ${sogui}/devices/SoGuiMouseP.h.in ${from}  ${to}/include/Inventor/Xt/devices Xt SoGuiMouseP.h
+./gui_in ${sogui}/devices/SoGuiSpaceballP.h.in ${from}  ${to}/include/Inventor/Xt/devices Xt SoGuiSpaceballP.h
+
+# Template viewers :
+./gui_in ${sogui}/viewers/SoGuiConstrainedViewer.h.in ${from}  ${to}/include/Inventor/Xt/viewers Xt
+./gui_in ${sogui}/viewers/SoGuiExaminerViewer.h.in ${from}  ${to}/include/Inventor/Xt/viewers Xt
+./gui_in ${sogui}/viewers/SoGuiExaminerViewerP.h.in ${from}  ${to}/include/Inventor/Xt/viewers Xt SoGuiExaminerViewerP.h
+./gui_in ${sogui}/viewers/SoGuiFlyViewer.h.in ${from}  ${to}/include/Inventor/Xt/viewers Xt
+./gui_in ${sogui}/viewers/SoGuiFullViewer.h.in ${from}  ${to}/include/Inventor/Xt/viewers Xt
+./gui_in ${sogui}/viewers/SoGuiFullViewerP.h.in ${from}  ${to}/include/Inventor/Xt/viewers Xt SoGuiFullViewerP.h
+./gui_in ${sogui}/viewers/SoGuiPlaneViewer.h.in ${from}  ${to}/include/Inventor/Xt/viewers Xt
+./gui_in ${sogui}/viewers/SoGuiPlaneViewerP.h.in ${from}  ${to}/include/Inventor/Xt/viewers Xt SoGuiPlaneViewerP.h
+./gui_in ${sogui}/viewers/SoGuiWalkViewer.h.in ${from}  ${to}/include/Inventor/Xt/viewers Xt
+./gui_in ${sogui}/viewers/SoGuiWalkViewerP.h.in ${from}  ${to}/include/Inventor/Xt/viewers Xt SoGuiWalkViewerP.h
+./gui_in ${sogui}/viewers/SoGuiViewer.h.in ${from}  ${to}/include/Inventor/Xt/viewers Xt
+
+# Template widgets :
+./gui_in ${sogui}/widgets/SoGuiPopupMenu.h.in ${from}  ${to}/include/Inventor/Xt/widgets Xt
+./gui_in ${sogui}/widgets/SoAnyThumbWheel.h.in ${from}  ${to}/include/Inventor/Xt/widgets Xt
+
+# Template nodes :
+./gui_in ${sogui}/nodes/Nodes.h.in ${from}  ${to}/include/Inventor/Xt/nodes Xt SoGuiNodes.h
+./gui_in ${sogui}/nodes/SceneTexture2.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiSceneTexture2.h
+./gui_in ${sogui}/nodes/ViewportFix.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiViewportFix.h
+./gui_in ${sogui}/nodes/Pane.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiPane.h
+./gui_in ${sogui}/nodes/Position.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiPosition.h
+./gui_in ${sogui}/nodes/Translation.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiTranslation.h
+./gui_in ${sogui}/nodes/Frame.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiFrame.h
+./gui_in ${sogui}/nodes/Image.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiImage.h
+./gui_in ${sogui}/nodes/Label.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiLabel.h
+./gui_in ${sogui}/nodes/ToggleButton.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiToggleButton.h
+./gui_in ${sogui}/nodes/RadioButton.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiRadioButton.h
+./gui_in ${sogui}/nodes/ClickCounter.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiClickCounter.h
+./gui_in ${sogui}/nodes/Slider1.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiSlider1.h
+./gui_in ${sogui}/nodes/Slider2.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiSlider2.h
+./gui_in ${sogui}/nodes/ColorEditor.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiColorEditor.h
+./gui_in ${sogui}/nodes/MaterialEditor.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiMaterialEditor.h
+./gui_in ${sogui}/nodes/ViewpointWrapper.h.in ${from} ${to}/include/Inventor/Xt/nodes Xt SoGuiViewpointWrapper.h
+
+# Template engines :
+./gui_in ${sogui}/engines/Engines.h.in ${from} ${to}/include/Inventor/Xt/engines Xt SoGuiEngines.h
+./gui_in ${sogui}/engines/Format.h.in ${from} ${to}/include/Inventor/Xt/engines Xt SoGuiFormat.h
+./gui_in ${sogui}/engines/RadioGroup.h.in ${from} ${to}/include/Inventor/Xt/engines Xt SoGuiRadioGroup.h
+
+# Template editors :
+./gui_in ${sogui}/SoGuiMaterialEditor.h.in ${from} ${to}/include/Inventor/Xt Xt SoXtMaterialEditor.h
+./gui_in ${sogui}/editors/MaterialEditor.h.in ${from} ${to}/include/Inventor/Xt/editors Xt SoXtMaterialEditor.h
+./gui_in ${sogui}/SoGuiColorEditor.h.in ${from} ${to}/include/Inventor/Xt Xt SoXtColorEditor.h
+./gui_in ${sogui}/editors/ColorEditor.h.in ${from} ${to}/include/Inventor/Xt/editors Xt SoXtColorEditor.h
+
+# Template general :
+./gui_in ${sogui}/SoAny.h.in ${from}  ${to}/include/Inventor/Xt Xt
+./gui_in ${sogui}/SoAnyMaterialList.h.in ${from}  ${to}/include/Inventor/Xt Xt
+./gui_in ${sogui}/SoGuiMaterialList.h.in ${from}  ${to}/include/Inventor/Xt Xt
+./gui_in ${sogui}/SoGui.h.in ${from}  ${to}/include/Inventor/Xt Xt
+./gui_in ${sogui}/SoGuiBasic.h.in ${from}  ${to}/include/Inventor/Xt Xt
+./gui_in ${sogui}/SoGuiComponent.h.in ${from}  ${to}/include/Inventor/Xt Xt
+./gui_in ${sogui}/SoGuiComponentP.h.in ${from}  ${to}/include/Inventor/Xt Xt SoGuiComponentP.h
+./gui_in ${sogui}/SoGuiGLWidget.h.in ${from}  ${to}/include/Inventor/Xt Xt
+#./gui_in ${sogui}/SoGuiMaterialList.h.in ${from}  ${to}/include/Inventor/Xt Xt
+./gui_in ${sogui}/SoGuiObject.h.in ${from}  ${to}/include/Inventor/Xt Xt
+./gui_in ${sogui}/SoGuiRenderArea.h.in ${from}  ${to}/include/Inventor/Xt Xt
+./gui_in ${sogui}/SoGuiCursor.h.in ${from}  ${to}/include/Inventor/Xt Xt
+./gui_in ${sogui}/gl.h.in ${from} ${to}/src/Inventor/Xt/common Xt
+./gui_in ${sogui}/soguidefs.h.in ${from} ${to}/src Xt
+./gui_in ${sogui}/SoGuiComponentP.h.in ${from}  ${to}/include/Inventor/Xt Xt SoGuiComponentP
+./gui_in ${sogui}/SoGuiGLWidgetP.h.in ${from}  ${to}/include/Inventor/Xt Xt SoGuiGLWidgetP.h
+
+./gui_in ${sogui}/SoGuiP.h.in ${from}  ${to}/include/Inventor/Xt Xt SoGuiP.h
+
+# Not templated files :
+find ${from}/src -name "Sb*.h" -exec ./cp_h {} ${from} ${to} \;
+find ${from}/src -name "So*.h" -exec ./cp_h {} ${from} ${to} \;
+find ${from}/src -name "Xt*.h" -exec ./cp_h {} ${from} ${to} \;
+find ${from}/src -name "6DOFEvents.h" -exec ./cp_h {} ${from} ${to} \;
+find ${from}/src -name "*.xpm" -exec ./cp_h {} ${from} ${to} \;
+
+# Else :
+
+/bin/rm -f ${to}/include/config.h
+
+exit

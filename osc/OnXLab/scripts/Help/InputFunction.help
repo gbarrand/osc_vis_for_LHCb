@@ -1,0 +1,83 @@
+  Create a function
+  
+  The name, being an identifier, must be unique.
+ 
+  The function is managed in the memoryTree in the current directory.
+
+  The function can be created from various sources (kind) :
+     alias,class, scripted, composite, compiled
+
+
+ Creating an "alias" function :
+  Someone can give directly a word from the below list, whatever the casing :
+    G, GAUSSIAN, E, EXPONENTIAL, EHBOOK, BW, BREITWIGNER, P<number>
+    GRID1D, GRID2D, COMPLEXGRID1D
+
+ Creating a "class" function :
+  Here the function is created as instance of a known class.
+  The codelet is :
+     class:<class>
+  For example :
+     class:Gaussian
+     class:Polynomial1
+  The minimal set of an AIDA implementation are available with :
+     class:[Gaussian,BreitWigner,ExpHBOOK,ExpAIDA,Polynomial[n]]
+  Others are :
+     class:[Array,Array2D,ArrayComplex]
+
+ Creating a function from an interpreted script :
+  The codelet shas the form : 
+     scripted:<script>
+  For example : 
+     scripted:cos(x)
+  The syntax is the same than a C expression, in particular multiplication
+ and power are done like in the below example :
+     cos(x)*power(sin(x),2)
+
+
+ Creating a function from some "composite scripting" :
+  Some basic keywords (G,E,...) represent some typical basic functions 
+ and the script composes them. For example :
+     composite:G+G
+
+ Creating a function by the "on the fly compilation and loading" :
+  This is probably the most flexible way to give some non trivial
+ function not in the default catalogs. Moreover it is the
+ most efficient way at run time (much more efficient that an
+ interpreted expression).
+  Here the code of a function is given in a file.
+     compiled:<model>;<file>
+  For example :
+     compiled:my_function;my_file.cpp
+  In the file it is assumed to be found a "signature" of the form :
+
+     /*function*/ double my_function(double x) {
+       double value;
+       ...         //Some code setting the value.
+       value = ... //
+       return value;
+     }
+
+   For example :
+
+     #include <math.h>
+     
+     /*function*/ double my_twice_cos(double x) {
+       return 2*cos(x);
+     }
+
+   WARNING : in case the file is a C++ one, someone must extern "C"
+   the function (else it is going to be mangled and then not found
+   by the dynamic loading). Then, if having a my_function.cpp 
+   (or .cxx, or .C) :
+
+     #include <math.h>
+
+     extern "C" { double my_twice_cos(double); }
+
+     /*function*/ double my_twice_cos(double x) {
+       return 2*cos(x);
+     }
+
+   Note that someone can #include standard C/C++ include files
+  along with the Lib ones.

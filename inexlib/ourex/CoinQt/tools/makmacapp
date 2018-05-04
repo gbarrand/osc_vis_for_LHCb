@@ -1,0 +1,46 @@
+#!/bin/sh -f
+
+if test -z $COINQTROOT ;
+then
+  echo "CoinQt setup not executed."
+  exit
+fi
+
+cd ${COINQTROOT}/${PLATFORMBIN}/CoinQt_cube.app/Contents
+/bin/rm -R -f MacOS
+mkdir MacOS
+cd MacOS
+cp ${COINQTROOT}/${PLATFORMBIN}/CoinQt_cube.exe CoinQt_cube
+
+cd ${COINQTROOT}/${PLATFORMBIN}/CoinQt_cube.app/Contents
+/bin/rm -R -f Frameworks
+mkdir Frameworks
+cd Frameworks
+cp /Developer/qt/lib/libqt-mt.3.dylib .
+cp ${COINGLROOT}/${PLATFORMBIN}/libCoin.dylib .
+cp ${COINQTROOT}/${PLATFORMBIN}/libSoQt.dylib .
+
+# Instrument the binary :
+cd ${COINQTROOT}/${PLATFORMBIN}/CoinQt_cube.app/Contents/MacOS
+binary=CoinQt_cube
+dylib=libqt-mt.3.dylib
+install_name_tool -change ${dylib} @executable_path/../Frameworks/${dylib} ${binary}
+dylib=libCoin.dylib
+install_name_tool -change ${dylib} @executable_path/../Frameworks/${dylib} ${binary}
+dylib=libSoQt.dylib
+install_name_tool -change ${dylib} @executable_path/../Frameworks/${dylib} ${binary}
+
+# Instrument the libraries :
+cd ${COINQTROOT}/${PLATFORMBIN}/CoinQt_cube.app/Contents/Frameworks
+dylib=libqt-mt.3.dylib
+install_name_tool -id @executable_path/../Frameworks/${dylib} ${dylib}
+
+dylib=libCoin.dylib
+install_name_tool -id @executable_path/../Frameworks/${dylib} ${dylib}
+
+dylib=libSoQt.dylib
+install_name_tool -id @executable_path/../Frameworks/${dylib} ${dylib}
+subdylib=libqt-mt.3.dylib
+install_name_tool -change ${subdylib} @executable_path/../Frameworks/${subdylib} ${dylib}
+subdylib=libCoin.dylib
+install_name_tool -change ${subdylib} @executable_path/../Frameworks/${subdylib} ${dylib}

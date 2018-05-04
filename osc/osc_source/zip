@@ -1,0 +1,12 @@
+#!/bin/sh -f 
+
+./osc_obuild_zip
+./osc_batch_zip
+./osc_iv_zip
+./osc_vis_zip
+
+#./osc_steve_zip
+./osc_survival_zip
+./osc_A2R_zip
+./osc_O2R_zip
+

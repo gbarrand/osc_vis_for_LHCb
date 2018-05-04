@@ -1,0 +1,21 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnXLab_InputInsidePolygon">
+    <label>Inside polygon function editor</label>
+
+    <input name="name" label="Name" type="text" default="my_function"/>
+    <input name="title" label="Title" type="text" default="My function"/>
+    <input name="pointn" label="Number of points" type="text" default="3"/>
+
+    <input name="radius" label="Radius" type="text" default="1"/>
+    <input name="translation" label="Translation" type="text" default="0 0"/>
+    <input name="angle" label="Rotation (deg)" type="text" default="0"/>
+
+    <input name="plot" label="Plot" type="option" default="true" items="true\nfalse"/>
+    <input name="editable" label="Editable" type="option" default="true" items="true\nfalse"/>
+
+    <ok exec="DLD">OnXLab OnXLab_InputInsidePolygon_ok @current@</ok>
+  </widget>
+
+</OnX>
+

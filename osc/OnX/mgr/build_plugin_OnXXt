@@ -1,0 +1,100 @@
+#!/bin/sh -f
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+. ${ourex_mgr}/build_header
+
+build_pack=plugin_OnXXt
+plugin=OnXXt
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+if [ ${build_compile} = "yes" ] ; then
+
+ccflags="${ccflags} -I../include"
+
+cppflags="${cppflags} -I${inlib_mgr}/.."
+cppflags="${cppflags} -I${exlib_mgr}/.."
+
+cppflags="${cppflags} -I../include"
+cppflags="${cppflags} -I../../Slash"
+cppflags="${cppflags} -I../../Lib/include"
+
+cfiles="${cfiles} ../source/Core/gl2ps.c"
+cfiles="${cfiles} ../source/Xt/ListTree.c"
+cfiles="${cfiles} ../source/Xt/Gcs.c"
+cfiles="${cfiles} ../source/Xt/Tabs.c"
+cfiles="${cfiles} ../source/Xt/Progress.c"
+cfiles="${cfiles} ../source/Xt/ColorPatch.c"
+cfiles="${cfiles} ../source/Xt/ColorEditor.c"
+cfiles="${cfiles} ../source/Xt/ColorEditorDialog.c"
+cfiles="${cfiles} ../source/Xt/OpenGLArea.c"
+cfiles="${cfiles} ../source/Xt/CommandLine.c"
+
+cxxfiles="${cxxfiles} ../source/Xt/XtTools.cxx"
+cxxfiles="${cxxfiles} ../source/Xt/XtCyclic.cxx"
+cxxfiles="${cxxfiles} ../source/Xt/MainWindow.cxx"
+cxxfiles="${cxxfiles} ../source/Xt/VContainer.cxx"
+cxxfiles="${cxxfiles} ../source/Xt/HContainer.cxx"
+cxxfiles="${cxxfiles} ../source/Xt/VBox.cxx"
+cxxfiles="${cxxfiles} ../source/Xt/HBox.cxx"
+cxxfiles="${cxxfiles} ../source/Xt/Password.cxx"
+cxxfiles="${cxxfiles} ../source/Xt/OptionMenu.cxx"
+cxxfiles="${cxxfiles} ../source/Xt/proxy.cxx"
+cxxfiles="${cxxfiles} ../source/Xt/XtUI.cxx"
+
+# related to Inventor Xt :
+cxxfiles="${cxxfiles} ../source/Xt/PageViewer.cxx"
+
+# plugin :
+cxxfiles="${cxxfiles} ../source/Xt/LoadXt.cxx"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+libs="${libs} -L${build_path} -lOnXCore -lOnXInventor"
+libs="${libs} -L../../Lib/mgr/${build_dir} -lLibUtils"
+
+use_CoinXt=yes
+use_HEPVis=yes
+use_CoinGL=yes
+use_expat=yes
+use_GL=yes
+use_Xm=yes
+use_GLX=yes
+use_X11=yes
+use_png=yes
+use_jpeg=yes
+use_freetype=yes
+use_zlib=yes
+
+. ${exlib_mgr}/use_CoinXt
+. ${exlib_mgr}/use_HEPVis
+. ${exlib_mgr}/use_CoinGL
+. ${exlib_mgr}/use_expat
+. ${exlib_mgr}/use_GL
+. ${exlib_mgr}/use_Xm
+. ${exlib_mgr}/use_X11
+. ${exlib_mgr}/use_png
+. ${exlib_mgr}/use_jpeg
+. ${exlib_mgr}/use_freetype
+. ${exlib_mgr}/use_zlib
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+. ${inlib_mgr}/build_compile
+
+fi # end build_compile
+ 
+if [ ${build_plugin} = "yes" ] ; then . ${inlib_mgr}/build_plugin; fi
+
+. ${inlib_mgr}/build_clean

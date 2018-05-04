@@ -1,0 +1,25 @@
+# ISession -> ILib::Session :
+replace\n#include <Lib/Interfaces/ISession.h>\n#include <ILib/Core/Session.h>
+replace\nclass ISession;\nnamespace ILib {class Session;}
+replace\nISession\nILib::Session
+#
+# IManager -> ILib::IManager :
+replace\n#include <Lib/Interfaces/IManager.h>\n#include <ILib/Core/Manager.h>
+replace\nclass IManager;\nnamespace ILib {class Manager;}
+replace\nIManager\nILib::Manager
+#
+# Reader -> ILib::Reader :
+replace\n#include <Lib/Interfaces/IReader.h>\n#include <ILib/Core/Reader.h>
+replace\nclass IReader;\nnamespace ILib {class Reader;}
+replace\nIReader\nILib::Reader
+#
+# IWriter -> ILib::Writer :
+replace\n#include <Lib/Interfaces/IWriter.h>\n#include <ILib/Core/Writer.h>
+replace\nclass IWriter;\nnamespace ILib {class Writer;}
+replace\nIWriter\nILib::Writer
+#
+# IPrinter -> ILib::Printer :
+replace\n#include <Lib/Interfaces/IPrinter.h>\n#include <ILib/Core/Printer.h>
+replace\nclass IPrinter;\nnamespace ILib {class Printer;}
+replace\nIPrinter\nILib::Printer
+#

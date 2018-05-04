@@ -1,0 +1,13 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_InputShape">
+    <label>Shape editor</label>
+    <input name="shape" label="Shape" type="option" items="Cube\nSphere\nCylinder\nCone\nHole" default="Cube"/>
+
+    <ok exec="DLD">OnX data_collect OnX_Shape type==" @cat@ @[OnX_InputShape_input_shape.value]@ @cat@ "</ok>
+    <ok exec="DLD">OnX data_visualize @current@</ok>
+
+  </widget>
+
+</OnX>
+

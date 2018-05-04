@@ -1,0 +1,115 @@
+///////////////////////////////////////////////////////////////////////////
+// Working with AIDA :
+///////////////////////////////////////////////////////////////////////////
+    
+  From a UNIX shell, you can setup the AIDA environment
+ with :
+    sh> . <install_path>/<pack>/<version>/aida-setup.sh
+ ( csh> source <install_path>/<pack>/<version>/aida-setup.csh )
+
+  After having done the aida-setup, you can run aida-config with :
+    UNIX> aida-config
+    UNIX> aida-config --incs
+    UNIX> aida-config --libs
+    UNIX> aida-config --version
+    UNIX> aida-config --implementation # it should return BatchLab or OnXLab.
+    UNIX> aida-config --compiler       # compiler used to build the kit.
+
+///////////////////////////////////////////////////////////////////////////
+// Creating an AIDA application :
+///////////////////////////////////////////////////////////////////////////
+
+  For example let us rebuild the AIDA_example_Histogram program.
+      sh> . <install_path>/<pack>/<version>/aida-setup.sh
+   ( csh> source <install_path>/<pack>/<version>/aida-setup.csh )
+    UNIX> cp "${AIDA_HOME_DIR}"/Resources/AIDA/examples/cpp/slac .
+    UNIX> cd slac
+    UNIX> ./build Histogram.cpp
+    UNIX> ./AIDA_example_Histogram
+ In the same way :
+    UNIX> ./build Store.cpp
+    UNIX> ./AIDA_example_Store
+ It should have produced the AIDA_example_Store.aida AIDA-XML data file.
+
+  If having installed an osc-vis kit, the .aida file can be visualized
+ with the osc-plot interactive program :
+    UNIX> osc-plot
+     GUI> File> Open AIDA XML file...> choose AIDA_example_Store.aida
+     GUI> Tree> open the AIDA_example_Store.aida tree branch.
+     GUI> Tree> clik 'test 1d' or 'test 2d'.
+ or by using OpenPAW with :
+    UNIX> opaw
+     opaw> h/file 10 AIDA_example_Store.aida
+     opaw> zone 1 2
+     opaw> h/plot 'test 1d'
+ OpenPAW in a terminal-like GUI can be started with :
+    UNIX> opaw -term
+
+  Note that the installation comes with various data files under the :
+   <install_path>/<pack>/<version>/Resources/AIDA/examples/data 
+ directory. You can play with them by using osc-plot. For example :
+ - open aptuple.tnt with "File/Open hippodraw file (*.tnt)..."
+ - open the aptuple.tnt folder in the left browsing tree widget.
+ - click the "CERN personnel" tuple ; it should map 
+   the "Tuple Explorer" palette.
+ - in the "Tuple Explorer" palette "bind X" to "Age"
+ - bind Y to "Cost"
+ - play with the sliders for X or Y.
+ - plot a lego with : Plotter>Shape>Lego
+ - play with the sliders for X or Y.
+
+ Some data files are at the hbook format. To be browsed, they will 
+ need the BatchLabZebra DLL which may not be available on some 
+ platform. About .hbook see the below paragraph about file formats.
+
+///////////////////////////////////////////////////////////////////////////
+// The file formats intrinsic pain :
+///////////////////////////////////////////////////////////////////////////
+
+  .hbook : we definitely advise to avoid the .hbook format which is
+ related to software no more supported by the lab that created it (CERN).
+ The OpenScientist/BatchLab package can read and write .hbook files but by
+ still using the deprecated CERNLIBs. CERN had not been able to do the
+ technical followup of this format ; at least pass from F77 to C and
+ repack to have a standalone IO package. Be sure that there is no plan 
+ in OpenScientist to do this painfull job ; this is a trash that we do not
+ want to empty. If wanting to using it, you must be aware that the number of 
+ people being able to understand the related code can be probably counted 
+ now on one hand.
+
+  .root : people able to understand this format and the IO related code 
+ can be counted on two fingers and then we obviously advise to NOT jump 
+ into this new engineering CERN trap ; at least for storing such common 
+ data than histograms and tuples. The OpenScientist/BatchLab package, by 
+ using Rio, can write and read at this format without tying to the 
+ "Reinvented Object Orientation Technology" quantum entanglement ; but we 
+ are left anyway in the hand of an uncontrolled engineering concerning the 
+ specifications of the format and the related code. Able to read your 
+ file today, but tomorrow ?
+
+  .aida : the best for the moment is to use the AIDA XML format.
+ Compared to the two uppers it is an ocean of limpidity. Moreover it is 
+ understood by all the AIDA implementations and if you have an XML 
+ package at hand you can easily implement a reader. It will probably cover 
+ good part of your needs, with the guarantee of not attaching your
+ application to some already outdated software.
+
+  .tnt, .ascii : with OSC/BatchLab you can write a tuple in a file at the 
+ simple hippodraw "tnt" ascii format (AIDA::ITree "hippodraw" storage type). 
+ The first line of the file is the tuple title, the second is a space 
+ separated list of the column labels and the rest of the file are rows 
+ of space or tab separated numbers. See data/aptuple.tnt or glast.tnt 
+ for examples. Note that in fact you can easily write such a 
+ data tuple file even without using AIDA (std::cout or even ::printf can 
+ do the job). These files are understood also by the hippodraw (non-AIDA) 
+ application, and by removing the two first lines they are also understood 
+ by a lot of software (including Mathematica and Excel (and old CERN/PAW)). 
+
+  .hdf5 : the future for big AIDA data files ? The open source IO binary 
+ standard that we dream of for so long ?
+
+///////////////////////////////////////////////////////////////////////////
+// URL :
+///////////////////////////////////////////////////////////////////////////
+ 
+   http://OpenScientist.lal.in2p3.fr

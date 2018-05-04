@@ -1,0 +1,160 @@
+<widget class="CascadeButton">
+  <label>Examples / AIDA / DLD</label>
+  <widget class="Menu">
+
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// DLD ///////////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// Pure AIDA /////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuItem">
+      <label>osc-plot banner</label>
+      <activate exec="DLD">OnXLabExas aida_exa_banner @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Analysis over analysis.root</label>
+      <activate exec="DLD">OnXLabExas aida_exa_rio @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Fitting</label>
+      <activate exec="DLD">OnXLabExas aida_exa_fitting @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Histo operations</label>
+      <activate exec="DLD">OnXLabExas aida_exa_hopera @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>ROOT TH*</label>
+      <activate exec="DLD">OnXLabExas aida_exa_root_th @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Function 2D</label>
+      <activate exec="DLD">OnXLabExas aida_exa_func_2D @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Function 2D curve</label>
+      <activate exec="DLD">OnXLabExas aida_exa_func_2D_curve @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Complex function 1D</label>
+      <activate exec="DLD">OnXLabExas aida_exa_complex_and_func @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Store/retrieve histogram</label>
+      <activate exec="DLD">OnXLabExas aida_exa_reopen @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Ascii tuple</label>
+      <activate exec="DLD">OnXLabExas aida_exa_ascii_tuple @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>hippodraw aptuple.tnt.gz</label>
+      <activate exec="DLD">OnXLabExas aida_exa_hippo @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>AIDA/xml/exampleHistogram.aida</label>
+      <activate exec="DLD">OnXLabExas aida_exa_xml @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Profiles</label>
+      <activate exec="DLD">OnXLabExas aida_exa_profile @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Open AIDA/xml file...</label>
+      <activate exec="DLD">OnX ui_set_file_chooser $AIDA_HOME_DIR/Resources/OnXLab/examples/data *.aida open DLD OnXLab OnXLab_open_file @ @cat@ this.value @cat@ @ aida</activate>
+      <activate exec="DLD">OnX ui_show fileChooser</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Convert function2D -> cloud3D</label>
+      <activate exec="DLD">OnXLabExas aida_exa_func_to_cloud @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Cloud3D and histo slice</label>
+      <activate exec="DLD">OnXLabExas aida_exa_cloud_slice @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Cloud2D</label>
+      <activate exec="DLD">OnXLabExas aida_exa_cloud_2D @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Histogram2D / lego plot</label>
+      <activate exec="DLD">OnXLabExas aida_exa_lego @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Data point set</label>
+      <activate exec="DLD">OnXLabExas aida_exa_data_point_set @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Test mag, axis title</label>
+      <activate exec="DLD">OnXLabExas aida_exa_mag @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Mandel</label>
+      <activate exec="DLD">OnXLabExas aida_exa_mandel @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>On-the-fly function</label>
+      <activate exec="DLD">OnXLabExas aida_exa_on_the_fly_func @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Animated fit</label>
+      <activate exec="DLD">OnXLabExas aida_exa_animated_fit @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Animated fit 2</label>
+      <activate exec="DLD">OnXLabExas aida_exa_animated_fit_2 @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>2D function cut</label>
+      <activate exec="DLD">OnXLabExas aida_exa_func_cut @current@</activate>
+    </widget>
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// Inventor specific /////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>Regions</label>
+      <activate exec="DLD">OnXLabExas aida_exa_slash_iv_regions @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Plot and detector</label>
+      <activate exec="DLD">OnXLabExas aida_exa_slash_iv_plot_and_det @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Plot and equation</label>
+      <activate exec="DLD">OnXLabExas aida_exa_slash_iv_plot_and_images @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>SoPlotter customization</label>
+      <activate exec="DLD">OnXLabExas aida_exa_slash_iv_aida_soplotter @current@</activate>
+    </widget>
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// AIAD and Slash specific ///////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>data_collect and data_fill</label>
+      <activate exec="DLD">OnXLabExas aida_exa_slash_shape_hits_collect @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>data_collect and data_tuple</label>
+      <activate exec="DLD">OnXExas shape_initialize</activate>
+      <activate exec="DLD">OnXLabExas aida_exa_slash_shape_collect_tuple @current@</activate>
+    </widget>
+
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// OnXLab specific ///////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>Repeatedly fill OnXLab banner histo (h)</label>
+      <activate exec="DLD">OnX cyclic_create OnXLabExas_h_cyclic 100 true DLD OnXLabExas h_fill</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Stop the h filling.</label>
+      <activate exec="DLD">OnXLabExas h_cyclic_stop</activate>
+      <activate exec="DLD">OnX cyclic_stop OnXLabExas_h_cyclic</activate>
+    </widget>
+  </widget>
+</widget>

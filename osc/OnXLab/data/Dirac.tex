@@ -1,0 +1,21 @@
+%
+% Usage :
+%   OS> latex2html -image_type gif Dirac.tex
+%       produces a .gif file
+% or :
+%   OS> latex Dirac.tex 
+%       produces a Dirac.dvi file
+%   OS> dvi2bitmap -t gif Dirac.dvi -o Dirac.gif
+%       produces also a Dirac.gif file
+%   OS> dvi2bitmap --query=types
+%
+
+\documentclass{article}
+\begin{document}
+\pagestyle{empty}
+\Large
+\begin{displaymath}
+i\gamma^\mu \partial _ \mu \psi = m \psi
+\end{displaymath}
+\end{document}
+

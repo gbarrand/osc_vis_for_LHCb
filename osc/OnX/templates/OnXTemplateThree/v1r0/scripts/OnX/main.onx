@@ -1,0 +1,14 @@
+<OnX>
+  <widget class="Window">
+    <geometry>500x500+0+0</geometry>
+    <title>OnXTemplateThree/Main</title>
+    <destroy exec="DLD">OnX ui_exit</destroy>
+    <widget class="MenuBar">
+      <reference file="File.onx"/>
+      <reference file="Help.onx"/>
+    </widget>
+    <widget class="OpenGLArea">
+      <paint exec="DLD">OnXTemplateThree OnXTemplateThree_paint_cube</paint>
+    </widget>
+  </widget>
+</OnX>

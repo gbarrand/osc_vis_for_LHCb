@@ -1,0 +1,13 @@
+<OnX>
+  <widget class="Window">
+    <geometry>400x400</geometry>
+    <title>prompt</title>
+    <show>yes</show> 
+
+    <widget class="PageViewer" name="Viewer"/>
+
+    <create exec="DLD">OnX page_title_visible Viewer false</create>
+    <create exec="DLD">OnX viewer_read_scene Viewer osc.iv iv staticScene</create>
+
+  </widget>
+</OnX>

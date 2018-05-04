@@ -1,0 +1,13 @@
+#!/bin/sh -f
+
+if test -z $RIOROOT ;
+then
+  echo "Rio setup not executed."
+  exit
+fi
+
+/bin/rm -R -f html
+/bin/rm -f html.zip
+
+doxygen
+zip -r html.zip html

@@ -1,0 +1,19 @@
+
+
+  To install on UNIXes, use :
+  -------------------------
+  - autoconf/configure/make from the Rio/configure directory 
+    (see Rio/configure/README file).
+  - or CMT from the Rio/cmt directory.
+ 
+  To install on Windows use :
+  -------------------------
+  - Microsoft Developer Studio from the Rio/mds directory
+    (see Rio/mds/README file).
+  - or CMT from the Rio/cmt directory.
+
+  Support : 
+  -------
+   Contact Guy Barrand at barrand@lal.in2p3.fr.
+
+

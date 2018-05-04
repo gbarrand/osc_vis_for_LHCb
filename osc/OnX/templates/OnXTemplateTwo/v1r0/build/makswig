@@ -1,0 +1,35 @@
+#!/bin/sh -f
+
+#
+#  To produce the Python wrapper for this package by using SWIG.
+#
+# Usage :
+#    UNIX> <setup OnX>
+#  ( UNIX> chmod a+x makswig )
+#    UNIX> ./makswig
+#
+
+#set -x
+
+SWIG_native_version=1.3.33
+SWIG_home=/usr/local/SWIG/${SWIG_native_version}
+SWIG_exe="${SWIG_home}/bin/swig"
+
+if test ! -x "${SWIG_exe}" ; then
+  echo "swig program not found."
+  exit
+fi
+
+if test "`osc-config --version`" = "" ; then
+  echo "osc-config not available."
+  exit
+fi
+
+incs="`osc-config --incs`"
+
+incs=${incs}" -I.."
+
+# Python :
+eval ${SWIG_exe} -interface OnXTemplateTwo_SWIG_Python -Wall -python -c++ ${incs} -o ../source/Python/PythonSWIG.ic ../source/SWIG/OnXTemplateTwo.i
+/bin/mv ../source/Python/OnXTemplateTwo.py ../scripts/Python/.
+

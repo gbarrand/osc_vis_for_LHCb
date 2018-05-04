@@ -1,0 +1,430 @@
+
+<!-- to build Xt/Motif related components. -->
+
+<obuild>
+
+  <!-- not this : -->
+
+  <reference package="foreign" path="../../foreign" file="Motif.obuild"/>  
+  <reference package="foreign" path="../../foreign" file="X11.obuild"/>  
+  <reference package="foreign" path="../../foreign" file="GLX.obuild"/>  
+  <reference package="CoinXt" path="../../CoinXt" file="obuild/export.obuild"/>  
+
+  <!-- only for OnX_test_GL.c -->
+  <reference package="foreign" path="../../foreign" file="OpenGL.obuild"/>  
+
+  <!-- only for OnX_Xt_tabdemo.c -->
+<!--  <reference package="foreign" path="../../foreign" file="Xaw.obuild"/>   -->
+
+  <dummy name="no_warns">
+    <!-- Darwin : _glPointParameteri defined also in the 
+                  OpenGL.framework/libGL.dylib
+                  then it leads to a warning at link time. --> 
+    <!-- Darwin : -bind_at_load -multiply_defined suppress 
+                  suppress the warnings. But do we want 
+                  the -bind_at_load that ? -->
+    <cxx_linker_options platform="Darwin">-bind_at_load -multiply_defined suppress</cxx_linker_options>
+
+    <cxx_shared_lib_builder_options 
+        platform="Darwin">-multiply_defined suppress</cxx_shared_lib_builder_options>
+    <cxx_dll_builder_options 
+        platform="Darwin">-multiply_defined suppress</cxx_dll_builder_options>
+
+  </dummy>
+
+  <!-- this : -->
+
+  <library name="OnXXtCore">
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+
+    <file>../source/Core/gl2ps.c</file>
+
+    <file>../source/Xt/XtTools.cxx</file>
+    <file>../source/Xt/XtCyclic.cxx</file>
+    <file>../source/Xt/MainWindow.cxx</file>
+    <file>../source/Xt/VContainer.cxx</file>
+    <file>../source/Xt/HContainer.cxx</file>
+    <file>../source/Xt/VBox.cxx</file>
+    <file>../source/Xt/HBox.cxx</file>
+    <file>../source/Xt/ListTree.c</file>
+    <file>../source/Xt/Gcs.c</file>
+    <file>../source/Xt/Tabs.c</file>
+    <file>../source/Xt/Progress.c</file>
+    <file>../source/Xt/ColorPatch.c</file>
+    <file>../source/Xt/ColorEditor.c</file>
+    <file>../source/Xt/ColorEditorDialog.c</file>
+    <file>../source/Xt/OpenGLArea.c</file>
+    <file>../source/Xt/CommandLine.c</file>
+    <file>../source/Xt/Password.cxx</file>
+    <file>../source/Xt/OptionMenu.cxx</file>
+    <file>../source/Xt/PageViewer.cxx</file> <!-- related to Inventor Xt -->
+    <file>../source/Xt/proxy.cxx</file>
+    <file>../source/Xt/XtUI.cxx</file>
+
+
+    <!-- not this : -->
+
+    <c_include>${obuild_OnX_path}/include</c_include>
+    <c_include>${obuild_OnX_path}/source/Xt</c_include>
+    <cxx_include>${obuild_OnX_path}/include</cxx_include>
+
+    <!-- Inventor / Xt : -->
+    <cxx_include copy="cxx_include" from="CoinXt"/>
+
+    <!-- Xt : -->
+
+    <c_include copy="c_include" from="Motif"/>
+    <cxx_include copy="c_include" from="Motif"/>
+
+    <c_include copy="c_include" from="X11"/>
+    <cxx_include copy="c_include" from="X11"/>
+
+    <!-- Inventor : -->
+    <cxx_include copy="cxx_include" from="HEPVis"/>
+    <cxx_include copy="cxx_include" from="CoinGL"/>
+
+    <c_include copy="c_include" from="GLX"/>
+    <cxx_include copy="c_include" from="GLX"/>
+
+    <!-- OpenGL : -->
+    <c_include copy="c_include" from="OpenGL"/>
+    <c_options copy="c_options" from="OpenGL"/>
+    <c_macro copy="c_macro" from="OpenGL"/>
+    <cxx_include copy="c_include" from="OpenGL"/>
+    <cxx_options copy="c_options" from="OpenGL"/>
+    <cxx_macro copy="c_macro" from="OpenGL"/>
+
+    <cxx_shared_lib_builder_options 
+       copy="cxx_shared_lib_builder_options" from="no_warns"/>
+
+    <!-- OnXCore : -->
+    <cxx_include copy="cxx_include" from="OnXCore"/>
+
+    <cxx_macro name="EXLIB_USE_NATIVE_EXPAT"/>
+
+    <lib platform="Windows_NT" copy="lib" from="CoinXt"/>
+    <lib platform="Windows_NT" copy="lib" from="Motif"/>
+    <lib platform="Windows_NT" copy="lib" from="GLX"/>
+    <lib platform="Windows_NT" copy="lib" from="X11"/>
+    <lib platform="Windows_NT">OnXInventor</lib>
+    <lib platform="Windows_NT" copy="lib" from="OnXInventor"/>
+    <lib platform="Windows_NT">OnXCore</lib>
+    <lib platform="Windows_NT" copy="lib" from="expat"/>
+    <lib platform="Windows_NT" copy="lib" from="zlib"/>
+    <lib platform="Windows_NT" copy="lib_LibUtils" from="Lib"/>
+
+  </library>
+
+  <dll name="OnXXt">
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+
+    <file>../source/Xt/LoadXt.cxx</file>
+
+    <!-- not this : -->
+    <cxx_include copy="cxx_include" from="OnXXtCore"/>
+
+    <cxx_dll_builder_options copy="cxx_dll_builder_options" from="no_warns"/>
+
+    <lib>OnXXtCore</lib>
+
+    <lib copy="lib" from="CoinXt"/>
+    <lib copy="lib" from="Motif"/> <!-- Darwin : before GLX -->
+    <lib copy="lib" from="GLX"/>
+    <lib copy="lib" from="X11"/>
+
+    <lib>OnXInventor</lib>
+    <lib copy="lib_HEPVisGUI" from="HEPVis"/>
+    <lib copy="lib_HEPVisPlotter" from="HEPVis"/>
+    <lib copy="lib_HEPVisDetector" from="HEPVis"/>
+    <lib copy="lib_HEPVisGeometry" from="HEPVis"/>
+    <lib copy="lib_HEPVisUtils" from="HEPVis"/>
+
+    <lib copy="lib" from="jpeg"/>
+    <lib copy="lib" from="dvi2bitmap"/>
+    <lib copy="lib" from="freetype2"/>
+
+    <lib copy="lib" from="png"/>
+    <lib copy="lib" from="zip"/>
+    <lib copy="lib" from="zlib"/>
+
+    <lib copy="lib" from="CoinGL"/>
+
+    <lib>OnXCore</lib>
+    <lib copy="lib" from="expat"/>
+    <lib copy="lib" from="zlib"/>
+    <lib copy="lib_LibUtils" from="Lib"/>
+
+    <lib platform="UNIX" verbatim="yes">-lm</lib>
+  </dll>
+
+  <darwin_app template="osc-gui-viewer-T" name="osc-gui-viewer-xt"> 
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+    <replace name="@@driver@@">Xt</replace>
+  </darwin_app>
+
+  <darwin_app template="osc-viewer-T" name="osc-viewer-xt"> 
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+    <replace name="@@driver@@">Xt</replace>
+  </darwin_app>
+
+  <!-- To help debugging. On OnXXtCore -->
+  <application name="OnX_test_Xt_page">
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+
+    <not_in_main_build/>
+
+    <file>../tests/Xt/OnX_test_Xt_page.cxx</file>
+
+    <!-- not this : -->
+    <cxx_include copy="cxx_include" from="OnXXtCore"/>
+    <cxx_options copy="cxx_options" from="OnXXtCore"/>
+    <cxx_macro copy="cxx_macro" from="OnXXtCore"/>
+    <cxx_linker_options copy="cxx_linker_options" from="no_warns"/>
+
+    <lib>OnXXtCore</lib>
+
+    <lib copy="lib" from="CoinXt"/>
+    <lib copy="lib" from="Motif"/>
+    <lib copy="lib" from="GLX"/>
+    <lib copy="lib" from="X11"/>
+
+    <lib>OnXInventor</lib>
+    <lib copy="lib_HEPVisGUI" from="HEPVis"/>
+    <lib copy="lib_HEPVisPlotter" from="HEPVis"/>
+    <lib copy="lib_HEPVisDetector" from="HEPVis"/>
+    <lib copy="lib_HEPVisGeometry" from="HEPVis"/>
+    <lib copy="lib_HEPVisUtils" from="HEPVis"/>
+
+    <lib copy="lib" from="jpeg"/>
+    <lib copy="lib" from="dvi2bitmap"/>
+    <lib copy="lib" from="freetype2"/>
+
+    <lib copy="lib" from="png"/>
+
+    <lib copy="lib" from="CoinGL"/>
+
+    <lib>OnXCore</lib>
+    <lib copy="lib" from="expat"/>
+    <lib copy="lib" from="zip"/>
+    <lib copy="lib" from="zlib"/>
+    <lib copy="lib_LibUtils" from="Lib"/>
+
+    <lib platform="UNIX" verbatim="yes">-lm</lib>
+  </application>
+
+  <!-- To help debugging. -->
+  <application name="OnX_test_Xt_OpenGLArea">
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+
+    <not_in_main_build/>
+
+    <file>../tests/Xt/OnX_test_Xt_OpenGLArea.cxx</file>
+
+    <!-- not this : -->
+
+    <cxx_include>${obuild_OnX_path}/include</cxx_include>
+    <cxx_include>${obuild_OnX_path}/source/Xt</cxx_include>
+    <cxx_include>${obuild_OnX_path}/source/Core</cxx_include>
+
+    <c_include copy="c_include" from="Motif"/>
+    <cxx_include copy="c_include" from="Motif"/>
+
+    <c_include copy="c_include" from="X11"/>
+    <cxx_include copy="c_include" from="X11"/>
+
+    <!-- Inventor : -->
+    <cxx_include copy="cxx_include" from="HEPVis"/>
+    <cxx_include copy="cxx_include" from="CoinGL"/>
+
+    <c_include copy="c_include" from="GLX"/>
+    <cxx_include copy="c_include" from="GLX"/>
+
+    <!-- OpenGL : -->
+    <c_include copy="c_include" from="OpenGL"/>
+    <c_options copy="c_options" from="OpenGL"/>
+    <c_macro copy="c_macro" from="OpenGL"/>
+    <cxx_include copy="c_include" from="OpenGL"/>
+    <cxx_options copy="c_options" from="OpenGL"/>
+    <cxx_macro copy="c_macro" from="OpenGL"/>
+
+    <lib copy="lib" from="Motif"/>
+    <lib copy="lib" from="GLX"/>
+    <lib copy="lib" from="X11"/>
+  </application>
+
+  <!-- To help debugging. Only on Xt / Motif : -->
+  <application name="OnX_test_Xt">
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+
+    <not_in_main_build/>
+
+    <file>../tests/Xt/OnX_test_Xt.cxx</file>
+
+    <!-- not this : -->
+    <cxx_include copy="c_include" from="Motif"/>
+    <cxx_include copy="c_include" from="X11"/>
+
+    <lib copy="lib" from="Motif"/>
+    <lib copy="lib" from="X11"/>
+  </application>
+
+  <application name="OnX_test_Xm">
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+
+    <not_in_main_build/>
+
+    <file>../tests/Xt/OnX_test_Xm.cxx</file>
+
+    <!-- not this : -->
+    <cxx_include copy="c_include" from="Motif"/>
+    <cxx_include copy="c_include" from="X11"/>
+
+    <lib copy="lib" from="Motif"/>
+    <lib copy="lib" from="X11"/>
+  </application>
+
+  <application name="OnX_test_XmPanedW">
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+
+    <not_in_main_build/>
+
+    <file>../tests/Xt/OnX_test_XmPanedW.c</file>
+
+    <!-- not this : -->
+    <c_include copy="c_include" from="Motif"/>
+    <c_include copy="c_include" from="X11"/>
+
+    <lib copy="lib" from="Motif"/>
+    <lib copy="lib" from="X11"/>
+  </application>
+
+  <application name="OnX_test_XmTabStack">
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+
+    <not_in_main_build/>
+
+    <file>../tests/Xt/OnX_test_XmTabStack.c</file>
+
+    <!-- not this : -->
+    <c_include copy="c_include" from="Motif"/>
+    <c_include copy="c_include" from="X11"/>
+
+    <lib copy="lib" from="Motif"/>
+    <lib copy="lib" from="X11"/>
+  </application>
+
+  <application name="OnX_test_XmText">
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+
+    <not_in_main_build/>
+
+    <file>../tests/Xt/OnX_test_XmText.cxx</file>
+
+    <!-- not this : -->
+    <cxx_include copy="c_include" from="Motif"/>
+    <cxx_include copy="c_include" from="X11"/>
+
+    <lib copy="lib" from="Motif"/>
+    <lib copy="lib" from="X11"/>
+  </application>
+
+  <application name="OnX_test_CommandLine">
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+
+    <not_in_main_build/>
+
+    <file>../tests/Xt/OnX_test_CommandLine.cxx</file>
+    <file>../source/Xt/CommandLine.c</file>
+
+    <!-- not this : -->
+    <cxx_include>${obuild_OnX_path}/include</cxx_include>
+    <c_include>${obuild_OnX_path}/include</c_include>
+
+    <c_include copy="c_include" from="Motif"/>
+    <cxx_include copy="c_include" from="Motif"/>
+    <c_include copy="c_include" from="X11"/>
+    <cxx_include copy="c_include" from="X11"/>
+
+    <lib copy="lib" from="Motif"/>
+    <lib copy="lib" from="X11"/>
+  </application>
+
+  <application name="OnX_test_colorEditor">
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+
+    <not_in_main_build/>
+
+    <file>../tests/Xt/OnX_test_colorEditor.cxx</file>
+    <file>../source/Xt/ColorEditorDialog.c</file>
+    <file>../source/Xt/ColorEditor.c</file>
+    <file>../source/Xt/ColorPatch.c</file>
+
+    <!-- not this : -->
+    <cxx_include>${obuild_OnX_path}/include</cxx_include>
+    <c_include>${obuild_OnX_path}/include</c_include>
+
+    <c_include copy="c_include" from="Motif"/>
+    <cxx_include copy="c_include" from="Motif"/>
+    <c_include copy="c_include" from="X11"/>
+    <cxx_include copy="c_include" from="X11"/>
+
+    <lib copy="lib" from="Motif"/>
+    <lib copy="lib" from="X11"/>
+  </application>
+
+  <!-- To help debugging. Only on OpenGL and X11 -->
+  <application name="OnX_test_GL">
+    <group>Xt</group>
+    <not_in_main_build/>
+
+    <file>../tests/GL/OnX_test_GL.c</file>
+
+    <!-- not this : -->
+    <c_include copy="c_include" from="GLX"/>
+    <lib copy="lib" from="GLX"/>
+    <c_include copy="c_include" from="OpenGL"/>
+    <c_macro copy="c_macro" from="OpenGL"/>
+    <c_options copy="c_options" from="OpenGL"/>
+    <c_linker_options copy="cxx_linker_options" from="no_warns"/>
+    <c_include copy="c_include" from="X11"/>
+
+    <lib copy="lib" from="OpenGL"/>
+    <lib copy="lib" from="X11"/>
+  </application>
+
+  <!-- To help debugging. Only on Xaw and X11 -->
+<!--
+  <application name="OnX_test_Xt_tab">
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+
+    <not_in_main_build/>
+
+    <file>../tests/Xt/OnX_test_Xt_tab.c</file>
+    <file>../source/Xt/Tabs.c</file>
+    <file>../source/Xt/Gcs.c</file>
+
+    <c_include>${obuild_OnX_path}/include</c_include>
+
+    <c_include copy="c_include" from="Xaw"/>
+    <c_include copy="c_include" from="X11"/>
+
+    <lib copy="lib" from="Xaw"/>
+    <lib copy="lib" from="X11"/>
+  </application>
+-->
+
+</obuild>

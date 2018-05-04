@@ -1,0 +1,20 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_InputRegion">
+    <label>Region factory</label>
+    <input name="class" label="Class" type="option" items="SoDisplayRegion\nSoPlotterRegion\nSoTextRegion\nSoImageRegion\nSoRulerRegion"/>
+    <input name="x" label="x" type="text" default="0.25"/>
+    <input name="y" label="y" type="text" default="0.25"/>
+    <input name="w" label="width" type="text" default="0.25"/>
+    <input name="h" label="height" type="text" default="0.25"/>
+
+    <ok exec="DLD">OnX page_create_region @current@ @[OnX_InputRegion_input_class.value]@ @[OnX_InputRegion_input_x.value]@ @[OnX_InputRegion_input_y.value]@ @[OnX_InputRegion_input_w.value]@ @[OnX_InputRegion_input_h.value]@</ok>
+
+    <help file="$ONXROOT/scripts/Help/InputRegion.help"/>
+  </widget>
+
+</OnX>
+
+
+
+

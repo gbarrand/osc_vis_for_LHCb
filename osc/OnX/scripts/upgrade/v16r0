@@ -1,0 +1,13 @@
+replace\nsmanip.\nLib::smanip::
+replace\nLib::smanip::h\nsmanip.h
+remove_line\nLib::smanip smanip;
+replace\nfmanip.\nLib::fmanip::
+replace\nLib::fmanip::h\nfmanip.h
+remove_line\nLib::fmanip fmanip;
+replace\nsys.\nLib::System::
+replace\nkLib::System::h\nksys.h
+remove_line\nLib::System sys;
+replace\n"C++"\n"DLD"
+replace\n"C++ bg"\n"DLD bg"
+warn\nLineStyle\ndeprecated
+warn\niineStyle\ndeprecated

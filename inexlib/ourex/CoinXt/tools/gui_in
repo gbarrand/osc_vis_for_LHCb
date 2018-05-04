@@ -1,0 +1,26 @@
+#!/bin/sh -f
+
+from=$2
+to=$3
+Gui=$4
+gui=`echo $Gui | tr '[:upper:]' '[:lower:]'`
+GUI=`echo $Gui | tr '[:lower:]' '[:upper:]'`
+
+dirname=`dirname $1`
+basename=`basename $1`
+
+# Target name :
+toname=$5
+if test "${toname}" == "" ; then
+  toname=`echo $basename | sed -e "s|\.in||g" | sed -e "s|Gui|${Gui}|g" | sed -e "s|gui|${gui}|g" `
+fi
+todir=`echo $to`
+
+echo '--------------++++'
+echo ${todir}
+echo ${toname}
+
+#exit
+sed -e "s|@gui@|${gui}|g" $1 | sed -e "s|@GUI@|${GUI}|g" | sed -e "s|@Gui@|${Gui}|g" | sed -e "s|@COMPONENTHEADER@||g" | sed -e "s|@WIDGET@|Widget|g" | sed -e "s|@EVENT@|XAnyEvent *|g" | sed -e 's#[$]Id[:][^$]*[$]##' > tmp
+/bin/mv tmp ${todir}/${toname}
+

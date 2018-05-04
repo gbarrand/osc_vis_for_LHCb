@@ -1,0 +1,12 @@
+#!/bin/sh -f
+find ../html -name "*" -maxdepth 1 -type f -exec /bin/rm -f {} \;
+doxygen
+# cp a doxygen.css without background in BODY {}
+# (in order that bgfade.gif works) :
+/bin/cp doxygen.css ../html/.
+/bin/cp bgfade.gif ../html/.
+cd ..
+zip -r html.zip html
+#find html -name "*" -maxdepth 1 -type f -exec /bin/rm -f {} \;
+/bin/mv html.zip html/.
+

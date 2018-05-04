@@ -1,0 +1,12 @@
+
+<!-- Used by other packages that uses CoinNextStep. -->
+
+<obuild>
+
+  <use name="CoinNextStep">
+    <objcxx_include>source/framework</objcxx_include>
+    <lib>CoinNextStep</lib>
+    <path>../../CoinNextStep</path>
+  </use>
+
+</obuild>

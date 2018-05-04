@@ -1,0 +1,10 @@
+#!/bin/sh -f
+
+#set -x
+
+flags="-O"
+#if test `uname` = "Darwin" ; then
+#  flags="${flags} -arch i386"
+#fi
+
+eval c++ ${flags} -o A2R_read `root-config --cflags` `aida-config --include` A2R_read_main.cpp -L. -lA2R `root-config --libs` `aida-config --lib`

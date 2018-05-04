@@ -1,0 +1,44 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_GOE">
+    <label>Graphical object editor</label>
+    <input name="what" label="Highlighted" type="option" items="true\nfalse" />
+    <input name="action" label="Action" type="option" items="Set color\nSet transparency\nSet modeling\nSet manip\nErase" />
+    <input name="color" label="Color" type="colorChooser" items="red\ngreen\nblue\nyellow\nmagenta\ncyan\nwhite\nblack"/>
+    <input name="transparency" label="Transparency" type="text" />
+    <input name="modeling" label="Modeling" type="option" items="Solid\nWire frame\nReduced wire frame"/>
+    <input name="manip" label="Manip" type="option" items="SoTransformBoxManip\nSoHandleBoxManip\nSoCenterballManip\nSoTrackballManip\nSoJackManip\nSoTabBoxManip\nSoTransformerManip\noff"/>
+
+    <ok exec="DLD">OnX data_collect SceneGraph( @cat@ @current@ @cat@ ) highlight== @cat@ @[OnX_GOE_input_what.value]@</ok>
+
+    <!-- map modeling label toward options -->
+    <variable name="OnX_GOE_solid">
+      Solid\nTRUE\n
+      Wire frame\nFALSE\n
+      Reduced wire frame\nFALSE
+    </variable>
+    <variable name="OnX_GOE_rwf"> <!-- reduce wire frame -->
+      Solid\nTRUE\n
+      Wire frame\nFALSE\n
+      Reduced wire frame\nTRUE
+    </variable>
+
+    <!-- map action label toward action script -->
+    <variable name="OnX_GOE_modeling_script">
+OnX data_set SoPolyhedron solid @next@[OnX_GOE_input_modeling.value]@{OnX_GOE_solid}@strip_key@\n
+OnX data_set SoPolyhedron reducedWireFrame @next@[OnX_GOE_input_modeling.value]@{OnX_GOE_rwf}@strip_key@
+    </variable>
+
+    <variable name="OnX_GOE_action_script">
+      Set color\nOnX data_set SoMaterial diffuseColor @cvt@rgb@[OnX_GOE_input_color.value]@\n
+      Set transparency\nOnX data_set SoMaterial transparency @[OnX_GOE_input_transparency.value]@\n
+      Set modeling\nOnX dld_exec_text @{OnX_GOE_modeling_script}@\n
+      Set manip\nOnX data_set SoTransform manip @[OnX_GOE_input_manip.value]@\n
+      Erase\nOnX data_destroy
+    </variable>
+
+    <ok exec="DLD">OnX ui_execute_script DLD @next@[OnX_GOE_input_action.value]@{OnX_GOE_action_script}@strip_key@</ok>
+
+  </widget>
+
+</OnX>

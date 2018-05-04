@@ -1,0 +1,27 @@
+#!/bin/sh -f 
+
+dir_pwd="`pwd`"
+
+vers=`cat version`
+
+zip_file=osc_survival_${vers}.zip
+
+cd ../..
+/bin/rm -f ${zip_file}
+
+packs=""
+
+packs="${packs} OpenScientist/survival"
+
+for pack in ${packs}
+do 
+  if [ ! -e ${pack} ] ; then
+    echo "${pack} not found."
+    exit
+  fi
+done
+
+zip -q -r ${zip_file} ${packs} -x '*/obuild/*'
+
+cd ${dir_pwd}
+

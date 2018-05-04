@@ -1,0 +1,11 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_InputFont">
+    <label>Font</label>
+    <input name="fontName" label="Font" type="combo" items="Hershey\nTTF/times\nTTF/timesbd\nTTF/timesi\nTTF/cour\nTTF/courbd\nTTF/couri\nTTF/arial\nTTF/arialbd\nTTF/ariali\nTTF/Helvetica\nTTF/Utopia-Regular\nTTF/Times-Roman\ndefaultFont" />
+    <input name="smoothing" label="Smoothing" type="option" items="FALSE\nTRUE" />
+    <input name="hinting" label="Hinting" type="option" items="FALSE\nTRUE" />
+    <ok exec="DLD">OnX OnX_InputFont_ok</ok>
+  </widget>
+
+</OnX>

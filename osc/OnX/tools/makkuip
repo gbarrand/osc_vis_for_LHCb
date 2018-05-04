@@ -1,0 +1,9 @@
+#!/bin/sh -f
+
+# Assumes that the kuipcc program is around.
+
+cp ../source/KUIP/CDF.cdf .
+kuipcc -c CDF.cdf
+mv CDF.c ../source/KUIP/KuipWrapCDF.ic
+touch ../source/KUIP/KuipWrapCDF.c
+/bin/rm -f CDF.cdf

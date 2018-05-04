@@ -1,0 +1,22 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+./build_lib_BatchLabAIDA        ${build_args}
+./build_lib_BatchLabHBOOK       ${build_args}
+
+./build_plugin_BatchLabFS       ${build_args}
+./build_plugin_BatchLabHDF5     ${build_args}
+./build_plugin_BatchLabRio      ${build_args}
+./build_plugin_BatchLabXML      ${build_args}
+./build_plugin_BatchLabZebra    ${build_args}
+./build_plugin_BatchLabZip      ${build_args}
+
+./build_app_aida_config ${build_args}
+./build_app_exa_aida    ${build_args}
+./build_app_test_histo  ${build_args}
+./build_app_test_ntuple ${build_args}
+

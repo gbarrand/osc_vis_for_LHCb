@@ -1,0 +1,56 @@
+#!/bin/sh -f
+#
+#  To produce wrappers using SWIG.
+#
+#
+
+if [ "${COINGLROOT}" = "" ] ; then 
+  COINGLROOT=../../CoinGL
+fi
+if test ! -d $COINGLROOT ; then
+  echo "CoinGL not found."
+  exit
+fi
+
+if [ "${COINPYTHONROOT}" = "" ] ; then 
+  COINPYTHONROOT=../../CoinPython
+fi
+if test ! -d $COINPYTHONROOT ; then
+  echo "CoinPython not found."
+  exit
+fi
+
+SWIG_native_version=1.3.33
+SWIG_home=/usr/local/SWIG/${SWIG_native_version}
+SWIG_exe="${SWIG_home}/bin/swig"
+
+if test ! -x $SWIG_exe ; then
+  echo "swig program not found."
+  exit
+fi
+
+#set -v
+
+pivy_home=/Users/barrand/private/dev/install/Pivy-0.3.0
+
+if test ! -d $pivy_home ; then
+  echo "Directory ${pivy_home} not found."
+  exit
+fi
+
+incs="-I${pivy_home} -I${pivy_home}/fake_headers"
+incs="${incs} -I${COINGLROOT}/include -I../include"
+incs="${incs} -I${COINPYTHONROOT}"
+incs="${incs} -I${pivy_home}/interfaces"
+incs="${incs} -I${COINPYTHONROOT}/source"
+incs="${incs}  -I../source/SWIG"
+
+flags="-includeall -modern -D__PIVY__"
+flags="${flags} -w302,306,307,312,389,361,362,467,503,509,510"
+flags="${flags} -fcompact"
+
+out_file=../py/SWIG.ic
+$SWIG_exe -interface CoinXt_SWIG_py -python -c++ ${flags} ${incs} -o ${out_file} ../py/SWIG.i
+
+sed -e 's#PyErr_Format(PyExc_RuntimeError, mesg)#PyErr_Format(PyExc_RuntimeError, "%s",mesg)#g' ${out_file} > tmp;mv tmp ${out_file}
+/bin/rm -f tmp

@@ -1,0 +1,65 @@
+#!/bin/sh -f
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+build_pack=BatchLabHDF5
+
+. ${ourex_mgr}/build_header
+
+if [ ${build_compile} = "yes" ] ; then
+
+cppflags="${cppflags} -I.."
+cppflags="${cppflags} -I../../Slash"
+cppflags="${cppflags} -I../../AIDA/v3r2p1"
+cppflags="${cppflags} -I../../Lib/include"
+cppflags="${cppflags} -I../../amanip/src/cpp"
+cppflags="${cppflags} -I${inlib_mgr}/.."
+cppflags="${cppflags} -I${exlib_mgr}/.."
+
+#    <cxx_macro platform="Windows_NT" name="_HDF5USEDLL_"/>
+
+cxxfiles=
+cxxfiles="${cxxfiles} ../source/HDF5/HDF5_HDF5O.cxx"
+cxxfiles="${cxxfiles} ../source/HDF5/HDF5_MemberInserter.cxx"
+cxxfiles="${cxxfiles} ../source/HDF5/HDF5_Writer.cxx"
+cxxfiles="${cxxfiles} ../source/HDF5/HDF5_ReadContext.cxx"
+cxxfiles="${cxxfiles} ../source/HDF5/HDF5_Tree.cxx"
+cxxfiles="${cxxfiles} ../source/HDF5/HDF5_Manager.cxx"
+cxxfiles="${cxxfiles} ../source/HDF5/HDF5.cxx"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+libs="${libs} -L../../Lib/mgr/${build_dir} -lLibUtils"
+
+use_hdf5=yes
+use_zlib=yes
+
+hdf5_home=${ourex_mgr}/../hdf5
+zlib_home=${ourex_mgr}/../zlib
+
+. ${exlib_mgr}/use_hdf5
+. ${exlib_mgr}/use_zlib
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+. ${inlib_mgr}/build_compile
+
+# CYGWIN : ro rm the messages :
+#   Info: resolving xxx by linking to __imp__xxx (auto-import). 
+# that come from the global variables in H5Tpublic.h :
+#   H5_DLLVAR hid_t H5T_NATIVE_<TYPE>_g;
+# plugin_flags=-Wl,--enable-auto-import
+
+fi # end build_compile
+ 
+if [ ${build_plugin} = "yes" ] ; then . ${inlib_mgr}/build_plugin; fi
+
+. ${inlib_mgr}/build_clean

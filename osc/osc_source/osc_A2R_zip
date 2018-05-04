@@ -1,0 +1,44 @@
+#!/bin/sh -f
+
+dir_pwd="`pwd`"
+
+vers=`cat version`
+
+zip_file=osc_A2R_${vers}.zip
+/bin/rm -f ../../${zip_file}
+
+/bin/rm -R -f ./osc_A2R
+/bin/mkdir -p ./osc_A2R
+
+from=../UseAIDA/examples
+
+cp ${from}/ROOT/README_A2R         ./osc_A2R/README
+cp ${from}/ROOT/A2R.h              ./osc_A2R/.
+cp ${from}/ROOT/A2R_Def.h          ./osc_A2R/.
+cp ${from}/ROOT/A2R_Imp.cpp        ./osc_A2R/.
+cp ${from}/ROOT/A2R_LinkDef.h      ./osc_A2R/.
+cp ${from}/ROOT/A2R_write.C        ./osc_A2R/.
+cp ${from}/ROOT/A2R_read.C         ./osc_A2R/.
+cp ${from}/ROOT/A2R_read_main.cpp  ./osc_A2R/.
+
+cp ${from}/cpp/osc/A2R.cpp ./osc_A2R/.
+
+cp ${from}/ROOT/jec.C      ./osc_A2R/.
+cp ${from}/ROOT/jec_ROOT.C ./osc_A2R/.
+cp ${from}/cpp/osc/jec.cpp ./osc_A2R/.
+
+# build material :
+cp ${from}/ROOT/build_A2R           ./osc_A2R/.
+cp ${from}/ROOT/build_A2R.bat       ./osc_A2R/.
+cp ${from}/ROOT/obuild_subs.cpp     ./osc_A2R/.
+cp ${from}/ROOT/build_A2R_read      ./osc_A2R/.
+cp ${from}/ROOT/build_A2R_read.bat  ./osc_A2R/.
+
+zip -qr ${zip_file} osc_A2R
+
+/bin/mv ${zip_file} ../../.
+
+/bin/rm -R -f ./osc_A2R
+
+cd ${dir_pwd}
+

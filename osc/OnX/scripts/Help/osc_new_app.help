@@ -1,0 +1,45 @@
+DESCRIPTION
+  osc-new-viewer permits to create new application/package using OpenScientist.
+
+USAGE
+      OS> osc-new-app <options>
+  (OS is for Operating System). The upper command assumes that 
+  the setup script of OpenScientist had been executed and that
+  the OSC_HOME_DIR environment variable points to your
+  OpenScientist installation.
+
+OPTIONS
+ -name=<application or package name>
+    name of the created application/package
+
+ -gl
+    to create an application doing plain OpenGL.
+ -iv
+    to create an application using Inventor/coin3d.
+ -py
+    to create an application wrapping C++ code (with SWIG) for Python.
+ -aida
+    to create an application using AIDA to create and store and histogram.
+ -g4
+    to create an application using Geant4 (and AIDA). Note that
+    this application can be built without the Geant4 GNUmakefile system
+    and then can be built on Windows directly from DOS (and then 
+    without CYGWIN).
+
+ -template=<path to template package to clone>
+      OS> osc-new-app -name=Xxx -template=$OSC_HOME_DIR/Resources/OnX/templates/OnXTemplateOne
+
+ -debug
+ -verbose
+    to have some trace of what is done.
+
+ENVIRONMENT
+  OSC_HOME_DIR : directory where OpenScientist is installed.
+
+FILES 
+  $OSC_HOME_DIR/Resources/OnX/templates/OnXTemplateOne
+  etc...
+
+WEB
+  http://OpenScientist.lal.in2p3.fr
+

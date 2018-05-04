@@ -1,0 +1,64 @@
+******************************************************************************
+* Setup viewer.
+******************************************************************************
+/AIDA/PLOTTER/NEW p 
+/AIDA/PLOTTER/REGION/GRID p 2 2
+
+******************************************************************************
+* Create a ROOT Tree.
+******************************************************************************
+/AIDA/TREE/RIO/NEW rootTree '$OSC_HOME_DIR/Resources/AIDA/examples/data/analysis.root' READ
+/AIDA/TREE/CD rootTree histograms
+/AIDA/TREE/LS rootTree
+
+******************************************************************************
+* First region :
+*  A XV plot with two histograms.  
+******************************************************************************
+/AIDA/HISTOGRAM/1D/GET BW rootTree
+/AIDA/HISTOGRAM/SHOW BW
+/AIDA/HISTOGRAM/1D/GET gauss rootTree
+/AIDA/PLOTTER/PLOT/HISTOGRAM p gauss
+*FIXME /AIDA/PLOTTER/REGION/SETPARAMETER p plotter.binsStyle.0.color red
+*FIXME /AIDA/PLOTTER/REGION/SETPARAMETER p plotter.binsStyle[0].modeling BOXES
+*FIXME /AIDA/PLOTTER/REGION/SETPARAMETER p plotter.binsStyle[1].color green
+*FIXME /AIDA/PLOTTER/REGION/SETPARAMETER p plotter.binsStyle[1].modeling BOXES
+******************************************************************************
+* Second region :
+*  A XY plot.  
+******************************************************************************
+/AIDA/PLOTTER/NEXT p
+/AIDA/HISTOGRAM/2D/GET gauss_BW rootTree
+/AIDA/PLOTTER/PLOT/HISTOGRAM p gauss_BW
+/AIDA/PLOTTER/REGION/SETPARAMETER p infosRegionVisible FALSE
+*FIXME /AIDA/PLOTTER/REGION/SETPARAMETER p plotter.colorMapping 'black 1 cyan 2 green 4 orange'
+******************************************************************************
+* Third region :
+*  Get a tuple, create an histo from one of its column, plot it. 
+******************************************************************************
+/AIDA/PLOTTER/NEXT p
+/AIDA/TREE/CD rootTree ..
+/AIDA/TREE/CD rootTree tuples
+/AIDA/HISTOGRAM/1D/NEW tuple1_v2 tuple_v2 10 0. 10.
+/AIDA/TUPLE/GET tuple1 rootTree
+/AIDA/TUPLE/PROJECT/1D tuple1 tuple1_v2 v2 ''
+/AIDA/PLOTTER/PLOT/HISTOGRAM p tuple1_v2
+******************************************************************************
+* Fourth region :
+*  Get a tuple, create an histo from one of its column, plot it. 
+******************************************************************************
+/AIDA/PLOTTER/NEXT p
+/AIDA/HISTOGRAM/1D/NEW tuple2_gauss tuple2_gauss 100 -5. 5.
+/AIDA/TUPLE/GET tuple2 rootTree
+/AIDA/TUPLE/PROJECT/1D tuple2 tuple2_gauss rand_gauss '(fabs(rand_gauss)<=2.)&&(step>=1.)'
+/AIDA/PLOTTER/PLOT/HISTOGRAM p tuple2_gauss
+******************************************************************************
+* Fit :
+******************************************************************************
+/AIDA/FITTER/NEW fitter
+/AIDA/FITTER/FIT fitter G tuple2_gauss fitResult
+/AIDA/PLOTTER/PLOT/FITRESULT p fitResult
+
+/AIDA/FITRESULT/DELETE fitResult
+/AIDA/FITTER/DELETE fitter
+/AIDA/PLOTTER/DELETE p 

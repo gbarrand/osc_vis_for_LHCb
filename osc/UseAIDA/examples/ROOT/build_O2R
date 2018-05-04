@@ -1,0 +1,52 @@
+#!/bin/sh -f
+
+#
+# build the O2R plugin.
+#
+
+#set -x
+
+if [ "${ROOTSYS}" = "" ] ; then
+  echo "You have to 'source setup' ROOT."
+  exit
+fi
+
+#////////////////////////////////////////////
+#///// To be customized if needed : /////////
+#////////////////////////////////////////////
+
+ROOT_rootcint=`root-config --bindir`/rootcint
+ROOT_incs=`root-config --cflags`
+ROOT_libs=`root-config --libs`
+
+AIDA_incs=`aida-config --include`
+AIDA_libs=`aida-config --lib`
+
+#HCL_incs="-I../../../../Resources/HCL/include"
+HCL_incs="-I../../../HCL/include"
+BatchLab_incs="-I../../../BatchLab"
+Slash_incs="-I../../../Slash"
+inlib_incs="-I../../../inlib"
+
+bin=.
+#////////////////////////////////////////////
+#////////////////////////////////////////////
+
+# Generating O2R CINT wrapping :
+eval ${ROOT_rootcint} -f G__O2R.cpp -c ${AIDA_incs} ${HCL_incs} ${BatchLab_incs} ${Slash_incs} ${inlib_incs} O2R_Def.h O2R_LinkDef.h 
+
+eval c++ -c -O -o ${bin}/G__O2R.o ${ROOT_incs} ${AIDA_incs} ${HCL_incs} ${BatchLab_incs} ${Slash_incs} ${inlib_incs} G__O2R.cpp 
+
+if test `uname` = "Darwin" ; then
+/bin/rm -f ${bin}/O2R.bundle
+eval c++ -bundle -twolevel_namespace -o ${bin}/O2R.bundle ${bin}/G__O2R.o ${ROOT_libs} ${AIDA_libs}
+# ROOT wants anyway .so for DLLs on Mac :
+/bin/mv O2R.bundle O2R.so
+fi
+
+if test `uname` = "Linux" ; then
+/bin/rm -f ${bin}/libO2R.so
+eval g++ -shared -o ${bin}/libO2R.so ${bin}/G__O2R.o ${ROOT_libs} ${AIDA_libs}
+/bin/mv libO2R.so O2R.so
+fi
+

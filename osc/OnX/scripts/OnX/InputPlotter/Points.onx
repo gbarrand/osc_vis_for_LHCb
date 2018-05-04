@@ -1,0 +1,99 @@
+<widget class="VContainer">
+ <tabLabel>points</tabLabel>
+ <widget class="HBox">
+   <widget class="Label">
+     <label>Index</label>
+   </widget>
+   <widget class="Entry" name="OnX_InputPlotter_points_index">
+     <value>0</value>
+   </widget>
+ </widget>
+ <widget class="HBox">
+   <expand>first</expand>
+   <widget class="HBox">
+     <widget class="Label">
+       <label>Modeling</label>
+     </widget>
+     <widget class="ComboBox" name="OnX_InputPlotter_points_modeling">
+       <items>unchanged\nboxes\nwire_boxes\nlines\nsegments\npoints\ntop_lines\ntexts\ncurve\nbar_chart\npolygon</items>
+     </widget>
+   </widget>
+ </widget>
+ <widget class="HBox">
+   <widget class="Label">
+     <label>Multi node limit</label>
+   </widget>
+   <widget class="ComboBox" name="OnX_InputPlotter_points_multiNodeLimit">
+     <items>unchanged\n0\n10\n100\n1000\n10000\n100000\n1000000</items>
+   </widget>
+ </widget>
+ <widget class="HBox">
+   <widget class="PushButton">
+     <label>Color</label>
+     <activate exec="DLD">OnX ui_set_callback colorChooser ok DLD OnX ui_set_parameter OnX_InputPlotter_points_color.default @ @cat@ this.value @cat@ @</activate>
+     <activate exec="DLD">OnX ui_show colorChooser</activate>
+   </widget>
+   <widget class="ComboBox" name="OnX_InputPlotter_points_color">
+     <items>unchanged\ndarkslategrey\nred\ngreen\nblue\nyellow\nmagenta\ncyan\ngrey\nlightgrey\nwhite\nblack</items>
+   </widget>
+ </widget>
+ <widget class="HBox">
+   <widget class="Label">
+     <label>Transparency</label>
+   </widget>
+   <widget class="Entry" name="OnX_InputPlotter_points_transparency">
+     <value>unchanged</value>
+   </widget>
+ </widget>
+ <widget class="HBox">
+   <widget class="Label">
+     <label>Line width</label>
+   </widget>
+   <widget class="ComboBox" name="OnX_InputPlotter_points_lineWidth">
+     <items>unchanged\n0\n1\n2\n5\n10</items>
+   </widget>
+ </widget>
+ <widget class="HBox">
+   <widget class="Label">
+     <label>Line style</label>
+   </widget>
+   <widget class="ComboBox" name="OnX_InputPlotter_points_linePattern">
+     <items>unchanged\nsolid\ndashed\ndotted\ndash_dotted</items>
+   </widget>
+ </widget>
+ <widget class="HBox">
+   <expand>first</expand>
+   <widget class="HBox">
+     <widget class="Label">
+       <label>Marker style</label>
+     </widget>
+     <widget class="OptionMenu" name="OnX_InputPlotter_points_markerStyle">
+       <items>unchanged\nDOT\nPLUS\nASTERISK\nCROSS\nSTAR\nCIRCLE_LINE\nCIRCLE_FILLED</items>
+     </widget>
+   </widget>
+   <widget class="HBox">
+     <widget class="Label">
+       <label>Marker size</label>
+     </widget>
+     <widget class="ComboBox" name="OnX_InputPlotter_points_markerSize">
+       <items>unchanged\n5\n7\n9</items>
+     </widget>
+   </widget>
+ </widget>
+ <widget class="HBox">
+   <widget class="Label">
+     <label>Area style</label>
+   </widget>
+   <widget class="OptionMenu" name="OnX_InputPlotter_points_areaStyle">
+     <items>unchanged\nSOLID\nHATCHED\nCHECKER\nEDGED</items>
+   </widget>
+ </widget>
+ <widget class="HBox">
+   <widget class="Label">
+     <label>Editable</label>
+   </widget>
+   <widget class="OptionMenu" name="OnX_InputPlotter_points_editable">
+     <items>false\ntrue</items>
+   </widget>
+ </widget>
+</widget>

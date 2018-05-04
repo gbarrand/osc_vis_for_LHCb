@@ -1,0 +1,20 @@
+
+  When selecting a AIDA::ITuple in the main tree widget
+ the tuple explorer paletter is mapped and its fields
+ are updated according the choosed tuple.
+
+  An histogram (1D or 2D) is filled and plotted according
+ to "Bind X" or "Bind Y".
+
+  "Bind X" permit to bind the X histogram axis to a given 
+ column tuple. If "Bind Y" is "none" the histogram is a 1D 
+ one histogramming the "Bind X" column of the tuple. If 
+ "Bind Y" is not none (then a tuple column) the histogram 
+ is a 2D one filled with the (Bind X,Bind Y) values of the 
+ tuple.
+
+  Someone can play with the X or Y booking parameters
+ with the below tab area.
+
+  "Cancel" unmaps the palette.
+

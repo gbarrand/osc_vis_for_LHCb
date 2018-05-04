@@ -1,0 +1,137 @@
+#!/bin/sh -f
+
+#set -x
+
+# Look for example if AIDA_example_Store is accessible :
+what=AIDA_example_Store
+found=false
+old_IFS="${IFS}"
+IFS=:
+for path in $PATH ; do
+  if [ -f ${path}/${what} ] ; then found=true;break; fi
+done
+IFS="${old_IFS}"
+if [ ${found} = "false" ] ; then echo "${what} not found.";exit; fi
+
+#/////////////////////////////////////////////////////////////
+# In memory manipulations (no IO) :
+#/////////////////////////////////////////////////////////////
+echo "AIDA_example_ChainedAndFilteredTuplesExample..."
+AIDA_example_ChainedAndFilteredTuplesExample
+
+echo "AIDA_example_CloudCreate..."
+AIDA_example_CloudCreate
+
+echo "AIDA_example_ProfileCreate..."
+AIDA_example_ProfileCreate
+
+echo "AIDA_example_ProfileFill..."
+AIDA_example_ProfileFill
+
+echo "AIDA_example_Tree..."
+AIDA_example_Tree
+
+echo "AIDA_example_TupleCreate..."
+AIDA_example_TupleCreate
+
+echo "AIDA_example_anaphe_b1..."
+AIDA_example_anaphe_b1
+
+echo "AIDA_example_anaphe_b3..."
+AIDA_example_anaphe_b3
+
+#/////////////////////////////////////////////////////////////
+# In memory + plotting :
+#/////////////////////////////////////////////////////////////
+echo "AIDA_example_Histogram..."
+AIDA_example_Histogram
+
+echo "AIDA_example_PlotExample..."
+AIDA_example_PlotExample
+
+echo "AIDA_example_PlotWithStyles..."
+AIDA_example_PlotWithStyles
+
+echo "AIDA_example_HistogramArithmetic..."
+AIDA_example_HistogramArithmetic
+
+echo "AIDA_example_Chi2FitToHistogram..."
+AIDA_example_Chi2FitToHistogram
+
+echo "AIDA_example_Cloud..."
+AIDA_example_Cloud
+
+echo "AIDA_example_ComplexFit..."
+AIDA_example_ComplexFit
+
+echo "AIDA_example_CreateAndFitDataPointSet..."
+AIDA_example_CreateAndFitDataPointSet
+
+echo "AIDA_example_DataPointSetCreateAndFill..."
+AIDA_example_DataPointSetCreateAndFill
+
+echo "AIDA_example_FilterAndEvaluatorExample..."
+AIDA_example_FilterAndEvaluatorExample
+
+echo "AIDA_example_FitExample..."
+AIDA_example_FitExample
+
+echo "AIDA_example_ProfileFitAndPlot..."
+AIDA_example_ProfileFitAndPlot
+
+echo "AIDA_example_ScanAndContour..."
+AIDA_example_ScanAndContour
+
+echo "AIDA_example_SimpleFit..."
+AIDA_example_SimpleFit
+
+echo "AIDA_example_Tuple..."
+AIDA_example_Tuple
+
+echo "AIDA_example_createAndFillTupleWithComplexStructure..."
+AIDA_example_createAndFillTupleWithComplexStructure
+
+echo "AIDA_example_anaphe_b2..."
+AIDA_example_anaphe_b2
+
+echo "AIDA_example_anaphe_b6..."
+AIDA_example_anaphe_b6
+
+#/////////////////////////////////////////////////////////////
+# Examples dealing with data files :
+#/////////////////////////////////////////////////////////////
+
+# write myFile.aida :
+echo "AIDA_example_Store..."
+AIDA_example_Store
+
+# read myFile.aida :
+echo "AIDA_example_Restore..."
+AIDA_example_Restore
+
+# write histo.hbook :
+echo "AIDA_example_anaphe_b4..."
+AIDA_example_anaphe_b4
+
+# read histo.hbook :
+# write histo.xml :
+echo "AIDA_example_anaphe_b5..."
+AIDA_example_anaphe_b5
+
+# write tuple.hbook :
+echo "AIDA_example_anaphe_b7..."
+AIDA_example_anaphe_b7
+
+# read tuple.hbook :
+echo "AIDA_example_anaphe_b8..."
+AIDA_example_anaphe_b8
+
+# write dps.aida :
+echo "AIDA_example_anaphe_b11..."
+AIDA_example_anaphe_b11
+
+# read aidaStore.aida (no plotting) :
+#FIXME : where is the aidaStore.aida file ?
+echo "AIDA_example_DataPointSetCreateFromData..."
+AIDA_example_DataPointSetCreateFromData
+

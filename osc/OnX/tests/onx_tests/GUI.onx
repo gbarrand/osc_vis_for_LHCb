@@ -1,0 +1,76 @@
+<widget class="CascadeButton">
+  <label>GUI</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Clone current in tab stack</label>
+      <activate exec="DLD">OnX set_variable tmp @current_name@ @cat@ _</activate>
+      <activate exec="DLD">OnX set_variable tmp @name@@{tmp}@</activate>
+      <activate exec="DLD">OnX ui_copy_component @{tmp}@ @current_name@ tab_stack</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Clone current in a panel</label>
+      <activate exec="DLD">OnX ui_load @empty@ $ONXROOT/scripts/OnX/ViewerWindow.onx</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Delete current widget</label>
+      <variable name="GUI_script">OnX ui_destroy_widget @current@</variable>
+      <activate exec="DLD">OnX ui_execute_script_if " @cat@ @current_name@ @cat@ "!=" @cat@ Viewer @cat@ " DLD @{GUI_script}@</activate>
+    </widget>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>New examiner page</label>
+      <activate exec="DLD">OnX set_variable viewer_class PageViewer</activate>
+      <activate exec="DLD">OnX dld_exec_file $ONXROOT/tests/onx_tests/new_viewer.dld</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>New plane page</label>
+      <activate exec="DLD">OnX set_variable viewer_class PlanePageViewer</activate>
+      <activate exec="DLD">OnX dld_exec_file $ONXROOT/tests/onx_tests/new_viewer.dld</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>New plotting page</label>
+      <activate exec="DLD">OnX set_variable viewer_class PlanePageViewer</activate>
+      <activate exec="DLD">OnX dld_exec_file $ONXROOT/tests/onx_tests/new_viewer.dld</activate>
+      <activate exec="DLD">OnX page_create_regions @{tmp}@ SoPlotterRegion 1 1 0</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>New plotting page 3D</label>
+      <activate exec="DLD">OnX set_variable viewer_class PageViewer</activate>
+      <activate exec="DLD">OnX dld_exec_file $ONXROOT/tests/onx_tests/new_viewer.dld</activate>
+      <activate exec="DLD">OnX page_create_regions @{tmp}@ SoPlotterRegion 1 1 0</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Dump tabLabel of current</label>
+      <activate exec="DLD">OnX set_variable tmp @current_name@ @cat@ .tabLabel</activate>
+      <activate exec="DLD">OnX ui_echo @[{tmp}]@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Set tabLabel of current</label>
+      <activate exec="DLD">OnX ui_setParameter @current_name@ @cat@ .tabLabel xxx</activate>
+    </widget>
+    <widget class="MenuSeparator"/>
+    <reference file="$ONXROOT/scripts/OnX/Viewer.onx"/>
+    <reference file="$ONXROOT/scripts/OnX/Page.onx"/>
+    <reference file="$ONXROOT/scripts/OnX/Region.onx"/>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>IB</label>
+      <activate exec="DLD">OnX ui_load @empty@ $ONXROOT/scripts/OnX/IB/IB.onx</activate>
+      <activate exec="DLD">OnX ui_show OnX_IB_main</activate>
+      <activate exec="DLD">OnX ui_setParameter OnX_IB_exit.label Cancel</activate>
+      <activate exec="DLD">OnX ui_setCallback OnX_IB_exit activate DLD OnX ui_hide OnX_IB_main</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Save</label>
+      <activate exec="DLD">OnX ui_save</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Menubar editor</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/MenubarEditor.onx OnX_MenubarEditor_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Browse managers</label>
+      <activate exec="DLD">OnX tree_set mainTree.items @session@manager_names@</activate>
+    </widget>
+  </widget>
+</widget>

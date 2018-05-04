@@ -1,0 +1,43 @@
+#!/bin/sh -f
+
+#set -x
+
+obuild_current=`pwd`
+
+obuild_from='="@@absolute_dir@@"'
+
+obuild_to='="'"${obuild_current}"'"'
+
+if test -e aida-setup.sh ; then
+  /bin/rm -f obuild_tmp
+  sed -e "s#${obuild_from}#${obuild_to}#g" aida-setup.sh > obuild_tmp
+  /bin/mv obuild_tmp aida-setup.sh
+  /bin/rm -f obuild_tmp
+fi
+
+if test -e aida-setup.csh ; then
+  /bin/rm -f obuild_tmp
+  sed -e "s#${obuild_from}#${obuild_to}#g" aida-setup.csh > obuild_tmp
+  /bin/mv obuild_tmp aida-setup.csh
+  /bin/rm -f obuild_tmp
+fi
+
+if test -e setup.sh ; then
+  /bin/rm -f obuild_tmp
+  sed -e "s#${obuild_from}#${obuild_to}#g" setup.sh > obuild_tmp
+  /bin/mv obuild_tmp setup.sh
+  /bin/rm -f obuild_tmp
+fi
+
+if test -e setup.csh ; then
+  /bin/rm -f obuild_tmp
+  sed -e "s#${obuild_from}#${obuild_to}#g" setup.csh > obuild_tmp
+  /bin/mv obuild_tmp setup.csh
+  /bin/rm -f obuild_tmp
+fi
+
+unset obuild_to
+unset obuild_from
+unset obuild_current
+
+

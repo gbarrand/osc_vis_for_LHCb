@@ -1,0 +1,73 @@
+<widget class="CascadeButton" name="OnX_menu_Page">
+  <label>Page</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>next region (pick mode + right arrow)</label>
+      <activate exec="DLD">OnX page_next</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>prev region (pick mode + left arrow)</label>
+      <activate exec="DLD">OnX page_previous</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Page layout editor</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/InputPage.onx OnX_InputPage_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>clear page</label>
+      <activate exec="DLD">OnX page_clear @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>1x1</label>
+      <activate exec="DLD">OnX page_add_regions @current@ SoDisplayRegion 1 1</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>2r x 1c</label>
+      <activate exec="DLD">OnX page_add_regions @current@ SoDisplayRegion 1 2</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Delete regions</label>
+      <activate exec="DLD">OnX page_delete_regions @current@</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Page title on/off</label>
+      <activate exec="DLD">OnX page_toggle_parameter @current@ titleVisible</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Page toggle verbose</label>
+      <activate exec="DLD">OnX page_toggle_parameter @current@ verbose</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Create region...</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/InputRegion.onx OnX_InputRegion_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Region toggle verbose</label>
+      <activate exec="DLD">OnX region_toggleParameter verbose</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Edit image region...</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/ImageRegion.onx OnX_ImageRegion_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Edit text region...</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/TextRegion.onx OnX_TextRegion_dialog</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Page resizePolicy LEAVE_ALONE</label>
+      <activate exec="DLD">OnX page_set_parameter @current@ regionsResizePolicy LEAVE_ALONE</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Page resizePolicy PAW_GRID</label>
+      <activate exec="DLD">OnX page_set_parameter @current@ regionsResizePolicy PAW_GRID</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Regions highlightable</label>
+      <activate exec="DLD">OnX page_set_root_regions_highlightable @current@ true</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Regions not highlightable</label>
+      <activate exec="DLD">OnX page_set_root_regions_highlightable @current@ false</activate>
+    </widget>
+  </widget>
+</widget>

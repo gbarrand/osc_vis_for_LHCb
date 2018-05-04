@@ -1,0 +1,17 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_Input_exa_py">
+    <label>OnX Python examples</label>
+
+    <input name="files" label="Examples" type="option" items=""/>
+
+    <create exec="DLD">OnX ui_setParameter OnX_Input_exa_py_input_files.items @directory@$ONXROOT/examples/Python@*.py@</create>
+
+    <ok exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/EditExec.onx OnX_EditExec_main</ok>
+    <ok exec="DLD">OnX ui_setParameter OnX_EditExec_text.value @file@[OnX_Input_exa_py_input_files.value]@</ok>
+    <ok exec="DLD">OnX ui_setParameter OnX_EditExec_interpreter.default Python</ok>
+    <ok exec="DLD">OnX session_setParameter OnX_EditExec.file @[OnX_Input_exa_py_input_files.value]@</ok>
+
+  </widget>
+
+</OnX>

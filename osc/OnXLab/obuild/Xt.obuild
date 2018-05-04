@@ -1,0 +1,9 @@
+<obuild>
+
+  <darwin_app template="osc-plot-T" name="osc-plot-xt"> 
+    <group>Xt</group>
+    <check_foreign>Motif</check_foreign>
+    <replace name="@@driver@@">Xt</replace>
+  </darwin_app>
+
+</obuild>

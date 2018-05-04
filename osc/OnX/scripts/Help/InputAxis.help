@@ -1,0 +1,14 @@
+
+  The update button permits to get the axes values
+ of the current plotter.
+
+  In most of the cases axes are automated. That is
+ to say the plotter decides axes values according to what
+ is plotted. In case multiple objects are plotted, 
+ there is one object which is the "master" of the axes.
+ In general it is the first plotted object which is 
+ the master of the axes.
+ 
+  To enforce min, max values of an axis you must
+ not have it automated.
+

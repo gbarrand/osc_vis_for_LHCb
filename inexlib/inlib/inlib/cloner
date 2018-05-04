@@ -1,0 +1,190 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file inlib.license for terms.
+
+#ifndef inlib_cloner
+#define inlib_cloner
+
+#include "sys/dir"
+#include "sout"
+#include "touplow"
+#include "srep"
+#include "file"
+
+namespace inlib {
+namespace cloner {
+
+class dump_visitor : public virtual dir::visitor {
+public:
+  virtual bool directory(const std::string& a_string,bool&) {
+    m_out << "dir : " << a_string << std::endl;
+    return true;
+  }
+  virtual bool file(const std::string& a_string) {
+    m_out << "file : " << a_string << std::endl;
+    return true;
+  }
+public:
+  dump_visitor(std::ostream& a_out)
+  :m_out(a_out){}
+  virtual ~dump_visitor() {};
+public:
+  dump_visitor(const dump_visitor& a_from)
+  : dir::visitor(a_from),m_out(a_from.m_out){}
+  dump_visitor& operator=(const dump_visitor&){
+    return *this;
+  }
+protected:
+  std::ostream& m_out;
+};
+
+class clone_visitor : public virtual dir::visitor {
+public:
+  virtual bool directory(const std::string& a_dir,bool& aProcess) {
+    aProcess = true;
+    unsigned int l = m_dir.size();
+    std::string to = m_To + a_dir.substr(l,a_dir.size()-l);
+    replace_all(to);
+    std::string p,n,s;
+    path_name_suffix(to,p,n,s);
+    if((n=="CVS")||(n==".svn")) {
+      //m_out << "Do not create CVS directory " << inlib::sout(to) << "." 
+      //      << std::endl;
+      aProcess = false;
+    } else {
+      if(!dir::create(to)) {
+        m_out << "Can't create dir " << inlib::sout(to) << "." << std::endl;
+        m_failure = true;
+        return false;
+      } else {
+        //m_out << "dir " << inlib::sout(to) << " created." << std::endl;
+      }
+    }
+    return true;
+  }
+  virtual bool file(const std::string& aFile) {
+    if(m_verbose) {
+      m_out << "Lib_clone : treat " << inlib::sout(aFile) << "" << std::endl;
+      //m_out << "Lib_clone :  m_dir " << inlib::sout(m_dir) << "" << std::endl;
+      //m_out << "Lib_clone :  m_To " << inlib::sout(m_To) << "" << std::endl;
+    }
+    unsigned int l = m_dir.size();
+    std::string newName = m_To + aFile.substr(l,aFile.size()-l);
+    replace_all(newName);
+    std::vector<std::string> text;
+    if(!file::read(aFile,text)) {
+      m_out << "Can't read " << inlib::sout(aFile) << std::endl;
+      m_failure = true;
+      return false;
+    }
+    FILE* _file = ::fopen(newName.c_str(),"wb");
+    if(!_file) {
+      m_out << "Can't create " << inlib::sout(newName) << std::endl;
+      m_failure = true;
+      return false;
+    }
+    unsigned int textn = text.size();
+    for(unsigned int index=0;index<textn;index++) {
+      std::string s = text[index];
+      replace_all(s);
+      replace(s,"LIB_CLONE_PWD",m_PWD);
+      fprintf(_file,"%s\n",s.c_str());
+    }
+    ::fclose(_file);
+    return true;
+  }
+public:
+  clone_visitor(std::ostream& a_out,
+        const std::string& a_PWD,
+        const std::string& a_dir,
+        const std::string& aFrom,
+        const std::string& aTo,
+        bool aVerbose = false)
+  :m_out(a_out)
+  ,m_PWD(a_PWD)
+  ,m_dir(a_dir)
+  ,m_From(aFrom)
+  ,m_To(aTo)
+  ,m_verbose(aVerbose)
+  ,m_failure(false){
+    m_FROM = m_From;
+    m_TO = m_To;
+    touppercase(m_FROM);
+    touppercase(m_TO);
+    m_pack = m_From;
+    m_to = m_To;
+    tolowercase(m_pack);
+    tolowercase(m_to);
+  }
+  virtual ~clone_visitor() {}
+protected:
+  clone_visitor(const clone_visitor& a_from)
+  : dir::visitor(a_from),m_out(a_from.m_out){}
+  clone_visitor& operator=(const clone_visitor&){return *this;}
+public:
+  bool is_success() const { return !m_failure;}
+protected:
+  void replace_all(std::string& a_string) {
+    replace(a_string,m_From,m_To);
+    replace(a_string,m_FROM,m_TO);
+    replace(a_string,m_pack,m_to);
+  }
+protected:
+  std::ostream& m_out;
+  std::string m_PWD;
+  std::string m_dir;
+  std::string m_From;
+  std::string m_To;
+  std::string m_FROM;
+  std::string m_TO;
+  std::string m_pack;
+  std::string m_to;
+  bool m_verbose;
+  bool m_failure;
+};
+
+inline bool clone(
+ const std::string& a_dir
+,const std::string& a_from
+,const std::string& a_to
+,std::ostream& a_out
+,bool a_verbose = false
+,bool a_debug = false
+){
+  if(a_to.find(' ')!=std::string::npos) {
+    a_out << "inlib::clone :"
+          << " can't have spaces in new name (" << inlib::sout(a_to) << ")." 
+          << std::endl;
+    return false;
+  }
+
+  std::string spwd;
+  if(!dir::pwd(spwd)) {
+    a_out << "inlib::clone :"
+          << " can't get current directory."
+          << std::endl;
+    return false;
+  }
+
+  dir::tree tree(a_out);
+  tree.set_path(a_dir);
+  if(!tree.build()) {
+    a_out << "inlib::clone :"
+          << " can't get files of " << inlib::sout(a_dir) 
+          << "." << std::endl;
+    return false;
+  }
+
+  if(a_debug) {
+    dump_visitor visitor(a_out);
+    tree.visit(visitor);
+  }
+
+  clone_visitor visitor(a_out,spwd,a_dir,a_from,a_to,a_verbose);
+  tree.visit(visitor);
+
+  return visitor.is_success();
+}
+
+}}
+
+#endif

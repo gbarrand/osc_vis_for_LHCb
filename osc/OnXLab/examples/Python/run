@@ -1,0 +1,21 @@
+#!/bin/sh -f
+
+if [ $# -eq 0 ] ; then
+  find . -maxdepth 1 -name '*.py' -exec ./run {} \;
+  exit
+fi
+
+exa=$1
+
+if test `uname` = "Darwin" ; then
+  py_exe=pythonw
+fi
+
+if test `uname` = "Linux" ; then
+  py_exe=python
+fi
+
+OSC_ARGS="-balance";export OSC_ARGS
+
+${py_exe} ${exa}
+

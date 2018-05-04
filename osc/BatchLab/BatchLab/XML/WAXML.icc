@@ -1,0 +1,614 @@
+
+#include <AIDA/IDataPointSet.h>
+#include <AIDA/IMeasurement.h>
+#include <AIDA/IDataPoint.h>
+#include <AIDA/IFunction.h>
+
+#include <inlib/waxml/histos>
+
+#include <BatchLab/Core/Histogram.h>
+#include <BatchLab/Core/BaseTuple.h> //FIXME
+
+bool BatchLab::WAXML::get_booking(std::ostream& a_out,const AIDA::ITuple& a_o,std::string& a_string) {
+  a_string += "{"; //we need the + because of the tuple in tuple.
+  int coln = a_o.columns();
+  for(int index=0;index<coln;index++) {
+    if(index) a_string += ",";
+    std::string type = a_o.columnType(index);
+    a_string += type + " ";
+    std::string name = a_o.columnName(index);
+    a_string += name + " = ";
+    if(type=="ITuple") {
+      const AIDA::ITuple* tupleTemplate = a_o.getTuple(index);
+      if(!tupleTemplate) {
+        a_out << "BatchLab::amanip::tuple_getBooking : "
+              << " tuple column without a template tuple."
+              << std::endl;
+        a_string = "";
+        return false;
+      }
+      if(!get_booking(a_out,*tupleTemplate,a_string)) return false;
+    } else {
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+      const BatchLab::BaseTuple* baseTuple =  
+        INLIB_CONST_CAST(a_o,BatchLab::BaseTuple);
+      if(!baseTuple) {
+        a_out << "BatchLab::amanip::tuple_getBooking : "
+              << " tuple not a BatchLab::BaseTuple."
+              << std::endl;
+        a_string = "";
+        return false;
+      }
+      std::string def = baseTuple->columnDefaultValue(index);
+      a_string += def;
+#else
+      std::string def = a_o.columnDefaultValue(index);
+      a_string += def;
+#endif
+    }  
+       
+  }  
+  a_string += "}";
+  return true;
+}
+
+
+void BatchLab::WAXML::writeTupleRows(std::ostream& a_writer,AIDA::ITuple& aObject,
+                           const std::string& aSpaces,std::ostream& a_out){
+  int coln = aObject.columns();
+  aObject.start();
+  while(aObject.next()) {
+    a_writer << aSpaces << "<row>" << std::endl;
+    for(int index=0;index<coln;index++) {
+      std::string type = aObject.columnType(index);
+      if(type=="ITuple") {
+        const AIDA::ITupleEntry* tupleEntry = aObject.getObject(index);
+        if(!tupleEntry) {        
+          a_out << "BatchLab::XML::writeTupleRows : "
+                << " no tuple entry."
+                << std::endl;
+        } else {
+          AIDA::ITuple* tuple = 
+            dynamic_cast<AIDA::ITuple*>((AIDA::ITupleEntry*)tupleEntry);
+          if(!tuple) {
+            a_out << "BatchLab::XML::writeTupleRows : "
+                  << " can't cast ITupleEntry to ITuple."
+                  << std::endl;
+          } else {
+            // NOTE : for osc < 17.0 we wrote entryTuple which is not in
+            //        the aida.dtd, then we write now entryITuple.
+
+            a_writer << aSpaces << "  <entryITuple>" << std::endl;
+            writeTupleRows(a_writer,*tuple,aSpaces+"    ",a_out);
+            a_writer << aSpaces << "  </entryITuple>" << std::endl;
+          }
+        }
+      } else {
+        std::string value;
+        if(!amanip::get_string(a_out,aObject,index,value)) {
+        }
+        //FIXME : and if the column type is string and that the
+        //        string value contains double quote ?
+        // > : &lt;
+        // < : &gt;
+        // & : &amp;
+        // " : &quote;
+        // ' : &apos;
+        a_writer << aSpaces << "  <entry" 
+                 << " value=" << inlib::sout(value)
+                 << "/>" << std::endl;
+      }
+    }
+    a_writer << aSpaces << "</row>" << std::endl;
+  }
+}
+
+bool BatchLab::WAXML::write_Histogram1D(
+ const Slash::Store::IObject& aIObject
+,BatchLab::XML::WriteContext& aContext
+){
+  const BatchLab::Histogram1D* bo = 
+    INLIB_CONST_CAST(aIObject,BatchLab::Histogram1D);
+  if(!bo) {
+    std::ostream& out = aContext.out();
+    out << "BatchLab::XML::write_Histogram1D : "
+        << "Can't cast Slash::Store::IObject to BatchLab::Histogram1D." 
+        << std::endl;
+    return false;
+  }  
+  bo->lock();
+  inlib::waxml::write(aContext.writer(),
+                      bo->hclHistogram(),
+                      aContext.path(),aContext.name(),
+                      aContext.shift());
+  bo->unlock();
+  return true;  
+}
+
+bool BatchLab::WAXML::write_Histogram2D(
+ const Slash::Store::IObject& aIObject
+,BatchLab::XML::WriteContext& aContext
+){
+  const BatchLab::Histogram2D* bo = 
+    INLIB_CONST_CAST(aIObject,BatchLab::Histogram2D);
+  if(!bo) {
+    std::ostream& out = aContext.out();
+    out << "BatchLab::XML::write_Histogram2D : "
+        << "Can't cast Slash::Store::IObject to BatchLab::Histogram2D." 
+        << std::endl;
+    return false;
+  }
+  bo->lock();
+  inlib::waxml::write(aContext.writer(),
+                      bo->hclHistogram(),
+                      aContext.path(),aContext.name(),
+                      aContext.shift());
+  bo->unlock();
+  return true;
+}
+
+bool BatchLab::WAXML::write_Histogram3D(
+ const Slash::Store::IObject& aIObject
+,BatchLab::XML::WriteContext& aContext
+){
+  const BatchLab::Histogram3D* bo = 
+    INLIB_CONST_CAST(aIObject,BatchLab::Histogram3D);
+  if(!bo) {
+    std::ostream& out = aContext.out();
+    out << "BatchLab::XML::write_Histogram3D : "
+        << "Can't cast Slash::Store::IObject to BatchLab::Histogram3D." 
+        << std::endl;
+    return false;
+  }
+  bo->lock();
+  inlib::waxml::write(aContext.writer(),
+                      bo->hclHistogram(),
+                      aContext.path(),aContext.name(),
+                      aContext.shift());
+  bo->unlock();
+  return true;
+}
+
+bool BatchLab::WAXML::write_Profile1D(
+ const Slash::Store::IObject& aIObject
+,BatchLab::XML::WriteContext& aContext
+){
+  const BatchLab::Profile1D* bo = 
+    INLIB_CONST_CAST(aIObject,BatchLab::Profile1D);
+  if(!bo) {
+    std::ostream& out = aContext.out();
+    out << "BatchLab::XML::write_Profile1D : "
+        << "Can't cast Slash::Store::IObject to BatchLab::Profile1D." 
+        << std::endl;
+    return false;
+  }
+  bo->lock();
+  inlib::waxml::write(aContext.writer(),
+                      bo->hclHistogram(),
+                      aContext.path(),aContext.name(),
+                      aContext.shift());
+  bo->unlock();
+  return true;
+}
+
+bool BatchLab::WAXML::write_Profile2D(
+ const Slash::Store::IObject& aIObject
+,BatchLab::XML::WriteContext& aContext
+){
+  const BatchLab::Profile2D* bo = 
+    INLIB_CONST_CAST(aIObject,BatchLab::Profile2D);
+  if(!bo) {
+    std::ostream& out = aContext.out();
+    out << "BatchLab::XML::write_Profile2D : "
+        << "Can't cast Slash::Store::IObject to BatchLab::Profile2D." 
+        << std::endl;
+    return false;
+  }
+  bo->lock();
+  inlib::waxml::write(aContext.writer(),
+                      bo->hclHistogram(),
+                      aContext.path(),aContext.name(),
+                      aContext.shift());
+  bo->unlock();
+  return true;
+}
+
+bool BatchLab::WAXML::write_Tuple(
+ const Slash::Store::IObject& aIObject
+,BatchLab::XML::WriteContext& aContext
+){
+  const AIDA::ITuple* aObject = 
+    INLIB_CONST_CAST(aIObject,AIDA::ITuple);
+  if(!aObject) return false;
+
+  std::ostream& writer = aContext.writer();
+  std::string aPath = aContext.path();
+  std::string aName = aContext.name();
+  //int aShift = aContext.shift();
+  std::ostream& out = aContext.out();
+
+  int aShift = 0;
+  std::string spaces;
+  for(int i=0;i<aShift;i++) spaces += " ";
+
+  // <tuple> :
+  writer << spaces << "  <tuple"
+       << " path=" << inlib::sout(aPath)
+       << " name=" << inlib::sout(aName)
+       << " title=" << inlib::sout(aObject->title())
+       << ">" << std::endl;
+
+  // <columns> :
+  writer << spaces << "    <columns>" << std::endl;
+  int coln = aObject->columns();
+  for(int index=0;index<coln;index++) {
+    std::string type = aObject->columnType(index);
+    if(type=="ITuple") {
+      std::string booking;
+      AIDA::ITuple* tupleTemplate = 
+        const_cast<AIDA::ITuple*>(aObject->getTuple(index));
+      if(!tupleTemplate) {
+        out << "BatchLab::XML::writeTuple : "
+            << " tuple column without a template tuple."
+            << std::endl;
+      } else {
+        get_booking(out,*tupleTemplate,booking);
+      }
+      writer << spaces << "      <column"
+           << " name=" << inlib::sout(aObject->columnName(index)) 
+           << " type=" << inlib::sout(aObject->columnType(index))
+           << " booking=" << inlib::sout(booking)
+           << "/>" << std::endl;
+    } else {
+      bool isDefaultDefault = true;
+#if (AIDA_VERSION_MAJOR<=3) && (AIDA_VERSION_MINOR<=2) 
+      std::string sdefault;
+      const BatchLab::BaseTuple* baseTuple = 
+        INLIB_CONST_CAST(*aObject,BatchLab::BaseTuple);
+      if(!baseTuple) {
+          out << "BatchLab::XML::writeTuple : "
+              << " tuple not a BatchLab::BaseTuple !"
+              << std::endl;
+      } else { 
+        sdefault = baseTuple->columnDefaultValue(index);
+        isDefaultDefault = baseTuple->isDefaultDefault(index);
+      }
+#else
+      std::string sdefault = aObject->columnDefaultValue(index);
+      const BatchLab::BaseTuple* baseTuple = 
+        INLIB_CONST_CAST(*aObject,BatchLab::BaseTuple);
+      if(!baseTuple) {
+          out << "BatchLab::XML::writeTuple : "
+              << " tuple not a BatchLab::BaseTuple !"
+              << std::endl;
+      } else { 
+        isDefaultDefault = baseTuple->isDefaultDefault(index);
+      }
+#endif
+      if((isDefaultDefault)||(sdefault.empty())) {
+        writer << spaces << "      <column"
+             << " name=" << inlib::sout(aObject->columnName(index)) 
+             << " type=" << inlib::sout(aObject->columnType(index))
+             << "/>" << std::endl;
+      } else {
+        writer << spaces << "      <column"
+             << " name=" << inlib::sout(aObject->columnName(index)) 
+             << " type=" << inlib::sout(aObject->columnType(index))
+             << " default=" << inlib::sout(sdefault)
+             << "/>" << std::endl;
+      }
+    }
+  }
+  writer << spaces << "    </columns>" << std::endl;
+  
+  // rows :
+  writer << spaces << "    <rows>" << std::endl;
+  writeTupleRows(writer,const_cast<AIDA::ITuple&>(*aObject),
+                 spaces+"      ",out);
+  writer << spaces << "    </rows>" << std::endl;
+  
+  writer << spaces << "  </tuple>" << std::endl;
+
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+bool BatchLab::WAXML::write_Cloud1D(
+ const Slash::Store::IObject& aIObject
+,BatchLab::XML::WriteContext& aContext
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  const AIDA::ICloud1D* aObject = 
+    INLIB_CONST_CAST(aIObject,AIDA::ICloud1D);
+  if(!aObject) return false;
+
+  std::ostream& writer = aContext.writer();
+  std::string aPath = aContext.path();
+  std::string aName = aContext.name();
+  //int aShift = aContext.shift();
+
+  // <cloud1d> :
+  writer << "  <cloud1d"
+       << " path=" << inlib::sout(aPath)
+       << " name=" << inlib::sout(aName)
+       << " title=" << inlib::sout(aObject->title())
+       << " maxEntries=" << inlib::sout<int>(aObject->maxEntries())
+       << ">" << std::endl;
+
+  if(aObject->isConverted()) {
+
+    const AIDA::IHistogram1D& object = aObject->histogram();
+    //FIXME : aName ?
+    const Slash::Store::IObject* obj = 
+      INLIB_CONST_CAST(object,Slash::Store::IObject);
+    if(!obj) return false;
+    write_Histogram1D(*obj,aContext);
+
+  } else {
+    // entries :
+    writer << "    <entries1d>" << std::endl;
+    int number = aObject->entries();
+    for(int index=0;index<number;index++) {
+      double weight = aObject->weight(index);
+      if(weight==1.) {
+        writer << "        <entry1d" 
+             << " valueX=" << inlib::soutd(aObject->value(index))
+             << "/>" << std::endl;
+      } else {
+        writer << "        <entry1d" 
+             << " valueX=" << inlib::soutd(aObject->value(index))
+             << " weight=" << inlib::soutd(weight)
+             << "/>" << std::endl;
+      }
+    }
+    writer << "    </entries1d>" << std::endl;
+  }
+
+  writer << "  </cloud1d>" << std::endl;
+
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+bool BatchLab::WAXML::write_Cloud2D(
+ const Slash::Store::IObject& aIObject
+,BatchLab::XML::WriteContext& aContext
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  const AIDA::ICloud2D* aObject = 
+    INLIB_CONST_CAST(aIObject,AIDA::ICloud2D);
+  if(!aObject) return false;
+
+  std::ostream& writer = aContext.writer();
+  std::string aPath = aContext.path();
+  std::string aName = aContext.name();
+  //int aShift = aContext.shift();
+
+  // <cloud2d> :
+  writer << "  <cloud2d"
+       << " path=" << inlib::sout(aPath)
+       << " name=" << inlib::sout(aName)
+       << " title=" << inlib::sout(aObject->title())
+       << " maxEntries=" << inlib::sout<int>(aObject->maxEntries())
+       << ">" << std::endl;
+
+  if(aObject->isConverted()) {
+
+    const AIDA::IHistogram2D& object = aObject->histogram();
+    //FIXME : aName ?
+    const Slash::Store::IObject* obj = 
+      INLIB_CONST_CAST(object,Slash::Store::IObject);
+    if(!obj) return false;
+    write_Histogram2D(*obj,aContext);
+
+  } else {
+    // entries :
+    writer << "    <entries2d>" << std::endl;
+    int number = aObject->entries();
+    for(int index=0;index<number;index++) {
+      double weight = aObject->weight(index);
+      if(weight==1.) {
+        writer << "        <entry2d" 
+             << " valueX=" << inlib::soutd(aObject->valueX(index))
+             << " valueY=" << inlib::soutd(aObject->valueY(index))
+             << "/>" << std::endl;
+      } else {
+        writer << "        <entry2d" 
+             << " valueX=" << inlib::soutd(aObject->valueX(index))
+             << " valueY=" << inlib::soutd(aObject->valueY(index))
+             << " weight=" << inlib::soutd(weight)
+             << "/>" << std::endl;
+      }
+    }
+    writer << "    </entries2d>" << std::endl;
+  }
+  
+  writer << "  </cloud2d>" << std::endl;
+
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+bool BatchLab::WAXML::write_Cloud3D(
+ const Slash::Store::IObject& aIObject
+,BatchLab::XML::WriteContext& aContext
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  const AIDA::ICloud3D* aObject = 
+    INLIB_CONST_CAST(aIObject,AIDA::ICloud3D);
+  if(!aObject) return false;
+
+  std::ostream& writer = aContext.writer();
+  std::string aPath = aContext.path();
+  std::string aName = aContext.name();
+  //int aShift = aContext.shift();
+
+  // <cloud3d> :
+  writer << "  <cloud3d"
+       << " path=" << inlib::sout(aPath)
+       << " name=" << inlib::sout(aName)
+       << " title=" << inlib::sout(aObject->title())
+       << " maxEntries=" << inlib::sout<int>(aObject->maxEntries())
+       << ">" << std::endl;
+
+  if(aObject->isConverted()) {    
+
+    const AIDA::IHistogram3D& object = aObject->histogram();
+    //FIXME : aName ?
+    //FIXME : test INLIB_CAST
+    const Slash::Store::IObject* obj = 
+      INLIB_CONST_CAST(object,Slash::Store::IObject);
+    if(!obj) return false;
+    write_Histogram3D(*obj,aContext);
+
+  } else {
+    // entries :
+    writer << "    <entries3d>" << std::endl;
+    int number = aObject->entries();
+    for(int index=0;index<number;index++) {
+      double weight = aObject->weight(index);
+      if(weight==1.) {
+        writer << "        <entry3d" 
+             << " valueX=" << inlib::soutd(aObject->valueX(index))
+             << " valueY=" << inlib::soutd(aObject->valueY(index))
+             << " valueZ=" << inlib::soutd(aObject->valueZ(index))
+             << "/>" << std::endl;
+      } else {
+        writer << "        <entry3d" 
+             << " valueX=" << inlib::soutd(aObject->valueX(index))
+             << " valueY=" << inlib::soutd(aObject->valueY(index))
+             << " valueZ=" << inlib::soutd(aObject->valueZ(index))
+             << " weight=" << inlib::soutd(weight)
+             << "/>" << std::endl;
+      }
+    }
+    writer << "    </entries3d>" << std::endl;
+  }
+
+  writer << "  </cloud3d>" << std::endl;
+
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+bool BatchLab::WAXML::write_DataPointSet(
+ const Slash::Store::IObject& aIObject
+,BatchLab::XML::WriteContext& aContext
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  const AIDA::IDataPointSet* aObject = 
+    INLIB_CONST_CAST(aIObject,AIDA::IDataPointSet);
+  if(!aObject) return false;
+
+  std::ostream& writer = aContext.writer();
+  std::string aPath = aContext.path();
+  std::string aName = aContext.name();
+  //int aShift = aContext.shift();
+
+  // <dataPointSet> :
+  writer << "  <dataPointSet"
+       << " path=" << inlib::sout(aPath)
+       << " name=" << inlib::sout(aName)
+       << " title=" << inlib::sout(aObject->title())
+       << " dimension=" << inlib::sout<int>(aObject->dimension())
+       << ">" << std::endl;
+
+  // dataPoints :
+  for(int index=0;index<aObject->size();index++) {
+    const AIDA::IDataPoint* point = aObject->point(index);
+    if(point) {
+      writer << "    <dataPoint>" << std::endl;
+      for(int icoord=0;icoord<aObject->dimension();icoord++) {
+        const AIDA::IMeasurement* measurement = point->coordinate(icoord);
+        if(measurement) {
+          writer << "      <measurement" 
+               << " value=" << inlib::soutd(measurement->value())
+               << " errorMinus=" << inlib::soutd(measurement->errorMinus())
+               << " errorPlus=" << inlib::soutd(measurement->errorPlus())
+               << "/>" << std::endl;
+        }
+      }
+      writer << "    </dataPoint>" << std::endl;
+    }
+  }
+  
+  writer << "  </dataPointSet>" << std::endl;
+
+  return true;
+}
+//////////////////////////////////////////////////////////////////////////////
+bool BatchLab::WAXML::write_Function(
+ const Slash::Store::IObject& aIObject
+,BatchLab::XML::WriteContext& aContext
+)
+//////////////////////////////////////////////////////////////////////////////
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+{
+  const AIDA::IFunction* aObject = 
+    INLIB_CONST_CAST(aIObject,AIDA::IFunction);
+  if(!aObject) return false;
+
+  std::ostream& writer = aContext.writer();
+  std::string aPath = aContext.path();
+  std::string aName = aContext.name();
+  //int aShift = aContext.shift();
+
+  // <function> :
+  writer << "  <function"
+       << " path=" << inlib::sout(aPath)
+       << " name=" << inlib::sout(aName)
+       << " title=" << inlib::sout(aObject->title())
+       << ">" << std::endl;
+
+  writer << "    <codelet>" << std::endl;
+  writer << "      " << aObject->codeletString() << std::endl;
+  writer << "    </codelet>" << std::endl;
+
+  writer << "    <arguments>" << std::endl;
+  std::vector<std::string> variables = aObject->variableNames();
+ {for(unsigned int index=0;index<variables.size();index++) {
+    writer << "      <argument" 
+         << " name=" << inlib::sout(variables[index]) 
+         << "/>" << std::endl;
+  }}
+  writer << "    </arguments>" << std::endl;
+
+  std::vector<std::string> names = aObject->parameterNames();
+  std::vector<double> values = aObject->parameters();
+  if(names.size()!=values.size()) return true; //FIXME
+
+  writer << "    <parameters>" << std::endl;
+ {for(unsigned int index=0;index<names.size();index++) {
+    writer << "      <parameter" 
+         << " name=" << inlib::sout(names[index]) 
+         << " value=" << inlib::soutd(values[index])
+         << "/>" << std::endl;
+  }}
+  writer << "    </parameters>" << std::endl;
+  
+  writer << "  </function>" << std::endl;
+
+  return true;
+}
+
+void BatchLab::WAXML::addDefaultWriters(){
+  addWriter("BatchLab::Histogram1D",write_Histogram1D);
+  addWriter("BatchLab::Histogram2D",write_Histogram2D);
+  addWriter("BatchLab::Histogram3D",write_Histogram3D);
+  addWriter("BatchLab::Profile1D",write_Profile1D);
+  addWriter("BatchLab::Profile2D",write_Profile2D);
+  addWriter("BatchLab::MemoryTuple",write_Tuple);
+  addWriter("BatchLab::Cloud1D",write_Cloud1D);
+  addWriter("BatchLab::Cloud2D",write_Cloud2D);
+  addWriter("BatchLab::Cloud3D",write_Cloud3D);
+  addWriter("BatchLab::DataPointSet",write_DataPointSet);
+
+  addWriter("BatchLab::Function::Gaussian",write_Function);
+  addWriter("BatchLab::Function::Scripted",write_Function);
+  addWriter("BatchLab::Function::Compiled",write_Function);
+}
+

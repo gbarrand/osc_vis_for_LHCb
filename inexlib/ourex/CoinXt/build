@@ -1,0 +1,88 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+. ../mgr/build_header
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+cppflags="${cppflags} -I../CoinGL/include"
+
+# libs for the apps :
+libs="${libs} ${build_path}/${libname}.a"
+libs="${libs} ../CoinGL/${build_dir}/libourex_CoinGL.a"
+
+use_GL=yes
+use_Xm=yes
+use_GLX=yes
+use_X11=yes
+
+. ${exlib_mgr}/use_GL
+. ${exlib_mgr}/use_Xm
+. ${exlib_mgr}/use_X11
+
+use_thread=yes
+use_dl=yes
+. ${exlib_mgr}/use_thread
+. ${exlib_mgr}/use_dl
+
+
+if [ ${build_compile} = "yes" ] ; then
+
+find ./src/Inventor/Xt -name '*.cpp' >> cpp_tmp
+
+# empty .o :
+grep -v SoXtIcons cpp_tmp  > tmp_0;/bin/mv tmp_0 cpp_tmp
+
+cppflags="${cppflags} -I./include"
+cppflags="${cppflags} -I./src"
+cppflags="${cppflags} -I./data"
+
+cppflags="${cppflags} -DHAVE_CONFIG_H"
+cppflags="${cppflags} -DSOXT_INTERNAL"
+cppflags="${cppflags} -DSOXT_DEBUG=0"
+
+if [ ${build_visual} = "yes" ] ; then
+  cppflags="${cppflags} -DCOIN_DLL"
+else
+  cppflags="${cppflags} -w"
+  cppflags="${cppflags} -D_REENTRANT"
+  cppflags="${cppflags} -DPIC"
+  cppflags="${cppflags} -fPIC -fno-exceptions -fno-common"
+  cppflags="${cppflags} -Wno-unused -Wno-multichar"
+  cppflags="${cppflags} -Woverloaded-virtual"
+fi
+
+#if [ `uname` = "Darwin" ] ; then
+#  # if building bundle -multiply_defined suppress
+#fi
+
+. ${inlib_mgr}/build_compile
+
+fi # end build_compile
+
+if [ ${build_archive} = "yes" ] ; then . ${inlib_mgr}/build_archive; fi
+
+if [ ${build_app} = "yes" ] ; then
+
+#  if [ ${build_visual} = "yes" ] ; then
+#    ccflags="${ccflags} /I./include"
+#  else
+#    ccflags="${ccflags} -I./include"
+#  fi
+
+  cppflags="${cppflags} -I./include"
+
+  objs=
+  app_exe=test_cube
+  app_src=./tests/CoinXt_test_cube.cpp
+  . ${inlib_mgr}/build_app
+
+fi
+
+. ${inlib_mgr}/build_clean

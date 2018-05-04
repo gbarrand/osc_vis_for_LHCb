@@ -1,0 +1,42 @@
+<OnX>
+  <widget class="Window">
+    <geometry>200x60</geometry>
+    <title>menu</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="MenuBar" name="menu_bar"> 
+      <!-- the upper name is used in menu.callback() -->
+
+      <widget class="CascadeButton">
+        <label>File</label>
+        <widget class="Menu">
+
+          <widget class="MenuItem">
+            <label>Create menu</label>
+            <!-- NOTE : the below callback works for both cases
+                        of starting with :
+                          OS> <start Python>
+                          >>> import menu          
+                        or with :
+                          OS> python -i menu.py   -->
+            <activate exec="Python">
+              import sys\n\
+              if sys.modules.has_key('menu'):\n\
+                sys.modules['menu'].callback()\n\
+              else:\n\
+                callback()
+            </activate>
+          </widget>
+
+          <widget class="MenuItem">
+            <label>Exit</label>
+            <activate exec="DLD">OnX ui_exit</activate>
+          </widget>
+
+        </widget>
+      </widget>
+    </widget>
+
+  </widget>
+</OnX>

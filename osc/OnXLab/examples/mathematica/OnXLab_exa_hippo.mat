@@ -1,0 +1,14 @@
+(*
+ * Usage :
+ *   OS> ../../<platform>/OnXLab_hippo.exe
+ *   OS> math
+ *   In[]:= <<OnXLab_hippo.mat
+ *)
+
+
+<<aida.mat
+
+(* aidaplot["OnXLab_hippo.tnt"] *)
+
+tupleplot["OnXLab_hippo.tnt",1,2]
+

@@ -1,0 +1,37 @@
+<OnX>
+
+  <widget class="InputDialog" name="OnX_Input_gl2ps">
+    <label>gl2ps options</label>
+
+    <input name="FILE" label="File" type="text" default="" />
+
+<!-- defaults should be 
+      GL2PS_OCCLUSION_CULL | 
+      GL2PS_BEST_ROOT | 
+      GL2PS_SILENT | 
+      GL2PS_DRAW_BACKGROUND
+-->
+
+    <input name="OCCLUSION_CULL" label="Occlusion cull" type="option" items="true\nfalse"/>
+    <input name="BEST_ROOT" label="Best root" type="option" items="true\nfalse"/>
+    <input name="SILENT" label="Silent" type="option" items="true\nfalse"/>
+    <input name="DRAW_BACKGROUND" label="Draw background" type="option" items="true\nfalse"/>
+
+    <input name="SIMPLE_LINE_OFFSET" label="Simple line offset" type="option" items="false\ntrue"/>
+    <input name="NO_TEXT" label="No text" type="option" items="false\ntrue"/>
+    <input name="LANDSCAPE" label="Landscape" type="option" items="false\ntrue"/>
+    <input name="NO_PS3_SHADING" label="No PS3 shading" type="option" items="false\ntrue"/>
+    <input name="NO_PIXMAP" label="No pixmap" type="option" items="false\ntrue"/>
+    <input name="USE_CURRENT_VIEWPORT" label="Use current viewport" type="option" items="false\ntrue"/>
+    <input name="COMPRESS" label="Compress" type="option" items="false\ntrue"/>
+    <input name="NO_BLENDING" label="No blending" type="option" items="false\ntrue"/>
+    <input name="TIGHT_BOUNDING_BOX" label="Tight bounding box" type="option" items="false\ntrue"/>
+
+    <!-- Ouch ! -->
+    <ok exec="DLD">OnX set_variable OnX_Input_gl2ps_options NONE @cat@ ; @cat@ DRAW_BACKGROUND @cat@ = @cat@ @[OnX_Input_gl2ps_input_DRAW_BACKGROUND.value]@ @cat@ ; @cat@ SIMPLE_LINE_OFFSET @cat@ = @cat@ @[OnX_Input_gl2ps_input_SIMPLE_LINE_OFFSET.value]@ @cat@ ; @cat@ SILENT @cat@ = @cat@ @[OnX_Input_gl2ps_input_SILENT.value]@ @cat@ ; @cat@ BEST_ROOT @cat@ = @cat@ @[OnX_Input_gl2ps_input_BEST_ROOT.value]@ @cat@ ; @cat@ OCCLUSION_CULL @cat@ = @cat@ @[OnX_Input_gl2ps_input_OCCLUSION_CULL.value]@ @cat@ ; @cat@ NO_TEXT @cat@ = @cat@ @[OnX_Input_gl2ps_input_NO_TEXT.value]@ @cat@ ; @cat@ LANDSCAPE @cat@ = @cat@ @[OnX_Input_gl2ps_input_LANDSCAPE.value]@ @cat@ ; @cat@ NO_PS3_SHADING @cat@ = @cat@ @[OnX_Input_gl2ps_input_NO_PS3_SHADING.value]@ @cat@ ; @cat@ NO_PIXMAP @cat@ = @cat@ @[OnX_Input_gl2ps_input_NO_PIXMAP.value]@ @cat@ ; @cat@ USE_CURRENT_VIEWPORT @cat@ = @cat@ @[OnX_Input_gl2ps_input_USE_CURRENT_VIEWPORT.value]@ @cat@ ; @cat@ COMPRESS @cat@ = @cat@ @[OnX_Input_gl2ps_input_COMPRESS.value]@ @cat@ ; @cat@ NO_BLENDING @cat@ = @cat@ @[OnX_Input_gl2ps_input_NO_BLENDING.value]@ @cat@ ; @cat@ TIGHT_BOUNDING_BOX @cat@ = @cat@ @[OnX_Input_gl2ps_input_TIGHT_BOUNDING_BOX.value]@</ok>
+
+    <ok exec="DLD">OnX widget_write @current@ @[OnX_Input_gl2ps_input_FILE.value]@ gl2ps @{OnX_Input_gl2ps_options}@</ok>
+
+  </widget>
+
+</OnX>

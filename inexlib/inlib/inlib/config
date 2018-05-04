@@ -1,0 +1,255 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file inlib.license for terms.
+
+#ifndef inlib_config
+#define inlib_config
+
+// Used in the xxx-config programs.
+
+#include "sep"
+#include "srep"
+#include "system"
+#include "file"
+
+namespace inlib {
+namespace config {
+
+
+inline bool version(const std::string& a_string,std::vector<unsigned int>& a_version) {
+  // a_string is of the form [v,V][<number><char>]<number>
+  // Examples : 0 1.2 v0 v1r2 V1r2p3 v0.1.3
+  unsigned int number = a_string.size();
+  if(!number) {
+    a_version.clear();
+    return false;
+  }
+  char* pos = (char*)a_string.c_str();
+  if( ((*pos)=='v') || ((*pos)=='V') ) {
+    if(number==1) {
+      a_version.clear();
+      return false; //a_string is only 'v' or 'V' !
+    }
+    pos++;
+  }
+  while(*pos!='\0') {
+    char* s;
+    long v = ::strtol(pos,&s,10);
+    if(s==pos) {
+      a_version.clear();
+      return false;
+    }
+    if(v<0) {
+      a_version.clear();
+      return false;
+    }
+    a_version.push_back((unsigned int)v);
+    pos = s; //Could be at end.
+    if(*pos=='\0') break;
+    // Next char is then not a digit. Skip it.
+    pos++;
+  }
+  return true;
+}
+
+inline std::string remove_version(const std::string& a_string) {
+  // replace "@@top@@/pack/vers" -> "@@top@@/pack".
+  std::string sold = a_string;
+  replace(sold,"\"",sep()+"@quote@"); //To treat AIDA/v3r2p1"/src
+  std::vector<std::string> words = inlib::words(sold,sep());
+  unsigned int wordn = words.size();
+  std::string snew;
+  for(unsigned int index=0;index<wordn;index++) {
+    std::vector<unsigned int> vers;
+    std::string word = words[index];
+    if(!version(word,vers)) {
+      if(snew.size()) snew += sep();
+      snew += words[index];
+    }
+  }
+  replace(snew,sep()+"@quote@","\"");
+  return snew;
+}
+
+inline std::string remove_versions(const std::string& aString) {
+  std::vector<std::string> words = inlib::words(aString," ");
+  unsigned int wordn = words.size();
+  std::string snew;
+  for(unsigned int index=0;index<wordn;index++) {
+    const std::string& word = words[index];
+    if(word.find("@@top@@")!=std::string::npos) {
+      std::string s = remove_version(word);
+      if(snew.size()) snew += " ";
+      snew += s;
+    } else {
+      if(snew.size()) snew += " ";
+      snew += word;
+    }
+  }
+  return snew;
+}
+
+inline bool osc_home_dir(std::string& a_dir) {
+  if(!getenv("OSC_HOME_DIR",a_dir)) {
+    ::fprintf(stderr," Environment variable OSC_HOME_DIR not defined.\n");
+    ::fprintf(stderr," You have to setup the kit by sourcing \n");
+    ::fprintf(stderr," the setup script found in the distribution.\n");
+    a_dir.clear();
+    return false;
+  }
+  return true;
+}
+
+inline bool find_resource(
+ const std::string& aFile
+,const std::string& aWhat
+,std::string& a_value
+) {
+  std::vector<std::string> txt;
+  if(!inlib::file::read(aFile,txt)) {
+    ::fprintf(stderr,"Can't read the file :\n");
+    ::fprintf(stderr,"%s\n",aFile.c_str());
+    ::fprintf(stderr,
+              "containing the platform dependant incs and libs infos.\n");
+    a_value.clear();
+    return false;
+  }
+  if(!txt.size()) {
+    ::fprintf(stderr,"The file :\n");
+    ::fprintf(stderr,"%s\n",aFile.c_str());
+    ::fprintf(stderr,"is empty. We expect to find in it\n");
+    ::fprintf(stderr,"the platform dependant incs and libs infos.\n");
+    a_value.clear();
+    return false;
+  }
+ {unsigned int number = txt.size();
+  for(unsigned int index=0;index<number;index++){
+    const std::string& line = txt[index];
+    std::string::size_type pos = line.find('=');
+    if(pos==std::string::npos) {
+      ::fprintf(stderr,"Syntax error in file :\n");
+      ::fprintf(stderr,"%s\n",aFile.c_str());
+      ::fprintf(stderr,"for line :\n");
+      ::fprintf(stderr,"%s\n",line.c_str());
+      ::fprintf(stderr,"We expect line with : <key>=<value>\n");
+      a_value.clear();
+      return false;
+    }
+    if(aWhat==line.substr(0,pos)) {
+      a_value = line.substr(pos+1,line.size()-(pos+1));
+      return true;
+    }
+  }}
+  ::fprintf(stderr,"The file :\n");
+  ::fprintf(stderr,"%s\n",aFile.c_str());
+  ::fprintf(stderr,"does not contain the %s infos.\n",aWhat.c_str());
+  a_value.clear();
+  return false;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+inline bool find_cxx(const std::string&,const std::string& aFile,std::string& a_value) {
+  std::string home_dir;
+  if(!osc_home_dir(home_dir)) {a_value.clear();return false;}
+  std::string file = home_dir+sep()+"bin"+sep()+aFile;
+  return find_resource(file,"obuild_cxx_command",a_value);
+}
+
+inline bool find_incs(const std::string&,const std::string& aFile,std::string& a_value) {
+  std::string home_dir;
+  if(!osc_home_dir(home_dir)) {a_value.clear();return false;}
+  std::string file = home_dir+sep()+"bin"+sep()+aFile;
+  if(!find_resource(file,"obuild_cxx_includes",a_value)) return false;
+  a_value = remove_versions(a_value);
+  replace(a_value,"@@top@@",home_dir+sep()+"Resources");
+  return true;
+}
+
+inline bool find_flags(const std::string&,const std::string& aFile,std::string& a_value) {
+  std::string home_dir;
+  if(!osc_home_dir(home_dir)) {a_value.clear();return false;}
+  std::string file = home_dir+sep()+"bin"+sep()+aFile;
+
+  std::string opts;
+  if(!find_resource(file,"obuild_cxx_options",opts)) {
+    a_value.clear();
+    return false;
+  }
+
+  std::string macs;
+  if(!find_resource(file,"obuild_cxx_macros",macs)) {
+    a_value.clear();
+    return false;
+  }
+
+  std::string incs;
+  if(!find_resource(file,"obuild_cxx_includes",incs)) {
+    a_value.clear();
+    return false;
+  }
+
+  incs = remove_versions(incs);
+  replace(incs,"@@top@@",home_dir+sep()+"Resources");
+
+  //if(home_dir.find(" ")==std::string::npos) {
+  //  replace(incs,"\"","");
+  //}
+
+  a_value= opts+" "+macs+" "+incs;
+  return true;
+}
+
+inline bool find_libs(const std::string&,const std::string& aFile,std::string& a_value) {
+  std::string home_dir;
+  if(!osc_home_dir(home_dir)) {a_value.clear();return false;}
+  std::string file = home_dir+sep()+"bin"+sep()+aFile;
+
+  std::string spaths;
+#ifdef WIN32
+  spaths = "/LIBPATH:\""+home_dir+"\\lib\"";
+#else
+  spaths = "-L\""+home_dir+"/lib\"";
+#endif
+
+  std::string slibs;
+  if(!find_resource(file,"obuild_linked_libraries",slibs)) {
+    a_value.clear();
+    return false;
+  }
+
+  //if(home_dir.find(" ")==std::string::npos) {
+  //  replace(spaths,"\"","");
+  //}
+
+  a_value = spaths+" "+slibs;
+
+  return true;
+}
+
+inline bool find_incdir(const std::string&,const std::string& aFile,std::string& a_value) {
+  std::string home_dir;
+  if(!osc_home_dir(home_dir)) {a_value.clear();return false;}
+  std::string file = home_dir+sep()+"bin"+sep()+aFile;
+
+  std::string package;
+  if(!find_resource(file,"obuild_package",package)) {
+    a_value.clear();
+    return false;
+  }
+
+  std::string version;
+  if(!find_resource(file,"obuild_version",version)) {
+    a_value.clear();
+    return false;
+  }
+
+  a_value = home_dir+sep()+"Resources"+sep()+package+sep()+"include";
+
+  return true;
+}
+
+}}
+
+#endif

@@ -1,0 +1,55 @@
+<obuild>
+
+  <package name="CoinPython" version="v1r1p0">
+
+    <repository>:pserver:@@user@@@cvsserver.lal.in2p3.fr:/projects/cvs</repository>
+
+    <!-- not this : -->
+    <reference package="CoinGL" path="../../CoinGL" file="obuild/export.obuild"/>  
+    <reference package="foreign" path="../../foreign" file="Python.obuild"/>  
+
+    <!-- this : -->
+    <dll name="CoinPython">
+      <group>Python</group>
+      <check_foreign>Python</check_foreign>
+
+
+      <file>../source/SWIG.cxx</file>
+
+      <cxx_options platform="Windows_NT">/wd4244 /wd4700 /wd4049</cxx_options>
+
+      <cxx_include>${obuild_CoinPython_path}</cxx_include>
+      <!-- not this : -->
+
+      <cxx_include copy="c_include" from="Python"/>
+
+      <cxx_include copy="cxx_include" from="CoinGL"/>
+      <cxx_macro copy="cxx_macro" from="CoinGL"/>
+      <cxx_options copy="c_options" from="OpenGL"/>
+      <cxx_macro copy="c_macro" from="OpenGL"/>
+  
+      <lib copy="lib" from="Python"/>
+  
+      <lib copy="lib" from="CoinGL"/>
+  
+      <python_module name="_CoinPython"/>
+    </dll>
+
+ 
+    <application name="CoinPython_exa_0">
+      <group>Python</group>
+      <check_foreign>Python</check_foreign>
+      <run>python "@@dir_package@@/examples/CoinPython_exa_0.py"</run>
+    </application>
+
+    <release>
+      <copy_dir>
+        <from>scripts</from>
+        <to>Resources/CoinPython/.</to>
+      </copy_dir>
+    </release>
+
+  </package>
+
+</obuild>
+

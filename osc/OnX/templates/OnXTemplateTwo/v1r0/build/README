@@ -1,0 +1,27 @@
+
+ On UNIX build with :
+     UNIX> <setup osc_vis kit>
+ test that osc-config is here with :
+     UNIX> osc-config
+ then build with :
+     UNIX> chmod a+x build
+     UNIX> ./build
+ set the PYTHONPATH with :
+      csh> source setup.csh
+    (  sh> source setup.sh )
+ and run with :
+     UNIX> osc-gui-viewer ../scripts/OnX/main.onx
+
+ On Windows build with :
+      DOS> <setup osc_vis kit>
+ test that osc-config is here with :
+      DOS> osc-config
+ test that VisualC++ is here with :
+      DOS> cl.exe
+ then build with :
+      DOS> call build.bat
+ set the PYTHONPATH with :
+      DOS> call setup.bat
+ and run with :
+      DOS> osc-gui-viewer ..\scripts\OnX\main.onx
+

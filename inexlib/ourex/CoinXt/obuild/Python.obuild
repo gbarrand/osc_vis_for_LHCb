@@ -1,0 +1,38 @@
+<obuild>
+
+    <reference package="foreign" path="../../foreign" file="Python.obuild"/>  
+    <use name="CoinPython">
+      <cxx_include/>
+      <path>../../CoinPython</path>
+    </use>
+
+    <dll name="CoinXt_SWIG_py">
+      <group>Xt_Python</group>
+      <check_foreign>Motif</check_foreign>
+      <check_foreign>Python</check_foreign>
+
+      <file>../py/SWIG.cpp</file>
+
+      <cxx_include copy="cxx_include" from="library CoinXt"/>
+      <cxx_macro copy="cxx_macro" from="library CoinXt"/>
+
+      <!-- To suppress the OpenGL warnings : 
+          see notes in foreign/GLX.obuild -->
+      <cxx_linker_options platform="Darwin">-bind_at_load -multiply_defined suppress</cxx_linker_options>
+
+      <cxx_include copy="cxx_include" from="CoinPython"/>
+      <cxx_include copy="c_include" from="Python"/>
+
+      <lib>CoinXt</lib>
+      <lib copy="lib" from="CoinGL"/>
+      <lib copy="lib" from="GLX"/>
+      <lib copy="lib" from="Motif"/>
+      <lib copy="lib" from="X11"/>
+      <lib copy="lib" from="Xpm"/>
+
+      <lib copy="lib" from="Python"/>
+
+      <python_module name="CoinXt_SWIG_py"/>
+    </dll>
+
+</obuild>

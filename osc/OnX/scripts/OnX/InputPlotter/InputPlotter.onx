@@ -1,0 +1,65 @@
+<widget class="Dialog" name="OnX_InputPlotter_dialog">
+  <geometry>450x550</geometry>
+  <show>no</show>
+  <title>Input plotter</title>
+  <widget class="VBox">
+    <expand>first</expand>
+    <sizeOfFixed>30</sizeOfFixed>
+    <widget class="TabStack" name="OnX_InputPlotter_dialogStack">
+
+<!-- Components -->
+      <reference file="Components.onx"/>
+
+<!-- Data styles -->
+      <widget class="VContainer">
+        <tabLabel>Data styles</tabLabel>
+        <widget class="TabStack" name="OnX_InputPlotter_graphicStack">
+          <reference file="Bins.onx"/>
+          <reference file="Function.onx"/>
+          <reference file="Points.onx"/>
+          <reference file="Errors.onx"/>
+        </widget>
+      </widget>
+
+<!-- Plotter -->
+      <widget class="VContainer">
+        <tabLabel>Etc Styles</tabLabel>
+        <widget class="TabStack" name="OnX_InputPlotter_plotterStack">
+          <reference file="Axis.onx"/>
+          <reference file="Title.onx"/>
+          <reference file="Infos.onx"/>
+          <reference file="Wall.onx"/>
+          <reference file="Grid.onx"/>
+          <reference file="InnerFrame.onx"/>
+        </widget>
+      </widget>
+
+<!-- buttons -->
+    </widget>
+    <widget class="HContainer">
+      <widget class="PushButton">
+        <label>Ok</label>
+        <activate exec="DLD">OnX OnX_InputPlotter_ok @current@</activate>
+        <activate exec="DLD">OnX ui_hide OnX_InputPlotter_dialog</activate>
+        <activate exec="DLD">OnX ui_hide OnX_InputPlotter_Hatch_Dialog</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Apply</label>
+        <activate exec="DLD">OnX OnX_InputPlotter_ok @current@</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Cancel</label>
+        <activate exec="DLD">OnX ui_hide OnX_InputPlotter_dialog</activate>
+        <activate exec="DLD">OnX ui_hide OnX_InputPlotter_Hatch_Dialog</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Help</label>
+        <activate exec="DLD">OnX ui_help_file $ONXROOT/scripts/Help/InputPlotter.help</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Update</label>
+        <activate exec="DLD">OnX OnX_InputPlotter_update @current@</activate>
+      </widget>
+    </widget>
+  </widget>
+</widget>

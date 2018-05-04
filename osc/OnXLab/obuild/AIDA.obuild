@@ -1,0 +1,139 @@
+
+<obuild>
+
+  <library name="OnXLabAIDA">
+    <file>../OnXLab/Core/AIDA.cxx</file>
+
+    <cxx_include>${obuild_OnXLab_path}</cxx_include>
+    <!-- not this : -->
+    <cxx_include copy="cxx_include" from="OnX"/>
+
+    <cxx_include copy="cxx_include" from="BatchLab"/>
+    <cxx_include copy="cxx_include" from="AIDA"/>
+    <cxx_include copy="cxx_include" from="amanip"/>
+    <cxx_include copy="cxx_include" from="Lib"/>
+    <cxx_include copy="cxx_include" from="inlib"/>
+    <cxx_include copy="cxx_include" from="Slash"/>
+    <cxx_include copy="cxx_include" from="Minuit"/>
+    <cxx_include copy="cxx_include" from="exlib"/>
+
+    <cxx_macro name="EXLIB_USE_NATIVE_ZLIB"/>
+    <cxx_macro name="EXLIB_USE_NATIVE_ZIP"/>
+
+    <lib platform="Windows_NT" copy="lib" from="Minuit"/>
+    <lib platform="Windows_NT" copy="lib" from="OnX"/>
+    <lib platform="Windows_NT" copy="lib" from="expat"/>
+    <lib platform="Windows_NT" copy="lib" from="zlib"/>
+    <lib platform="Windows_NT" copy="lib_LibUtils" from="Lib"/>
+  </library>
+
+  <dll name="OnXLabLoadAIDA">
+    <!-- To dynamic load OnXLab AIDA. -->
+
+    <file>../source/Core/LoadAIDA.cxx</file>
+    <file>../OnXLab/Core/AIDA.cxx</file>
+
+    <!-- not this : -->
+    <cxx_include copy="cxx_include" from="OnXLabAIDA"/>
+
+    <cxx_macro name="EXLIB_USE_NATIVE_ZLIB"/>
+    <cxx_macro name="EXLIB_USE_NATIVE_ZIP"/>
+
+    <lib copy="lib" from="Minuit"/>
+
+    <lib copy="lib" from="OnX"/>
+
+    <lib copy="lib" from="expat"/>
+    <lib copy="lib_LibUtils" from="Lib"/>
+
+    <!-- (stat) data part to plot. -->
+
+    <!-- graphics. -->
+    <lib copy="lib_HEPVisPlotter" from="HEPVis"/>
+    <lib copy="lib_HEPVisDetector" from="HEPVis"/>
+    <lib copy="lib_HEPVisGeometry" from="HEPVis"/>
+    <lib copy="lib_HEPVisUtils" from="HEPVis"/>
+    <lib copy="lib" from="jpeg"/>
+    <lib copy="lib" from="dvi2bitmap"/>
+    <lib copy="lib" from="freetype2"/>
+    <lib copy="lib" from="png"/>
+    <lib copy="lib" from="zip"/>
+    <lib copy="lib" from="zlib"/>
+    <lib copy="lib" from="CoinGL"/>
+  </dll>
+
+  <application name="OnXLab_aida_config">
+    <file>../applications/OnXLab_aida_config.cxx</file>
+
+
+    <cxx_include copy="cxx_include" from="inlib"/>
+    <cxx_include copy="cxx_include" from="Slash"/>
+
+    <!-- not this : -->
+    <cxx_include copy="cxx_include" from="AIDA"/>
+
+    <cxx_macro name="BUILDER_OBUILD"/>
+
+    <copy>aida-config</copy>
+  </application>
+
+  <!-- IMPORTANT -->
+  <application name="OnXLab_exa_config">
+    <!--  A dummy AIDA application in order to capture the 
+         compilation includes and the linked libraries 
+         needed to build an AIDA application
+         by using the OnXLab implementation.
+
+          The per platform infos are saved in a :
+            OnXLab/vers/bin_obuild/OnXLab_exa_config.save
+         file. This file is read by the OnXLab_aida_config
+         to dump the incs and libs infos.
+
+           This way of doing avoids the usage 
+         of the two environment variables ONXLAB_AIDA_CONFIG_INCS
+         and ONXLAB_AIDA_CONFIG_LIBS that was needed when
+         building with CMT. -->
+    <file>../examples/cpp/OnXLab_exa_config.cxx</file>
+
+
+    <!-- not this : -->
+    <cxx_include copy="cxx_include" from="AIDA"/>
+
+    <lib>OnXLabAIDA</lib>
+    <lib copy="lib" from="Minuit"/>
+
+    <lib copy="lib" from="OnX"/>
+
+    <lib copy="lib" from="expat"/>
+    <lib copy="lib_LibUtils" from="Lib"/>
+    <lib platform="Linux" verbatim="yes">-ldl</lib>
+
+    <!-- (stat) data part to plot. -->
+
+    <!-- graphics. -->
+    <lib copy="lib_HEPVisPlotter" from="HEPVis"/>
+    <lib copy="lib_HEPVisDetector" from="HEPVis"/>
+    <lib copy="lib_HEPVisGeometry" from="HEPVis"/>
+    <lib copy="lib_HEPVisUtils" from="HEPVis"/>
+    <lib copy="lib" from="jpeg"/>
+    <lib copy="lib" from="dvi2bitmap"/>
+    <lib copy="lib" from="freetype2"/>
+    <lib copy="lib" from="png"/>
+    <lib copy="lib" from="zip"/>
+    <lib copy="lib" from="zlib"/>
+    <lib copy="lib" from="CoinGL"/>
+
+    <!-- ask to save compilation and link infos in a 
+           OnXLab_aida_config_save.save 
+         file put in the binary directory. -->
+    <save> 
+      <subs_path>
+        <from>../..</from>
+        <to>@@top@@</to>
+      </subs_path>
+    </save> 
+
+  </application>
+
+
+</obuild>

@@ -1,0 +1,186 @@
+#!/bin/sh -f
+
+#
+# osc_wget_install permits to get a binary kit from the OpenScientist
+# download area and install it locally.
+#
+# The binary kit file name is of the form :
+#   <kit>-<version>-<platform>.zip
+# The <platform> is composed of :
+#   <os>-<processor>-<compiler>
+# For example :
+#   osc_batch-v16r6-Linux-x86_64-gcc_346.zip
+#
+# Usage of the command :
+#   OS> ./osc_wget_install -kit <kit> -version <version> [options]
+#
+# [options] could be :
+#   -platform : enforce a platform string.
+#   -check : execute check_install after installation.
+#
+# Usage example :
+#   OS> ./osc_wget_install -kit osc_batch -version 16.10
+#   OS> ./osc_wget_install -kit osc_batch -version 16.10 -platform Darwin-i386-gcc_401
+#
+#
+
+#set -x
+
+osc_wget_install_kit=
+osc_wget_install_version=
+osc_wget_install_platform=
+osc_wget_install_check=no
+
+while test $# -ge 1 ; do
+  case $1 in
+    -h) 
+        echo "Arguments :"
+        echo "  -kit : [osc_batch,osc_vis,...]."
+        echo "  -version : version to use."
+        echo "Optional :"
+        echo "  -platform : enforce a platform string."
+        echo "  -check : execute check_install after installation."
+        echo ""
+        exit ;;
+    -kit) shift
+        if [ $# != 0 ] ; then
+          osc_wget_install_kit=$1 
+        else         
+          echo "give a name after the -kit option."
+          exit 
+        fi ;;
+    -version) shift
+        if [ $# != 0 ] ; then
+          osc_wget_install_version=$1 
+        else         
+          echo "give a version after the -version option."
+          exit 
+        fi ;;
+    -platform) shift
+        if [ $# != 0 ] ; then
+          osc_wget_install_platform=$1 
+        else         
+          echo "give a platform after the -platform option."
+          exit 
+        fi ;;
+    -check) 
+        osc_wget_install_check=yes ;;
+  esac
+  shift
+done
+
+#///////////////////////////
+#// mendatory input : //////
+#///////////////////////////
+if [ "${osc_wget_install_kit}" = "" ] ; then
+  echo 'No package given.'
+  exit
+fi
+
+if [ "${osc_wget_install_version}" = "" ] ; then
+  echo 'No version given.'
+  exit
+fi
+
+#///////////////////////////
+#// web getter : ///////////
+#///////////////////////////
+
+osc_wget_install_web_getter=
+if [ `uname` = "Darwin" ] ; then
+  osc_wget_install_web_getter="curl -s -O"
+elif [ `uname` = "Linux" ] ; then
+  osc_wget_install_web_getter="wget -q"
+elif [ "`uname | grep CYGWIN`" != "" ] ; then
+  osc_wget_install_web_getter="wget -q"
+fi
+
+if [ "${osc_wget_install_web_getter}" = "" ] ; then
+  echo "No web getter."
+  exit
+fi
+
+#///////////////////////////
+#// download area : ////////
+#///////////////////////////
+
+osc_wget_install_download_area="http://OpenScientist.lal.in2p3.fr/download/tmpup"
+#osc_wget_install_download_area="http://OpenScientist.lal.in2p3.fr/download/${osc_wget_install_version}/${osc_wget_install_kit_file}"
+
+#///////////////////////////
+#// guess platform : ///////
+#///////////////////////////
+if [ "${osc_wget_install_platform}" = "" ] ; then
+
+  # we are going to use the obuild_platform program.
+
+  # check for the compiler :
+  osc_wget_install_compiler=c++
+  osc_wget_install_found=false
+  osc_wget_install_old_IFS="${IFS}"
+  IFS=:
+  for osc_wget_install_path in $PATH ; do
+    if [ -f ${osc_wget_install_path}/${osc_wget_install_compiler} ] ; then
+      osc_wget_install_found=true
+      break
+    fi
+  done
+  IFS="${osc_wget_install_old_IFS}"
+  if [ ${osc_wget_install_found} = "false" ] ; then
+    echo "compiler ${osc_wget_install_compiler} not found."
+    exit
+  fi
+
+  # get obuild_platform.cpp :
+  ${osc_wget_install_web_getter} ${osc_wget_install_download_area}/obuild_platform.cpp
+  if [ $? != 0 ] ; then
+    echo "Unable to web get obuild_platform.cpp"
+    exit
+  fi 
+  if [ ! -e obuild_platform.cpp ] ; then
+    echo "File obuild_platform.cpp not found."
+    exit
+  fi
+
+  ${osc_wget_install_compiler} obuild_platform.cpp
+  osc_wget_install_platform=`./a.out`
+  /bin/rm -f ./a.out
+  /bin/rm -f ./obuild_platform.cpp
+
+fi
+
+#echo ${osc_wget_install_platform}
+
+#///////////////////////////
+#// web get the kit : //////
+#///////////////////////////
+
+osc_wget_install_kit_file=${osc_wget_install_kit}-${osc_wget_install_version}-${osc_wget_install_platform}.zip
+
+${osc_wget_install_web_getter} ${osc_wget_install_download_area}/${osc_wget_install_kit_file}
+if [ $? != 0 ] ; then
+  echo "Unable to web get ${osc_wget_install_download_area}/${osc_wget_install_url}"
+  exit
+fi 
+
+if [ ! -e ${osc_wget_install_kit_file} ] ; then
+  echo "File ${osc_wget_install_kit_file} not found."
+  exit
+fi
+
+unzip -q ${osc_wget_install_kit_file}
+/bin/rm -f ${osc_wget_install_kit_file}
+cd ${osc_wget_install_kit}/${osc_wget_install_version}
+./install
+cd ../..
+
+#///////////////////////////
+#// check //////////////////
+#///////////////////////////
+
+if [ ${osc_wget_install_check} = yes ] ; then
+  cd ${osc_wget_install_kit}/${osc_wget_install_version}
+  . ./setup.sh
+  ./check_install
+fi
+

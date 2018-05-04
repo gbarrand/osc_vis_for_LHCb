@@ -1,0 +1,31 @@
+#!/bin/sh -f
+
+#  To produce wrappers using SWIG.
+
+use_swig=yes
+. ../../exlib/mgr/use_swig
+
+if [ ! -x ${swig_exe} ] ; then
+  echo "swig program not found."
+  exit
+fi
+
+pivy_home=../pivy
+
+incs="-I${pivy_home} -I${pivy_home}/fake_headers"
+incs="${incs} -I${pivy_home}/interfaces"
+
+incs="${incs} -I../CoinGL/include"
+incs="${incs} -I../CoinPython/source"
+incs="${incs} -I../CoinPython"
+incs="${incs} -I./include"
+
+flags="-includeall -modern -D__PIVY__"
+flags="${flags} -w302,306,307,312,389,361,362,467,503,509,510"
+flags="${flags} -fcompact"
+
+out_file=./py/SWIG.ic
+${swig_exe} -interface CoinXt_SWIG_Python -python -c++ ${flags} ${incs} -o ${out_file} ./py/SWIG.i
+
+sed -e 's#PyErr_Format(PyExc_RuntimeError, mesg)#PyErr_Format(PyExc_RuntimeError, "%s",mesg)#g' ${out_file} > tmp;mv tmp ${out_file}
+/bin/rm -f tmp

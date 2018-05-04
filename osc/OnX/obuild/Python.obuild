@@ -1,0 +1,140 @@
+<obuild>
+
+  <!-- not this : -->
+  <reference package="foreign" path="../../foreign" file="Python.obuild"/>  
+
+  <!-- this : -->
+  <dll name="OnXPython">
+    <group>Python</group>
+    <check_foreign>Python</check_foreign>
+
+
+    <file>../source/Python/Python.cxx</file>
+
+    <!-- not this : -->
+    <cxx_include copy="cxx_include" from="Lib"/>
+    <cxx_include copy="cxx_include" from="inlib"/>
+    <cxx_include copy="cxx_include" from="Slash"/>
+    <cxx_include copy="c_include" from="Python"/>
+
+    <lib copy="lib_LibUtils" from="Lib"/>
+    <lib copy="lib" from="Python"/>
+  </dll>
+
+  <dll name="OnX_SWIG_Python">
+    <group>Python</group>
+    <check_foreign>Python</check_foreign>
+
+
+    <file>../source/Python/OnX_SWIG_Python.cxx</file>
+
+    <!-- not this : -->
+
+    <cxx_include copy="c_include" from="Python"/>
+
+    <cxx_include copy="cxx_include" from="Lib"/>
+    <cxx_include copy="cxx_include" from="inlib"/>
+    <cxx_include copy="cxx_include" from="Slash"/>
+
+    <cxx_include copy="cxx_include" from="CoinPython"/>
+    <cxx_include copy="cxx_include" from="HEPVis"/>
+    <cxx_include copy="cxx_include" from="CoinGL"/>
+    <cxx_macro copy="cxx_macro" from="CoinGL"/>
+    <cxx_options copy="c_options" from="OpenGL"/>
+    <cxx_macro copy="c_macro" from="OpenGL"/>
+
+    <lib copy="lib" from="Python"/>
+    <lib>OnXCore</lib>
+    <lib copy="lib" from="expat"/>
+    <lib copy="lib" from="zip"/>
+    <lib copy="lib" from="zlib"/>
+    <lib copy="lib_LibUtils" from="Lib"/>
+
+    <lib copy="lib_HEPVisGUI" from="HEPVis"/>
+    <lib copy="lib_HEPVisPlotter" from="HEPVis"/>
+    <lib copy="lib_HEPVisDetector" from="HEPVis"/>
+    <lib copy="lib_HEPVisGeometry" from="HEPVis"/>
+    <lib copy="lib_HEPVisUtils" from="HEPVis"/>
+
+    <lib copy="lib" from="jpeg"/>
+    <lib copy="lib" from="dvi2bitmap"/>
+    <lib copy="lib" from="freetype2"/>
+
+    <lib copy="lib" from="png"/>
+    <lib copy="lib" from="zlib"/>
+
+    <lib copy="lib" from="CoinGL"/>
+
+    <python_module name="OnX_SWIG_Python"/>
+  </dll>
+
+  <application name="OnX_test_Python">
+    <group>Python</group>
+    <check_foreign>Python</check_foreign>
+
+
+    <file>../tests/Python/OnX_test_Python.cxx</file>
+
+    <!-- not this : -->
+    <cxx_include copy="c_include" from="Python"/>
+    <lib copy="lib" from="Python"/>
+    <lib platform="Linux" verbatim="yes">-ldl</lib>
+  </application>
+
+  <application name="OnX_test_Python_1">
+    <group>Python</group>
+    <check_foreign>Python</check_foreign>
+    <file>../tests/Python/OnX_test_Python_1.cxx</file>
+    <!-- not this : -->
+    <cxx_include copy="c_include" from="Python"/>
+    <lib copy="lib" from="Python"/>
+    <lib platform="Linux" verbatim="yes">-ldl</lib>
+  </application>
+
+  <template name="OnX_exa_Python_T">
+    <group>Python</group>
+    <check_foreign>Python</check_foreign>
+    <run>python "@@dir_package@@/examples/Python/@@name@@.py"</run>
+  </template>
+
+  <application template="OnX_exa_Python_T" name="OnX_exa_hello"/>
+  <application template="OnX_exa_Python_T" name="OnX_exa_OnX"/>
+  <application template="OnX_exa_Python_T" name="OnX_exa_cube"/>
+  <application template="OnX_exa_Python_T" name="OnX_exa_detector"/>
+  <application template="OnX_exa_Python_T" name="OnX_exa_cylinder"/>
+  <application template="OnX_exa_Python_T" name="OnX_exa_images"/>
+  <application template="OnX_exa_Python_T" name="OnX_exa_shapes"/>
+  <application template="OnX_exa_Python_T" name="OnX_exa_menu"/>
+  <application template="OnX_exa_Python_T" name="OnX_exa_tree"/>
+
+<!--
+  <application template="OnX_exa_Python_T" name="OnX_exa_lib"/>
+  <application template="OnX_exa_Python_T" name="OnX_exa_pivy"/>
+  <application template="OnX_exa_Python_T" name="OnX_exa_typemaps"/>
+
+  <application template="OnX_exa_Python_T" name="OnX_exa_string"/>
+-->
+
+  <dll name="OnX_config_Python">
+    <group>Python</group>
+    <check_foreign>Python</check_foreign>
+
+    <file>../source/Callbacks/config_Python.cxx</file>
+
+    <!-- not this : -->
+    <cxx_include copy="cxx_include" from="inlib"/>
+    <cxx_include copy="cxx_include" from="Slash"/>
+    <cxx_include copy="c_include" from="Python"/>
+
+    <lib copy="lib" from="Python"/>
+
+    <save> 
+      <subs_path>
+        <from>../..</from>
+        <to>@@top@@</to>
+      </subs_path>
+    </save> 
+  </dll>
+
+</obuild>
+

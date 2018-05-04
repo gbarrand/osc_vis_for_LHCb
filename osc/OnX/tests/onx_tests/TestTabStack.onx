@@ -1,0 +1,121 @@
+<widget class="Dialog" name="OnX_TestTabStack_dialog">
+  <geometry>400x500</geometry>
+<!--
+  <decoration>none</decoration>
+-->
+  <title>Test TabStack</title>
+  <show>no</show>
+  <widget class="VBox">
+    <expand>second</expand>
+    <sizeOfFixed>200</sizeOfFixed>
+    <widget class="TabStack" name="OnX_TestTabStack_stack">
+      <select exec="DLD" background="yes">OnX ui_setParameter OnX_TestTabStack_text.value @this.value@</select>
+      <widget class="VBox">
+        <tabLabel>Page 1</tabLabel>
+        <expand>first</expand>
+        <sizeOfFixed>30</sizeOfFixed>
+        <widget class="ScrolledList" name="OnX_TestTabStack_list">
+          <items>Item 1\nItem 2\nItem 3\nItem 4\nItem 5\nItem 6\nItem 7</items>
+<!--
+          <selection>Item 3</selection>
+-->
+          <create exec="DLD">OnX ui_setParameter OnX_TestTabStack_list.selection Item 2</create>
+          <select exec="DLD">OnX ui_setParameter OnX_TestTabStack_text.value @this.value@</select>
+        </widget>
+        <widget class="PushButton">
+          <label>Selection</label>
+          <activate exec="DLD">OnX ui_set_parameter OnX_TestTabStack_text.value @[OnX_TestTabStack_list.selection]@</activate>
+        </widget>
+      </widget>
+      <widget class="VBox">
+        <tabLabel>Page 2</tabLabel>
+        <expand>first</expand>
+        <sizeOfFixed>30</sizeOfFixed>
+        <widget class="ScrolledTree" name="OnX_TestTabStack_tree">
+          <create exec="DLD">OnX tree_set_with_file OnX_TestTabStack_tree.items $ONXROOT/scripts/OnX/Tree.xml</create>
+          <create exec="DLD">OnX ui_setParameter OnX_TestTabStack_tree.selection Item 2\nItem 2 1</create>
+          <select exec="DLD">OnX ui_set_parameter OnX_TestTabStack_text.value path : @cat@ @char@10@ @cat@ @this.value@ @cat@ @char@10@ @cat@ item : @cat@ @char@10@ @cat@ @nth@last@this.value@</select>
+        </widget>
+        <widget class="PushButton">
+          <label>Selection</label>
+          <activate exec="DLD">OnX ui_set_parameter OnX_TestTabStack_text.value path : @cat@ @char@10@ @cat@ @[OnX_TestTabStack_tree.selection]@ @cat@ @char@10@ @cat@ item : @cat@ @char@10@ @cat@ @nth@last@[OnX_TestTabStack_tree.selection]@</activate>
+        </widget>
+      </widget>
+      <widget class="CommandLine">
+        <tabLabel>Page 3</tabLabel>
+        <activate exec="DLD">OnX ui_setParameter OnX_TestTabStack_text.value @this.value@</activate>
+        <complete exec="DLD">OnX ui_setParameter this.value @this.value@ xxx</complete>
+      </widget>
+      <widget class="VBox">
+        <tabLabel>Page 4</tabLabel>
+        <expand>second</expand>
+        <sizeOfFixed>60</sizeOfFixed>
+        <widget class="VBox">
+          <expand>both</expand>
+          <widget class="OptionMenu">
+            <items>aa\nbb\ncc</items>
+            <valueChanged exec="DLD">OnX ui_setParameter OnX_TestTabStack_text.value @this.value@</valueChanged>
+          </widget>
+          <widget class="ComboBox">
+            <items>aa\nbb\ncc</items>
+            <valueChanged exec="DLD">OnX ui_setParameter OnX_TestTabStack_text.value @this.value@</valueChanged>
+            <default>bb</default>
+          </widget>
+        </widget>
+        <widget class="VBox">
+        </widget>
+      </widget>
+      <widget class="VBox">
+        <tabLabel>Page 5</tabLabel>
+        <expand>second</expand>
+        <sizeOfFixed>30</sizeOfFixed>
+        <widget class="HBox">
+          <expand>second</expand>
+          <sizeOfFixed>100</sizeOfFixed>
+          <widget class="Label">
+            <label>Password</label>
+          </widget>
+          <widget class="Password">
+            <activate exec="DLD">OnX ui_setParameter OnX_TestTabStack_text.value @this.value@</activate>
+          </widget>
+        </widget>
+        <widget class="VBox">
+        </widget>
+      </widget>
+      <widget class="VBox">
+        <tabLabel>Page 6</tabLabel>
+        <expand>both</expand>
+        <widget class="HScale">
+          <drag exec="DLD">OnX ui_setParameter OnX_TestTabStack_text.value @this.value@</drag>
+          <minimum>500</minimum>
+          <maximum>2500</maximum>
+          <value>2000</value>
+        </widget>
+        <widget class="HScrollBar">
+          <drag exec="DLD">OnX ui_setParameter OnX_TestTabStack_text.value @this.value@</drag>
+          <minimum>500</minimum>
+          <maximum>2500</maximum>
+          <value>2000</value>
+        </widget>
+      </widget>
+    </widget>
+
+    <widget class="VBox"> 
+      <expand>first</expand>
+      <sizeOfFixed>60</sizeOfFixed>
+      <widget class="ScrolledText" name="OnX_TestTabStack_text">
+      </widget>
+      <widget class="VBox"> 
+        <expand>both</expand>
+        <widget class="PushButton">
+          <label>Selected page</label>
+          <activate exec="DLD">OnX ui_set_parameter OnX_TestTabStack_text.value @[OnX_TestTabStack_stack.selection]@</activate>
+        </widget>
+        <widget class="PushButton" name="OnX_TestTabStack_cancel">
+          <label>Cancel</label>
+          <activate exec="DLD">OnX ui_hide OnX_TestTabStack_dialog</activate>
+        </widget>
+      </widget>
+    </widget>
+  </widget>
+</widget>

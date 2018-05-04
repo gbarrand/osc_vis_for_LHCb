@@ -1,0 +1,11 @@
+    Welcome to OpenScientist.
+
+  OpenScientist is an integration of open source products 
+ working together to do scientific visualization and data 
+ analysis ; in particular for high energy physics (HEP).
+
+  OpenScientist is definitely NOT one million lines of 
+ unnecessary complex home made code reinventing everything.
+
+  For more, see :
+   http://OpenScientist.lal.in2p3.fr

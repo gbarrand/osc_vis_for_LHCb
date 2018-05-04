@@ -1,0 +1,26 @@
+<!-- WARNING : must not be loaded directly with osc-gui-viewer. -->
+
+<OnX>
+
+  <widget class="InputDialog" name="OnX_ExaInput">
+    <label>Input dialogs</label>
+    <input name="xxx_1" />
+    <input name="xxx_2" type="option" items="aa\nbb\ncc\ndd\nee" default="bb" label="Xxx 2"/>
+    <input name="xxx_3" type="combo" items="aa\nbb\ncc\ndd\nee" default="ee" label="Xxx 3"/>
+    <input name="xxx_4" label="File chooser" type="fileChooser" default="choose.out"/>
+    <input name="xxx_5" label="File saver" type="fileSaver" default="save.out"/>
+    <input name="xxx_6" label="Scale" type="scale" minimum="10" maximum="90" default="50"/>
+    <input name="xxx_7" label="ScrollBar" type="scrollBar" minimum="20" maximum="80" default="50"/>
+    <input name="xxx_8" label="Color" type="colorChooser" items="red\ngreen\nblue\nyellow\nmagenta\ncyan\nwhite\nblack"/>
+
+    <ok exec="DLD">OnX ui_echo @[OnX_ExaInput_input_xxx_1.value]@</ok>
+    <ok exec="DLD">OnX ui_echo @[OnX_ExaInput_input_xxx_2.value]@</ok>
+    <ok exec="DLD">OnX ui_echo @[OnX_ExaInput_input_xxx_3.value]@</ok>
+    <ok exec="DLD">OnX ui_echo @[OnX_ExaInput_input_xxx_4.value]@</ok>
+    <ok exec="DLD">OnX ui_echo @[OnX_ExaInput_input_xxx_5.value]@</ok>
+    <ok exec="DLD">OnX ui_echo @[OnX_ExaInput_input_xxx_6.value]@</ok>
+    <ok exec="DLD">OnX ui_echo @[OnX_ExaInput_input_xxx_7.value]@</ok>
+    <ok exec="DLD">OnX ui_echo @[OnX_ExaInput_input_xxx_8.value]@</ok>
+  </widget>
+
+</OnX>

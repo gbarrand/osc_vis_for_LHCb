@@ -1,0 +1,36 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+. ${ourex_mgr}/build_header
+
+build_pack=LibUtils
+
+if [ ${build_compile} = "yes" ] ; then
+
+cppflags="${cppflags} -I../include"
+cppflags="${cppflags} -I${inlib_mgr}/.."
+cppflags="${cppflags} -I../../Slash"
+
+cxxfiles="${cxxfiles} ../source/Debug.cxx"
+cxxfiles="${cxxfiles} ../source/ProcessorLexer.cxx"
+cxxfiles="${cxxfiles} ../source/ColumnsLexer.cxx"
+cxxfiles="${cxxfiles} ../source/FortranFormatLexer.cxx"
+cxxfiles="${cxxfiles} ../source/Processor.cxx"
+cxxfiles="${cxxfiles} ../source/Columns.cxx"
+cxxfiles="${cxxfiles} ../source/FortranFormat.cxx"
+
+libname=libLibUtils
+
+. ${inlib_mgr}/build_compile
+
+fi # end build_compile
+ 
+if [ ${build_archive} = "yes" ] ; then . ${inlib_mgr}/build_archive; fi
+
+. ${inlib_mgr}/build_clean

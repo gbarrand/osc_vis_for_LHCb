@@ -1,0 +1,61 @@
+#!/bin/sh -f
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+. ${ourex_mgr}/build_header
+
+plugin=OnXLabExas
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+if [ ${build_compile} = "yes" ] ; then
+
+cppflags="${cppflags} -I${inlib_mgr}/.."
+
+cppflags="${cppflags} -I../../AIDA/v3r2p1"
+cppflags="${cppflags} -I../../Slash"
+cppflags="${cppflags} -I../../amanip/src/cpp"
+
+cppflags="${cppflags} -I../../UseAIDA/examples/cpp/osc"
+
+cxxfiles=
+cxxfiles="${cxxfiles} ../examples/Callbacks/Included.cxx"
+cxxfiles="${cxxfiles} ../examples/Callbacks/Thread.cxx"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+use_HEPVis=yes
+use_CoinGL=yes
+use_GL=yes
+use_png=yes
+use_jpeg=yes
+use_freetype=yes
+use_zlib=yes
+
+. ${exlib_mgr}/use_HEPVis
+. ${exlib_mgr}/use_CoinGL
+. ${exlib_mgr}/use_GL
+. ${exlib_mgr}/use_png
+. ${exlib_mgr}/use_jpeg
+. ${exlib_mgr}/use_freetype
+. ${exlib_mgr}/use_zlib
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+. ${inlib_mgr}/build_compile
+
+fi # end build_compile
+ 
+if [ ${build_plugin} = "yes" ] ; then . ${inlib_mgr}/build_plugin; fi
+
+. ${inlib_mgr}/build_clean

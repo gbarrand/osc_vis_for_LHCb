@@ -1,0 +1,450 @@
+// included by Rio_Dictionary.cxx
+
+#include <Rio/Core/Arguments.h>
+
+#define Rio_Class(aClass_Class,aIO_Class,aStoreClassName,aVersion) \
+namespace BatchLab {\
+namespace Rio {\
+class aClass_Class : public ::Rio::BaseClass {\
+public: \
+  virtual ::Rio::IObject* create(const ::Rio::Arguments& aArgs) {\
+    ::Rio::IDirectory* directory = \
+      (::Rio::IDirectory*)::Rio::Args_findDirectory(aArgs);\
+    if(!directory) {\
+      fOut << "BatchLab::Rio:: " << #aClass_Class << "::create :" \
+           << " no directory given." << std::endl;		 \
+      return 0;\
+    }\
+    const ::Rio::IDictionary& dico = directory->file().dictionary();\
+    ::Rio::IObject* object = new aIO_Class(dico,fOut);\
+    directory->appendObject(object);\
+    return object;\
+  }\
+  virtual unsigned int checkSum() const {return 0;}\
+public:\
+  aClass_Class(std::ostream& aOut)\
+  : ::Rio::BaseClass(#aIO_Class,#aStoreClassName,aVersion)\
+  ,fOut(aOut)\
+  {}\
+  virtual ~aClass_Class(){}\
+private:\
+  std::ostream& fOut;\
+};\
+}}
+
+Rio_Class(THistogram_Class,BatchLab::Rio::THistogram,THistogram,8)
+
+namespace BatchLab {
+
+namespace Rio {
+
+class AttAxis_Class : public ::Rio::BaseClass {
+public: //::Rio::IClass
+  virtual ::Rio::IObject* create(const ::Rio::Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  AttAxis_Class()
+    : ::Rio::BaseClass("BatchLab::Rio::AttAxis","TAttAxis",4),fCheckSum(0){
+    //name :
+    ::Rio::stringCheckSum(fCheckSum,"TAttAxis");
+    //members :
+    ::Rio::stringCheckSum(fCheckSum,"fNdivisions");
+    ::Rio::stringCheckSum(fCheckSum,"Int_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fAxisColor");
+    ::Rio::stringCheckSum(fCheckSum,"Color_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fLabelColor");
+    ::Rio::stringCheckSum(fCheckSum,"Color_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fLabelFont");
+    ::Rio::stringCheckSum(fCheckSum,"Style_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fLabelOffset");
+    ::Rio::stringCheckSum(fCheckSum,"Float_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fLabelSize");
+    ::Rio::stringCheckSum(fCheckSum,"Float_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fTickLength");
+    ::Rio::stringCheckSum(fCheckSum,"Float_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fTitleOffset");
+    ::Rio::stringCheckSum(fCheckSum,"Float_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fTitleSize");
+    ::Rio::stringCheckSum(fCheckSum,"Float_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fTitleColor");
+    ::Rio::stringCheckSum(fCheckSum,"Color_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fTitleFont");
+    ::Rio::stringCheckSum(fCheckSum,"Style_t");
+  }
+  virtual ~AttAxis_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class Axis_Class : public ::Rio::BaseClass {
+public: //::Rio::IClass
+  virtual ::Rio::IObject* create(const ::Rio::Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  Axis_Class()
+    : ::Rio::BaseClass("BatchLab::Rio::Axis","TAxis",6),fCheckSum(0){
+    //name :
+    ::Rio::stringCheckSum(fCheckSum,"TAxis");
+    //bases :
+    ::Rio::stringCheckSum(fCheckSum,"TNamed");
+    ::Rio::stringCheckSum(fCheckSum,"TAttAxis");
+    //members :
+    ::Rio::stringCheckSum(fCheckSum,"fNbins");
+    ::Rio::stringCheckSum(fCheckSum,"Int_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fXmin");
+    ::Rio::stringCheckSum(fCheckSum,"Axis_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fXmax");
+    ::Rio::stringCheckSum(fCheckSum,"Axis_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fXbins");
+    ::Rio::stringCheckSum(fCheckSum,"TArrayD");
+
+    ::Rio::stringCheckSum(fCheckSum,"fFirst");
+    ::Rio::stringCheckSum(fCheckSum,"Int_t");
+    
+    ::Rio::stringCheckSum(fCheckSum,"fLast");
+    ::Rio::stringCheckSum(fCheckSum,"Int_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fTimeDisplay");
+    ::Rio::stringCheckSum(fCheckSum,"Bool_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fTimeFormat");
+    ::Rio::stringCheckSum(fCheckSum,"TString");
+  }
+  virtual ~Axis_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+#define TH1_VERSION 3
+class TH1_Class : public ::Rio::BaseClass {
+public: //::Rio::IClass
+  virtual ::Rio::IObject* create(const ::Rio::Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  TH1_Class()
+    : ::Rio::BaseClass("BatchLab::Rio::TH1","TH1",TH1_VERSION),fCheckSum(0){
+    //name :
+    ::Rio::stringCheckSum(fCheckSum,"TH1");
+    //bases :
+    ::Rio::stringCheckSum(fCheckSum,"TNamed");
+    ::Rio::stringCheckSum(fCheckSum,"TAttLine");
+    ::Rio::stringCheckSum(fCheckSum,"TAttFill");
+    ::Rio::stringCheckSum(fCheckSum,"TAttMarker");
+    //members :
+    ::Rio::stringCheckSum(fCheckSum,"fNcells");
+    ::Rio::stringCheckSum(fCheckSum,"Int_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fXaxis");
+    ::Rio::stringCheckSum(fCheckSum,"TAxis");
+
+    ::Rio::stringCheckSum(fCheckSum,"fBarOffset");
+    ::Rio::stringCheckSum(fCheckSum,"Short_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fBarWidth");
+    ::Rio::stringCheckSum(fCheckSum,"Short_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fEntries");
+    ::Rio::stringCheckSum(fCheckSum,"Stat_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fTsumw");
+    ::Rio::stringCheckSum(fCheckSum,"Stat_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fTsumw2");
+    ::Rio::stringCheckSum(fCheckSum,"Stat_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fTsumwx");
+    ::Rio::stringCheckSum(fCheckSum,"Stat_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fTsumwx2");
+    ::Rio::stringCheckSum(fCheckSum,"Stat_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fMaximum");
+    ::Rio::stringCheckSum(fCheckSum,"Double_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fMinimum");
+    ::Rio::stringCheckSum(fCheckSum,"Double_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fNormFactor");
+    ::Rio::stringCheckSum(fCheckSum,"Double_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fContour");
+    ::Rio::stringCheckSum(fCheckSum,"TArrayD");
+
+    ::Rio::stringCheckSum(fCheckSum,"fSumw2");
+    ::Rio::stringCheckSum(fCheckSum,"TArrayD");
+
+    ::Rio::stringCheckSum(fCheckSum,"fOption");
+    ::Rio::stringCheckSum(fCheckSum,"TString");
+
+    ::Rio::stringCheckSum(fCheckSum,"fFunctions");
+    ::Rio::stringCheckSum(fCheckSum,"TList*");
+  }
+  virtual ~TH1_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class TH1F_Class : public ::Rio::BaseClass {
+public: //::Rio::IClass
+  virtual ::Rio::IObject* create(const ::Rio::Arguments& aArgs) {
+    ::Rio::IDirectory* directory = 
+      (::Rio::IDirectory*)::Rio::Args_findDirectory(aArgs);
+    if(!directory) {
+      fOut <<
+        "BatchLab::Rio::TH1F_Class::create : no directory given." << std::endl;
+      return 0;
+    }
+    const ::Rio::IDictionary& dico = directory->file().dictionary();
+    ::Rio::IObject* object = new TH1F(dico);
+    directory->appendObject(object);
+    return object;
+  }
+  virtual unsigned int checkSum() const {return fCheckSum;}
+public:
+  TH1F_Class(std::ostream& aOut)
+  : ::Rio::BaseClass("BatchLab::Rio::TH1F","TH1F",1),fOut(aOut),fCheckSum(0){
+    //name :
+    ::Rio::stringCheckSum(fCheckSum,"TH1F");
+    //base :
+    ::Rio::stringCheckSum(fCheckSum,"TH1");
+    ::Rio::stringCheckSum(fCheckSum,"TArrayF");
+  }
+  virtual ~TH1F_Class(){}
+private:
+  std::ostream& fOut;
+  unsigned int fCheckSum;
+};
+
+#define TH1D_VERSION 1
+class TH1D_Class : public ::Rio::BaseClass {
+public: //::Rio::IClass
+  virtual ::Rio::IObject* create(const ::Rio::Arguments& aArgs) {
+    ::Rio::IDirectory* directory = 
+      (::Rio::IDirectory*)::Rio::Args_findDirectory(aArgs);
+    if(!directory) {
+      fOut <<
+        "BatchLab::Rio::TH1D_Class::create : no directory given." << std::endl;
+      return 0;
+    }
+    const ::Rio::IDictionary& dico = directory->file().dictionary();
+    ::Rio::IObject* object = new TH1D(dico);
+    directory->appendObject(object);
+    return object;
+  }
+  virtual unsigned int checkSum() const {return fCheckSum;}
+public:
+  TH1D_Class(std::ostream& aOut)
+  : ::Rio::BaseClass("BatchLab::Rio::TH1D","TH1D",TH1D_VERSION),fOut(aOut),fCheckSum(0){
+    //name :
+    ::Rio::stringCheckSum(fCheckSum,"TH1D");
+    //base :
+    ::Rio::stringCheckSum(fCheckSum,"TH1");
+    ::Rio::stringCheckSum(fCheckSum,"TArrayD");
+  }
+  virtual ~TH1D_Class(){}
+private:
+  std::ostream& fOut;
+  unsigned int fCheckSum;
+};
+
+#define TH2_VERSION 3
+class TH2_Class : public ::Rio::BaseClass {
+public: //::Rio::IClass
+  virtual ::Rio::IObject* create(const ::Rio::Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  TH2_Class()
+    : ::Rio::BaseClass("BatchLab::Rio::TH2","TH2",TH2_VERSION),fCheckSum(0){
+    //name :
+    ::Rio::stringCheckSum(fCheckSum,"TH2");
+    //bases :
+    ::Rio::stringCheckSum(fCheckSum,"TH1");
+    //members :
+    ::Rio::stringCheckSum(fCheckSum,"fScaleFactor");
+    ::Rio::stringCheckSum(fCheckSum,"Double_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fTsumwy");
+    ::Rio::stringCheckSum(fCheckSum,"Double_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fTsumwy2");
+    ::Rio::stringCheckSum(fCheckSum,"Double_t");
+
+    ::Rio::stringCheckSum(fCheckSum,"fTsumwxy");
+    ::Rio::stringCheckSum(fCheckSum,"Double_t");
+  }
+  virtual ~TH2_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+class TH2F_Class : public ::Rio::BaseClass {
+public: //::Rio::IClass
+  virtual ::Rio::IObject* create(const ::Rio::Arguments& aArgs) {
+    ::Rio::IDirectory* directory = 
+      (::Rio::IDirectory*)::Rio::Args_findDirectory(aArgs);
+    if(!directory) {
+      fOut <<
+        "BatchLab::Rio::TH2F_Class::create : no directory given." << std::endl;
+      return 0;
+    }
+    const ::Rio::IDictionary& dico = directory->file().dictionary();
+    ::Rio::IObject* object = new TH2F(dico);
+    directory->appendObject(object);
+    return object;
+  }
+  virtual unsigned int checkSum() const {return fCheckSum;}
+public:
+  TH2F_Class(std::ostream& aOut)
+  : ::Rio::BaseClass("BatchLab::Rio::TH2F","TH2F",3),fOut(aOut),fCheckSum(0){
+    //name :
+    ::Rio::stringCheckSum(fCheckSum,"TH2F");
+    //base :
+    ::Rio::stringCheckSum(fCheckSum,"TH2");
+    ::Rio::stringCheckSum(fCheckSum,"TArrayF");
+  }
+  virtual ~TH2F_Class(){}
+private:
+  std::ostream& fOut;
+  unsigned int fCheckSum;
+};
+
+class TH2D_Class : public ::Rio::BaseClass {
+public: //::Rio::IClass
+  virtual ::Rio::IObject* create(const ::Rio::Arguments& aArgs) {
+    ::Rio::IDirectory* directory = 
+      (::Rio::IDirectory*)::Rio::Args_findDirectory(aArgs);
+    if(!directory) {
+      fOut <<
+        "BatchLab::Rio::TH2D_Class::create : no directory given." << std::endl;
+      return 0;
+    }
+    const ::Rio::IDictionary& dico = directory->file().dictionary();
+    ::Rio::IObject* object = new TH2D(dico);
+    directory->appendObject(object);
+    return object;
+  }
+  virtual unsigned int checkSum() const {return fCheckSum;}
+public:
+  TH2D_Class(std::ostream& aOut)
+  : ::Rio::BaseClass("BatchLab::Rio::TH2D","TH2D",3),fOut(aOut),fCheckSum(0){
+    //name :
+    ::Rio::stringCheckSum(fCheckSum,"TH2D");
+    //base :
+    ::Rio::stringCheckSum(fCheckSum,"TH2");
+    ::Rio::stringCheckSum(fCheckSum,"TArrayD");
+  }
+  virtual ~TH2D_Class(){}
+private:
+  std::ostream& fOut;
+  unsigned int fCheckSum;
+};
+
+class TProfile_Class : public ::Rio::BaseClass {
+public: //::Rio::IClass
+  virtual ::Rio::IObject* create(const ::Rio::Arguments& aArgs) {
+    ::Rio::IDirectory* directory = 
+      (::Rio::IDirectory*)::Rio::Args_findDirectory(aArgs);
+    if(!directory) {
+      fOut <<
+        "BatchLab::Rio::TProfile_Class::create : no directory given." 
+        << std::endl;
+      return 0;
+    }
+    const ::Rio::IDictionary& dico = directory->file().dictionary();
+    ::Rio::IObject* object = new Rio::TProfile(dico);
+    directory->appendObject(object);
+    return object;
+  }
+  virtual unsigned int checkSum() const {return fCheckSum;}
+public:
+  TProfile_Class(std::ostream& aOut)
+  : ::Rio::BaseClass("BatchLab::Rio::TProfile","TProfile",3)
+  ,fOut(aOut),fCheckSum(0){
+    //name :
+    ::Rio::stringCheckSum(fCheckSum,"TProfile");
+    //base :
+    ::Rio::stringCheckSum(fCheckSum,"TH1D");
+    //members :
+    ::Rio::stringCheckSum(fCheckSum,"fBinEntries");
+    ::Rio::stringCheckSum(fCheckSum,"TArrayD");
+    //
+    ::Rio::stringCheckSum(fCheckSum,"fErrorMode");
+    ::Rio::stringCheckSum(fCheckSum,"EErrorType");//FIXME : ok ?
+    //
+    ::Rio::stringCheckSum(fCheckSum,"fYmin");
+    ::Rio::stringCheckSum(fCheckSum,"Double_t");
+    //
+    ::Rio::stringCheckSum(fCheckSum,"fYmax");
+    ::Rio::stringCheckSum(fCheckSum,"Double_t");
+  }
+  virtual ~TProfile_Class(){}
+private:
+  std::ostream& fOut;
+  unsigned int fCheckSum;
+};
+
+class TVectorD_Class : public ::Rio::BaseClass {
+public: //::Rio::IClass
+  virtual ::Rio::IObject* create(const ::Rio::Arguments& aArgs) {
+    ::Rio::IDirectory* directory = 
+      (::Rio::IDirectory*)::Rio::Args_findDirectory(aArgs);
+    if(!directory) {
+      fOut <<
+        "BatchLab::Rio::TVectorD_Class::create : no directory given." << std::endl;
+      return 0;
+    }
+    const ::Rio::IDictionary& dico = directory->file().dictionary();
+    ::Rio::IObject* object = new Rio::TVectorD(dico);
+    directory->appendObject(object);
+    return object;
+  }
+  virtual unsigned int checkSum() const {return 0;}
+public:
+  TVectorD_Class(std::ostream& aOut)
+  : ::Rio::BaseClass("BatchLab::Rio::TVectorD","TVectorD",2),fOut(aOut){}
+  virtual ~TVectorD_Class(){}
+private:
+  std::ostream& fOut;
+};
+
+class TMatrix_Class : public ::Rio::BaseClass {
+public: //::Rio::IClass
+  virtual ::Rio::IObject* create(const ::Rio::Arguments& aArgs) {
+    ::Rio::IDirectory* directory = 
+      (::Rio::IDirectory*)::Rio::Args_findDirectory(aArgs);
+    if(!directory) {
+      fOut <<
+        "BatchLab::Rio::TMatrix_Class::create : no directory given." 
+           << std::endl;
+      return 0;
+    }
+    const ::Rio::IDictionary& dico = directory->file().dictionary();
+    ::Rio::IObject* object = new Rio::TMatrix(dico);
+    directory->appendObject(object);
+    return object;
+  }
+  virtual unsigned int checkSum() const {return 0;}
+public:
+  TMatrix_Class(std::ostream& aOut)
+  : ::Rio::BaseClass("BatchLab::Rio::TMatrix","TMatrix",2),fOut(aOut){}
+  virtual ~TMatrix_Class(){}
+private:
+  std::ostream& fOut;
+};
+
+} //Rio
+
+} //BatchLab

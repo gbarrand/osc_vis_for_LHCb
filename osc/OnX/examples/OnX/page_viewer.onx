@@ -1,0 +1,102 @@
+<OnX>
+
+  <variable name="page_viewer_help">
+     This example shows a "PageViewer" able to handle multiple "regions".\n
+    The create callbacks of the PageViewer create some regions\n
+    and fill them with some scene taken in files.\n
+   \n
+     We create also a "picking mode" popup menu, that is to say a \n
+    popup activated by the right button when the cursor is the pointer.\n
+    (Someone can switch the viewer from viewing mode to picking \n
+    mode by using the two right upper buttons on the decoration \n
+    of the viewer).    \n
+\n
+     When in picking mode, someone can move around a region by\n
+    grasping one of its side and moving the cursor around. Someone can\n
+    resize the region in the same way by grasping a corner.\n
+\n
+     Actions on the popup are :\n
+     - Region on top : the highlighted region (with red border)\n
+       is put on top of the other regions.\n
+     - Region to page : to map the highlighted region to the page. \n
+       The other regions are deleted.\n
+     - Decorations off : to hide the viewer decorations.\n
+     - Decorations on : to show the viewer decorations.\n
+     - No highlighted : picking the "Hello OnX" highlights it.\n
+       The "No highlighted" permits to unhighlight objects in the scene.\n
+\n
+  </variable>
+
+  <widget class="Window">
+    <geometry>400x400</geometry>
+    <title>PageViewer</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <create exec="DLD">OnX set_variable ONX_HOME @env@OSC_HOME_DIR@ @cat@ /Resources/OnX</create>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>60</sizeOfFixed>
+
+      <widget class="PageViewer" name="Viewer">
+        <create exec="DLD">OnX viewer_set_background_color @this@ 0.4 0.2 0.2</create>
+        <create exec="DLD">OnX page_set_title @this@ OnX</create>
+        <create exec="DLD">OnX page_title_visible @this@ false</create>
+        <create exec="DLD">OnX page_delete_regions @this@</create>
+        <create exec="DLD">OnX page_create_region @this@ SoDisplayRegion 0.05 0.25 0.6 0.6</create>
+        <create exec="DLD">OnX viewer_read_scene @this@ @{ONX_HOME}@ @cat@ /examples/OnX/bird.iv iv staticScene</create>
+        <create exec="DLD">OnX viewer_view_all @this@</create>
+        <create exec="DLD">OnX page_create_region @this@ SoDisplayRegion 0.3 0.1 0.6 0.6</create>
+        <create exec="DLD">OnX region_set_background_color @this@ 0.3 0.2 0.2</create>
+        <create exec="DLD">OnX viewer_read_scene @this@ @{ONX_HOME}@ @cat@ /examples/OnX/HelloOnX.iv iv staticScene</create>
+        <create exec="DLD">OnX viewer_view_all @this@</create>
+  
+        <!-- have a popup menu on picking mode -->
+        <popupItems>Region on top\nRegion to page\nDecorations off\nDecorations on\nNo highlighted</popupItems>
+  
+        <variable name="Pages_popup_item_script">
+          No highlighted\nOnX region_no_highlighted @this@\n
+          Dump highlighted\nOnX viewer_collect @this@\n
+          Region to page\nOnX region_to_page @this@\n
+          Region on top\nOnX region_on_top @this@\n
+          Decorations on\nOnX viewer_set_decoration @this@ true\n
+          Decorations off\nOnX viewer_set_decoration @this@ false
+        </variable>
+  
+        <popup exec="DLD">OnX ui_execute_script DLD @next@this.value@{Pages_popup_item_script}@strip_key@</popup>
+  
+        <rectangularCollect exec="DLD">OnX viewer_rectangular_collect @this@</rectangularCollect>
+        <rectangularCollect exec="DLD">OnX page_rectangular_collect @this@</rectangularCollect>
+  
+      </widget>
+
+      <widget class="VContainer">
+        <widget class="PushButton">
+          <label>Print</label>
+          <activate exec="DLD">OnX widget_write Viewer out.ps gl2ps DEFAULTS</activate>
+        </widget>
+
+        <widget class="PushButton">
+          <label>Help</label>
+
+          <!-- 
+            Take the text in the upper page_viewer_help variable and 
+            show it in a help dialog. We need to do some extra 
+            string manipulations to transform the \n in true LF characters.
+          -->
+  
+          <activate exec="DLD">OnX ui_load @empty@ $ONXROOT/scripts/OnX/HelpWindow.onx</activate>
+          <activate exec="DLD">OnX ui_set_parameter OnX_HelpWindow_text.value @{page_viewer_help}@</activate>
+          <activate exec="DLD">OnX ui_show OnX_HelpWindow_window</activate>
+        </widget>
+
+        <widget class="PushButton">
+          <label>Quit</label>
+          <activate exec="DLD">OnX ui_exit</activate>
+        </widget>
+
+      </widget>
+    </widget>
+  </widget>
+</OnX>

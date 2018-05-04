@@ -1,0 +1,68 @@
+<OnX>
+
+  <!-- to be run only with the SDL driver :
+          Linux> osc-gui-viewer -SDL sdl.onx
+       On a Mac :
+          Darwin> setenv OSC_GUI_FILE `pwd`/sdl.onx
+          Darwin> open <install_path>/darwin_app/osc-gui-viewer-SDL.app
+    -->
+
+  <!-- NOTE : Darwin : in fact we never get out nativeSteer ! 
+                       then the below destroy is never executed. -->
+  <destroy exec="Session">OnX session_echo OnX_Finalize.</destroy>
+
+  <!-- The four below are dummy with SDL UI. -->
+
+  <widget class="Window">
+  <widget class="MenuBar">
+  <widget class="CascadeButton">
+  <widget class="Menu">
+
+  <widget class="MenuItem" name="OnX_File_exit">
+    <label>Exit</label>
+    <activate exec="DLD">OnX ui_exit</activate>
+  </widget>
+
+  <widget class="MenuItem">
+    <label>Erase</label>
+    <activate exec="DLD">OnX viewer_clear @current@ staticScene</activate>
+  </widget>
+
+  <widget class="MenuItem">
+    <label>Scene</label>
+    <activate exec="DLD">OnXExas OnX_SDL_default_scene</activate>
+    <!-- OnX Banner :
+    <activate exec="DLD">OnX viewer_clear @current@ all</activate>
+    <activate exec="DLD">OnX viewer_set_background_color @current@ 0.8 0.8 0.8</activate>
+    <activate exec="DLD">OnX viewer_read_scene @current@ SDL_OnX.iv iv staticScene</activate>
+    -->
+  </widget>
+
+  <widget class="MenuItem">
+    <label>Rm manips</label>
+    <activate exec="DLD">OnX viewer_remove_manips @current@</activate>
+    <activate exec="DLD">OnX widget_set_parameter @current@ showCursor false</activate>
+  </widget>
+
+  <widget class="MenuItem">
+    <label>Rotate</label>
+    <create exec="DLD">OnX cyclic_create OnX_SDL_cyclic 250 false DLD OnXExas OnX_SDL_rotate_update</create>
+    <activate exec="DLD">OnX cyclic_toggle OnX_SDL_cyclic</activate>
+  </widget>
+
+  <widget class="MenuItem" name="OnX_SDL_lock">
+    <label>Lock (pwd OnX)</label>
+    <activate exec="DLD">OnX ui_lock_screen OnX DLD OnX @cat_space@ ui_do_nothing</activate>
+    <activate exec="DLD">OnX widget_set_parameter @current@ showOptionsRegion false</activate>
+  </widget>
+
+  </widget>
+  </widget>
+  </widget>
+
+  <widget class="PageViewer" name="Viewer">
+    <create exec="DLD">OnX ui_set_current_widget @this@</create>
+  </widget>
+
+  </widget>
+</OnX>

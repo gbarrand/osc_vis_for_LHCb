@@ -1,0 +1,127 @@
+
+# to be sourced from a build script.
+
+if [ "${build_path}" = "yes" ] ; then
+  echo 'osc_batch/mgr/cp2distrib : variable build_path not set.'
+  exit
+fi  
+if [ "${build_pack}" = "yes" ] ; then
+  echo 'osc_batch/mgr/cp2distrib : variable build_pack not set.'
+  exit
+fi
+if [ "${version}" = "yes" ] ; then
+  echo 'osc_batch/mgr/cp2distrib : variable version not set.'
+  exit
+fi
+  
+#/////////////////////////////////////////////
+#/// packaging : /////////////////////////////
+#/////////////////////////////////////////////
+/bin/cp ../../osc_source/release/UNIX/aida-setup.csh ${head}/.
+/bin/cp ../../osc_source/release/UNIX/aida-setup.sh ${head}/.
+/bin/cp ../../osc_source/release/UNIX/setup.csh ${head}/.
+/bin/cp ../../osc_source/release/UNIX/setup.sh ${head}/.
+/bin/cp ../../osc_source/release/UNIX/install ${head}/.
+/bin/cp ../../osc_source/release/UNIX/check_install ${head}/.
+/bin/cp ../../osc_source/release/UNIX/README ${head}/README
+
+#/////////////////////////////////////////////
+#/// Resources : /////////////////////////////
+#/////////////////////////////////////////////
+/bin/mkdir -p ${head}/Resources/expat
+/bin/cp -R ${ourex_mgr}/../expat/include ${head}/Resources/expat/.
+/bin/mkdir -p ${head}/Resources/inlib
+/bin/cp -R ${inlib_mgr}/../inlib ${head}/Resources/inlib/.
+
+/bin/mkdir -p ${head}/Resources/AIDA/src/cpp
+/bin/cp -R ../../AIDA/v3r2p1/AIDA ${head}/Resources/AIDA/src/cpp/.
+/bin/cp -R ../../UseAIDA/examples ${head}/Resources/AIDA/.
+/bin/mkdir -p ${head}/Resources/BatchLab
+/bin/cp -R ../../BatchLab/BatchLab ${head}/Resources/BatchLab/.
+/bin/cp -R ../../BatchLab/scripts ${head}/Resources/BatchLab/.
+/bin/mkdir -p ${head}/Resources/Lib
+/bin/cp -R ../../Lib/include ${head}/Resources/Lib/.
+/bin/mkdir -p ${head}/Resources/Slash
+/bin/cp -R ../../Slash/Slash ${head}/Resources/Slash/.
+/bin/mkdir -p ${head}/Resources/amanip
+/bin/cp -R ../../amanip/src ${head}/Resources/amanip/.
+
+#/////////////////////////////////////////////
+#/// apps : //////////////////////////////////
+#/////////////////////////////////////////////
+/bin/cp ${inlib_mgr}/${build_dir}/config            ${head}/bin/inlib-config
+/bin/cp ../../amanip/mgr/${build_dir}/amanip-config ${head}/bin/.
+/bin/cp ../../Slash/mgr/${build_dir}/slash-config   ${head}/bin/.
+/bin/cp ../../BatchLab/mgr/${build_dir}/aida-config ${head}/bin/.
+/bin/cp ../../BatchLab/mgr/${build_dir}/test_ntuple ${head}/bin/.
+
+#/////////////////////////////////////////////
+#/// plugins : ///////////////////////////////
+#/////////////////////////////////////////////
+packs=
+packs="${packs} BatchLab"
+for pack in ${packs} ; do
+  find ../../${pack}/mgr/${build_dir} -name "*.${pgex}" -exec /bin/cp {} ${head}/bin/. \;
+done
+if [ "${pgex}" = "${shex}" ] ; then
+  find ${head}/bin -name "lib*.${shex}" -exec /bin/rm -f {} \;
+fi
+
+#/////////////////////////////////////////////
+#/// osc libs : //////////////////////////////
+#/////////////////////////////////////////////
+packs=
+packs="${packs} Rio Minuit Lib BatchLab"
+for pack in ${packs} ; do
+  find ../../${pack}/mgr/${build_dir} -name "lib*.${shex}" -exec /bin/cp {} ${head}/lib/. \;
+done
+
+#/////////////////////////////////////////////
+#/// ourex libs : ////////////////////////////
+#/////////////////////////////////////////////
+packs=
+packs="${packs} zlib"
+for pack in ${packs} ; do
+  /bin/cp ${ourex_mgr}/../${pack}/${build_dir}/libourex_${pack}.${shex} ${head}/lib/.
+done
+
+#/////////////////////////////////////////////
+#/// save files : ////////////////////////////
+#/////////////////////////////////////////////
+
+# config .save files :
+save=${head}/bin/inlib_config_save.save
+/bin/rm -f ${save}
+echo "obuild_cxx_command=${cpp_compiler}"  >> ${save}
+echo 'obuild_cxx_options='                 >> ${save}
+echo 'obuild_cxx_macros='                  >> ${save}
+echo 'obuild_cxx_includes=-I"@@top@@/inlib"'   >> ${save}
+echo 'obuild_linked_libraries='   >> ${save}
+
+save=${head}/bin/amanip_config_save.save
+/bin/rm -f ${save}
+echo "obuild_cxx_command=${cpp_compiler}"  >> ${save}
+echo 'obuild_cxx_options='                 >> ${save}
+echo 'obuild_cxx_macros='                  >> ${save}
+echo 'obuild_cxx_includes=-I"@@top@@/amanip/src/cpp" -I"@@top@@/AIDA/v3r2p1/src/cpp"'   >> ${save}
+echo 'obuild_linked_libraries='   >> ${save}
+
+save=${head}/bin/Slash_config_save.save
+/bin/rm -f ${save}
+echo "obuild_cxx_command=${cpp_compiler}"  >> ${save}
+echo 'obuild_cxx_options='                 >> ${save}
+echo 'obuild_cxx_macros='                  >> ${save}
+echo 'obuild_cxx_includes=-I"@@top@@/Slash" -I"@@top@@/inlib"'   >> ${save}
+echo 'obuild_linked_libraries='   >> ${save}
+
+save=${head}/bin/BatchLab_exa_config.save
+/bin/rm -f ${save}
+echo "obuild_cxx_command=${cpp_compiler}"  >> ${save}
+echo 'obuild_cxx_options='                 >> ${save}
+echo 'obuild_cxx_macros='                  >> ${save}
+echo 'obuild_cxx_includes=-I"@@top@@/AIDA/v3r2p1/src/cpp"'   >> ${save}
+if [ `uname` = "Linux" ] ; then
+  echo 'obuild_linked_libraries=-lBatchLabAIDA -lLibUtils -lourex_zlib -losc_Minuit -ldl'   >> ${save}
+else
+  echo 'obuild_linked_libraries=-lBatchLabAIDA -lLibUtils -lourex_zlib -losc_Minuit'   >> ${save}
+fi

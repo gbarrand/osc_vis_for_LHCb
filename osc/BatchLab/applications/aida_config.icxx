@@ -1,0 +1,120 @@
+
+#include <AIDA/IConstants.h>
+
+#include <inlib/args>
+#include <inlib/config>
+
+#include <cstdio>   //printf
+#include <cstdlib>  //EXIT_SUCCESS
+
+int main(int aArgc,char** aArgv) {
+  inlib::args args(aArgc,aArgv);
+
+  unsigned int number = args.number();
+  if(number==1) {
+    ::printf("\
+Usage: aida-config [OPTION]\n\
+Options:\n\
+        [--version]\n\
+        [--incs,--include]\n\
+        [--cflags,--cppflags]\n\
+        [--libs,--lib]\n\
+        [--dll]\n\
+        [--compiler]\n\
+        [--implementation]\n\
+        [--builder]\n\
+");
+    return EXIT_SUCCESS;
+  } 
+
+  const std::vector<inlib::args::arg>& argv = args.get_args();
+
+ {std::vector<std::string> options;
+  options.push_back("--version");
+  options.push_back("--builder");
+  options.push_back("--dll");
+  options.push_back("--implementation");
+  options.push_back("--compiler");
+  options.push_back("--incs");
+  options.push_back("--include");
+  options.push_back("--cflags");
+  options.push_back("--cppflags");
+  options.push_back("--libs");
+  options.push_back("--lib");
+  for(unsigned int index=1;index<number;index++) {
+    const std::string& arg = argv[index].first;
+
+    bool found = false;
+    unsigned int optn = options.size();
+    for(unsigned int opt=0;opt<optn;opt++) {
+      if(arg==options[opt]) {
+        found = true;
+        break;        
+      }
+    }
+    if(!found) {
+      ::fprintf(stderr,"%s_aida_config : unknown option.\n",Pack);
+     {::fprintf(stderr,"passed arguments had been :\n");
+      for(int index=0;index<aArgc;index++) {
+        ::fprintf(stderr,"%s\n",aArgv[index]);
+      }}
+      return EXIT_FAILURE;
+    }
+  }}
+
+  for(unsigned int index=1;index<number;index++) {
+    if(index>1) ::printf(" ");
+
+    const std::string& arg = argv[index].first;
+
+    if(arg=="--version") {
+
+      ::printf("%s",AIDA_VERSION);
+
+    } else if(arg=="--builder") { //Not AIDA compliant.
+
+      ::printf("obuild");
+
+    } else if(arg=="--dll") {
+
+      ::printf("%sLoadAIDA",Pack);
+
+    } else if(arg=="--implementation") {
+
+      ::printf("%s",Pack);
+
+    } else if(arg=="--compiler") { //Not AIDA compliant.
+
+      std::string file = std::string(Pack)+"_exa_config.save";
+      std::string value;
+      if(!inlib::config::find_cxx(aArgv[0],file,value)) return EXIT_FAILURE;
+      ::printf("%s",value.c_str());
+
+    } else if( (arg=="--incs") || 
+               (arg=="--include") ){
+      std::string file = std::string(Pack)+"_exa_config.save";
+      std::string value;
+      if(!inlib::config::find_incs(aArgv[0],file,value)) return EXIT_FAILURE;
+      ::printf("%s",value.c_str());
+
+    } else if( (arg=="--cflags") || 
+               (arg=="--cppflags") ){
+      std::string file = std::string(Pack)+"_exa_config.save";
+      std::string value;
+      if(!inlib::config::find_flags(aArgv[0],file,value)) return EXIT_FAILURE;
+      ::printf("%s",value.c_str());
+
+    } else if( (arg=="--libs") || 
+               (arg=="--lib") ){
+      std::string file = std::string(Pack)+"_exa_config.save";
+      std::string value;
+      if(!inlib::config::find_libs(aArgv[0],file,value)) return EXIT_FAILURE;
+      ::printf("%s",value.c_str());
+  
+    }
+  }
+
+  ::printf("\n");
+
+  return EXIT_SUCCESS;
+}

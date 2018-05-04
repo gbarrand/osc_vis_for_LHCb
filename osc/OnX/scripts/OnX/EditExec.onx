@@ -1,0 +1,78 @@
+<OnX>
+  <widget class="Window" name="OnX_EditExec_main">
+    <decoration>no_close_button\nno_system_menu</decoration>
+    <geometry>500x400+100+100</geometry>
+    <title>Edit and execute scripts</title>
+    <create exec="DLD">OnX ui_setParameter OnX_EditExec_interpreter.items @manager@ScriptManager@interpreters@</create>
+    <create exec="DLD">OnX set_variable OnX_EditExec.file out.dld</create>
+    <widget class="MenuBar">
+      <comment text="////////////////////////////////////"/>
+      <comment text="//// File ///////////////////////////"/>
+      <comment text="////////////////////////////////////"/>
+      <widget class="CascadeButton">
+        <label>File</label>
+        <widget class="Menu">
+          <widget class="MenuItem">
+            <label>Open...</label>
+            <variable name="OnX_EditExec.script">OnX OnX_EditExec_setFile @this.value@</variable>
+            <activate exec="DLD">OnX ui_set_fileChooser $ONXROOT/examples * open DLD @{OnX_EditExec.script}@</activate>
+            <activate exec="DLD">OnX ui_show fileChooser</activate>
+          </widget>
+          <widget class="MenuItem">
+            <label>Save</label>
+            <activate exec="DLD">OnX lib_write_file @{OnX_EditExec.file}@ @[OnX_EditExec_text.value]@</activate>
+          </widget>
+          <widget class="MenuItem">
+            <label>Save as...</label>
+            <variable name="OnX_EditExec_fileChooser_ok">OnX lib_write_file @this.value@ @[OnX_EditExec_text.value]@</variable>
+            <activate exec="DLD">OnX set_variable OnX_EditExec.suffix *. @cat@ @interpreter@[OnX_EditExec_interpreter.value]@suffix@</activate>
+            <activate exec="DLD">OnX ui_set_fileChooser . @{OnX_EditExec.suffix}@ save DLD @{OnX_EditExec_fileChooser_ok}@</activate>
+            <activate exec="DLD">OnX ui_show fileChooser</activate>
+          </widget>
+        </widget>
+      </widget>
+      <comment text="////////////////////////////////////"/>
+      <comment text="//// Edit //////////////////////////"/>
+      <comment text="////////////////////////////////////"/>
+      <widget class="CascadeButton">
+        <label>Edit</label>
+        <widget class="Menu">
+          <widget class="MenuItem">
+            <label>Clear</label>
+            <activate exec="DLD">OnX ui_setParameter OnX_EditExec_text.value</activate>
+          </widget>
+        </widget>
+      </widget>
+    </widget>
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>30</sizeOfFixed>
+      <widget class="ScrolledText" name="OnX_EditExec_text"/>
+      <widget class="HBox">
+        <expand>second</expand>
+        <sizeOfFixed>80</sizeOfFixed>
+        <widget class="OptionMenu" name="OnX_EditExec_interpreter">
+          <label>Interpreter</label>
+          <default>DLD</default>
+          <comment text="items set by the create callback"/>
+          <items>DLD</items>
+        </widget>
+        <widget class="HContainer">
+          <widget class="PushButton">
+            <label>Ok</label>
+            <activate exec="DLD">OnX ui_hide OnX_EditExec_main</activate>
+            <activate exec="DLD">OnX OnX_EditExec_ok</activate>
+          </widget>
+          <widget class="PushButton">
+            <label>Apply</label>
+            <activate exec="DLD">OnX OnX_EditExec_ok</activate>
+          </widget>
+          <widget class="PushButton">
+            <label>Cancel</label>
+            <activate exec="DLD">OnX ui_hide OnX_EditExec_main</activate>
+          </widget>
+        </widget>
+      </widget>
+    </widget>
+  </widget>
+</OnX>

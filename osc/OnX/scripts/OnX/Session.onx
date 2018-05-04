@@ -1,0 +1,61 @@
+<session>
+<!--
+  <output>terminal</output>
+  <verbose>1</verbose>
+
+  <myParam>myValue</myParam>
+-->
+
+  <manager name="UI_Manager">
+<!--
+    <verbose>1</verbose>
+    <style>aqua</style>
+    <toolkit>Qt</toolkit>
+    <thread>yes</thread>
+    <style>motif</style>
+-->
+  </manager>
+
+  <manager name="AccessorManager">
+<!--    
+    <verbose>1</verbose> 
+-->
+  </manager>
+
+  <manager name="ScriptManager">
+    <recordExecutedScripts>no</recordExecutedScripts>
+    <interpreter name="Python">
+      <library>OnXPython</library>
+      <package>OnXPython</package>
+      <suffix>py</suffix>
+      <execFileCommand>execfile('@onx_file@')</execFileCommand>
+      <mendatoryEnvironmentVariable>ONX_HAS_PYTHON</mendatoryEnvironmentVariable>
+    </interpreter>
+    <interpreter name="Tcl">
+      <library>OnXTcl</library>
+      <package>OnXTcl</package>
+      <suffix>tcl</suffix>
+      <execFileCommand>source @onx_file@</execFileCommand>
+    </interpreter>
+    <interpreter name="KUIP">
+      <library>OnXKUIP</library>
+      <package>OnXKuip</package>
+      <suffix>kumac</suffix>
+      <execFileCommand>/MACRO/EXEC @onx_file@</execFileCommand>
+    </interpreter>
+<!--
+    <interpreter name="CINT">
+      <library>OnXCINT</library>
+      <package>OnXCint</package>
+      <suffix>C</suffix>
+      <execFileCommand>x @onx_file@</execFileCommand>
+    </interpreter>
+    <interpreter name="java">
+      <library>OnXJava</library>
+      <package>OnXJava</package>
+      <suffix>java</suffix>
+      <execFileCommand/>
+    </interpreter>
+-->
+  </manager>
+</session>

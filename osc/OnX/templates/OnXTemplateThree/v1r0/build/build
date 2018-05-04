@@ -1,0 +1,34 @@
+#!/bin/sh -f 
+
+#set -x
+
+if test "`osc-config --version`" = "" ; then
+  echo "osc-config not available."
+  exit
+fi
+
+bin=.
+
+#args=$*
+
+cppflags="-I."
+eval `osc-config --compiler` -c ${cppflags} `osc-config --gl_cppflags` -o ${bin}/Callbacks.o ../source/Callbacks.cxx
+
+libs=`osc-config --gl_libs`
+
+if test `uname` = "Darwin" ; then
+/bin/rm -f ${bin}/OnXTemplateThree.bundle
+eval c++ -bundle -twolevel_namespace -o ${bin}/OnXTemplateThree.bundle ${bin}/Callbacks.o ${libs}
+fi
+
+if test `uname` = "Linux" ; then
+/bin/rm -f ${bin}/libOnXTemplateThree.so
+eval g++ -shared -o ${bin}/libOnXTemplateThree.so ${bin}/Callbacks.o ${libs}
+fi
+
+if test `uname` = "OSF1" ; then
+/bin/rm -f ${bin}/libOnXTemplateThree.so
+eval cxx -shared -o ${bin}/libOnXTemplateThree.so ${bin}/Callbacks.o ${libs}
+fi
+
+find . -name '*.o' -exec /bin/rm -f {} \;

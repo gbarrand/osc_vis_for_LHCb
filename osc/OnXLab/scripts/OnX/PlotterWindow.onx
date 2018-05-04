@@ -1,0 +1,34 @@
+  <widget class="Window" name="@name@@window_@">
+    <geometry>500x500+0+0</geometry>
+    <title>osc-plot</title>
+    <decoration>no_close_button</decoration>
+    <destroy exec="DLD">OnX ui_exit</destroy>
+    <show>no</show>  
+
+    <widget class="VBox"> 
+      <expand>first</expand>
+      <sizeOfFixed>30</sizeOfFixed>
+
+      <widget class="PlanePageViewer" name="@name@@plotter_@">
+        <create exec="DLD">OnX ui_set_current_widget @this@</create>
+        <create exec="DLD">OnX page_set_title @this@ OnXLab</create>
+        <create exec="DLD">OnX page_title_visible @this@ false</create>
+        <create exec="DLD">OnX page_create_regions @this@ SoPlotterRegion 1 1 0</create>
+        <create exec="DLD">OnX region_set_color @this@ white</create>
+        <create exec="DLD">OnX viewer_set_decoration @this@ false</create>
+        <create exec="DLD">OnX viewer_set_viewing @this@ false</create>
+
+        <collect exec="DLD">OnX viewer_collect @this@</collect>
+        <popupItems>No highlighted</popupItems>
+        <variable name="Pages_popup_item_script">
+          No highlighted\nOnX region_no_highlighted @this@
+        </variable>
+        <popup exec="DLD">OnX ui_execute_script DLD @next@this.value@{Pages_popup_item_script}@strip_key@</popup>
+      </widget>
+
+      <widget class="PushButton">
+        <label>Leave plotter</label>
+        <activate exec="DLD">OnX ui_exit</activate>
+      </widget>
+    </widget>
+  </widget>

@@ -1,0 +1,5 @@
+OnX page_set_title @current@ OnX
+OnX page_title_visible @current@ false
+OnX page_create_regions @current@ SoDisplayRegion 1 1 0
+OnX region_set_color @current@ 0.8 0.8 0.8
+OnX viewer_read_scene @current@ $ONXROOT/examples/OnX/HelloOnX.iv iv staticScene

@@ -1,0 +1,62 @@
+<widget class="VContainer">
+  <tabLabel>Components</tabLabel>
+  <widget class="Label">
+    <label>Set/Unset plotter components :(only for current region)</label>
+  </widget>
+  <widget class="HBox">
+    <widget class="ToggleButton" name="OnX_InputPlotter_wallStyle">
+      <label>wall</label>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <widget class="ToggleButton" name="OnX_InputPlotter_gridStyle">
+      <label>grid</label>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <widget class="ToggleButton" name="OnX_InputPlotter_innerFrameStyle">
+      <label>inner frame</label>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <widget class="ToggleButton" name="OnX_InputPlotter_infosVisible">
+      <label>infos</label>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <widget class="ToggleButton" name="OnX_InputPlotter_legendVisible">
+      <label>legend</label>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <widget class="ToggleButton" name="OnX_InputPlotter_titleStyle">
+      <label>title</label>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <widget class="ToggleButton" name="OnX_InputPlotter_titleUp">
+      <label>title position Up/Down</label>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <widget class="ToggleButton" name="OnX_InputPlotter_superposeBins">
+      <label>superpose bins</label>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <widget class="ToggleButton" name="OnX_InputPlotter_errors">
+      <label>errors</label>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <widget class="ToggleButton" name="OnX_InputPlotter_shape_automated">
+      <label>shape automated</label>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <widget class="OptionMenu" name="OnX_InputPlotter_shape">
+      <label>shape</label>
+      <items>XY\nXYZ</items>
+    </widget>
+  </widget>
+</widget>

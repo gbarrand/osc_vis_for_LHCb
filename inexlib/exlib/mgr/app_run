@@ -1,0 +1,45 @@
+#!/bin/sh -f
+
+run_gdb=no
+run_Wt=no
+run_args=
+build_args=
+
+while test $# -ge 1 ; do
+  case $1 in
+    # to find build_out dir :
+    -gnu)    build_args="${build_args} $1";;
+    -intel)  build_args="${build_args} $1";;
+    -clang)  build_args="${build_args} $1";;
+    -visual) build_args="${build_args} $1";;
+
+    -ios)    build_args="${build_args} $1";;
+    -iossim) build_args="${build_args} $1";;
+    -cocoa)  build_args="${build_args} $1";;
+    -x11)    build_args="${build_args} $1";;
+
+    # local options : 
+    -gdb) run_gdb=yes;;
+    -Wt)  run_Wt=yes;;
+
+    -*) run_args="${run_args} $1";;  
+     *) run_args="${run_args} $1";;  
+  esac
+  shift
+done
+
+exlib_mgr=../../inexlib/exlib/mgr
+. ${exlib_mgr}/build_app_header  # to get build_path
+
+if [ "${run_Wt}" = "yes" ] ; then
+  ${build_path}/distrib/${app}/${version}/bin/run ${run_args}
+else
+  if [ "${run_gdb}" = "yes" ] ; then
+    gdb ${build_path}/distrib/${app}/${version}/bin/${app}
+  elif [ ${build_cocoa} = "yes" ] ; then
+    open ${build_path}/distrib/${app}/${version}/${app}.app
+  else
+    ${build_path}/distrib/${app}/${version}/bin/${app} ${run_args}
+  fi
+fi
+

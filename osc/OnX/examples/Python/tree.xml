@@ -1,0 +1,37 @@
+<tree>
+
+<treeItem>
+  <label>Item 1</label>
+  <treeItem>
+    <label>Item 1 1</label>
+  </treeItem>
+  <treeItem>
+    <label>Item 1 2</label>
+  </treeItem>
+</treeItem>
+<treeItem>
+  <label>Item 2</label>
+  <opened>true</opened>
+  <treeItem>
+    <label>Item 2 1</label>
+  </treeItem>
+  <treeItem>
+    <label>Item 2 2</label>
+  </treeItem>
+</treeItem>
+<treeItem>
+  <label>Item 3</label>
+  <opened>no</opened>
+  <treeItem>
+    <label>Item 3 1</label>
+  </treeItem>
+  <treeItem>
+    <label>Item 3 2</label>
+    <treeItem>
+      <label>Item 3 2 1</label>
+    </treeItem>
+  </treeItem>
+</treeItem>
+
+</tree>
+

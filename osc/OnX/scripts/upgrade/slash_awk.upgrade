@@ -1,0 +1,136 @@
+replace\nIReader\nSlash::Core::IReader
+replace\nclass Slash::Core::IReader;\nnamespace Slash {namespace Core {class IReader;}}
+replace\n<Lib/Interfaces/Slash::Core::IReader.h>\n<Slash/Core/IReader.h>
+
+replace\nIWriter\nSlash::Core::IWriter
+replace\nclass Slash::Core::IWriter;\nnamespace Slash {namespace Core {class IWriter;}}
+replace\n<Lib/Interfaces/Slash::Core::IWriter.h>\n<Slash/Core/IWriter.h>
+
+replace\nIManager\nSlash::Core::IManager
+replace\nclass Slash::Core::IManager;\nnamespace Slash {namespace Core {class IManager;}}
+replace\n<Lib/Interfaces/Slash::Core::IManager.h>\n<Slash/Core/IManager.h>
+
+replace\nISession\nSlash::Core::ISession
+replace\nclass Slash::Core::ISession;\nnamespace Slash {namespace Core {class ISession;}}
+replace\n<Lib/Interfaces/Slash::Core::ISession.h>\n<Slash/Core/ISession.h>
+
+replace\nILibraryManager\nSlash::Core::ILibraryManager
+replace\nclass Slash::Core::ILibraryManager;\nnamespace Slash {namespace Core {class ILibraryManager;}}
+replace\n<Lib/Interfaces/Slash::Core::ILibraryManager.h>\n<Slash/Core/ILibraryManager.h>
+
+replace\nILibrary\nSlash::Core::ILibrary
+replace\nclass Slash::Core::ILibrary;\nnamespace Slash {namespace Core {class ILibrary;}}
+replace\n<Lib/Interfaces/Slash::Core::ILibrary.h>\n<Slash/Core/ILibrary.h>
+
+replace\nIOpaqueManager\nSlash::Core::IOpaqueManager
+replace\nclass Slash::Core::IOpaqueManager;\nnamespace Slash {namespace Core {class IOpaqueManager;}}
+replace\n<Lib/Interfaces/Slash::Core::IOpaqueManager.h>\n<Slash/Core/IOpaqueManager.h>
+
+replace\nLib::IRelationManager\nSlash::Core::IRelationManager
+replace\nnamespace Lib {class IRelationManager;\nnamespace Slash {namespace Core {class IRelationManager;}
+replace\n<Lib/Interfaces/IRelationManager.h>\n<Slash/Core/IRelationManager.h>
+
+replace\nLib::IRelationVisitor\nSlash::Core::IRelationVisitor
+replace\nnamespace Lib {class IRelationVisitor;\nnamespace Slash {namespace Core {class IRelationVisitor;}
+replace\n<Lib/Interfaces/IRelationVisitor.h>\n<Slash/Core/IRelationVisitor.h>
+
+replace\nLib::IRelation\nSlash::Core::IRelation
+replace\nnamespace Lib {class IRelation;\nnamespace Slash {namespace Core {class IRelation;}
+replace\n<Lib/Interfaces/IRelation.h>\n<Slash/Core/IRelation.h>
+
+replace\nIDirectoryVisitor\nSlash::Core::IDirectoryVisitor
+replace\nclass Slash::Core::IDirectoryVisitor;\nnamespace Slash {namespace Core {class IDirectoryVisitor;}}
+replace\n<Lib/Interfaces/Slash::Core::IDirectoryVisitor.h>\n<Slash/Core/IDirectoryVisitor.h>
+
+replace\nLib::IValue\nSlash::Core::IValue
+replace\nnamespace Lib {class IValue;\nnamespace Slash {namespace Core {class IValue;}
+replace\n<Lib/Interfaces/IValue.h>\n<Slash/Core/IValue.h>
+
+replace\nLib::IAction\nSlash::Core::IAction
+replace\nnamespace Lib {class IAction;\nnamespace Slash {namespace Core {class IAction;}
+replace\n<Lib/Interfaces/IAction.h>\n<Slash/Core/IAction.h>
+
+replace\nLib::IMessage\nSlash::Core::IMessage
+replace\nnamespace Lib {class IMessage;\nnamespace Slash {namespace Core {class IMessage;}
+replace\n<Lib/Interfaces/IMessage.h>\n<Slash/Core/IMessage.h>
+
+replace\nLib::IFileGetter\nSlash::Core::IFileGetter
+replace\nnamespace Lib {class IFileGetter;\nnamespace Slash {namespace Core {class IFileGetter;}
+replace\n<Lib/Interfaces/IFileGetter.h>\n<Slash/Core/IFileGetter.h>
+
+replace\nLib::IFunction\nSlash::Data::IFunction
+replace\nnamespace Lib {class IFunction;\nnamespace Slash {namespace Data {class IFunction;}
+replace\n<Lib/Interfaces/IFunction.h>\n<Slash/Data/IFunction.h>
+
+replace\nLib::IFunctionManager\nSlash::Data::IFunctionManager
+replace\nnamespace Lib {class IFunctionManager;\nnamespace Slash {namespace Data {class IFunctionManager;}
+replace\n<Lib/Interfaces/IFunctionManager.h>\n<Slash/Data/IFunctionManager.h>
+
+replace\nLib::IHandler\nSlash::Data::IHandler
+replace\nnamespace Lib {class IHandler;\nnamespace Slash {namespace Data {class IHandler;}
+replace\n<Lib/Interfaces/IHandler.h>\n<Slash/Data/IHandler.h>
+
+replace\nLib::IHandlersIterator\nSlash::Data::IHandlersIterator
+replace\nnamespace Lib {class IHandlersIterator;\nnamespace Slash {namespace Data {class IHandlersIterator;}
+replace\n<Lib/Interfaces/IHandlersIterator.h>\n<Slash/Data/IHandlersIterator.h>
+
+replace\nLib::IIterator\nSlash::Data::IIterator
+replace\nnamespace Lib {class IIterator;\nnamespace Slash {namespace Data {class IIterator;}
+replace\n<Lib/Interfaces/IIterator.h>\n<Slash/Data/IIterator.h>
+
+replace\nLib::IProperty\nSlash::Data::IProperty
+replace\nnamespace Lib {class IProperty;\nnamespace Slash {namespace Data {class IProperty;}
+replace\n<Lib/Interfaces/IProperty.h>\n<Slash/Data/IProperty.h>
+
+replace\nLib::IAccessor\nSlash::Data::IAccessor
+replace\nnamespace Lib {class IAccessor;\nnamespace Slash {namespace Data {class IAccessor;}
+replace\n<Lib/Interfaces/IAccessor.h>\n<Slash/Data/IAccessor.h>
+
+replace\nLib::IProcessor\nSlash::Data::IProcessor
+replace\nnamespace Lib {class IProcessor;\nnamespace Slash {namespace Data {class IProcessor;}
+replace\n<Lib/Interfaces/IProcessor.h>\n<Slash/Data/IProcessor.h>
+
+replace\nLib::IVisualizer\nSlash::Data::IVisualizer
+replace\nnamespace Lib {class IVisualizer;\nnamespace Slash {namespace Data {class IVisualizer;}
+replace\n<Lib/Interfaces/IVisualizer.h>\n<Slash/Data/IVisualizer.h>
+
+replace\nIInterpreter\nSlash::UI::IInterpreter
+replace\nclass Slash::UI::IInterpreter;\nnamespace Slash {namespace UI {class IInterpreter;}}
+replace\n<OnX/Interfaces/Slash::UI::IInterpreter.h>\n<Slash/UI/IInterpreter.h>
+
+replace\nIScriptManager\nSlash::UI::IScriptManager
+replace\nclass Slash::UI::IScriptManager;\nnamespace Slash {namespace UI {class IScriptManager;}}
+replace\n<OnX/Interfaces/Slash::UI::IScriptManager.h>\n<Slash/UI/IScriptManager.h>
+
+replace\nIUI_Manager\nSlash::UI::IUI_Manager
+replace\nclass Slash::UI::IUI_Manager;\nnamespace Slash {namespace UI {class IUI_Manager;}}
+replace\n<OnX/Interfaces/Slash::UI::IUI_Manager.h>\n<Slash/UI/IUI_Manager.h>
+
+replace\nIUI\nSlash::UI::IUI
+replace\nclass Slash::UI::IUI;\nnamespace Slash {namespace UI {class IUI;}}
+replace\n<OnX/Interfaces/Slash::UI::IUI.h>\n<Slash/UI/IUI.h>
+
+replace\nICallbackData\nSlash::UI::ICallbackData
+replace\nclass Slash::UI::ICallbackData;\nnamespace Slash {namespace UI {class ICallbackData;}}
+replace\n<OnX/Interfaces/Slash::UI::ICallbackData.h>\n<Slash/UI/ICallbackData.h>
+
+replace\nIStyleManager\nSlash::UI::IStyleManager
+replace\nclass Slash::UI::IStyleManager;\nnamespace Slash {namespace UI {class IStyleManager;}}
+replace\n<OnX/Interfaces/Slash::UI::IStyleManager.h>\n<Slash/UI/IStyleManager.h>
+
+replace\nIWidgetClass\nSlash::UI::IWidgetClass
+replace\nclass Slash::UI::IWidgetClass;\nnamespace Slash {namespace UI {class IWidgetClass;}}
+replace\n<OnX/Interfaces/Slash::UI::IWidgetClass.h>\n<Slash/UI/IWidgetClass.h>
+
+replace\nIWidgetFactory\nSlash::UI::IWidgetFactory
+replace\nclass Slash::UI::IWidgetFactory;\nnamespace Slash {namespace UI {class IWidgetFactory;}}
+replace\n<OnX/Interfaces/Slash::UI::IWidgetFactory.h>\n<Slash/UI/IWidgetFactory.h>
+
+replace\nIWidget\nSlash::UI::IWidget
+replace\nclass Slash::UI::IWidget;\nnamespace Slash {namespace UI {class IWidget;}}
+replace\n<OnX/Interfaces/Slash::UI::IWidget.h>\n<Slash/UI/IWidget.h>
+
+replace\nICyclic\nSlash::UI::ICyclic
+replace\nclass Slash::UI::ICyclic;\nnamespace Slash {namespace UI {class ICyclic;}}
+replace\n<OnX/Interfaces/Slash::UI::ICyclic.h>\n<Slash/UI/ICyclic.h>
+

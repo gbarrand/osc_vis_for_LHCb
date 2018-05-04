@@ -1,0 +1,8 @@
+#!/bin/sh -f
+
+location=$2
+
+cd "${location}"/OpenScientist/v16r1
+chmod a+x ./install
+./install
+

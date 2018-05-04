@@ -1,0 +1,74 @@
+
+# to be sourced from another build script.
+
+if [ "${plugin}" = "" ] ; then
+  echo "inlib/mgr/build_plugin : variable plugin not defined."
+  exit
+fi
+
+if [ "${objs}" = "" ] ; then
+  echo "inlib/mgr/build_plugin : no objs."
+else
+
+  if [ ${build_visual} = "yes" ] ; then
+    echo "inlib/mgr/build_plugin : build plugin not yet handled."
+  else
+
+    if [ ${build_sdk_android} = "yes" ] ; then
+      plugin_suffix=so
+
+      pgflags="${pgflags} -Wl,-soname,${plugin}.so"
+	
+      pgflags="${pgflags} -shared"
+      pgflags="${pgflags} --sysroot=${ndk_home}/platforms/android-8/arch-arm"
+      pgflags="${pgflags} -Wl,--no-undefined -Wl,-z,noexecstack"
+
+      # NOTE : it is very touchy concerning the order in the below :
+      libs="${libs} ${ndk_home}/sources/cxx-stl/gnu-libstdc++/libs/armeabi/libgnustl_static.a"
+      libs="${libs} ${ndk_home}/toolchains/arm-linux-androideabi-4.4.3/prebuilt/darwin-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/libgcc.a"
+  
+      libs="${libs} -L${ndk_home}/platforms/android-8/arch-arm/usr/lib -lGLESv1_CM"
+      libs="${libs} -ldl -llog -lz -lc -lm"
+
+    elif [ `uname` = Darwin ] ; then
+      plugin_suffix=bundle
+
+      pgflags="${pgflags} -bundle -twolevel_namespace -Wl,-headerpad_max_install_names -Wl,-headerpad,800"
+
+    else
+      plugin_suffix=so
+
+      pgflags="${pgflags} -shared"
+    fi
+
+    if [ ${build_m32} = yes ] ; then
+      pgflags="${pgflags} -m32"
+    fi
+
+    /bin/mkdir -p ${build_path}
+
+    file_exe="${build_path}/${plugin}.${plugin_suffix}"
+    /bin/rm -f ${file_exe}
+    if [ ${build_verbose} = yes ] ; then
+      echo "inlib/mgr/build_plugin : link ${file_exe} ..."
+    fi
+
+    eval ${cpp_linker} ${pgflags} -o ${file_exe} ${objs} ${libs}
+
+    if [ ${build_sdk_android} = "yes" ] ; then
+      ${strip_cmd} ${file_exe}
+    fi
+
+    if [ "${pyname}" != "" ] ; then
+      fr="${build_path}/${plugin}.${pgex}"
+      to="${build_path}/${pyname}.${pgpy}"
+      if [ ${build_verbose} = yes ] ; then
+        echo "inlib/mgr/build_plugin : py : mv plugin to ${to} ..."
+      fi
+      if [ ${fr} != ${to} ] ; then /bin/mv "${fr}" "${to}"; fi
+    fi
+
+  fi
+
+fi
+

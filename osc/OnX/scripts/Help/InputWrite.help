@@ -1,0 +1,21 @@
+
+  The "Write" dialog box permits to produce output file
+ at various formats : HEPVis, Inventor, VRML, POV.
+
+  The HEPVis format (.hiv) writes plain HEPVis nodes 
+ in an Inventor file (then without any attempt to 
+ convert it to a scene using only nodes of the default 
+ Inventor library).
+
+  The Inventor format (.iv) converts (through the
+ "alternate representation" mechanism) the HEPVis nodes
+ to a scene using only nodes of the default Inventor library.
+
+  The VRML format (.wrl) creates an alternate representation
+ and then writes the scene at VRML format.
+
+  The POV-Ray format (.pov) creates an alternate representation
+ and then writes the scene at POV-Ray format.
+
+
+

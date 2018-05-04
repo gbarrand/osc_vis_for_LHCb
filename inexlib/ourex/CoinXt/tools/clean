@@ -1,0 +1,4 @@
+#!/bin/sh -f
+find ../src/Inventor -name "*.cpp" -exec /bin/rm {} \;
+find ../include/Inventor -name "*.h" -exec /bin/rm {} \;
+find ../data -name "*.h" -exec /bin/rm {} \;

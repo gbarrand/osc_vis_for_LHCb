@@ -1,0 +1,47 @@
+#!/bin/sh -f
+
+#set -x
+
+run_gdb=no
+
+run_args=
+build_args=
+
+what=
+while test $# -ge 1 ; do
+  case $1 in
+    # to find build_out dir :
+    -gnu)        build_args="${build_args} $1";;
+    -intel)      build_args="${build_args} $1";;
+    -clang)      build_args="${build_args} $1";;
+    -visual)     build_args="${build_args} $1";;
+    -sdk_mac)    build_args="${build_args} $1";;
+    -sdk_ios)    build_args="${build_args} $1";;
+    -sdk_iossim) build_args="${build_args} $1";;
+
+    # local options : 
+    -gdb) run_gdb=yes;;
+
+    -*) run_args="${run_args} $1";;  
+     *) if [ $# = 1 ] ; then
+          what=$1
+        else         
+          echo "unknwon option : $1"
+        fi
+        ;;
+  esac
+  shift
+done
+
+inlib_mgr=../../../inlib/mgr
+. ${inlib_mgr}/build_app_header  # to get build_path
+
+app_exe="`basename ${what}`"
+app_exe=`echo ${app_exe} | sed -e 's:\.cpp::g'`
+app_exe=`echo ${app_exe} | sed -e 's:\.c::g'`
+
+if [ "${run_gdb}" = "yes" ] ; then
+  gdb ${build_path}/${app_exe}
+else
+  ${build_path}/${app_exe} ${run_args}
+fi

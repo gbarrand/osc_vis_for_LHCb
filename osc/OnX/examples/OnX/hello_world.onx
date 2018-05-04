@@ -1,0 +1,15 @@
+<OnX>
+  <widget class="Window">
+    <geometry>300x40</geometry>
+    <title>Hello OnX world</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+    <widget class="PushButton">
+      <label>Quit the OnX world :-(</label>
+      <activate exec="DLD">OnX ui_exit</activate>
+<!-- this is a commented line
+      <background>white</background>
+-->
+    </widget>
+  </widget>
+</OnX>

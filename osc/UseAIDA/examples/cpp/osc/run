@@ -1,0 +1,39 @@
+#!/bin/sh -f
+
+if [ $# -eq 0 ] ; then
+  find . -name 'AIDA_*' -print -exec ./run {} \;
+  exit
+fi
+
+exa=$1
+
+echo "run ${exa}..."
+
+# options could be :
+# -verbose
+# -stdout
+# -balance
+# -debug_check_class
+
+OSC_ARGS="-balance";export OSC_ARGS
+
+if [ `echo ${exa} | sed -e 's:AIDA_example_load_aida::g'` != ${exa} ] ; then
+  aida_implementation=`aida-config --implementation`
+  #echo ${aida_implementation}
+  if [ ${aida_implementation} = BatchLab ] ; then
+    ${exa} BatchLabLoadAIDA
+  else
+    ${exa}
+  fi
+elif [ `echo ${exa} | sed -e 's:AIDA_example_load_plotter::g'` != ${exa} ] ; then
+  aida_implementation=`aida-config --implementation`
+  #echo ${aida_implementation}
+  if [ ${aida_implementation} = BatchLab ] ; then
+    echo "We can't run this example with this AIDA implementation."
+  else
+    ${exa}
+  fi
+else
+  ${exa}
+fi
+

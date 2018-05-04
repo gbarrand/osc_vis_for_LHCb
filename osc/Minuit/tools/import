@@ -1,0 +1,17 @@
+#!/bin/sh -f
+root=/barrand/with_cmt/Minuit/from_seal/SEAL_1_4_0/Minuit
+cd ..
+findrm .cpp
+findrm .h
+find ${root}/src -name "*.cpp" -exec cp {} src/. \;
+find ${root}/Minuit -name "*.h" -exec cp {} Minuit/. \;
+find ${root}/tests/MnSim -name "*.cpp" -exec cp {} tests/MnSim/. \;
+find ${root}/tests/MnSim -name "*.h" -exec cp {} tests/MnSim/. \;
+find ${root}/tests/MnSim -name "*.txt" -exec cp {} tests/MnSim/. \;
+find ${root}/tests/MnTutorial -name "*.cpp" -exec cp {} tests/MnTutorial/. \;
+find ${root}/tests/MnTutorial -name "*.h" -exec cp {} tests/MnTutorial/. \;
+#
+# FIXME : In tests remove ROOT related things.
+#
+# Correct operator new delete :
+find Minuit -name "*.h" -exec tools/strsubs {} \;

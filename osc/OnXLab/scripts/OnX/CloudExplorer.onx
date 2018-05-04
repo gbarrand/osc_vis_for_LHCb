@@ -1,0 +1,62 @@
+<widget class="Dialog" name="OnXLab_CloudExplorer_dialog">
+  <geometry>300x350</geometry>
+  <title>Cloud explorer</title>
+  <show>no</show>
+
+  <widget class="VBox"> 
+    <expand>first</expand>
+    <sizeOfFixed>30</sizeOfFixed>
+
+    <widget class="VBox"> 
+      <expand>first</expand>
+      <sizeOfFixed>120</sizeOfFixed>
+
+      <widget class="VContainer"> 
+        <widget class="PushButton" name="CloudExplorer_update">
+          <label>Update</label>
+          <activate exec="DLD">OnXLab OnXLab_CloudExplorer_update</activate>
+        </widget>
+        <widget class="Entry" name="OnXLab_CloudExplorer_tree"/>
+        <widget class="Entry" name="OnXLab_CloudExplorer_cloud"/>
+        <widget class="PushButton">
+          <label>Infos</label>
+          <activate exec="DLD">OnXLab OnXLab_CloudExplorer_infos</activate>
+        </widget>
+        <widget class="HContainer">
+          <widget class="OptionMenu" name="OnXLab_CloudExplorer_list">
+            <label>coordinate</label>
+            <valueChanged exec="DLD">OnXLab OnXLab_CloudExplorer_list_represent</valueChanged>
+          </widget>
+          <widget class="OptionMenu" name="OnXLab_CloudExplorer_rep">
+            <label>Rep</label>
+  
+            <items>points\nhisto</items>
+            <valueChanged exec="DLD">OnXLab OnXLab_CloudExplorer_list_represent</valueChanged>
+            <valueChanged exec="DLD">OnX ui_execute_script_if " @cat@ @this.value@ @cat@ "=="points" DLD OnX  @cat_space@ widget_manage @cat_space@ OnXLab_CloudExplorer_histo_box @cat_space@ no</valueChanged>
+            <valueChanged exec="DLD">OnX ui_execute_script_if " @cat@ @this.value@ @cat@ "=="histo" DLD OnX @cat_space@ widget_manage @cat_space@ OnXLab_CloudExplorer_histo_box @cat_space@ yes</valueChanged>
+  <!--
+  -->
+          </widget>
+        </widget>
+  
+      </widget>
+
+      <!-- 4*30 -->
+      <reference file="CloudExplorerHistoBox.onx"/>
+
+    </widget>
+
+    <widget class="HContainer">
+      <widget class="PushButton">
+        <label>Cancel</label>
+        <activate exec="DLD">OnX ui_hide OnXLab_CloudExplorer_dialog</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Help</label>
+        <activate exec="DLD">OnX ui_help_file @{ONXLAB_HOME}@ @cat@ /scripts/Help/CloudExplorer.help</activate>
+      </widget>
+    </widget>
+
+  </widget>
+</widget>
+

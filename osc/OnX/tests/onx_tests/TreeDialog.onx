@@ -1,0 +1,17 @@
+<widget class="Dialog" name="OnX_Tree_dialog">
+  <geometry>200x300</geometry>
+  <title>OnX/Tree</title>
+  <show>no</show>
+  <widget class="VBox"> 
+    <expand>first</expand>
+    <sizeOfFixed>30</sizeOfFixed>
+    <widget class="ScrolledTree" name="OnX_Tree_dialog_tree">
+      <create exec="DLD">OnX tree_set_with_file OnX_Tree_dialog_tree.items $ONXROOT/scripts/OnX/Tree.xml</create>
+      <select exec="DLD">OnX ui_echo @this.value@</select>
+    </widget>
+    <widget class="PushButton" name="OnX_Tree_dialog_cancel">
+      <label>Cancel</label>
+      <activate exec="DLD">OnX ui_hide OnX_Tree_dialog</activate>
+    </widget>
+  </widget>
+</widget>

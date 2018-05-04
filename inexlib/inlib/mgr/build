@@ -1,0 +1,325 @@
+#!/bin/sh -f
+
+build_verbose=no
+what=
+
+build_args=
+while test $# -ge 1 ; do
+  case $1 in
+    -v) build_verbose=yes;build_args="${build_args} $1";;
+    -*) build_args="${build_args} $1";;
+     *) if [ $# = 1 ] ; then
+          what=$1
+        else         
+          echo "unknwon option : $1"
+        fi
+        ;;
+  esac
+  shift
+done
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+if [ "${what}" = "" ] ; then
+  ./find_rm ../examples/cpp 'inlib_example_*'
+  ./find_rm ../inlib '*.gch.*'
+  ./find_rm ../inlib '*.cxx'
+  find ../inlib -name "*" -exec grep exlib.license {} \;
+  
+  find ../inlib -name '*' -type f -exec ./build ${build_args} {} \;
+  #exit
+
+  dirs=
+  dirs="${dirs} ../apps"
+  dirs="${dirs} ../tests"
+  for dir in ${dirs} ; do
+    find ${dir} -maxdepth 1 -name '*.cpp' -type f -exec ./build ${build_args} {} \;
+  done
+
+
+  # NOTE : for exas, we use the local build script.
+  find ../examples/cpp -maxdepth 1 -name '*.cpp' -type f -exec ./build_exa ${build_args} {} \;
+
+  exit
+fi
+
+if [ -d "${what}" ] ; then
+  find ${what} -name '*' -type f -exec ./build ${build_args} {} \;
+  exit
+fi
+
+base_name=`basename ${what}`
+
+if [ "${what}" = "${base_name}" ] ; then
+  # only the name entered, find exact places :
+  found="`find .. -name "${base_name}" -print`"
+  if [ "${found}" = "" ] ; then
+    echo "not found."
+  else
+    find .. -name "${base_name}" -type f -exec ./build ${build_args} {} \;
+  fi
+  exit
+fi
+
+if [ "`echo ${what} | grep examples`" != "" ] ; then
+  ./build_exa ${build_args} ${what}
+  exit
+fi
+
+#echo $1
+dir=`dirname ${what}`
+name=`basename ${what}`
+group=`basename ${dir}`
+
+name=`echo ${name} | sed -e 's:\.cpp::g'`
+
+#echo "dir : ${dir}"
+#echo "group : ${group}"
+#echo "name : ${name}"
+#exit
+
+if [ "`echo ${what} | grep '\.help'`" != "" ] ; then exit; fi
+if [ ${group} = "CVS" ] ; then exit;fi
+if [ ${name} = "README" ] ; then exit;fi
+
+if [ ${build_verbose} = yes ] ; then
+  echo "do : ${what}"
+fi
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+inlib_mgr=.
+. ${inlib_mgr}/build_header
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+if [ ${build_visual} = "yes" ] ; then
+  # rm painfull warnings about API strcpy, etc... deprecated.
+  cppflags="${cppflags} /wd4996"
+  ccflags0="${ccflags0} /wd4996"
+fi
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+use_inlib=yes
+
+is_app=no
+is_plugin=no
+
+is_test=no
+if [ ${group} = "apps" ] ; then is_app=yes; fi
+if [ ${group} = "tools" ] ; then is_app=yes; fi
+if [ ${group} = "tests" ] ; then
+  is_app=yes
+  is_test=yes
+fi
+
+if [ ${is_app} = "yes" ] ; then
+
+  if [ ${name} = "thread" ] ; then
+    if [ ${build_visual} = "yes" ] ; then
+      cppflags="${cppflags} "
+    else
+      cppflags="${cppflags} -pthread"
+    fi
+  fi
+
+  if [ ${name} = "plug" ] ; then
+    if [ `uname` = "Darwin" ] ; then
+      libs="${libs}"
+    elif [ `uname` = "Linux" ] ; then
+      #libs="${libs} -L/usr/${lib} -dl"
+      libs="${libs} /usr/${lib}/libdl.so"
+    fi
+  fi
+
+  if [ ${name} = "plugin" ] ; then
+    is_plugin=yes
+    is_app=no
+  fi
+
+  if [ ${name} = "inline_link" ] ; then
+    cppfiles="${cppfiles} ../tests/a.cpp ../tests/b.cpp"
+  fi
+
+  if [ ${name} = "test" ] ; then
+    /bin/rm -f tmp_0
+    find ../tests/test -name '*.cpp' -print > tmp_0
+    for file in $(cat tmp_0) ; do cppfiles="${cppfiles} ${file}";done
+    /bin/rm -f tmp_0
+  fi
+
+  if [ ${name} = "a" ] ; then exit; fi
+  if [ ${name} = "b" ] ; then exit; fi
+  if [ ${name} = "gen_solids" ] ; then exit; fi
+
+  if [ ${name} = "stl" ] ; then
+    if [ ${build_visual} = "yes" ] ; then
+      echo "stl : inlib/stl/vector does not compile."
+      exit
+    fi
+  fi
+
+  if [ ${name} = "ftp" ] ; then
+    use_socket=yes
+  fi
+  if [ ${name} = "http" ] ; then
+    use_socket=yes
+  fi
+  if [ ${name} = "hostaddr" ] ; then
+    use_socket=yes
+  fi
+  if [ ${name} = "wall_data_client" ] ; then
+    use_socket=yes
+  fi
+  if [ ${name} = "mail" ] ; then
+    use_socket=yes
+  fi
+
+  if [ ${name} = "f77mn.out" ] ; then exit;fi
+  if [ ${name} = "test_encode.txt" ] ; then exit;fi
+  if [ ${name} = "input_gen" ] ; then exit;fi
+fi
+
+# ////////////////////////////////////
+# ////////////////////////////////////
+# ////////////////////////////////////
+. ${inlib_mgr}/use_inlib
+
+. ${inlib_mgr}/use_socket
+
+# let the freedom to some application to not use G4_cppflags.
+cppflags="${G4_cppflags} ${cppflags}"
+
+# ////////////////////////////////////
+# ////////////////////////////////////
+# ////////////////////////////////////
+
+for file in ${cppfiles} ; do
+  oname=`basename ${file}`
+  oname=`echo ${oname} | sed -e 's:\.cpp::g'`
+  obj="${oname}.o"
+  if [ ${build_visual} = "yes" ] ; then
+    eval ${cpp_compiler} /c ${cppflags} /Fo${obj} ${file}
+  else
+    eval ${cpp_compiler} -c ${cppflags} -o ${obj} ${file}
+  fi
+  objs="${objs} ${obj}"
+done
+
+# ////////////////////////////////////
+# ////////////////////////////////////
+# ////////////////////////////////////
+
+/bin/mkdir -p ${build_path}
+
+if [ ${is_app} = "yes" ] ; then
+
+  if [ ${is_test} = "yes" ] ; then
+    file_exe="${build_path}/test_${name}"
+  else
+    file_exe="${build_path}/${name}"
+  fi
+  if [ ${build_visual} = "yes" ] ; then
+    file_exe="${file_exe}.exe"
+  fi
+ 
+  /bin/rm -f ${file_exe}
+
+  obj="${build_path}/main.o"
+  if [ ${build_visual} = "yes" ] ; then
+    eval ${cpp_compiler} /c ${cppflags} /Fo${obj} ${what}
+    objs="${objs} ${obj}"
+    eval ${cpp_linker} /nologo /OPT:NOREF /out:${file_exe} ${objs} ${libs}
+  else
+    eval ${cpp_compiler} -c ${cppflags} -o ${obj} ${what}
+    objs="${objs} ${obj}"
+    eval ${cpp_linker} ${cppflags} -o ${file_exe} ${objs} ${libs}
+  fi
+
+  /bin/rm -f ${objs}
+
+elif [ ${is_plugin} = "yes" ] ; then
+
+  if [ ${build_visual} = "yes" ] ; then
+
+    file_o="${build_path}/${name}.o"
+    file_a="${build_path}/${name}.a"
+    file_symbs="${build_path}/${name}.symbs"
+    file_def="${build_path}/${name}.def"
+    file_lib="${build_path}/${name}.lib"
+    file_exp="${build_path}/${name}.exp"
+
+    file_plugin="${build_path}/${name}.dll"
+
+    eval ${cpp_compiler} /c ${cppflags} /Fo${file_o} /Tp${what}
+    objs="${objs} ${file_o}"
+
+    lib.exe /nologo /machine:ix86 /out:${file_a} ${objs}
+
+    # Build the obuild_windef.exe utility program :
+    cl.exe /nologo /DWIN32 /MD /O2 /W3 /Feinlib_windef.exe ${inlib_mgr}/../apps/windef.c
+
+    # Building the .def file :
+    dumpbin.exe /symbols /out:${file_symbs} ${file_a}
+
+    ./inlib_windef.exe ${name} < ${file_symbs} > ${file_def}
+
+    # Building the linking library :
+    # It produces a .exp file.
+    lib.exe /nologo /machine:ix86 /out:${file_lib} /def:${file_def}
+
+    eval ${cpp_linker} /nologo /dll /out:${file_plugin} ${file_exp} ${file_a}
+
+    /bin/rm -f ${file_a} ${file_o} ${file_symbs} ${file_def} ${file_lib} ${file_exp} inlib_windef.exe
+
+  else
+
+    plugin_flags=
+    if [ `uname` = "Darwin" ] ; then
+      file_plugin="${build_path}/${name}.bundle"
+      plugin_flags="${plugin_flags} -bundle -twolevel_namespace"
+    elif [ `uname` = "Linux" ] ; then
+      file_plugin="${build_path}/lib${name}.so"
+      plugin_flags="${plugin_flags} -fPIC -shared "
+    fi
+  
+    /bin/rm -f ${file_plugin}
+  
+    ${cpp_linker} ${plugin_flags} ${cppflags} -o ${file_plugin} ${what} ${libs}
+
+  fi
+
+else
+
+  if [ ${name} = "pbp.icc" ] ; then exit;fi
+  if [ ${name} = "polyhedron.icc" ] ; then exit;fi
+  if [ ${name} = "value.icc" ] ; then exit;fi
+  if [ ${name} = "val_func.icc" ] ; then exit;fi
+  if [ ${name} = "md5.icc" ] ; then exit;fi
+
+  #c++ -x c++-header ${cppflags} ${what}
+  #exit
+
+  file="${dir}/${name}.cpp"
+  /bin/cp ${what} ${file}
+
+  file_o="${dir}/${name}.o"
+
+  if [ ${build_visual} = "yes" ] ; then
+    eval ${cpp_compiler} /c ${cppflags} /Fo${file_o} /Tp${file}
+  else
+    eval ${cpp_compiler} -c ${cppflags} -o ${file_o} ${file}
+  fi
+
+  /bin/rm -f ${file_o}
+  /bin/rm -f ${file}
+fi
+

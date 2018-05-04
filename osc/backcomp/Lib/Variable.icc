@@ -1,0 +1,2033 @@
+#ifndef Lib_Variable_icc
+#define Lib_Variable_icc
+
+#include <Slash/Core/IWriter.h>
+
+inline std::string Lib::Variable::stype(eType aType){
+  switch(aType) {
+  case NONE:return "NONE";
+  case INTEGER:return "INTEGER";
+  case INT64:return "INT64";
+  case DOUBLE:return "DOUBLE";
+  case STRING:return "STRING";
+  case POINTER:return "POINTER";
+  case BOOLEAN:return "BOOLEAN";
+  case SHORT:return "SHORT";
+  case FLOAT:return "FLOAT";
+  case CHAR:return "CHAR";
+  case UNSIGNED_CHAR:return "UNSIGNED_CHAR";
+  case UNSIGNED_SHORT:return "UNSIGNED_SHORT";
+  case UNSIGNED_INTEGER:return "UNSIGNED_INTEGER";
+  case UNSIGNED_INT64:return "UNSIGNED_INT64";
+  case DOUBLE_STAR:return "DOUBLE_STAR";
+  case FLOAT_STAR:return "FLOAT_STAR";
+  case INT_STAR:return "INT_STAR";
+  case VECTOR_DOUBLE:return "VECTOR_DOUBLE";
+  default:return "unknown";
+  }
+}
+
+inline bool Lib::Variable::assign(const Lib::Variable& aVariable,
+                                  std::string& aError){
+  if(fType==aVariable.fType) {
+    reset();
+    if(aVariable.fType==STRING) {
+      u.f_std_string = new std::string(*aVariable.u.f_std_string);
+    } else if(aVariable.fType==VECTOR_DOUBLE) {
+      u.f_Array_double = new inlib::array<double>(*aVariable.u.f_Array_double);
+    } else {
+      u = aVariable.u;
+    }
+    return true;
+  } else {
+    switch(fType) {
+    case INTEGER:
+      break;
+    case DOUBLE:
+      switch(aVariable.fType) {
+      case INTEGER:
+        u.f_double = aVariable.u.f_int;
+        return true;
+      case UNSIGNED_SHORT:
+        u.f_double = aVariable.u.f_unsigned_short;
+        return true;
+      case UNSIGNED_INTEGER:
+        u.f_double = aVariable.u.f_unsigned_int;
+        return true;
+      case NONE:
+      case DOUBLE:
+      case POINTER:
+      case BOOLEAN:
+      case SHORT:
+      case INT64:
+      case FLOAT:
+      case UNSIGNED_CHAR:
+      case CHAR:
+      case UNSIGNED_INT64:
+      case DOUBLE_STAR:
+      case FLOAT_STAR:
+      case INT_STAR:
+      case STRING:
+      case VECTOR_DOUBLE:
+        break;
+      }
+      break;
+    case STRING:
+      break;
+    case POINTER:
+      break;
+    case UNSIGNED_INTEGER:
+      break;
+    case BOOLEAN:
+      break;
+    case SHORT:
+      switch(aVariable.fType) {
+      case INTEGER:
+        u.f_short = (short)aVariable.u.f_int;
+        return true;
+      case NONE:
+      case DOUBLE:
+      case POINTER:
+      case BOOLEAN:
+      case SHORT:
+      case INT64:
+      case FLOAT:
+      case UNSIGNED_CHAR:
+      case CHAR:
+      case UNSIGNED_SHORT:
+      case UNSIGNED_INTEGER:
+      case UNSIGNED_INT64:
+      case DOUBLE_STAR:
+      case FLOAT_STAR:
+      case INT_STAR:
+      case STRING:
+      case VECTOR_DOUBLE:
+        break;
+      }
+      break;
+    case FLOAT:
+      switch(aVariable.fType) {
+      case INTEGER:
+        u.f_float = (float)aVariable.u.f_int;
+        return true;
+      case DOUBLE:
+        u.f_float = (float)aVariable.u.f_double;
+        return true;
+      case NONE:
+      case POINTER:
+      case BOOLEAN:
+      case SHORT:
+      case INT64:
+      case FLOAT:
+      case UNSIGNED_CHAR:
+      case CHAR:
+      case UNSIGNED_SHORT:
+      case UNSIGNED_INTEGER:
+      case UNSIGNED_INT64:
+      case DOUBLE_STAR:
+      case FLOAT_STAR:
+      case INT_STAR:
+      case STRING:
+      case VECTOR_DOUBLE:
+        break;
+      }
+      break;
+    case UNSIGNED_CHAR:
+      switch(aVariable.fType) {
+      case INTEGER:
+        u.f_unsigned_char = (unsigned char)aVariable.u.f_int;
+        return true;
+      case NONE:
+      case DOUBLE:
+      case POINTER:
+      case BOOLEAN:
+      case SHORT:
+      case INT64:
+      case FLOAT:
+      case UNSIGNED_CHAR:
+      case CHAR:
+      case UNSIGNED_SHORT:
+      case UNSIGNED_INTEGER:
+      case UNSIGNED_INT64:
+      case DOUBLE_STAR:
+      case FLOAT_STAR:
+      case INT_STAR:
+      case STRING:
+      case VECTOR_DOUBLE:
+        break;
+      }
+      break;
+    case CHAR:
+      switch(aVariable.fType) {
+      case INTEGER:
+        u.f_char = (char)aVariable.u.f_int;
+        return true;
+      case STRING:
+        if(aVariable.u.f_std_string->size()!=1) break;
+        u.f_char = (*aVariable.u.f_std_string)[0];
+        return true;
+      case NONE:
+      case DOUBLE:
+      case POINTER:
+      case BOOLEAN:
+      case SHORT:
+      case INT64:
+      case FLOAT:
+      case UNSIGNED_CHAR:
+      case CHAR:
+      case UNSIGNED_SHORT:
+      case UNSIGNED_INTEGER:
+      case UNSIGNED_INT64:
+      case DOUBLE_STAR:
+      case FLOAT_STAR:
+      case INT_STAR:
+      case VECTOR_DOUBLE:
+        break;
+      }
+      break;
+    case NONE:
+    case INT64:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case VECTOR_DOUBLE:
+      break;
+    }
+    aError = std::string("Lib::Variable::assign :")
+           + " unable to assign " + aVariable.stype() 
+           + " to " + stype();
+    setNone();
+    return false;
+  }
+}
+
+inline bool Lib::Variable::minus(std::string& aError){
+  eType oType = fType;
+  switch(fType) {
+  case INTEGER:
+    u.f_int = -u.f_int;
+    return true;
+  case DOUBLE:
+    u.f_double = -u.f_double;
+    return true;
+  case SHORT:
+    u.f_short = -u.f_short;
+    return true;
+  case INT64:
+    u.f_int64 = -u.f_int64;
+    return true;
+  case CHAR:
+    u.f_char = -u.f_char;
+    return true;
+  case FLOAT:
+    u.f_float = -1.0F * u.f_float;
+    return true;
+  case VECTOR_DOUBLE:{
+    std::vector<double>& stdv = u.f_Array_double->vector();
+    unsigned int number = stdv.size();
+    for(unsigned int index=0;index<number;index++) stdv[index] = -stdv[index];
+    return true;}
+  case BOOLEAN:
+  case NONE:
+  case STRING:
+  case POINTER:
+  case UNSIGNED_CHAR:
+  case UNSIGNED_SHORT:
+  case UNSIGNED_INT64:
+  case DOUBLE_STAR:
+  case FLOAT_STAR:
+  case INT_STAR:
+  case UNSIGNED_INTEGER:
+    break;
+  }
+  aError = std::string("Lib::Variable::minus :")
+         + " can't apply on type " + stype(oType);
+  setNone();
+  return false;
+}
+
+inline bool Lib::Variable::do_not(std::string& aError){
+  eType oType = fType;
+  switch(fType) {
+  case BOOLEAN:
+    u.f_bool = u.f_bool?false:true;
+    return true;
+  case INTEGER:
+  case DOUBLE:
+  case STRING:
+  case POINTER:
+  case UNSIGNED_SHORT:
+  case UNSIGNED_INTEGER:
+  case SHORT:
+  case FLOAT:
+  case UNSIGNED_CHAR:
+  case CHAR:
+  case NONE:
+  case INT64:
+  case UNSIGNED_INT64:
+  case DOUBLE_STAR:
+  case FLOAT_STAR:
+  case INT_STAR:
+  case VECTOR_DOUBLE:
+    break;
+  }
+  aError = std::string("Lib::Variable::do_not :")
+         + " can't apply on type " + stype(oType);
+  setNone();
+  return false;
+}
+
+inline bool Lib::Variable::add(const Variable& aV,std::string& aError){
+  eType oType = fType;
+  switch(fType) {
+  case INTEGER:
+    switch(aV.fType) {
+    case INTEGER:
+      u.f_int += aV.u.f_int;
+      return true;
+    case VECTOR_DOUBLE:{
+      int tmp = u.f_int;
+      set(*aV.u.f_Array_double); //this becomes a VECTOR_DOUBLE.
+      u.f_Array_double->add(tmp);
+      return true;}
+    case NONE:
+    case DOUBLE:
+    case STRING:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case UNSIGNED_INTEGER:
+      break;
+    }
+    break;
+  case DOUBLE:
+    switch(aV.fType) {
+    case DOUBLE:
+      u.f_double += aV.u.f_double;
+      return true;
+    case UNSIGNED_SHORT:
+      u.f_double += aV.u.f_unsigned_short;
+      return true;
+    case UNSIGNED_INTEGER:
+      u.f_double += aV.u.f_unsigned_int;
+      return true;
+    case VECTOR_DOUBLE:{
+      double tmp = u.f_double;
+      set(*aV.u.f_Array_double); //this becomes a VECTOR_DOUBLE.
+      u.f_Array_double->add(tmp);
+      return true;}
+    case NONE:
+    case INTEGER:
+    case STRING:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+      break;
+    }
+    break;
+  case UNSIGNED_INTEGER:
+    switch(aV.fType) {
+    case UNSIGNED_INTEGER:
+      u.f_unsigned_int += aV.u.f_unsigned_int;
+      return true;
+/*  case DOUBLE:{
+      double d = u.f_unsigned_int + aV.u.f_double;
+      if(d>=0)  {
+        u.f_unsigned_int = (unsigned int)d;
+        return true;
+      }}*/
+    case VECTOR_DOUBLE:{
+      unsigned int tmp = u.f_unsigned_int;
+      set(*aV.u.f_Array_double); //this becomes a VECTOR_DOUBLE.
+      u.f_Array_double->add(tmp);
+      return true;}
+    case DOUBLE:{
+      double d = double(u.f_unsigned_int) + aV.u.f_double;
+      set(d); //this becomes a DOUBLE.
+      return true;}
+    case NONE:
+    case INTEGER:
+    case STRING:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+      break;
+    }
+    break;
+  case STRING:
+    switch(aV.fType) {
+    case STRING:
+      set((*u.f_std_string)+(*aV.u.f_std_string));
+      return true;
+    case NONE:
+    case INTEGER:
+    case DOUBLE:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INTEGER:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case VECTOR_DOUBLE:
+      break;
+    }
+    break;
+  case VECTOR_DOUBLE:
+    switch(aV.fType) {
+    case INTEGER:
+      u.f_Array_double->add(aV.u.f_int);
+      return true;
+    case UNSIGNED_INTEGER:
+      u.f_Array_double->add(aV.u.f_unsigned_int);
+      return true;
+    case DOUBLE:
+      u.f_Array_double->add(aV.u.f_double);
+      return true;
+    case VECTOR_DOUBLE:
+      if(u.f_Array_double->orders()!=aV.u.f_Array_double->orders()) {
+        aError = "Variable::add : vector orders mismatch.";
+        setNone();
+        return false;
+      }
+      u.f_Array_double->add(*aV.u.f_Array_double);
+      return true;
+    case NONE:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case NONE:
+  case POINTER:
+  case BOOLEAN:
+  case SHORT:
+  case INT64:
+  case FLOAT:
+  case UNSIGNED_CHAR:
+  case CHAR:
+  case UNSIGNED_SHORT:
+  case UNSIGNED_INT64:
+  case DOUBLE_STAR:
+  case FLOAT_STAR:
+  case INT_STAR:
+    break;
+  }
+  aError = std::string("Variable::add :" )
+         + " can't apply on type " + stype(oType)
+         + " and type " + aV.stype();
+  setNone();
+  return false;
+}
+
+inline bool Lib::Variable::subtract(const Variable& aV,std::string& aError){
+  eType oType = fType;
+  switch(fType) {
+  case INTEGER:
+    switch(aV.fType) {
+    case INTEGER:
+      u.f_int -= aV.u.f_int;
+      return true;
+    case VECTOR_DOUBLE:{
+      int tmp = u.f_int;
+      set(*aV.u.f_Array_double); //this becomes a VECTOR_DOUBLE.
+      u.f_Array_double->multiply(-1);
+      u.f_Array_double->add(tmp);
+      return true;}
+    case NONE:
+    case DOUBLE:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INTEGER:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case DOUBLE:
+    switch(aV.fType) {
+    case DOUBLE:
+      u.f_double -= aV.u.f_double;
+      return true;
+    case UNSIGNED_SHORT:
+      u.f_double -= aV.u.f_unsigned_short;
+      return true;
+    case UNSIGNED_INTEGER:
+      u.f_double -= aV.u.f_unsigned_int;
+      return true;
+    case VECTOR_DOUBLE:{
+      double tmp = u.f_double;
+      set(*aV.u.f_Array_double); //this becomes a VECTOR_DOUBLE.
+      u.f_Array_double->multiply(-1);
+      u.f_Array_double->add(tmp);
+      return true;}
+    case NONE:
+    case INTEGER:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case UNSIGNED_INTEGER:
+    switch(aV.fType) {
+//uuu
+/*
+    case UNSIGNED_INTEGER:
+      u.f_unsigned_int -= aV.u.f_unsigned_int;
+      return true;
+*/
+    case VECTOR_DOUBLE:{
+      unsigned int tmp = u.f_unsigned_int;
+      set(*aV.u.f_Array_double); //this becomes a VECTOR_DOUBLE.
+      u.f_Array_double->multiply(-1);
+      u.f_Array_double->add(tmp);
+      return true;}
+    case DOUBLE:{
+      double d = double(u.f_unsigned_int) - aV.u.f_double;
+      set(d); //this becomes a DOUBLE.
+      return true;}
+    case NONE:
+    case INTEGER:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INTEGER:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case VECTOR_DOUBLE:
+    switch(aV.fType) {
+    case INTEGER:
+      u.f_Array_double->add(-aV.u.f_int);
+      return true;
+    case UNSIGNED_INTEGER:
+      u.f_Array_double->add(-((double)aV.u.f_unsigned_int));
+      return true;
+    case DOUBLE:
+      u.f_Array_double->add(-aV.u.f_double);
+      return true;
+    case VECTOR_DOUBLE:{
+      if(u.f_Array_double->orders()!=aV.u.f_Array_double->orders()) {
+        aError = "Variable::subtract : vector orders mismatch.";
+        setNone();
+        return false;
+      }
+      std::vector<double>& stdv = u.f_Array_double->vector();
+      const std::vector<double>& stdv2 = aV.u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) { 
+        stdv[index] -= stdv2[index];
+      }
+      return true;}
+    case NONE:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case NONE:
+  case POINTER:
+  case BOOLEAN:
+  case SHORT:
+  case INT64:
+  case FLOAT:
+  case UNSIGNED_CHAR:
+  case CHAR:
+  case UNSIGNED_SHORT:
+  case UNSIGNED_INT64:
+  case DOUBLE_STAR:
+  case FLOAT_STAR:
+  case INT_STAR:
+  case STRING:
+    break;
+  }
+  aError = std::string("Variable::subtract :" )
+         + " can't apply on type " + stype(oType)
+         + " and type " + aV.stype();
+  setNone();
+  return false;
+}
+
+inline bool Lib::Variable::multiply(const Variable& aV,std::string& aError){
+  eType oType = fType;
+  switch(fType) {
+  case INTEGER:
+    switch(aV.fType) {
+    case INTEGER:
+      u.f_int *= aV.u.f_int;
+      return true;
+    case DOUBLE:
+      u.f_int *= (int)aV.u.f_double;
+      return true;
+    case FLOAT:
+      u.f_int *= (int)aV.u.f_float;
+      return true;
+    case VECTOR_DOUBLE:{
+      int tmp = u.f_int;
+      set(*aV.u.f_Array_double); //this becomes a VECTOR_DOUBLE.
+      u.f_Array_double->multiply(tmp);
+      return true;}
+    case NONE:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case UNSIGNED_INTEGER:
+    case STRING:
+      break;
+    }
+    break;
+  case DOUBLE:
+    switch(aV.fType) {
+    case INTEGER:
+      u.f_double *= aV.u.f_int;
+      return true;
+    case DOUBLE:
+      u.f_double *= aV.u.f_double;
+      return true;
+    case UNSIGNED_SHORT:
+      u.f_double *= aV.u.f_unsigned_short;
+      return true;
+    case UNSIGNED_INTEGER:
+      u.f_double *= aV.u.f_unsigned_int;
+      return true;
+    case VECTOR_DOUBLE:{
+      double tmp = u.f_double;
+      set(*aV.u.f_Array_double); //this becomes a VECTOR_DOUBLE.
+      u.f_Array_double->multiply(tmp);
+      return true;}
+    case NONE:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case UNSIGNED_INTEGER:
+    switch(aV.fType) {
+    case DOUBLE:{
+      double tmp = double(u.f_unsigned_int) * aV.u.f_double;
+      set(tmp); //this becomes a DOUBLE.
+      return true;}
+
+      //u.f_unsigned_int *= (unsigned int)aV.u.f_double;
+      //return true;
+
+    case UNSIGNED_INTEGER:
+      u.f_unsigned_int *= aV.u.f_unsigned_int;
+      return true;
+    case VECTOR_DOUBLE:{
+      unsigned int tmp = u.f_unsigned_int;
+      set(*aV.u.f_Array_double); //this becomes a VECTOR_DOUBLE.
+      u.f_Array_double->multiply(tmp);
+      return true;}
+    case NONE:
+    case POINTER:
+    case BOOLEAN:
+    case INTEGER:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case VECTOR_DOUBLE:
+    switch(aV.fType) {
+    case INTEGER:
+      u.f_Array_double->multiply(aV.u.f_int);
+      return true;
+    case UNSIGNED_INTEGER:
+      u.f_Array_double->multiply(aV.u.f_unsigned_int);
+      return true;
+    case DOUBLE:
+      u.f_Array_double->multiply(aV.u.f_double);
+      return true;
+    case VECTOR_DOUBLE:{
+      if(u.f_Array_double->orders()!=aV.u.f_Array_double->orders()) {
+        aError = "Variable::multiply : vector orders mismatch.";
+        setNone();
+        return false;
+      }
+      std::vector<double>& stdv = u.f_Array_double->vector();
+      const std::vector<double>& stdv2 = aV.u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) { 
+        stdv[index] *= stdv2[index];
+      }
+      return true;}
+    case NONE:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case NONE:
+  case STRING:
+  case POINTER:
+  case BOOLEAN:
+  case SHORT:
+  case INT64:
+  case FLOAT:
+  case UNSIGNED_CHAR:
+  case CHAR:
+  case UNSIGNED_SHORT:
+  case UNSIGNED_INT64:
+  case DOUBLE_STAR:
+  case FLOAT_STAR:
+  case INT_STAR:
+    break;
+  }
+  aError = std::string("Variable::multiply :" )
+         + " can't apply on type " + stype(oType)
+         + " and type " + aV.stype();
+  setNone();
+  return false;
+}
+
+inline bool Lib::Variable::divide(const Variable& aV,std::string& aError){
+  eType oType = fType;
+  switch(fType) {
+  case INTEGER:
+    switch(aV.fType) {
+    case VECTOR_DOUBLE:{
+      int tmp = u.f_int;
+      set(*aV.u.f_Array_double); //this becomes a VECTOR_DOUBLE.
+      if(!u.f_Array_double->invert()) {
+        aError = Lib_Variable_error_div_zero;
+        setNone();
+        return false;
+      }
+      u.f_Array_double->multiply(tmp);
+      return true;}
+    case NONE:
+    case INTEGER:
+    case DOUBLE:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INTEGER:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case DOUBLE:
+    switch(aV.fType) {
+    case DOUBLE:
+      if(aV.u.f_double==0) {
+        aError = Lib_Variable_error_div_zero;
+        setNone();
+        return false;
+      } else {
+        u.f_double /= aV.u.f_double;
+        return true;
+      }
+    case UNSIGNED_INTEGER:
+      if(aV.u.f_unsigned_int==0) {
+        aError = Lib_Variable_error_div_zero;
+        setNone();
+        return false;
+      } else {
+        u.f_double /= aV.u.f_unsigned_int;
+        return true;
+      }
+    case VECTOR_DOUBLE:{
+      double tmp = u.f_double;
+      set(*aV.u.f_Array_double); //this becomes a VECTOR_DOUBLE.
+      if(!u.f_Array_double->invert()) {
+        aError = Lib_Variable_error_div_zero;
+        setNone();
+        return false;
+      }
+      u.f_Array_double->multiply(tmp);
+      return true;}
+
+    case NONE:
+    case INTEGER:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case UNSIGNED_INTEGER:
+    switch(aV.fType) {
+/*  case UNSIGNED_INTEGER:
+      if(aV.u.f_unsigned_int==0) {
+        aError = Lib_Variable_error_div_zero;
+        setNone();
+        return false;
+      } else {
+        //FIXME : ???
+        set((double)(u.f_unsigned_int  / aV.u.f_unsigned_int ));
+        return true;
+      }*/
+    case VECTOR_DOUBLE:{
+      unsigned int tmp = u.f_unsigned_int;
+      set(*aV.u.f_Array_double); //this becomes a VECTOR_DOUBLE.
+      if(!u.f_Array_double->invert()) {
+        aError = Lib_Variable_error_div_zero;
+        setNone();
+        return false;
+      }
+      u.f_Array_double->multiply(tmp);
+      return true;}
+
+    case DOUBLE:
+      if(aV.u.f_double==0) {
+        aError = Lib_Variable_error_div_zero;
+        setNone();
+        return false;
+      } else {
+        double d = double(u.f_unsigned_int)/aV.u.f_double;
+        set(d); //this becomes a DOUBLE.
+        return true;
+      }
+    case NONE:
+    case INTEGER:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INTEGER:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case VECTOR_DOUBLE:
+    switch(aV.fType) {
+    case INTEGER:
+      if(aV.u.f_int==0) {
+        aError = Lib_Variable_error_div_zero;
+        setNone();
+        return false;
+      } else {
+        double value = 1./aV.u.f_int;
+        u.f_Array_double->multiply(value);
+        return true;
+      }
+    case UNSIGNED_INTEGER:
+      if(aV.u.f_unsigned_int==0) {
+        aError = Lib_Variable_error_div_zero;
+        setNone();
+        return false;
+      } else {
+        double value = 1./aV.u.f_unsigned_int;
+        u.f_Array_double->multiply(value);
+        return true;
+      }
+    case DOUBLE:
+      if(aV.u.f_double==0) {
+        aError = Lib_Variable_error_div_zero;
+        setNone();
+        return false;
+      } else {
+        u.f_Array_double->multiply(1./aV.u.f_double);
+        return true;
+      }
+    case VECTOR_DOUBLE:{
+      if(u.f_Array_double->orders()!=aV.u.f_Array_double->orders()) {
+        aError = Lib_Variable_error_div_zero;
+        setNone();
+        return false;
+      }
+      std::vector<double>& stdv = u.f_Array_double->vector();
+      const std::vector<double>& stdv2 = aV.u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) { 
+        if(stdv2[index]==0) {
+          typedef unsigned int uint_t;
+          aError = std::string
+            ("Lib::Variable::divide : VECTOR : divide by 0 at index")
+            + inlib::to<uint_t>(index) 
+            + ". Let it and continue.";
+          //continue;
+          aError = Lib_Variable_error_div_zero;
+          setNone();
+          return false;
+        } else {
+          stdv[index] /= stdv2[index];
+        }
+      }
+      return true;}
+
+    case NONE:
+    case STRING:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case INT64:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+      break;
+    }
+    break;
+
+  case NONE:
+  case STRING:
+  case POINTER:
+  case BOOLEAN:
+  case SHORT:
+  case FLOAT:
+  case UNSIGNED_CHAR:
+  case CHAR:
+  case INT64:
+  case UNSIGNED_SHORT:
+  case UNSIGNED_INT64:
+  case DOUBLE_STAR:
+  case FLOAT_STAR:
+  case INT_STAR:
+    break;
+  }
+  aError = std::string("Variable::divide :")
+         + " can't apply on type " + stype(oType)
+         + " and type " + aV.stype();
+  setNone();
+  return false;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+inline bool Lib::Variable::if_gt(const Lib::Variable& aV,std::string& aError){
+  eType oType = fType;
+  switch(fType) {
+  case INTEGER:
+    switch(aV.fType) {
+    case INTEGER:
+      set((bool)(u.f_int>aV.u.f_int?true:false));
+      return true;
+    case FLOAT:
+      set((bool)(u.f_int>aV.u.f_float?true:false));
+      return true;
+    case DOUBLE:
+      set((bool)(u.f_int>aV.u.f_double?true:false));
+      return true;
+    case UNSIGNED_SHORT:
+      set((bool)(u.f_int>(int)aV.u.f_unsigned_short?true:false));
+      return true;
+    case UNSIGNED_INTEGER:
+      set((bool)(u.f_int>(int)aV.u.f_unsigned_int?true:false));
+      return true;
+    case VECTOR_DOUBLE:{
+      const std::vector<double>& stdv = aV.u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(u.f_int<=stdv[index]) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case NONE:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case DOUBLE:
+    switch(aV.fType) {
+    case DOUBLE:
+      set((bool)(u.f_double>aV.u.f_double?true:false));
+      return true;
+    case FLOAT:
+      set((bool)(u.f_double>aV.u.f_float?true:false));
+      return true;
+    case INTEGER:
+      set((bool)(u.f_double>aV.u.f_int?true:false));
+      return true;
+    case UNSIGNED_SHORT:
+      set((bool)(u.f_double>aV.u.f_unsigned_short?true:false));
+      return true;
+    case UNSIGNED_INTEGER:
+      set((bool)(u.f_double>aV.u.f_unsigned_int?true:false));
+      return true;
+    case VECTOR_DOUBLE:{
+      const std::vector<double>& stdv = aV.u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(u.f_double<=stdv[index]) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case NONE:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case FLOAT:
+    switch(aV.fType) {
+    case DOUBLE:
+      set((bool)(u.f_float>aV.u.f_double?true:false));
+      return true;
+    case FLOAT:
+      set((bool)(u.f_float>aV.u.f_float?true:false));
+      return true;
+    case INTEGER:
+      set((bool)(u.f_float>aV.u.f_int?true:false));
+      return true;
+    case UNSIGNED_SHORT:
+      set((bool)(u.f_float>aV.u.f_unsigned_short?true:false));
+      return true;
+    case UNSIGNED_INTEGER:
+      set((bool)(u.f_float>aV.u.f_unsigned_int?true:false));
+      return true;
+    case VECTOR_DOUBLE:{
+      const std::vector<double>& stdv = aV.u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(u.f_float<=stdv[index]) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case NONE:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case POINTER:
+    switch(aV.fType) {
+    case POINTER:
+      set((bool)(u.f_void_star>aV.u.f_void_star?true:false));
+      return true;
+    case NONE:
+    case INTEGER:
+    case DOUBLE:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INTEGER:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+    case VECTOR_DOUBLE:
+      break;
+    }
+    break;
+  case UNSIGNED_INTEGER:
+    switch(aV.fType) {
+    case UNSIGNED_INTEGER:
+      set((bool)(u.f_unsigned_int >aV.u.f_unsigned_int ?true:false));
+      return true;
+    case INTEGER:
+      set((bool)((int)u.f_unsigned_int >aV.u.f_int?true:false));
+      return true;
+    case NONE:
+    case POINTER:
+    case DOUBLE:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+    case VECTOR_DOUBLE:
+      break;
+    }
+    break;
+  case VECTOR_DOUBLE:
+    switch(aV.fType) {
+    case INTEGER:{
+      const std::vector<double>& stdv = u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]<=aV.u.f_int) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case FLOAT:{
+      const std::vector<double>& stdv = u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]<=aV.u.f_float) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case DOUBLE:{
+      const std::vector<double>& stdv = u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]<=aV.u.f_double) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case UNSIGNED_INTEGER:{
+      const std::vector<double>& stdv = u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]<=aV.u.f_unsigned_int ) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case VECTOR_DOUBLE:{
+      const std::vector<double>& stdv = u.f_Array_double->vector();
+      const std::vector<double>& stdv2 = aV.u.f_Array_double->vector();
+      if(stdv.size()!=stdv2.size()) break;
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]<=stdv2[index]) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case NONE:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case NONE:
+  case BOOLEAN:
+  case SHORT:
+  case UNSIGNED_CHAR:
+  case CHAR:
+  case STRING:
+  case INT64:
+  case UNSIGNED_SHORT:
+  case UNSIGNED_INT64:
+  case DOUBLE_STAR:
+  case FLOAT_STAR:
+  case INT_STAR:
+    break;
+  }
+  aError = std::string("Variable::if_gt() :")
+         + " can't compare type " + stype(oType) 
+         + " with type " + aV.stype();
+  setNone();
+  return false;
+}
+
+inline bool Lib::Variable::if_eq(const Variable& aV,std::string& aError){
+  eType oType = fType;
+  switch(fType) {
+  case INTEGER:
+    switch(aV.fType) {
+    case INTEGER:
+      set((bool)(u.f_int==aV.u.f_int?true:false));
+      return true;
+    case DOUBLE:
+      set((bool)(u.f_int==aV.u.f_double?true:false));
+      return true;
+    case FLOAT:
+      set((bool)(u.f_int==aV.u.f_float?true:false));
+      return true;
+    case UNSIGNED_SHORT:
+      set((bool)(u.f_int==(int)aV.u.f_unsigned_short?true:false));
+      return true;
+    case UNSIGNED_INTEGER:
+      set((bool)(u.f_int==(int)aV.u.f_unsigned_int ?true:false));
+      return true;
+    case VECTOR_DOUBLE:{
+      const std::vector<double>& stdv = aV.u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(u.f_int!=stdv[index]) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+
+    case NONE:
+    case STRING:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+      break;
+    }
+    break;
+  case FLOAT:
+    switch(aV.fType) {
+    case FLOAT:
+      set((bool)(u.f_float==aV.u.f_float?true:false));
+      return true;
+    case DOUBLE:
+      set((bool)(u.f_float==aV.u.f_double?true:false));
+      return true;
+    case INTEGER:
+      set((bool)(u.f_float==aV.u.f_int?true:false));
+      return true;
+    case UNSIGNED_SHORT:
+      set((bool)(u.f_float==aV.u.f_unsigned_short?true:false));
+      return true;
+    case UNSIGNED_INTEGER:
+      set((bool)(u.f_float==aV.u.f_unsigned_int?true:false));
+      return true;
+    case VECTOR_DOUBLE:{
+      const std::vector<double>& stdv = aV.u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(u.f_float!=stdv[index]) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case NONE:
+    case STRING:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case INT64:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+      break;
+    }
+    break;
+  case DOUBLE:
+    switch(aV.fType) {
+    case DOUBLE:
+      set((bool)(u.f_double==aV.u.f_double?true:false));
+      return true;
+    case FLOAT:
+      set((bool)(u.f_double==aV.u.f_float?true:false));
+      return true;
+    case INTEGER:
+      set((bool)(u.f_double==aV.u.f_int?true:false));
+      return true;
+    case UNSIGNED_SHORT:
+      set((bool)(u.f_double==aV.u.f_unsigned_short?true:false));
+      return true;
+    case UNSIGNED_INTEGER:
+      set((bool)(u.f_double==aV.u.f_unsigned_int ?true:false));
+      return true;
+    case VECTOR_DOUBLE:{
+      const std::vector<double>& stdv = aV.u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(u.f_double!=stdv[index]) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case NONE:
+    case STRING:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case INT64:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+      break;
+    }
+    break;
+  case STRING:
+    switch(aV.fType) {
+    case STRING:
+      set((bool)((*u.f_std_string)==(*aV.u.f_std_string)?true:false));
+      return true;
+    case INTEGER:
+     {int v;
+       if(!inlib::to<int>(*u.f_std_string,v)) break;
+      set((bool)(v==aV.u.f_int?true:false));
+      return true;}
+    case FLOAT:
+     {float v;
+      if(!inlib::to<float>(*u.f_std_string,v)) break;
+      set((bool)(v==aV.u.f_float?true:false));
+      return true;}
+    case DOUBLE:
+     {double v;
+      if(!inlib::to<double>(*u.f_std_string,v)) break;
+      set((bool)(v==aV.u.f_double?true:false));
+      return true;}
+    case UNSIGNED_INTEGER:
+     {unsigned int v;
+      typedef unsigned int uint_t;
+      if(!inlib::to<uint_t>(*u.f_std_string,v)) break;
+      set((bool)(v==aV.u.f_unsigned_int ?true:false));
+      return true;}
+    case BOOLEAN:
+     {bool v;
+      if(!inlib::to(*u.f_std_string,v)) break;
+      set((bool)(v==aV.u.f_bool?true:false));
+      return true;}
+    case NONE:
+    case POINTER:
+    case SHORT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case INT64:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case VECTOR_DOUBLE:
+      break;
+    }
+    break;
+  case POINTER:
+    switch(aV.fType) {
+    case POINTER:
+      set((bool)(u.f_void_star==aV.u.f_void_star?true:false));
+      return true;
+    case NONE:
+    case INTEGER:
+    case DOUBLE:
+    case BOOLEAN:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INTEGER:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+    case VECTOR_DOUBLE:
+      break;
+    }
+    break;
+  case UNSIGNED_INTEGER:
+    switch(aV.fType) {
+    case UNSIGNED_INTEGER:
+      set((bool)(u.f_unsigned_int ==aV.u.f_unsigned_int ?true:false));
+      return true;
+    case INTEGER:
+      set((bool)((int)u.f_unsigned_int ==aV.u.f_int?true:false));
+      return true;
+    case FLOAT:
+      set((bool)((int)u.f_unsigned_int ==aV.u.f_float?true:false));
+      return true;
+    case DOUBLE:
+      set((bool)((int)u.f_unsigned_int ==aV.u.f_double?true:false));
+      return true;
+    case VECTOR_DOUBLE:{
+      const std::vector<double>& stdv = aV.u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(u.f_unsigned_int !=stdv[index]) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case NONE:
+    case BOOLEAN:
+    case POINTER:
+    case SHORT:
+    case INT64:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+      break;
+    }
+    break;
+  case BOOLEAN:
+    switch(aV.fType) {
+    case BOOLEAN:
+      u.f_bool = ((u.f_bool==aV.u.f_bool)?true:false);
+      return true;
+    case NONE:
+    case INTEGER:
+    case DOUBLE:
+    case POINTER:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INTEGER:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case STRING:
+    case VECTOR_DOUBLE:
+      break;
+    }
+    break;
+  case VECTOR_DOUBLE:
+    switch(aV.fType) {
+    case INTEGER:{
+      const std::vector<double>& stdv = u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]!=aV.u.f_int) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case FLOAT:{
+      const std::vector<double>& stdv = u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]!=aV.u.f_float) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case DOUBLE:{
+      const std::vector<double>& stdv = u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]!=aV.u.f_double) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case UNSIGNED_INTEGER:{
+      const std::vector<double>& stdv = u.f_Array_double->vector();
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]!=aV.u.f_unsigned_int ) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case VECTOR_DOUBLE:{
+      const std::vector<double>& stdv = u.f_Array_double->vector();
+      const std::vector<double>& stdv2 = aV.u.f_Array_double->vector();
+      if(stdv.size()!=stdv2.size()) {
+        set(false);
+        return true;
+      }
+      unsigned int number = stdv.size();
+      for(unsigned int index=0;index<number;index++) {
+        if(stdv[index]!=stdv2[index]) {
+          set(false);
+          return true;
+        }
+      }
+      set(true);
+      return true;
+    }
+    case NONE:
+    case POINTER:
+    case BOOLEAN:
+    case SHORT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case STRING:
+    case INT64:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+      break;
+    }
+    break;
+  case NONE:
+  case SHORT:
+  case INT64:
+  case UNSIGNED_CHAR:
+  case CHAR:
+  case UNSIGNED_SHORT:
+  case UNSIGNED_INT64:
+  case DOUBLE_STAR:
+  case FLOAT_STAR:
+  case INT_STAR:
+    break;
+  }
+  aError = std::string("Variable::if_eq() :")
+         + " can't compare type " + stype(oType) 
+         + " with type " + aV.stype();
+  setNone();
+  return false;
+}
+
+inline bool Lib::Variable::if_ne(const Variable& aV,std::string& aError){
+  if(!if_eq(aV,aError)) return false;
+  u.f_bool = (u.f_bool?false:true);
+  return true;
+}
+
+inline bool Lib::Variable::if_ge(const Variable& aV,std::string& aError){
+  Variable tmp(*this);
+  if(!if_eq(aV,aError)) return false;
+  if(u.f_bool) return true;
+
+  // then not equal, check gt :
+  if(!tmp.if_gt(aV,aError)) return false;
+
+  u.f_bool = tmp.u.f_bool;
+  return true;
+}
+
+inline bool Lib::Variable::if_lt(const Variable& aV,std::string& aError){
+  if(!if_ge(aV,aError)) return false;
+  u.f_bool = (u.f_bool?false:true);  
+  return true;
+}
+
+inline bool Lib::Variable::if_le(const Variable& aV,std::string& aError){
+  if(!if_gt(aV,aError)) return false;
+  u.f_bool = (u.f_bool?false:true);  
+  return true;
+}
+
+inline bool Lib::Variable::if_and(const Variable& aV,std::string& aError){
+  eType oType = fType;
+  switch(fType) {
+  case BOOLEAN:
+    switch(aV.fType) {
+    case BOOLEAN:
+      u.f_bool = ((u.f_bool && aV.u.f_bool)?true:false);
+      return true;
+    case INTEGER:
+    case VECTOR_DOUBLE:
+    case NONE:
+    case DOUBLE:
+    case STRING:
+    case POINTER:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case UNSIGNED_INTEGER:
+      break;
+    }
+    break;
+  case NONE:
+  case INTEGER:
+  case DOUBLE:
+  case POINTER:
+  case SHORT:
+  case INT64:
+  case FLOAT:
+  case UNSIGNED_CHAR:
+  case CHAR:
+  case UNSIGNED_SHORT:
+  case UNSIGNED_INTEGER:
+  case UNSIGNED_INT64:
+  case DOUBLE_STAR:
+  case FLOAT_STAR:
+  case INT_STAR:
+  case STRING:
+  case VECTOR_DOUBLE:
+    break;
+  }
+  aError = std::string("Variable::if_and :")
+         + " can't apply on type " + stype(oType) 
+         + " and type " + aV.stype();
+  setNone();
+  return false;
+}
+
+inline bool Lib::Variable::if_or(const Variable& aV,std::string& aError){
+  eType oType = fType;
+  switch(fType) {
+  case BOOLEAN:
+    switch(aV.fType) {
+    case BOOLEAN:
+      u.f_bool = ((u.f_bool || aV.u.f_bool)?true:false);
+      return true;
+    case INTEGER:
+    case VECTOR_DOUBLE:
+    case NONE:
+    case DOUBLE:
+    case STRING:
+    case POINTER:
+    case SHORT:
+    case INT64:
+    case FLOAT:
+    case UNSIGNED_CHAR:
+    case CHAR:
+    case UNSIGNED_SHORT:
+    case UNSIGNED_INT64:
+    case DOUBLE_STAR:
+    case FLOAT_STAR:
+    case INT_STAR:
+    case UNSIGNED_INTEGER:
+      break;
+    }
+    break;
+  case NONE:
+  case INTEGER:
+  case DOUBLE:
+  case POINTER:
+  case SHORT:
+  case INT64:
+  case FLOAT:
+  case UNSIGNED_CHAR:
+  case CHAR:
+  case UNSIGNED_SHORT:
+  case UNSIGNED_INTEGER:
+  case UNSIGNED_INT64:
+  case DOUBLE_STAR:
+  case FLOAT_STAR:
+  case INT_STAR:
+  case STRING:
+  case VECTOR_DOUBLE:
+    break;
+  }
+  aError = std::string("Variable::if_or :")
+         + " can't apply on type " + stype(oType) 
+         + " and type " + aV.stype();
+  setNone();
+  return false;
+}
+
+#include <Slash/Core/IValue.h>
+
+inline bool Lib::Variable::set(const Slash::Core::IValue& aValue){
+  reset();
+
+  switch(aValue.type()) {
+  case Slash::Core::IValue::NONE:
+    fType = Variable::NONE;
+    u.f_unsigned_int64 = 0;
+    return true;
+  case Slash::Core::IValue::CHAR:
+    fType = Variable::CHAR;
+    u.f_char = aValue.get_char();
+    return true;
+  case Slash::Core::IValue::SHORT:
+    fType = Variable::SHORT;
+    u.f_short = aValue.get_short();
+    return true;
+  case Slash::Core::IValue::INT:
+    fType = Variable::INTEGER;
+    u.f_int = aValue.get_int();
+    return true;
+  case Slash::Core::IValue::INT64:
+    fType = Variable::INT64;
+    u.f_int64 = aValue.get_int64();
+    return true;
+  case Slash::Core::IValue::UNSIGNED_INT64:
+    fType = Variable::UNSIGNED_INT64;
+    u.f_unsigned_int64 = aValue.get_unsigned_int64();
+    return true;
+  case Slash::Core::IValue::UNSIGNED_CHAR:
+    fType = Variable::UNSIGNED_CHAR;
+    u.f_unsigned_char = aValue.get_unsigned_char();
+    return true;
+  case Slash::Core::IValue::UNSIGNED_SHORT:
+    fType = Variable::UNSIGNED_SHORT;
+    u.f_unsigned_short  = aValue.get_unsigned_short();
+    return true;
+  case Slash::Core::IValue::UNSIGNED_INT:
+    fType = Variable::UNSIGNED_INTEGER;
+    u.f_unsigned_int  = aValue.get_unsigned_int();
+    return true;
+  case Slash::Core::IValue::DOUBLE_STAR:
+    fType = Variable::DOUBLE_STAR;
+    u.f_double_star  = aValue.get_double_star();
+    return true;
+  case Slash::Core::IValue::FLOAT_STAR:
+    fType = Variable::FLOAT_STAR;
+    u.f_float_star  = aValue.get_float_star();
+    return true;
+  case Slash::Core::IValue::INT_STAR:
+    fType = Variable::INT_STAR;
+    u.f_int_star  = aValue.get_int_star();
+    return true;
+  case Slash::Core::IValue::FLOAT:
+    fType = Variable::FLOAT;
+    u.f_float = aValue.get_float();
+    return true;
+  case Slash::Core::IValue::DOUBLE:
+    fType = Variable::DOUBLE;
+    u.f_double = aValue.get_double();
+    return true;
+  case Slash::Core::IValue::VOID_STAR:
+    fType = Variable::POINTER;
+    u.f_void_star = aValue.get_void_star();
+    return true;
+  case Slash::Core::IValue::BOOL:
+    fType = Variable::BOOLEAN;
+    u.f_bool = aValue.get_bool();
+    return true;
+  case Slash::Core::IValue::STRING:
+    fType = Variable::STRING;
+    u.f_std_string = new std::string(aValue.get_string());
+    return true;
+/*
+  case Slash::Core::IValue::STD_VECTOR_DOUBLE:
+   {fType = Variable::VECTOR_DOUBLE;
+    u.f_Array_double = new Array<double>();
+    std::vector<double> vd = aValue.get_std_vector_double();
+    unsigned int n = vd.size();
+    std::vector<unsigned int> is(1);
+    is[0] = n;         
+    if(!u.f_Array_double->configure(is)) { //FIXME
+    }
+    for(unsigned int index=0;index<n;index++) {
+      is[0] = index;         
+      if(!u.f_Array_double->setValue(is,vd[index])) { //FIXME
+      }
+    }}
+    return true;
+  }
+*/
+  case Slash::Core::IValue::ARRAY_DOUBLE:
+   {fType = Variable::VECTOR_DOUBLE;
+    std::vector<unsigned int> is;
+    const std::vector<double>& vd = aValue.get_array_double(is);
+    u.f_Array_double = new inlib::array<double>();
+    if(!u.f_Array_double->configure(is)) {
+      setNone();
+      return false;
+    }
+    if(!u.f_Array_double->fill(vd)) {
+      setNone();
+      return false;
+    }
+    return true;}
+  case Slash::Core::IValue::ARRAY_UNSIGNED_CHAR:
+  case Slash::Core::IValue::ARRAY_CHAR:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_SHORT:
+  case Slash::Core::IValue::ARRAY_SHORT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT:
+  case Slash::Core::IValue::ARRAY_INT:
+  case Slash::Core::IValue::ARRAY_UNSIGNED_INT64:
+  case Slash::Core::IValue::ARRAY_INT64:
+  case Slash::Core::IValue::ARRAY_FLOAT:
+  //case Slash::Core::IValue::ARRAY_DOUBLE:
+  case Slash::Core::IValue::ARRAY_BOOL:
+  case Slash::Core::IValue::ARRAY_STRING:
+    break;
+  }
+  setNone();
+  return false;
+}
+
+#include <Lib/Value.h>
+
+inline Slash::Core::IValue* Lib::Variable::toValue(const Lib::Variable& aVariable) {
+  switch(aVariable.fType) {
+  case NONE:
+    return new Lib::Value();
+  case INTEGER:
+    return new Lib::Value(aVariable.u.f_int);
+  case DOUBLE:
+    return new Lib::Value(aVariable.u.f_double);
+  case POINTER:
+    return new Lib::Value(aVariable.u.f_void_star);
+  case UNSIGNED_SHORT:
+    return new Lib::Value(aVariable.u.f_unsigned_short);
+  case UNSIGNED_INTEGER:
+    return new Lib::Value(aVariable.u.f_unsigned_int);
+  case DOUBLE_STAR:
+    return new Lib::Value(aVariable.u.f_double_star);
+  case FLOAT_STAR:
+    return new Lib::Value(aVariable.u.f_float_star);
+  case INT_STAR:
+    return new Lib::Value(aVariable.u.f_int_star);
+  case BOOLEAN:
+    return new Lib::Value(aVariable.u.f_bool);
+  case SHORT:
+    return new Lib::Value(aVariable.u.f_short);
+  case FLOAT:
+    return new Lib::Value(aVariable.u.f_float);
+  case UNSIGNED_CHAR:
+    return new Lib::Value(aVariable.u.f_unsigned_char);
+  case CHAR:
+    return new Lib::Value(aVariable.u.f_char);
+  case STRING:
+    return new Lib::Value(*aVariable.u.f_std_string);
+  case VECTOR_DOUBLE:
+    return new Lib::Value(aVariable.u.f_Array_double->orders(),
+                          aVariable.u.f_Array_double->vector());
+  //FIXME
+  case INT64:
+  case UNSIGNED_INT64:
+    return 0;
+  }
+  return 0;
+}
+
+/*
+  case NONE:
+  case INTEGER:
+  case DOUBLE:
+  case POINTER:
+  case BOOLEAN:
+  case SHORT:
+  case INT64:
+  case FLOAT:
+  case CHAR:
+  case UNSIGNED_CHAR:
+  case UNSIGNED_SHORT:
+  case UNSIGNED_INTEGER:
+  case UNSIGNED_INT64:
+  case STRING:
+  case VECTOR_DOUBLE:
+*/
+
+#endif

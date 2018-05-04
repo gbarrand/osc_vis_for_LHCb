@@ -1,0 +1,47 @@
+<widget class="Dialog" name="OnX_IB_selectGeometry">
+  <geometry>100x100+300+300</geometry>
+  <decoration>no_close_button\nno_system_menu</decoration>
+  <title>Select geometry</title>
+  <widget class="VContainer">
+  <widget class="Label">
+    <label>Select geometry for current window</label>
+  </widget>
+  <widget class="Label">
+    <label>Position:</label>
+  </widget>
+  <widget class="HBox">
+    <widget class="Label">
+      <label>X</label>
+    </widget>
+    <widget class="Entry" name="OnX_IB_XGeometry">
+      <value>100</value>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <widget class="Label">
+      <label>Y</label>
+    </widget>
+    <widget class="Entry" name="OnX_IB_YGeometry">
+      <value>100</value>
+    </widget>
+  </widget>
+  <widget class="Label">
+    <label>Geometry:</label>
+  </widget>
+  <widget class="HBox">
+    <widget class="Label">
+      <label>Width</label>
+    </widget>
+    <widget class="Entry" name="OnX_IB_WGeometry">
+      <value>100</value>
+    </widget>
+  </widget>
+  <widget class="HBox">
+    <widget class="Label">
+      <label>Heigth</label>
+    </widget>
+    <widget class="Entry" name="OnX_IB_HGeometry">
+      <value>100</value>
+    </widget>
+  </widget>
+</widget>

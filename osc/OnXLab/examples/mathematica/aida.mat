@@ -1,0 +1,54 @@
+<<Graphics`Graphics`
+
+(* ///////////////////////////////////////////////////////////////////////// *)
+aidaplot[file_] := Module[{data,rows,dataXYW,l,n},
+(* ///////////////////////////////////////////////////////////////////////// *)
+(* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! *)
+  data = Import[file,"Table"];
+  rows = Dimensions[data][[1]]-2;
+
+  Print["rows : ",rows];
+  Print[ data[[3]] ];
+
+  dataXYW = Table[0, {i, rows}, {j, 3}];
+  l = 1;
+  n = 3;
+  While[l <= rows, 
+    dataXYW[[l, 1]] =  data[[n,1]]+0.5;
+    dataXYW[[l, 2]] =  data[[n,2]];
+    dataXYW[[l, 3]] =  1;
+    l++;n++;
+  ];
+
+  GeneralizedBarChart[dataXYW];
+]
+
+
+(* ///////////////////////////////////////////////////////////////////////// *)
+tupleplot[file_,colX_,colY_] := Module[{data,rows,dataXY,l,n},
+(* ///////////////////////////////////////////////////////////////////////// *)
+(* Read data file file, project columns colX and colY in a scatter plot.     *)
+(* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! *)
+
+  data = Import[file,"Table"];
+  rows = Dimensions[data][[1]]-2;
+
+  Print["rows : ",rows];
+  (* Print[ data[[3]] ]; *)
+
+  dataXY = Table[0, {i, rows}, {j, 2}];
+
+  (* colX = 5; *)
+  (* colY = 6; *)
+  l = 1;
+  n = 3;
+  While[n <= rows, 
+    dataXY[[l, 1]] = data[[n,colX]] ;
+    dataXY[[l, 2]] = data[[n,colY]] ;
+    l++;n++;
+  ];
+
+  (* Print[ dataXY[[1]] ];  Print[ dataXY[[rows]] ]; *)
+  ListPlot[dataXY];
+
+]

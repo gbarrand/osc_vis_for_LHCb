@@ -1,0 +1,121 @@
+<widget class="CascadeButton">
+  <label>Examples / AIDA / Python</label>
+  <widget class="Menu">
+
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// Python ////////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// Pure AIDA /////////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuItem">
+      <label>Mandel</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','aida_1')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Banner</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','aida_2')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Test mag, axis title</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','aida_3')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Histo normalize</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','aida_4')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Fitting</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','aida_5')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Plotter</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','aida_6')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Histo and log</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','aida_7')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Ascii tuple</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','aida_8')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Cloud3D and slice</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','aida_9')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Functions</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','aida_10')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Rio and tuple</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','aida_11')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Histo operations</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','aida_12')</activate>
+    </widget>
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// Quite AIDA  ///////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>Analysis over analysis.root</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','quite_aida_0')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Store/read an histo</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','quite_aida_1')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Histo variable bins</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','quite_aida_2')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>ROOT TH*</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','quite_aida_3')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Function 2D</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','quite_aida_4')</activate>
+    </widget>
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// OnX specific //////////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>Plot and detector</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/OnXLab/examples/Python','aida_OnX_1')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Plot and equation</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/OnXLab/examples/Python','aida_OnX_2')</activate>
+    </widget>
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// OnXLab specific ///////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>Histo and data_collect</label>
+      <activate exec="Python">import OnX;OnX.import_py('$OSC_HOME_DIR/Resources/AIDA/examples/Python','aida_OnX_3')</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Refill OnXLab_banner.h</label>
+      <activate exec="Python">
+        import AIDA\n\
+        import random\n\
+        aida = AIDA.createAnalysisFactory()\n\
+        treeFactory = aida.createTreeFactory()\n\
+        memoryTree = treeFactory.create()\n\
+        mo = memoryTree.find('h')\n\
+        if mo != None :\n\
+          h = mo.cast_IHistogram1D()\n\
+          if h != None :\n\
+            r = random.Random()\n\
+            for I in range(0,10000): h.fill(r.gauss(0,1),1)\n\
+        del treeFactory;del memoryTree
+      </activate>
+    </widget>
+  </widget>
+</widget>

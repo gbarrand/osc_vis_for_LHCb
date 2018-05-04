@@ -1,0 +1,100 @@
+<OnX>
+
+  <variable name="page_viewer_help">
+     Example of visualizing user data (here some "OnX_Shape")\n
+    by using the OnX data accessor system. The code of the\n
+    OnX_Shape class along with its accessor is in\n
+       OnX/examples/Callbacks/Shape.cxx\n
+    \n
+    This accessor is declared to the accessor system by using\n
+    the OnXExas_shape_initialize create callback deposited on the viewer.\n 
+    \n
+     When done, someone can use the "data_collect" and "data_visualize"\n
+    to filter out the data (here shapes) and visualize them.\n
+     See the code of the OnXExas_shape_visualize callbacks.\n
+    \n
+     But someone can have, for example on activate callbacks\n
+     of the "Cube" button, some DLD script like :\n
+        OnX data_collect OnX_Shape type=="Cube"\n
+        OnX data_visualize Viewer\n
+  </variable>
+
+  <widget class="Window">
+    <geometry>400x400</geometry>
+    <title>PageViewer</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="VBox">
+      <expand>first</expand>
+      <sizeOfFixed>90</sizeOfFixed>
+
+      <widget class="PageViewer" name="Viewer">
+        <create exec="DLD">OnX viewer_set_background_color @this@ 0.4 0.2 0.2</create>
+        <create exec="DLD">OnX page_set_title @this@ OnX</create>
+        <create exec="DLD">OnX page_title_visible @this@ false</create>
+        <create exec="DLD">OnX page_create_regions @this@ SoDisplayRegion 1 1 0</create>
+        <create exec="DLD">OnX region_set_background_color @this@ 0.3 0.2 0.2</create>
+
+        <create exec="DLD" where="remote">OnXExas shape_initialize</create>
+
+        <!-- NOTE : in client/server, today we have to use @current@. -->
+        <create exec="DLD">OnX ui_set_current_widget @this@</create>
+        <create exec="DLD" where="remote">OnXExas shape_visualize @current@</create>
+        <create exec="DLD">OnX viewer_view_all @this@</create>
+
+        <!-- To be able to have some feedback on picking. -->
+        <create exec="DLD">OnX declare_accessors</create>
+        <collect exec="DLD">OnX viewer_collect @this@</collect>
+        <rectangularCollect exec="DLD">OnX viewer_rectangular_collect @this@</rectangularCollect>
+
+        <!-- have a popup menu on picking mode -->
+        <popupItems>Decorations off\nDecorations on\nNo highlighted</popupItems>
+  
+        <variable name="Pages_popup_item_script">
+          No highlighted\nOnX region_no_highlighted @this@\n
+          Decorations on\nOnX viewer_set_decoration @this@ true\n
+          Decorations off\nOnX viewer_set_decoration @this@ false
+        </variable>
+  
+        <popup exec="DLD">OnX ui_execute_script DLD @next@this.value@{Pages_popup_item_script}@strip_key@</popup>
+  
+      </widget>
+
+      <widget class="VContainer">
+        <widget class="PushButton">
+          <label>Cubes</label>
+          <activate exec="DLD">OnX viewer_clear Viewer all</activate>
+          <!-- NOTE : in client/server, today we have to use @current@. -->
+          <activate exec="DLD" where="remote">OnX data_collect OnX_Shape type=="Cube"</activate>
+          <activate exec="DLD" where="remote">OnX data_visualize @current@</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Detector</label>
+          <activate exec="DLD">OnX viewer_clear Viewer all</activate>
+          <!-- NOTE : in client/server, today we have to use @current@. -->
+          <activate exec="DLD" where="remote">OnXExas detector_visualize @current@</activate>
+        </widget>
+        <widget class="PushButton">
+          <label>Help</label>
+
+          <!-- 
+            Take the text in the upper page_viewer_help variable and 
+            show it in a help dialog. We need to do some extra 
+            string manipulations to transform the \n in true LF characters.
+          -->
+  
+          <activate exec="DLD">OnX ui_load @empty@ $ONXROOT/scripts/OnX/HelpWindow.onx</activate>
+          <activate exec="DLD">OnX ui_set_parameter OnX_HelpWindow_text.value @{page_viewer_help}@</activate>
+          <activate exec="DLD">OnX ui_show OnX_HelpWindow_window</activate>
+        </widget>
+
+        <widget class="PushButton">
+          <label>Quit</label>
+          <activate exec="DLD">OnX ui_exit</activate>
+        </widget>
+
+      </widget>
+    </widget>
+  </widget>
+</OnX>

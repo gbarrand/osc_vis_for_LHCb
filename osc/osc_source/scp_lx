@@ -1,0 +1,25 @@
+#!/bin/sh -f
+
+remote=barrand@lx3.lal.in2p3.fr
+
+scp AA_INSTALL_README ${remote}:tmpup/.
+scp A_DARWIN_APP_README ${remote}:tmpup/.
+scp A_GEANT4_README ${remote}:tmpup/.
+scp A_RELEASE_NOTES ${remote}:tmpup/.
+
+scp osc_wget_build ${remote}:tmpup/.
+scp osc_wget_build.bat ${remote}:tmpup/.
+#scp osc_wget_install ${remote}:tmpup/.
+#scp osc_wget_install.bat ${remote}:tmpup/.
+#scp osc_wget_run ${remote}:tmpup/.
+#scp osc_wget_run.bat ${remote}:tmpup/.
+#scp osc_build_remote ${remote}:tmpup/.
+obuild_platform_cpp=`find ../obuild -maxdepth 2 -name 'obuild_platform.cpp' -print`
+scp ${obuild_platform_cpp} ${remote}:tmpup/.
+
+#exit
+from=../..
+find ${from} -maxdepth 1 -name '*.zip' -exec scp {} ${remote}:tmpup/. \;
+
+ssh ${remote} ls -al tmpup/*
+

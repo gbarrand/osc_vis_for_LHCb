@@ -1,0 +1,582 @@
+// included by TreeDictionary.cxx
+
+#include <Rio/Core/Arguments.h>
+
+namespace Rio {
+
+class Tree_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    IDirectory* directory = (IDirectory*)Args_findDirectory(aArgs);
+    if(!directory) {
+      fOut << "Rio::Tree_Class::create : no directory given." << std::endl;
+      return 0;
+    }
+    return new Tree(fDictionary,*directory);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  // 3.00.06 version 5
+  // 3.10.02 version 10
+  Tree_Class(const IDictionary& aDictionary,std::ostream& aOut)
+  :BaseClass("Rio::Tree","TTree",5)
+  ,fOut(aOut),fDictionary(aDictionary),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TTree");
+    //bases :
+    stringCheckSum(fCheckSum,"TNamed");
+    stringCheckSum(fCheckSum,"TAttLine");
+    stringCheckSum(fCheckSum,"TAttFill");
+    stringCheckSum(fCheckSum,"TAttMarker");
+    //members :
+    stringCheckSum(fCheckSum,"fEntries");
+    stringCheckSum(fCheckSum,"Stat_t");
+
+    stringCheckSum(fCheckSum,"fTotBytes");
+    stringCheckSum(fCheckSum,"Stat_t");
+
+    stringCheckSum(fCheckSum,"fZipBytes");
+    stringCheckSum(fCheckSum,"Stat_t");
+
+    stringCheckSum(fCheckSum,"fSavedBytes");
+    stringCheckSum(fCheckSum,"Stat_t");
+
+    stringCheckSum(fCheckSum,"fTimerInterval");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fScanField");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fUpdate");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fMaxEntryLoop");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fMaxVirtualSize");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fAutoSave");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fEstimate");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fBranches");
+    stringCheckSum(fCheckSum,"TObjArray");
+
+    stringCheckSum(fCheckSum,"fLeaves");
+    stringCheckSum(fCheckSum,"TObjArray");
+
+    //stringCheckSum(fCheckSum,"fAliases");
+    //stringCheckSum(fCheckSum,"TList*");
+
+    stringCheckSum(fCheckSum,"fIndexValues");
+    stringCheckSum(fCheckSum,"TArrayD");
+
+    stringCheckSum(fCheckSum,"fIndex");
+    stringCheckSum(fCheckSum,"TArrayI");
+
+    //stringCheckSum(fCheckSum,"fFriends");
+    //stringCheckSum(fCheckSum,"TList*");
+    //Should be : 3245044844U //3.00.06
+    //Should be : FIXME //3.10.02
+  }
+  virtual ~Tree_Class(){}
+private:
+  std::ostream& fOut;
+  const IDictionary& fDictionary;
+  unsigned int fCheckSum;
+};
+
+class Branch_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    Tree* tree = (Tree*)Args_findTree(aArgs);
+    if(!tree) {
+      fOut << "Rio::BranchClass::create : no tree given." << std::endl;
+      return 0;
+    }
+    return new Branch(fDictionary,*tree);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  // 3.00.06 version 6
+  // 3.03.01 version 7 (add int fSplitLevel)
+  // 3.10.02 version 8 (inherits TAttFill (!))
+  Branch_Class(const IDictionary& aDictionary,std::ostream& aOut)
+  :BaseClass("Rio::Branch","TBranch",8)
+  ,fOut(aOut),fDictionary(aDictionary),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TBranch");
+    //bases :
+    stringCheckSum(fCheckSum,"TNamed");
+    stringCheckSum(fCheckSum,"TAttFill");
+    //members :
+    stringCheckSum(fCheckSum,"fCompress");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fBasketSize");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fEntryOffsetLen");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fWriteBasket");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fEntryNumber");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fOffset");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fMaxBaskets");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fSplitLevel");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fEntries");
+    stringCheckSum(fCheckSum,"Stat_t");
+
+    stringCheckSum(fCheckSum,"fTotBytes");
+    stringCheckSum(fCheckSum,"Stat_t");
+
+    stringCheckSum(fCheckSum,"fZipBytes");
+    stringCheckSum(fCheckSum,"Stat_t");
+
+    stringCheckSum(fCheckSum,"fBranches");
+    stringCheckSum(fCheckSum,"TObjArray");
+
+    stringCheckSum(fCheckSum,"fLeaves");
+    stringCheckSum(fCheckSum,"TObjArray");
+
+    stringCheckSum(fCheckSum,"fBaskets");
+    stringCheckSum(fCheckSum,"TObjArray");
+
+    stringCheckSum(fCheckSum,"fBasketBytes");
+    stringCheckSum(fCheckSum,"Int_t*");
+
+    stringCheckSum(fCheckSum,"fBasketEntry");
+    stringCheckSum(fCheckSum,"Int_t*");
+
+    stringCheckSum(fCheckSum,"fBasketSeek");
+    stringCheckSum(fCheckSum,"Seek_t*");
+
+    stringCheckSum(fCheckSum,"fFileName");
+    stringCheckSum(fCheckSum,"TString");
+    //Should be : 2056727376U (6 3.00.06)
+    //Should be : FIXME (7 3.03.01)
+  }
+  virtual ~Branch_Class(){}
+private:
+  std::ostream& fOut;
+  const IDictionary& fDictionary;
+  unsigned int fCheckSum;
+};
+
+class BranchObject_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    Tree* tree = (Tree*)Args_findTree(aArgs);
+    if(!tree) {
+      fOut << "Rio::BranchObjectClass::create : no tree given." << std::endl;
+      return 0;
+    }
+    return new BranchObject(fDictionary,*tree);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  BranchObject_Class(const IDictionary& aDictionary,std::ostream& aOut)
+  :BaseClass("Rio::BranchObject","TBranchObject",1)
+  ,fOut(aOut),fDictionary(aDictionary),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TBranchObject");
+    //bases :
+    stringCheckSum(fCheckSum,"TBranch");
+    //members :
+    stringCheckSum(fCheckSum,"fClassName");
+    stringCheckSum(fCheckSum,"TString");
+
+    //Should be : 2857878535U
+  }
+  virtual ~BranchObject_Class(){}
+private:
+  std::ostream& fOut;
+  const IDictionary& fDictionary;
+  unsigned int fCheckSum;
+};
+
+class BranchElement_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    Tree* tree = (Tree*)Args_findTree(aArgs);
+    if(!tree) {
+      fOut << "Rio::BranchElementClass::create : no tree given." << std::endl;
+      return 0;
+    }
+    return new BranchElement(fDictionary,*tree);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  BranchElement_Class(const IDictionary& aDictionary,std::ostream& aOut)
+  :BaseClass("Rio::BranchElement","TBranchElement",1)
+  ,fOut(aOut),fDictionary(aDictionary),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TBranchElement");
+    //bases :
+    stringCheckSum(fCheckSum,"TBranch");
+    //members :
+    stringCheckSum(fCheckSum,"fClassName");
+    stringCheckSum(fCheckSum,"TString");
+
+    stringCheckSum(fCheckSum,"fClassVersion");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fID");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fType");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fStreamerType");
+    stringCheckSum(fCheckSum,"Int_t");
+  }
+  virtual ~BranchElement_Class(){}
+private:
+  std::ostream& fOut;
+  const IDictionary& fDictionary;
+  unsigned int fCheckSum;
+};
+
+class Basket_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    IDirectory* directory = (IDirectory*)Args_findDirectory(aArgs);
+    if(!directory) {
+      fOut << "Rio::BasketClass::create : no directory given." << std::endl;
+      return 0;
+    }
+    Branch* branch = (Branch*)Args_findBranch(aArgs);
+    if(!branch) {
+      fOut << "Rio::BasketClass::create : no branch given." << std::endl;
+      return 0;
+    }
+    return new Basket(branch->dictionary(),*directory,*branch);
+  }
+  virtual unsigned int checkSum() const { return 0;}
+public:
+  Basket_Class(std::ostream& aOut)
+  :BaseClass("Rio::Basket","TBasket",2),fOut(aOut){}
+  virtual ~Basket_Class(){}
+private:
+  std::ostream& fOut;
+};
+
+class LeafFloat_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    Branch* branch = (Branch*)Args_findBranch(aArgs);
+    if(!branch) {
+      fOut << "Rio::LeafFloatClass::create : no branch given." << std::endl;
+      return 0;
+    }
+    return new LeafFloat(branch->dictionary(),*branch);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  LeafFloat_Class(std::ostream& aOut)
+  :BaseClass("Rio::LeafFloat","TLeafF",1)
+  ,fOut(aOut),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TLeafF");
+    //bases :
+    stringCheckSum(fCheckSum,"TLeaf");
+    //members :
+    stringCheckSum(fCheckSum,"fMinimum");
+    stringCheckSum(fCheckSum,"Float_t");
+
+    stringCheckSum(fCheckSum,"fMaximum");
+    stringCheckSum(fCheckSum,"Float_t");
+
+    //Should be 1366318032U
+  }
+  virtual ~LeafFloat_Class(){}
+private:
+  std::ostream& fOut;
+  unsigned int fCheckSum;
+};
+
+class LeafDouble_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    Branch* branch = (Branch*)Args_findBranch(aArgs);
+    if(!branch) {
+      fOut << "Rio::LeafDoubleClass::create : no branch given." << std::endl;
+      return 0;
+    }
+    return new LeafDouble(branch->dictionary(),*branch);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  LeafDouble_Class(std::ostream& aOut)
+  :BaseClass("Rio::LeafDouble","TLeafD",1)
+  ,fOut(aOut),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TLeafD");
+    //bases :
+    stringCheckSum(fCheckSum,"TLeaf");
+    //members :
+    stringCheckSum(fCheckSum,"fMinimum");
+    stringCheckSum(fCheckSum,"Double_t");
+
+    stringCheckSum(fCheckSum,"fMaximum");
+    stringCheckSum(fCheckSum,"Double_t");
+
+    //Should be
+  }
+  virtual ~LeafDouble_Class(){}
+private:
+  std::ostream& fOut;
+  unsigned int fCheckSum;
+};
+
+class LeafShort_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    Branch* branch = (Branch*)Args_findBranch(aArgs);
+    if(!branch) {
+      fOut << "Rio::LeafShortClass::create : no branch given." << std::endl;
+      return 0;
+    }
+    return new LeafShort(branch->dictionary(),*branch);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  LeafShort_Class(std::ostream& aOut)
+  :BaseClass("Rio::LeafShort","TLeafS",1)
+  ,fOut(aOut),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TLeafS");
+    //bases :
+    stringCheckSum(fCheckSum,"TLeaf");
+    //members :
+    stringCheckSum(fCheckSum,"fMinimum");
+    stringCheckSum(fCheckSum,"Short_t");
+
+    stringCheckSum(fCheckSum,"fMaximum");
+    stringCheckSum(fCheckSum,"Short_t");
+
+    //Should be : FIXME
+  }
+  virtual ~LeafShort_Class(){}
+private:
+  std::ostream& fOut;
+  unsigned int fCheckSum;
+};
+
+class LeafInteger_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    Branch* branch = (Branch*)Args_findBranch(aArgs);
+    if(!branch) {
+      fOut << "Rio::LeafIntegerClass::create : no branch given." << std::endl;
+      return 0;
+    }
+    return new LeafInteger(branch->dictionary(),*branch);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  LeafInteger_Class(std::ostream& aOut)
+  :BaseClass("Rio::LeafInteger","TLeafI",1)
+  ,fOut(aOut),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TLeafI");
+    //bases :
+    stringCheckSum(fCheckSum,"TLeaf");
+    //members :
+    stringCheckSum(fCheckSum,"fMinimum");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fMaximum");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    //Should be : 3495201397U
+  }
+  virtual ~LeafInteger_Class(){}
+private:
+  std::ostream& fOut;
+  unsigned int fCheckSum;
+};
+
+class LeafCharacter_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    Branch* branch = (Branch*)Args_findBranch(aArgs);
+    if(!branch) {
+      fOut << "Rio::LeafCharacterClass::create : no branch given." << std::endl;
+      return 0;
+    }
+    return new LeafCharacter(branch->dictionary(),*branch);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  LeafCharacter_Class(std::ostream& aOut)
+  :BaseClass("Rio::LeafCharacter","TLeafB",1)
+  ,fOut(aOut),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TLeafB");
+    //bases :
+    stringCheckSum(fCheckSum,"TLeaf");
+    //members :
+    stringCheckSum(fCheckSum,"fMinimum");
+    stringCheckSum(fCheckSum,"Char_t");
+
+    stringCheckSum(fCheckSum,"fMaximum");
+    stringCheckSum(fCheckSum,"Char_t");
+
+    //Should be : FIXME
+  }
+  virtual ~LeafCharacter_Class(){}
+private:
+  std::ostream& fOut;
+  unsigned int fCheckSum;
+};
+
+class LeafString_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    Branch* branch = (Branch*)Args_findBranch(aArgs);
+    if(!branch) {
+      fOut << "Rio::LeafStringClass::create : no branch given." << std::endl;
+      return 0;
+    }
+    return new LeafString(branch->dictionary(),*branch);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  LeafString_Class(std::ostream& aOut)
+  :BaseClass("Rio::LeafString","TLeafC",1)
+  ,fOut(aOut),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TLeafC");
+    //bases :
+    stringCheckSum(fCheckSum,"TLeaf");
+    //members :
+    stringCheckSum(fCheckSum,"fMinimum");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fMaximum");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    //Should be : FIXME
+  }
+  virtual ~LeafString_Class(){}
+private:
+  std::ostream& fOut;
+  unsigned int fCheckSum;
+};
+
+class LeafObject_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    Branch* branch = (Branch*)Args_findBranch(aArgs);
+    if(!branch) {
+      fOut << "Rio::LeafObjectClass::create : no branch given." << std::endl;
+      return 0;
+    }
+    return new LeafObject(branch->dictionary(),*branch);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  LeafObject_Class(std::ostream& aOut)
+  :BaseClass("Rio::LeafObject","TLeafObject",4)
+  ,fOut(aOut),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TLeafObject");
+    //bases :
+    stringCheckSum(fCheckSum,"TLeaf");
+    //members :
+    stringCheckSum(fCheckSum,"fVirtual");
+    stringCheckSum(fCheckSum,"Bool_t");
+
+    //Should be 2312661809U
+  }
+  virtual ~LeafObject_Class(){}
+private:
+  std::ostream& fOut;
+  unsigned int fCheckSum;
+};
+
+class LeafElement_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments& aArgs) {
+    Branch* branch = (Branch*)Args_findBranch(aArgs);
+    if(!branch) {
+      fOut << "Rio::LeafElementClass::create : no branch given." << std::endl;
+      return 0;
+    }
+    return new LeafElement(branch->dictionary(),*branch);
+  }
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  LeafElement_Class(std::ostream& aOut)
+  :BaseClass("Rio::LeafElement","TLeafElement",1)
+  ,fOut(aOut),fCheckSum(0){
+    //name :
+    stringCheckSum(fCheckSum,"TLeafElement");
+    //bases :
+    stringCheckSum(fCheckSum,"TLeaf");
+    //members :
+    stringCheckSum(fCheckSum,"fID");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fType");
+    stringCheckSum(fCheckSum,"Int_t");
+  }
+  virtual ~LeafElement_Class(){}
+private:
+  std::ostream& fOut;
+  unsigned int fCheckSum;
+};
+
+class BaseLeaf_Class : public BaseClass {
+public: //Rio::IClass
+  virtual IObject* create(const Arguments&) { return 0;}
+  virtual unsigned int checkSum() const { return fCheckSum;}
+public:
+  BaseLeaf_Class()
+  :BaseClass("Rio::BaseLeaf","TLeaf",2),fCheckSum(0) {
+    //name :
+    stringCheckSum(fCheckSum,"TLeaf");
+    //bases :
+    stringCheckSum(fCheckSum,"TNamed");
+    //members :
+    stringCheckSum(fCheckSum,"fLen");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fLenType");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fOffset");
+    stringCheckSum(fCheckSum,"Int_t");
+
+    stringCheckSum(fCheckSum,"fIsRange");
+    stringCheckSum(fCheckSum,"Bool_t");
+
+    stringCheckSum(fCheckSum,"fIsUnsigned");
+    stringCheckSum(fCheckSum,"Bool_t");
+
+    stringCheckSum(fCheckSum,"fLeafCount");
+    stringCheckSum(fCheckSum,"TLeaf*");
+
+    //Should be : 727988519U
+  }
+  virtual ~BaseLeaf_Class(){}
+private:
+  unsigned int fCheckSum;
+};
+
+}
+

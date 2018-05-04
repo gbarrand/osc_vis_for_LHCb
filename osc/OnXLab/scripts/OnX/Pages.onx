@@ -1,0 +1,57 @@
+<widget class="TabStack" name="tab_stack"> <!-- name used in GUI.onx -->
+  <!-- with some toolkit (gtk), a direct <select> would be executed
+       at creation when inserting children. And as the IUI is still
+       not known by the session, then the callback would issue 
+       somw warnings. To sort out that, we install the select callback
+       after the creation of the widgets. -->
+  <create exec="DLD">OnX ui_set_callback @this@ select DLD OnX ui_set_current_widget @ @cat@ this.value@</create>
+
+  <widget class="PlanePageViewer" name="Viewer">
+    <create exec="DLD">OnX ui_add_in_tab_stack @this@</create>
+    <create exec="DLD">OnX ui_add_in_currents @this@ OnX_viewers</create>
+    <create exec="DLD">OnX ui_set_current_widget @this@</create>
+
+    <!-- Default graphics layout -->
+    <create exec="DLD">OnX page_set_title @this@ OnXLab</create>
+    <create exec="DLD">OnX page_title_visible @this@ false</create>
+    <create exec="DLD">OnX page_create_regions @this@ SoPlotterRegion 1 1 0</create>
+    <create exec="DLD">OnX region_set_color @this@ white</create>
+    <create exec="DLD">OnX viewer_set_decoration @this@ false</create>
+    <create exec="DLD">OnX viewer_set_viewing @this@ false</create>
+
+    <!-- Else -->
+    <destroy exec="DLD">OnX ui_remove_from_currents @this@ OnX_viewers</destroy>
+    <destroy exec="DLD">OnX ui_change_current @this@ OnX_viewers</destroy>
+    <collect exec="DLD">OnX viewer_collect @this@</collect>
+    <rectangularCollect exec="DLD">OnXLab rectangular_collect @this@</rectangularCollect>
+    <popupItems>No highlighted</popupItems>
+    <variable name="Pages_popup_item_script">
+      No highlighted\nOnX region_no_highlighted @this@
+    </variable>
+    <popup exec="DLD">OnX ui_execute_script DLD @next@this.value@{Pages_popup_item_script}@strip_key@</popup>
+  </widget>
+
+  <widget class="PageViewer" name="Viewer3D">
+    <create exec="DLD">OnX ui_add_in_tab_stack @this@</create>
+    <create exec="DLD">OnX ui_add_in_currents @this@ OnX_viewers</create>
+
+    <!-- Default graphics layout -->
+    <create exec="DLD">OnX page_set_title @this@ OnXLab</create>
+    <create exec="DLD">OnX page_title_visible @this@ false</create>
+    <create exec="DLD">OnX page_create_regions @this@ SoPlotterRegion 1 1 0</create>
+    <create exec="DLD">OnX region_set_color @this@ white</create>
+    <create exec="DLD">OnX viewer_set_decoration @this@ true</create>
+    <create exec="DLD">OnX viewer_set_viewing @this@ true</create>
+
+    <!-- Else -->
+    <destroy exec="DLD">OnX ui_remove_from_currents @this@ OnX_viewers</destroy>
+    <destroy exec="DLD">OnX ui_change_current @this@ OnX_viewers</destroy>
+    <collect exec="DLD">OnX viewer_collect @this@</collect>
+    <rectangularCollect exec="DLD">OnXLab rectangular_collect @this@</rectangularCollect>
+    <popupItems>No highlighted</popupItems>
+    <variable name="Pages_popup_item_script">
+      No highlighted\nOnX region_no_highlighted @this@
+    </variable>
+    <popup exec="DLD">OnX ui_execute_script DLD @next@this.value@{Pages_popup_item_script}@strip_key@</popup>
+  </widget>
+</widget>

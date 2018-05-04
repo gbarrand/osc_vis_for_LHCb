@@ -1,0 +1,179 @@
+
+<!-- 
+////////////////////////////////////////////////
+// This is a obuild / OpenScientist integration 
+// of code of SoQt_1_3_0.
+//
+// This code is over Qt-4. 
+//
+////////////////////////////////////////////////
+-->
+  
+<obuild>
+
+  <package name="CoinQt" version="v1r130p9">
+
+    <repository>:pserver:@@user@@@cvsserver.lal.in2p3.fr:/projects/cvs</repository>
+
+    <!-- not this : -->
+
+    <reference package="CoinGL" path="../../CoinGL" file="obuild/export.obuild"/>  
+    <reference package="foreign" path="../../foreign" file="Qt.obuild"/>  
+
+    <!-- this : -->
+
+    <library name="CoinQt">
+      <group>Qt</group>
+      <check_foreign>Qt</check_foreign>
+
+      <!-- Produce moc files : -->
+      <command>${Qt_moc} -o ../src/Inventor/Qt/moc_SoQtP.icc ../include/Inventor/Qt/SoQtP.h</command>
+      <command>${Qt_moc} -o ../src/Inventor/Qt/moc_SoQtComponentP.icc ../include/Inventor/Qt/SoQtComponentP.h </command>
+      <command>${Qt_moc} -o ../src/Inventor/Qt/moc_SoQtGLWidgetP.icc ../include/Inventor/Qt/SoQtGLWidgetP.h </command>
+      <command>${Qt_moc} -o ../src/Inventor/Qt/viewers/moc_SoQtExaminerViewerP.icc ../include/Inventor/Qt/viewers/SoQtExaminerViewerP.h </command>
+      <command>${Qt_moc} -o ../src/Inventor/Qt/viewers/moc_SoQtFullViewerP.icc ../include/Inventor/Qt/viewers/SoQtFullViewerP.h </command>
+      <command>${Qt_moc} -o ../src/Inventor/Qt/viewers/moc_SoQtPlaneViewerP.icc ../include/Inventor/Qt/viewers/SoQtPlaneViewerP.h </command>
+      <command>${Qt_moc} -o ../src/Inventor/Qt/widgets/moc_QtNativePopupMenu.icc ../include/Inventor/Qt/widgets/QtNativePopupMenu.h </command>
+      <command>${Qt_moc} -o ../src/Inventor/Qt/widgets/moc_SoQtGLArea.icc ../include/Inventor/Qt/widgets/SoQtGLArea.h </command>
+      <command>${Qt_moc} -o ../src/Inventor/Qt/widgets/moc_SoQtThumbWheel.icc ../include/Inventor/Qt/widgets/SoQtThumbWheel.h </command>
+
+      <files>../src/Inventor/Qt/widgets/*.cpp</files>
+      <files>../src/Inventor/Qt/devices/*.cpp</files>
+      <files>../src/Inventor/Qt/viewers/*.cpp</files>
+      <files>../src/Inventor/Qt/nodes/*.cpp</files>
+      <files>../src/Inventor/Qt/engines/*.cpp</files>
+
+<!--  <files>../src/Inventor/Qt/editors/*.cpp</files> -->
+
+      <files>../src/Inventor/Qt/*.cpp</files>
+
+      <cxx_include>${obuild_CoinQt_path}/include</cxx_include>
+      <cxx_include>${obuild_CoinQt_path}/src</cxx_include>
+      <cxx_include>${obuild_CoinQt_path}/data</cxx_include>
+  
+      <cxx_macro name="HAVE_CONFIG_H"/>
+      <cxx_macro name="SOQT_INTERNAL"/>
+      <cxx_macro name="SOQT_DEBUG">0</cxx_macro>
+
+      <cxx_macro platform="Windows_NT" name="SOQT_MAKE_DLL"/>
+  
+      <!-- not this : -->
+
+      <cxx_include copy="cxx_include" from="Qt"/>
+      <cxx_include copy="c_include" from="CoinGL"/>
+      <cxx_options copy="c_options" from="CoinGL"/>
+      <cxx_macro copy="c_macro" from="CoinGL"/>
+
+      <lib platform="Windows_NT" copy="lib" from="CoinGL"/>
+      <lib platform="Windows_NT" copy="lib" from="Qt"/>
+
+    </library>
+  
+    <template name="CoinQt_test_T">
+      <group>Qt</group>
+      <check_foreign>Qt</check_foreign>
+
+      <file>../tests/@@name@@.cpp</file>
+  
+      <cxx_include copy="cxx_include" from="library CoinQt"/>
+
+      <cxx_macro platform="Windows_NT" name="SOQT_DLL"/>
+      <cxx_macro copy="c_macro" from="CoinGL"/>
+
+      <!-- To suppress the OpenGL warnings : 
+          see notes in foreign/GLX.obuild -->
+      <cxx_linker_options platform="Darwin">-bind_at_load -multiply_defined suppress</cxx_linker_options>
+
+      <lib>CoinQt</lib>
+      <lib copy="lib" from="CoinGL"/>
+      <lib copy="lib" from="Qt"/>
+
+    </template>
+  
+    <darwin_app name="CoinQt_test_cube">
+      <group>Qt</group>
+      <check_foreign>Qt</check_foreign>
+      <copy_dir>
+        <from>${Qt_fmk}/QtGui.framework/Resources/qt_menu.nib</from>
+        <to>@@dir_bin@@/@@component@@.app/Contents/Resources/.</to>
+      </copy_dir>
+    </darwin_app>
+    <darwin_app name="CoinQt_test_gui">
+      <group>Qt</group>
+      <check_foreign>Qt</check_foreign>
+      <copy_dir>
+        <from>${Qt_fmk}/QtGui.framework/Resources/qt_menu.nib</from>
+        <to>@@dir_bin@@/@@component@@.app/Contents/Resources/.</to>
+      </copy_dir>
+    </darwin_app>
+
+    <application template="CoinQt_test_T" name="CoinQt_test_cube"/>
+    <application template="CoinQt_test_T" name="CoinQt_test_gui"/>
+
+    <application name="CoinQt_test_GL">
+      <group>Qt</group>
+      <check_foreign>Qt</check_foreign>
+
+      <command>${Qt_moc} -o ../tests/moc_MyButton.cpp ../tests/MyButton.h </command>
+      <file>../tests/moc_MyButton.cpp</file>
+
+      <file>../tests/CoinQt_test_GL.cpp</file>
+  
+      <cxx_include copy="cxx_include" from="Qt"/>
+      <lib copy="lib" from="Qt"/>
+    </application>
+  
+    <application name="CoinQt_coin_config">
+      <group>Qt</group>
+      <check_foreign>Qt</check_foreign>
+
+      <file>../applications/CoinQt_coin_config.cxx</file>
+
+      <cxx_include>${obuild_CoinQt_path}/include</cxx_include>
+
+      <cxx_macro platform="Windows_NT" name="SOQT_DLL"/>
+      <cxx_macro copy="c_macro" from="CoinGL"/>
+
+      <copy>osc-coin-qt-config</copy>
+    </application>
+  
+    <!-- IMPORTANT for osc-coin-qt-config : -->
+    <application name="CoinQt_config_save">
+      <group>Qt</group>
+      <check_foreign>Qt</check_foreign>
+
+      <file>../applications/config_save.cxx</file>
+
+      <cxx_include>${obuild_CoinQt_path}/include</cxx_include>
+      <cxx_include copy="cxx_include" from="Qt"/>
+      <cxx_include copy="c_include" from="CoinGL"/>
+
+      <cxx_macro platform="Windows_NT" name="SOQT_DLL"/>
+      <cxx_macro copy="c_macro" from="CoinGL"/>
+
+      <!-- To suppress the OpenGL warnings : 
+          see notes in foreign/GLX.obuild -->
+      <cxx_linker_options platform="Darwin">-bind_at_load -multiply_defined suppress</cxx_linker_options>
+
+      <lib>CoinQt</lib>
+      <lib copy="lib" from="CoinGL"/>
+      <lib copy="lib" from="Qt"/>
+
+      <save> 
+        <subs_path>
+          <from>../..</from>
+          <to>@@top@@</to>
+        </subs_path>
+      </save> 
+    </application>
+
+    <release>
+      <copy_dir>
+        <from>include</from>
+        <to>Resources/CoinQt/.</to>
+      </copy_dir>
+    </release>
+
+  </package>
+
+</obuild>

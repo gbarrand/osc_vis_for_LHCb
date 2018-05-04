@@ -1,0 +1,9 @@
+
+  Things under Graf are needed in order to stream a TTree correctly !.
+
+  It is clrealy a pure scandal to have to introduce graphic things
+ in a package that have to deal with file io only. 
+
+  But we have to coope with the bad design of ROOT...
+
+   Guy Barrand

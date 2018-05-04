@@ -1,0 +1,105 @@
+#!/bin/sh -f 
+
+#set -x
+
+if test "`osc-config --version`" = "" ; then
+  echo "osc-config not available."
+  exit
+fi
+
+bin=.
+
+#args=$*
+
+cppflags="-I. -I.."
+cppflags=${cppflags}" `osc-config --cppflags`"
+cppflags=${cppflags}" `osc-config --iv_cppflags`"
+
+#//////////////////////////////////////////////////
+#// library UserData :
+#//////////////////////////////////////////////////
+eval `osc-config --compiler` -c ${cppflags} -o ${bin}/Track.o ../source/User/Track.cxx
+eval `osc-config --compiler` -c ${cppflags} -o ${bin}/Event.o ../source/User/Event.cxx
+eval `osc-config --compiler` -c ${cppflags} -o ${bin}/Processor.o ../source/User/Processor.cxx
+eval `osc-config --compiler` -c ${cppflags} -o ${bin}/PrintProcessor.o ../source/User/PrintProcessor.cxx
+eval `osc-config --compiler` -c ${cppflags} -o ${bin}/Framework.o ../source/User/Framework.cxx
+
+UserData_objs="${bin}/Track.o ${bin}/Event.o ${bin}/Processor.o ${bin}/PrintProcessor.o ${bin}/Framework.o"
+
+#//////////////////////////////////////////////////
+#// library OnXTemplateSixCore :
+#//////////////////////////////////////////////////
+eval `osc-config --compiler` -c ${cppflags} -o ${bin}/FrameworkManager.o ../source/FrameworkManager.cxx
+eval `osc-config --compiler` -c ${cppflags} -o ${bin}/Track_Accessor.o ../source/Track_Accessor.cxx
+OnXTemplateSixCore_objs="${bin}/FrameworkManager.o ${bin}/Track_Accessor.o"
+
+#//////////////////////////////////////////////////
+#// dll OnXTemplateSix :
+#//////////////////////////////////////////////////
+eval `osc-config --compiler` -c ${cppflags} -o ${bin}/Callbacks.o ../source/Callbacks.cxx
+
+objs="${bin}/Callbacks.o ${OnXTemplateSixCore_objs} ${UserData_objs}"
+
+libs=""
+libs=${libs}" `osc-config --iv_libs`"
+libs=${libs}" `osc-config --libs`"
+
+if test `uname` = "Darwin" ; then
+/bin/rm -f ${bin}/OnXTemplateSix.bundle
+eval c++ -bundle -twolevel_namespace -o ${bin}/OnXTemplateSix.bundle ${objs} ${libs}
+fi
+
+if test `uname` = "Linux" ; then
+/bin/rm -f ${bin}/libOnXTemplateSix.so
+eval g++ -shared -o ${bin}/libOnXTemplateSix.so ${objs} ${libs}
+fi
+
+if test `uname` = "OSF1" ; then
+/bin/rm -f ${bin}/libOnXTemplateSix.so
+eval cxx -shared -o ${bin}/libOnXTemplateSix.so ${objs} ${libs}
+fi
+
+#//////////////////////////////////////////////////
+#// Application in which the user framework
+#// is the master of the main loop.
+#//////////////////////////////////////////////////
+
+#//////////////////////////////////////////////////
+#// application OnXTemplateSix_batch,
+#//  no visualization in this application :
+#//////////////////////////////////////////////////
+eval `osc-config --compiler` -c ${cppflags} -o ${bin}/OnXTemplateSix_batch.o ../applications/OnXTemplateSix_batch.cxx
+
+objs="${bin}/OnXTemplateSix_batch.o ${UserData_objs}"
+libs=""
+
+/bin/rm -f ${bin}/OnXTemplateSix_batch
+if test `uname` = "Darwin" ; then
+eval c++ -bind_at_load -o ${bin}/OnXTemplateSix_batch ${objs} ${libs}
+fi
+
+if test `uname` = "Linux" ; then
+eval g++ -shared -o ${bin}/OnXTemplateSix_batch ${objs} ${libs}
+fi
+
+#//////////////////////////////////////////////////
+#// application OnXTemplateSix_vis :
+#//////////////////////////////////////////////////
+eval `osc-config --compiler` -c ${cppflags} -o ${bin}/OnXTemplateSix_vis.o ../applications/OnXTemplateSix_vis.cxx
+eval `osc-config --compiler` -c ${cppflags} -o ${bin}/VisProcessor.o ../source/VisProcessor.cxx
+
+objs="${bin}/OnXTemplateSix_vis.o ${OnXTemplateSixCore_objs} ${bin}/VisProcessor.o ${UserData_objs}"
+libs="`osc-config --iv_libs`"
+libs=${libs}" `osc-config --core_libs`"
+libs=${libs}" `osc-config --libs`"
+
+/bin/rm -f ${bin}/OnXTemplateSix_vis
+if test `uname` = "Darwin" ; then
+eval c++ -bind_at_load -o ${bin}/OnXTemplateSix_vis ${objs} ${libs}
+fi
+
+if test `uname` = "Linux" ; then
+eval g++ -shared -o ${bin}/OnXTemplateSix_vis ${objs} ${libs}
+fi
+
+find . -name '*.o' -exec /bin/rm -f {} \;

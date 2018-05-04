@@ -1,0 +1,22 @@
+<widget class="Window">
+  <geometry>500x570</geometry>
+  <title>OnX/Viewer</title>
+  <show>yes</show>
+  <widget class="VBox"> 
+    <expand>first</expand>
+    <sizeOfFixed>60</sizeOfFixed>
+    <widget class="Copy" copy="@current_name@" name="@name_from_current@@">
+    </widget>
+    <widget class="VBox"> 
+      <widget class="PushButton">
+        <label>Hide</label>
+        <activate exec="DLD">OnX ui_hide @shell@this@</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Destroy</label>
+        <activate exec="DLD">OnX ui_destroyComponent @shell@this@</activate>
+      </widget>
+    </widget>
+  </widget>
+</widget>
+

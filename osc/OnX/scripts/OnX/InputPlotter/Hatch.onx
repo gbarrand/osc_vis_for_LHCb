@@ -1,0 +1,35 @@
+<widget class="Dialog" name="OnX_InputPlotter_Hatch_Dialog">
+  <geometry>450x500</geometry>
+  <show>no</show>
+  <title>Input plotter</title>
+  <widget class="VBox">
+    <expand>first</expand>
+    <widget class="TabStack" name="OnX_InputPlotter_dialogStack">
+      <reference file="RightHatch.onx"/>
+      <reference file="LeftHatch.onx"/>
+    </widget>
+    <widget class="HContainer">
+      <widget class="PushButton">
+        <label>Ok</label>
+        <activate exec="DLD">OnX OnX_InputPlotter_ok @current@</activate>
+        <activate exec="DLD">OnX ui_hide OnX_InputPlotter_Hatch_Dialog</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Apply</label>
+        <activate exec="DLD">OnX OnX_InputPlotter_HatchEditor_ok @current@</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Cancel</label>
+        <activate exec="DLD">OnX ui_hide OnX_InputPlotter_Hatch_Dialog</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Help</label>
+        <activate exec="DLD">OnX ui_help_file $ONXROOT/scripts/Help/InputPlotter.help</activate>
+      </widget>
+      <widget class="PushButton">
+        <label>Update</label>
+        <activate exec="DLD">OnX OnX_InputPlotter_updateHatchEditor @current@</activate>
+      </widget>
+    </widget>
+  </widget>
+</widget>

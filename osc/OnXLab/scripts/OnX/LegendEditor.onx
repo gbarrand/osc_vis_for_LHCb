@@ -1,0 +1,39 @@
+<widget class="Dialog" name="OnXLab_LegendEditor_dialog">
+  <geometry>300x150</geometry>
+  <title>Legend editor</title>
+  <show>no</show>
+
+  <variable name="OnXLab_LegendEditor_work_on"/>
+
+  <widget class="VBox"> 
+    <expand>first</expand>
+    <sizeOfFixed>30</sizeOfFixed>
+
+    <widget class="VContainer"> 
+      <widget class="PushButton">
+        <label>Update palette</label>
+        <activate exec="DLD">OnXLab OnXLab_LegendEditor_update @{OnXLab_LegendEditor_work_on}@</activate>
+      </widget>
+      <widget class="Entry" name="OnXLab_LegendEditor_tree"/>
+      <widget class="Entry" name="OnXLab_LegendEditor_object"/>
+      <widget class="HBox"> 
+        <expand>second</expand>
+        <sizeOfFixed>50</sizeOfFixed>
+        <widget class="Label">
+          <label>Legend</label>
+        </widget>
+        <widget class="CommandLine" name="OnXLab_LegendEditor_entry">
+          <activate exec="DLD">OnXLab OnXLab_LegendEditor_entry</activate>
+        </widget>
+      </widget>
+    </widget>
+
+    <widget class="PushButton">
+      <label>Cancel</label>
+      <activate exec="DLD">OnX ui_hide OnXLab_LegendEditor_dialog</activate>
+    </widget>
+
+
+  </widget> 
+</widget>
+

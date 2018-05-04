@@ -1,0 +1,42 @@
+#!/bin/sh -f
+
+inlib_incs=./inexlib/inlib/mgr/inlib_incs
+
+save_dir=`pwd`
+
+cd ../../..
+
+if [ ! -e ${inlib_incs} ] ; then
+  echo "inlib_incs not found."
+  cd ${save_dir}
+  exit
+fi
+
+app=inlib
+to=/tmp/${app}
+/bin/rm -R -f /tmp/${app}
+
+/bin/mkdir -p ${to}
+
+#verbose=-verbose
+
+#dirs=./inexlib/inlib:./inexlib/exlib
+dirs=./inexlib/inlib
+
+${inlib_incs} ${verbose} -pack -dirs=${dirs} -to=${to} ./inexlib/inlib/examples/cpp/fit_multi.cpp
+${inlib_incs} ${verbose} -pack -dirs=${dirs} -to=${to} ./inexlib/inlib/examples/cpp/fit.cpp
+${inlib_incs} ${verbose} -pack -dirs=${dirs} -to=${to} ./inexlib/inlib/examples/cpp/f2cmn.cpp
+${inlib_incs} ${verbose} -pack -dirs=${dirs} -to=${to} ./inexlib/inlib/apps/platform.cpp
+
+/bin/cp -R ./inexlib/inlib/mgr ${to}/inexlib/inlib/.
+/bin/cp ./inexlib/inlib/examples/cpp/build ${to}/inexlib/inlib/examples/cpp/.
+
+/bin/cp -R ./inexlib/inlib/inlib/version ${to}/inexlib/inlib/inlib/.
+
+cd ${to}/inexlib/inlib/mgr
+version="`./appvers`"
+cd /tmp
+/bin/rm -f ./${app}_source-${version}.zip
+zip -qr ./${app}_source-${version}.zip ${app}
+
+cd ${save_dir}

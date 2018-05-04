@@ -1,0 +1,32 @@
+#!/bin/sh -f
+
+version=1.2
+
+/bin/rm -R -f ../osc_A2R
+/bin/mkdir -p ../osc_A2R
+
+cp README_A2R         ../osc_A2R/README
+cp A2R.h              ../osc_A2R/.
+cp A2R_Def.h          ../osc_A2R/.
+cp A2R_Imp.cpp        ../osc_A2R/.
+cp A2R_LinkDef.h      ../osc_A2R/.
+cp A2R_write.C        ../osc_A2R/.
+cp A2R_read.C         ../osc_A2R/.
+cp A2R_read_main.cpp  ../osc_A2R/.
+
+cp ../cpp/osc/A2R.cpp ../osc_A2R/.
+
+cp ../ROOT/jec.C      ../osc_A2R/.
+cp ../ROOT/jec_ROOT.C ../osc_A2R/.
+cp ../cpp/osc/jec.cpp ../osc_A2R/.
+
+# build material :
+cp build_A2R           ../osc_A2R/.
+cp build_A2R.bat       ../osc_A2R/.
+cp obuild_subs.cpp     ../osc_A2R/.
+cp build_A2R_read      ../osc_A2R/.
+cp build_A2R_read.bat  ../osc_A2R/.
+
+cd ..
+zip -qr osc_A2R_${version}.zip osc_A2R
+cd ROOT

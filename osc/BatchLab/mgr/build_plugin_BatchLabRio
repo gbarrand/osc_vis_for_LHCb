@@ -1,0 +1,52 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+build_pack=BatchLabRio
+
+. ${ourex_mgr}/build_header
+
+if [ ${build_compile} = "yes" ] ; then
+
+cppflags="${cppflags} -I.."
+cppflags="${cppflags} -I../../Slash"
+cppflags="${cppflags} -I../../AIDA/v3r2p1"
+cppflags="${cppflags} -I${inlib_mgr}/.."
+cppflags="${cppflags} -I../../Lib/include"
+cppflags="${cppflags} -I../../amanip/src/cpp"
+cppflags="${cppflags} -I../../Rio"
+
+cxxfiles=
+cxxfiles="${cxxfiles} ../source/Rio/Rio_MemberWriter.cxx"
+cxxfiles="${cxxfiles} ../source/Rio/Rio_MemberReader.cxx"
+cxxfiles="${cxxfiles} ../source/Rio/Rio_Annotation.cxx"
+cxxfiles="${cxxfiles} ../source/Rio/Rio_THistogram.cxx"
+cxxfiles="${cxxfiles} ../source/Rio/Rio_AttAxis.cxx"
+cxxfiles="${cxxfiles} ../source/Rio/Rio_Axis.cxx"
+cxxfiles="${cxxfiles} ../source/Rio/Rio_ROOT.cxx"
+cxxfiles="${cxxfiles} ../source/Rio/Rio_Store.cxx"
+cxxfiles="${cxxfiles} ../source/Rio/Rio_Tuple.cxx"
+cxxfiles="${cxxfiles} ../source/Rio/Rio_ReadContext.cxx"
+cxxfiles="${cxxfiles} ../source/Rio/Rio_DataReader.cxx"
+cxxfiles="${cxxfiles} ../source/Rio/Rio_Tree.cxx"
+cxxfiles="${cxxfiles} ../source/Rio/Rio_Dictionary.cxx"
+cxxfiles="${cxxfiles} ../source/Rio/Rio_Manager.cxx"
+cxxfiles="${cxxfiles} ../source/Rio/Rio.cxx"
+
+. ${inlib_mgr}/build_compile
+
+fi # end build_compile
+ 
+libs="${libs} -L../../Rio/mgr/${build_dir} -losc_Rio"
+libs="${libs} -L../../Lib/mgr/${build_dir} -lLibUtils"
+
+if [ ${build_plugin} = "yes" ] ; then . ${inlib_mgr}/build_plugin; fi
+
+. ${inlib_mgr}/build_clean

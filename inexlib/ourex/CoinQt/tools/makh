@@ -1,0 +1,107 @@
+#!/bin/sh -f
+
+from=/barrand/externals/SoQt-1.3.0
+sogui=${from}/src/Inventor/Qt/common
+to=/barrand/OpenScientist/dev/CoinQt/v1r50p3
+
+#
+# Problematic files are gl.h, SoQtBasic.h, soqtdefs.h, config.h.
+#
+#
+#
+
+#exit
+
+# Template devices :
+./gui_in ${sogui}/devices/SoGuiDevice.h.in ${from}  ${to}/include/Inventor/Qt/devices Qt
+./gui_in ${sogui}/devices/SoGuiDeviceP.h.in ${from}  ${to}/include/Inventor/Qt/devices Qt SoGuiDeviceP.h
+./gui_in ${sogui}/devices/SoGuiMouse.h.in ${from}  ${to}/include/Inventor/Qt/devices Qt
+./gui_in ${sogui}/devices/SoGuiKeyboard.h.in ${from}  ${to}/include/Inventor/Qt/devices Qt
+./gui_in ${sogui}/devices/SoGuiSpaceball.h.in ${from}  ${to}/include/Inventor/Qt/devices Qt
+./gui_in ${sogui}/devices/SoGuiInputFocus.h.in ${from}  ${to}/include/Inventor/Qt/devices Qt
+./gui_in ${sogui}/devices/SoGuiInputFocusP.h.in ${from}  ${to}/include/Inventor/Qt/devices Qt SoGuiInputFocusP.h
+./gui_in ${sogui}/spwinput.h.in ${from}  ${to}/include/Inventor/Qt/devices Qt
+./gui_in ${sogui}/devices/SoGuiKeyboardP.h.in ${from}  ${to}/include/Inventor/Qt/devices Qt SoGuiKeyboardP.h
+./gui_in ${sogui}/devices/SoGuiMouseP.h.in ${from}  ${to}/include/Inventor/Qt/devices Qt SoGuiMouseP.h
+./gui_in ${sogui}/devices/SoGuiSpaceballP.h.in ${from}  ${to}/include/Inventor/Qt/devices Qt SoGuiSpaceballP.h
+
+# Template viewers :
+./gui_in ${sogui}/viewers/SoGuiConstrainedViewer.h.in ${from}  ${to}/include/Inventor/Qt/viewers Qt
+./gui_in ${sogui}/viewers/SoGuiExaminerViewer.h.in ${from}  ${to}/include/Inventor/Qt/viewers Qt
+./gui_in ${sogui}/viewers/SoGuiExaminerViewerP.h.in ${from}  ${to}/include/Inventor/Qt/viewers Qt SoGuiExaminerViewerP.h
+./gui_in ${sogui}/viewers/SoGuiFlyViewer.h.in ${from}  ${to}/include/Inventor/Qt/viewers Qt
+./gui_in ${sogui}/viewers/SoGuiFullViewer.h.in ${from}  ${to}/include/Inventor/Qt/viewers Qt
+./gui_in ${sogui}/viewers/SoGuiFullViewerP.h.in ${from}  ${to}/include/Inventor/Qt/viewers Qt SoGuiFullViewerP.h
+./gui_in ${sogui}/viewers/SoGuiPlaneViewer.h.in ${from}  ${to}/include/Inventor/Qt/viewers Qt
+./gui_in ${sogui}/viewers/SoGuiPlaneViewerP.h.in ${from}  ${to}/include/Inventor/Qt/viewers Qt SoGuiPlaneViewerP.h
+#./gui_in ${sogui}/viewers/SoGuiWalkViewer.h.in ${from}  ${to}/include/Inventor/Qt/viewers Qt
+#./gui_in ${sogui}/viewers/SoGuiWalkViewerP.h.in ${from}  ${to}/include/Inventor/Qt/viewers Qt SoGuiWalkViewerP.h
+./gui_in ${sogui}/viewers/SoGuiViewer.h.in ${from}  ${to}/include/Inventor/Qt/viewers Qt
+
+# Template widgets :
+./gui_in ${sogui}/widgets/SoGuiPopupMenu.h.in ${from}  ${to}/include/Inventor/Qt/widgets Qt
+./gui_in ${sogui}/widgets/SoAnyThumbWheel.h.in ${from}  ${to}/include/Inventor/Qt/widgets Qt
+
+# Template nodes :
+./gui_in ${sogui}/nodes/Nodes.h.in ${from}  ${to}/include/Inventor/Qt/nodes Qt SoGuiNodes.h
+./gui_in ${sogui}/nodes/SceneTexture2.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiSceneTexture2.h
+./gui_in ${sogui}/nodes/ViewportFix.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiViewportFix.h
+./gui_in ${sogui}/nodes/Pane.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiPane.h
+./gui_in ${sogui}/nodes/Position.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiPosition.h
+./gui_in ${sogui}/nodes/Translation.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiTranslation.h
+./gui_in ${sogui}/nodes/Frame.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiFrame.h
+./gui_in ${sogui}/nodes/Image.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiImage.h
+./gui_in ${sogui}/nodes/Label.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiLabel.h
+./gui_in ${sogui}/nodes/ToggleButton.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiToggleButton.h
+./gui_in ${sogui}/nodes/RadioButton.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiRadioButton.h
+./gui_in ${sogui}/nodes/ClickCounter.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiClickCounter.h
+./gui_in ${sogui}/nodes/Slider1.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiSlider1.h
+./gui_in ${sogui}/nodes/Slider2.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiSlider2.h
+./gui_in ${sogui}/nodes/ColorEditor.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiColorEditor.h
+./gui_in ${sogui}/nodes/MaterialEditor.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiMaterialEditor.h
+./gui_in ${sogui}/nodes/ViewpointWrapper.h.in ${from} ${to}/include/Inventor/Qt/nodes Qt SoGuiViewpointWrapper.h
+
+# Template engines :
+./gui_in ${sogui}/engines/Engines.h.in ${from} ${to}/include/Inventor/Qt/engines Qt SoGuiEngines.h
+./gui_in ${sogui}/engines/Format.h.in ${from} ${to}/include/Inventor/Qt/engines Qt SoGuiFormat.h
+./gui_in ${sogui}/engines/RadioGroup.h.in ${from} ${to}/include/Inventor/Qt/engines Qt SoGuiRadioGroup.h
+
+# Template editors :
+./gui_in ${sogui}/SoGuiMaterialEditor.h.in ${from} ${to}/include/Inventor/Qt Qt SoQtMaterialEditor.h
+./gui_in ${sogui}/editors/MaterialEditor.h.in ${from} ${to}/include/Inventor/Qt/editors Qt SoQtMaterialEditor.h
+./gui_in ${sogui}/SoGuiColorEditor.h.in ${from} ${to}/include/Inventor/Qt Qt SoQtColorEditor.h
+./gui_in ${sogui}/editors/ColorEditor.h.in ${from} ${to}/include/Inventor/Qt/editors Qt SoQtColorEditor.h
+
+# Template general :
+./gui_in ${sogui}/SoAny.h.in ${from}  ${to}/include/Inventor/Qt Qt
+#./gui_in ${sogui}/SoAnyMaterialList.h.in ${from}  ${to}/include/Inventor/Qt Qt
+#./gui_in ${sogui}/SoGuiMaterialList.h.in ${from}  ${to}/include/Inventor/Qt Qt
+./gui_in ${sogui}/SoGui.h.in ${from}  ${to}/include/Inventor/Qt Qt
+./gui_in ${sogui}/SoGuiBasic.h.in ${from}  ${to}/include/Inventor/Qt Qt
+./gui_in ${sogui}/SoGuiComponent.h.in ${from}  ${to}/include/Inventor/Qt Qt
+./gui_in ${sogui}/SoGuiComponentP.h.in ${from}  ${to}/include/Inventor/Qt Qt SoGuiComponentP.h
+./gui_in ${sogui}/SoGuiGLWidget.h.in ${from}  ${to}/include/Inventor/Qt Qt
+#./gui_in ${sogui}/SoGuiMaterialList.h.in ${from}  ${to}/include/Inventor/Qt Qt
+./gui_in ${sogui}/SoGuiObject.h.in ${from}  ${to}/include/Inventor/Qt Qt
+./gui_in ${sogui}/SoGuiRenderArea.h.in ${from}  ${to}/include/Inventor/Qt Qt
+./gui_in ${sogui}/SoGuiCursor.h.in ${from}  ${to}/include/Inventor/Qt Qt
+./gui_in ${sogui}/gl.h.in ${from} ${to}/include/Inventor/Qt/common Qt
+./gui_in ${sogui}/soguidefs.h.in ${from} ${to}/src Qt
+./gui_in ${sogui}/SoGuiComponentP.h.in ${from}  ${to}/include/Inventor/Qt Qt SoGuiComponentP
+./gui_in ${sogui}/SoGuiGLWidgetP.h.in ${from}  ${to}/include/Inventor/Qt Qt SoGuiGLWidgetP.h
+
+./gui_in ${sogui}/SoGuiP.h.in ${from}  ${to}/include/Inventor/Qt Qt SoGuiP.h
+
+# Not templated files :
+find ${from}/src -name "Sb*.h" -exec ./cp_h {} ${from} ${to} \;
+find ${from}/src -name "So*.h" -exec ./cp_h {} ${from} ${to} \;
+find ${from}/src -name "Qt*.h" -exec ./cp_h {} ${from} ${to} \;
+find ${from}/src -name "*.xpm" -exec ./cp_h {} ${from} ${to} \;
+
+find ${from}/src -name "6DOFEvents.h" -exec ./cp_cpp {} ${from} ${to} \;
+
+# Else :
+
+/bin/rm -f ${to}/include/config.h
+
+exit

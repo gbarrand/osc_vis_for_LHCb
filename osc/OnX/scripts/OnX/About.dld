@@ -1,0 +1,3 @@
+OnX ui_load main $ONXROOT/scripts/OnX/HelpDialog.onx
+OnX ui_setParameter OnX_HelpDialog_text.value @about@
+OnX ui_show OnX_HelpDialog_dialog

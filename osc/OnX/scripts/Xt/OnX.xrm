@@ -1,0 +1,61 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!!! AWT Frame :
+*AWTapp.geometry:+0+0
+
+OnX*ListTree.background:white
+!OnX*ListTree.background:#FF00FF
+
+!! Needed if using Coin Inventor :
+!!OnX.visual:TrueColor
+
+OnX*XmText.background:white
+OnX*XmComboBox.XmTextField.background:white
+
+OnX*keyboardFocusPolicy:pointer
+!OnX*keyboardFocusPolicy:explicit
+! On dialogs, avoid "pointer" policy in order 
+! that "tab" navigation work in the palettes :
+OnX*XmDialogShell*keyboardFocusPolicy:explicit
+
+OnX*XmList.background:white
+OnX*XmList.width:70
+OnX*highlightOnEnter:True
+OnX*highlightThickness:2
+OnX*highlightColor:Red
+OnX*listSizePolicy:constant
+OnX*scrollBarDisplayPolicy:static
+
+OnX*topShadowColor:white
+OnX*bottomShadowColor:black
+OnX*background:grey
+
+OnX*fontList:-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-1
+!OnX*fontList:-*-helvetica-medium-r-*-*-*-140-*-*-*-*-iso8859-1
+!OnX*fontList:-*-helvetica-bold-r-*-*-*-140-*-*-*-*-iso8859-1
+!OnX*fontList:-*-helvetica-bold-r-*-*-*-180-*-*-*-*-iso8859-1
+!OnX*XmList.fontList:-*-helvetica-bold-r-*-*-*-180-*-*-*-*-iso8859-1
+!*geometry:100x100
+
+OnX*consoleText.title:OnX console
+OnX*consoleText.editMode:multi_line_edit
+OnX*consoleText.rows:6
+OnX*consoleText.columns:20
+OnX*consoleText.fontList:*courier*-r-*--14-*
+OnX*consoleText.background:white
+
+OnX*consoleText.scrollHorizontal:false
+OnX*consoleText.wordWrap:true
+!OnX*consoleText.autoShowCursorPosition:false
+
+OnX*CommandLine.background:white
+OnX*Password.background:white
+
+OnX*toolTipEnable: True
+OnX*toolTipPostDelay: 1000
+OnX*toolTipPostDuration: 1000
+OnX*TipShell.TipLabel.background:white
+!OnX*toolTipString:No tip
+
+OnX*XrhpProgress.showTime:false

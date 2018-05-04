@@ -1,0 +1,91 @@
+#!/bin/sh -f
+#
+#  To produce wrappers using SWIG.
+#
+# Usage :
+#    UNIX> ./makswig
+#
+
+if [ "${AIDAROOT}" = "" ] ; then AIDAROOT=../../AIDA/v3r2p1; fi
+if test ! -d "${AIDAROOT}" ; then
+  echo "AIDA not found."
+  exit
+fi
+
+if [ "${SLASHROOT}" = "" ] ; then SLASHROOT=../../Slash; fi
+if test ! -d "${SLASHROOT}" ; then
+  echo "Slash not found."
+  exit
+fi
+
+if [ "${ONXROOT}" = "" ] ; then ONXROOT=../../OnX; fi
+if test ! -d "${ONXROOT}" ; then
+  echo "OnX not found."
+  exit
+fi
+
+ONXLABROOT=..
+
+SWIG_native_version=1.3.33
+SWIG_home=/usr/local/SWIG/${SWIG_native_version}
+SWIG_exe="${SWIG_home}/bin/swig"
+
+swig=$SWIG_exe
+
+do_python=no
+do_tcl=no
+do_java=no
+
+if test $# = 0 ; then
+ do_python=yes
+ do_tcl=no
+ do_java=no
+fi
+if test $# = 1 ; then
+ if test $1 = python ; then
+   do_python=yes
+ fi
+ if test $1 = py ; then
+   do_python=yes
+ fi
+ if test $1 = tcl ; then
+   do_tcl=yes
+ fi
+ if test $1 = java ; then
+   do_java=yes
+ fi
+fi
+
+
+incs="-I\"${AIDAROOT}\"/src/cpp"
+incs=${incs}" -I\"${SLASHROOT}\""
+incs=${incs}" -I\"${ONXLABROOT}\""
+incs=${incs}" -I\"${ONXROOT}\"/source/SWIG"
+incs=${incs}" -I../source/SWIG"
+#echo $incs
+
+# Python :
+if test ${do_python} = yes ; then
+  echo "swig for Python..."
+  flags="-Wall -fcompact"
+  out_file=../source/Python/OnXLab_SWIG_Python.ic
+  eval $SWIG_exe -interface OnXLab_SWIG_Python -python -c++ ${flags} ${incs} -o ${out_file} ../source/SWIG/OnXLab_SWIG.i
+  /bin/mv ../source/Python/OnXLab.py ../scripts/Python/.
+  sed -e 's#PyErr_Format(PyExc_RuntimeError, mesg)#PyErr_Format(PyExc_RuntimeError, "%s",mesg)#g' ${out_file} > tmp;mv tmp ${out_file}
+  /bin/rm -f tmp
+fi
+
+# tcl :
+if test ${do_tcl} = yes ; then
+  echo "swig for Tcl..."
+  flags="-Wall -fcompact"
+  eval $SWIG_exe -Wall -tcl -c++ ${flags} ${incs} -o ../source/Tcl/OnXLab_SWIG_Tcl.ic ../source/SWIG/OnXLab_SWIG.i
+fi
+
+# java :
+if test ${do_java} = yes ; then
+  echo "swig for java..."
+  find ../source/Java/OnXLab -name '*.java' -exec /bin/rm {} \;
+  flags="-Wall -fcompact"
+  eval $SWIG_exe -Wall -java -c++ ${flags} ${incs} -o ../source/Java/OnXLab_SWIG_Java.ic  -package hep.aida -outdir ../source/Java/OnXLab ../source/SWIG/OnXLab_SWIG.i
+fi

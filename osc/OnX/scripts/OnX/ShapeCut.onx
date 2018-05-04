@@ -1,0 +1,37 @@
+<widget class="CascadeButton">
+  <label>Shape cut</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Cut none</label>
+      <activate exec="DLD">OnX session_setParameter modeling.cut none</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Cut x&gt;0</label>
+      <activate exec="DLD">OnX session_setParameter modeling.cut box 100000 100000 100000 translation 100000 0 0</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Cut x&lt;0</label>
+      <activate exec="DLD">OnX session_setParameter modeling.cut box 100000 100000 100000 translation -100000 0 0</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Cut z&gt;0</label>
+      <activate exec="DLD">OnX session_setParameter modeling.cut box 100000 100000 100000 translation 0 0 100000</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Cut z&lt;0</label>
+      <activate exec="DLD">OnX session_setParameter modeling.cut box 100000 100000 100000 translation 0 0 -100000</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Cut y&gt;0</label>
+      <activate exec="DLD">OnX session_setParameter modeling.cut box 100000 100000 100000 translation 0 100000 0</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Cut y&lt;0</label>
+      <activate exec="DLD">OnX session_setParameter modeling.cut box 100000 100000 100000 translation 0 -100000 0</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Cut x&gt;0 y&gt;0</label>
+      <activate exec="DLD">OnX session_setParameter modeling.cut box 100000 100000 100000 translation 100000 100000 0</activate>
+    </widget>
+  </widget>
+</widget>

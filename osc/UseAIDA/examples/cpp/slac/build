@@ -1,0 +1,65 @@
+#!/bin/sh -f
+
+compiler=
+set_x=no
+
+what=
+args=
+while test $# -ge 1 ; do
+  case $1 in
+    -gnu) compiler=g++;args="${args} $1";;
+    -clang) compiler=clang++;args="${args} $1";;
+    -x) set_x=yes;args="${args} $1";;
+    -*) args="${args} $1";;
+     *) if [ $# = 1 ] ; then
+          what=$1
+        else         
+          echo "unknwon option : $1"
+        fi
+        ;;
+  esac
+  shift
+done
+
+if [ "${what}" = "" ] ; then
+  find . -maxdepth 1 -name '*.cpp' -exec ./build ${args} {} \;
+  exit
+fi
+
+if [ ${set_x} = "yes" ] ; then set -x;fi
+
+exa=${what}
+
+exa=`echo ${exa} | sed -e 's:.cpp::g'`
+exa=`echo ${exa} | sed -e 's:./::g'`
+
+echo "build ${exa}..."
+
+if [ "${compiler}" = "" ] ; then
+  aida_compiler=`aida-config --compiler`
+  if [ "${aida_compiler}" != "" ] ; then
+    compiler=${aida_compiler}
+  else
+    if [ `uname` = Darwin ] ; then
+      compiler=clang++
+    else
+      compiler=c++
+    fi
+  fi
+fi
+
+cppflags=
+cppflags="${cppflags} -I."
+cppflags="${cppflags} `aida-config --incs`"
+cppflags="${cppflags} -I./lib"
+
+# for PlotExample :
+#cppflags="${cppflags} `amanip-config --incs`"
+cppflags="${cppflags} `inlib-config --incs`"
+
+ldflags=
+
+libs=
+libs="${libs} `aida-config --libs`"
+
+eval ${compiler} -o AIDA_example_${exa} ${cppflags} ${exa}.cpp ${ldflags} ${libs}

@@ -1,0 +1,69 @@
+<widget class="CascadeButton">
+  <label>Monitoring</label>
+  <widget class="Menu">
+    <comment text="////////////////////////////////////"/>
+    <comment text="//// Monitor examples //////////////"/>
+    <comment text="////////////////////////////////////"/>
+    <widget class="MenuItem">
+      <label>cyclic only</label>
+      <activate exec="DLD">OnXLabExas aida_exa_slash_cyclic @current@</activate>
+      <activate exec="DLD">OnX ui_set_callback OnXLab_File_exit activate DLD OnXLabExas aida_exa_monitor_exit</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>stop</label>
+      <activate exec="DLD">OnXLabExas aida_exa_slash_cyclic_stop</activate>
+    </widget>
+
+    <widget class="MenuItem">
+      <label>data in thread and refresh with a cyclic</label>
+      <activate exec="DLD">OnXLabExas aida_exa_slash_thread_cyclic @current@</activate>
+      <activate exec="DLD">OnX ui_set_callback OnXLab_File_exit activate DLD OnXLabExas aida_exa_monitor_exit</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>stop</label>
+      <activate exec="DLD">OnXLabExas aida_exa_slash_thread_cyclic_stop</activate>
+    </widget>
+
+    <widget class="MenuItem">
+      <label>data in thread and auto_refresh</label>
+      <activate exec="DLD">OnXLabExas aida_exa_thread_and_auto_refresh @current@</activate>
+      <activate exec="DLD">OnX ui_set_callback OnXLab_File_exit activate DLD OnXLabExas aida_exa_monitor_exit</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>stop</label>
+      <activate exec="DLD">OnXLabExas aida_exa_thread_and_auto_refresh_stop</activate>
+    </widget>
+
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>The below is crashy with Qt.</label>
+    </widget>
+    <widget class="MenuItem">
+      <label>histograms in thread</label>
+      <activate exec="DLD">OnXLabExas aida_exa_pure_thread @current@</activate>
+      <activate exec="DLD">OnX ui_set_callback OnXLab_File_exit activate DLD OnXLabExas aida_exa_monitor_exit</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>data point set in thread</label>
+      <activate exec="DLD">OnXLabExas aida_exa_pure_thread_dps @current@</activate>
+      <activate exec="DLD">OnX ui_set_callback OnXLab_File_exit activate DLD OnXLabExas aida_exa_monitor_exit</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>stop</label>
+      <activate exec="DLD">OnXLabExas aida_exa_pure_thread_stop</activate>
+    </widget>
+
+<!--
+    <widget class="MenuSeparator"/>
+    <widget class="MenuItem">
+      <label>graphics in a thread</label>
+      <activate exec="DLD">OnX page_create_regions @current@ SoDisplayRegion 1 1 0</activate>
+      <activate exec="DLD">OnXLabExas monitor_iv_start</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>stop</label>
+      <activate exec="DLD">OnXLabExas monitor_iv_stop</activate>
+    </widget>
+-->
+  </widget>
+</widget>

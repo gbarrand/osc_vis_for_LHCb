@@ -1,0 +1,25 @@
+#Inventor V2.0 ascii
+
+DEF sceneGraph Separator {
+  SoMaterial {
+    diffuseColor 1 1 1
+  }
+  SoTransform {
+   translation 0.1 0 0
+   scaleFactor 0.015 0.015 0.015
+  }	
+  SoRotationXYZ  {
+    axis X
+    angle 0.5
+  }	
+  SoRotationXYZ  {
+    axis Y
+    angle 0.5
+  }	
+  SoText3 {
+    # Darwin : SoText3 is bugged. Add extra spaces...(s.size()-1)
+    string "Hello OnX  "
+    parts ALL
+    justification CENTER 
+ }
+}

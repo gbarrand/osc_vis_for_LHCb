@@ -1,0 +1,39 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+build_pack=OnX_onx
+
+. ${ourex_mgr}/build_header
+
+if [ ${build_app} = "yes" ] ; then
+
+  cppflags="${cppflags} -I../include"
+  cppflags="${cppflags} -I../../Slash"
+
+  cppflags="${cppflags} -I${inlib_mgr}/.."
+
+  libs="${libs} -L${build_path} -lOnXCore"
+  libs="${libs} -L../../Lib/mgr/${build_dir} -lLibUtils"
+
+  if [ `uname` = "Linux" ] ; then libs="${libs} -ldl"; fi
+
+  use_expat=yes
+  expat_home=${ourex_mgr}/../expat
+  . ${exlib_mgr}/use_expat
+ 
+  objs=
+  app_exe=osc-gui-viewer
+  app_src=../applications/OnX_onx.cxx
+  . ${inlib_mgr}/build_app
+
+fi
+
+. ${inlib_mgr}/build_clean

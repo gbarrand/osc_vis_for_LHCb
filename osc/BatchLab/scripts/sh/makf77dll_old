@@ -1,0 +1,89 @@
+#!/bin/sh -f
+
+#set -x
+
+#//////////////////////////////////////////////////////////
+#// Used by :                                            //
+#//   Lib::FunctionManager::load                         //
+#// to produce a dll for a f77 function.                 //
+#//////////////////////////////////////////////////////////
+
+this_dir_bin=.
+
+FNAME=$1
+SUFFIX=$2
+CNAME=$3
+
+#echo ${FNAME}
+#echo ${CNAME}
+
+# To find include files :
+if [ "${LIBROOT}" = "" ] ; then
+  echo "Environment variable LIBROOT not defined."
+  exit
+fi
+if [ "${BATCHLABROOT}" = "" ] ; then
+  echo "Environment variable BATCHLABROOT not defined."
+  exit
+fi
+
+# To find libraries :
+if [ "${LIBDIRLIB}" = "" ] ; then
+  echo "Environment variable LIBDIRLIB not defined."
+  exit
+fi
+if [ "${BATCHLABDIRLIB}" = "" ] ; then
+  echo "Environment variable BATCHLABDIRLIB not defined."
+  exit
+fi
+
+if [ "${LIBDIRLIB}" = "" ] ; then
+  echo "LIBDIRLIB variable not defined."
+  exit
+fi
+
+if [ "${BATCHLABDIRLIB}" = "" ] ; then
+  echo "BATCHLABDIRLIB variable not defined."
+  exit
+fi
+
+/bin/rm -f "${this_dir_bin}/${FNAME}.o"
+/bin/rm -f "${this_dir_bin}/${CNAME}.o"
+
+compiler=""
+libs=""
+if test `uname` = "Darwin" ; then
+  compiler=fort77
+  libs="-L/sw/lib -lf2c"
+#  compiler=gfortran
+#  libs="-L/usr/local/lib -lgfortran"
+else
+  compiler=f77
+fi
+
+${compiler} -c -o "${this_dir_bin}/${FNAME}.o" ${FNAME}.${SUFFIX}
+
+cc -c  -o "${this_dir_bin}/${CNAME}.o" ${CNAME}.c
+
+if test `uname` = "Linux" ; then
+/bin/rm -f "${this_dir_bin}/lib${FNAME}.so"
+g++ -shared -o "${this_dir_bin}/lib${FNAME}.so" "${this_dir_bin}/${CNAME}.o" "${this_dir_bin}/${FNAME}.o" "${BATCHLABDIRLIB}/libBatchLabHBOOK.so" "${LIBDIRLIB}/libLibUtils.so" ${libs}
+fi
+
+if test `uname` = "Darwin" ; then
+/bin/rm -f "${this_dir_bin}/${FNAME}.bundle"
+c++ -bundle -twolevel_namespace -o "${this_dir_bin}/${FNAME}.bundle" "${this_dir_bin}/${CNAME}.o" "${this_dir_bin}/${FNAME}.o" "${BATCHLABDIRLIB}/libBatchLabHBOOK.dylib" "${LIBDIRLIB}/libLibUtils.dylib" ${libs}
+fi
+
+if test `uname` = "CYGWIN_NT-5.1" ; then
+/bin/rm -f "${this_dir_bin}/${FNAME}.dll"
+g++ -shared -o "${this_dir_bin}/${FNAME}.dll" "${this_dir_bin}/${CNAME}.o" "${this_dir_bin}/${FNAME}.o" "${BATCHLABDIRLIB}/BatchLabHBOOK.a" "${LIBDIRLIB}/LibUtils.a" ${libs}
+fi
+
+if test `uname` = "OSF1" ; then
+/bin/rm -f "${this_dir_bin}/lib${FNAME}.so"
+cxx -shared -o "${this_dir_bin}/lib${FNAME}.so" "${this_dir_bin}/${CNAME}.o" "${this_dir_bin}/${FNAME}.o" "${BATCHLABDIRLIB}/libBatchLabHBOOK.so" "${LIBDIRLIB}/libLibUtils.so" ${libs}
+fi
+
+/bin/rm -f "${this_dir_bin}/${FNAME}.o"
+/bin/rm -f "${this_dir_bin}/${CNAME}.o"

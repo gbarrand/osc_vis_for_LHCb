@@ -1,0 +1,37 @@
+
+<!-- to build Inventor related components. -->
+
+<obuild>
+
+  <!-- not this : -->
+  <reference package="HEPVis" path="../../HEPVis" file="obuild/export.obuild"/>
+
+  <!-- this : -->
+  <library name="OnXInventor">
+    <file>../source/Inventor/Inventor.cxx</file>
+    <file>../source/Inventor/HEPVis.cxx</file>
+
+    <!-- not this : -->
+    <cxx_include>${obuild_OnX_path}/include</cxx_include>
+    <cxx_include copy="cxx_include" from="Slash"/>
+    <cxx_include copy="cxx_include" from="CoinGL"/>
+    <cxx_macro copy="cxx_macro" from="CoinGL"/>
+
+    <lib platform="Windows_NT" copy="lib_HEPVisGUI" from="HEPVis"/>
+    <lib platform="Windows_NT" copy="lib_HEPVisPlotter" from="HEPVis"/>
+    <lib platform="Windows_NT" copy="lib_HEPVisDetector" from="HEPVis"/>
+    <lib platform="Windows_NT" copy="lib_HEPVisGeometry" from="HEPVis"/>
+    <lib platform="Windows_NT" copy="lib_HEPVisUtils" from="HEPVis"/>
+
+    <lib platform="Windows_NT" copy="lib" from="jpeg"/>
+    <lib platform="Windows_NT" copy="lib" from="dvi2bitmap"/>
+    <lib platform="Windows_NT" copy="lib" from="freetype2"/>
+
+    <lib platform="Windows_NT" copy="lib" from="png"/>
+    <lib platform="Windows_NT" copy="lib" from="zlib"/>
+
+    <lib platform="Windows_NT" copy="lib" from="CoinGL"/>
+
+  </library>
+
+</obuild>

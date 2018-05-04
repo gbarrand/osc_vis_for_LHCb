@@ -1,0 +1,58 @@
+#!/bin/sh -f
+
+if [ $# -eq 0 ] ; then
+  find . -maxdepth 1 -name '*.onx' -print -exec ./run {} \;
+  exit
+fi
+
+exa=$1
+
+#echo ${exa}
+
+if [ ${exa} = "sdl.onx" -o ${exa} = "./sdl.onx" ] ; then
+  if [ `uname` = "Darwin" ] ; then
+    osc_home=`printenv OSC_HOME_DIR`
+    if [ -e ${osc_home}/darwin_app/osc-gui-viewer-SDL.app ] ; then
+      OSC_GUI_FILE="`pwd`/${exa}"
+      export OSC_GUI_FILE
+      unset OSC_HOME_DIR
+      unset DYLD_LIBRARY_PATH
+      open -W ${osc_home}/darwin_app/osc-gui-viewer-SDL.app
+    else
+      echo "osc-gui-viewer-SDL.app not found. Using terminal version..."
+      if [ -e ${OSC_HOME_DIR}/bin/OnXSDL.bundle ] ; then
+        osc-gui-viewer -SDL ${exa}
+      else
+        echo "SDL plugin not available."
+      fi
+    fi  
+  else
+    if [ -e ${OSC_HOME_DIR}/bin/libOnXSDL.so ] ; then
+      osc-gui-viewer -SDL ${exa}
+    else
+      echo "SDL plugin not available."
+    fi
+  fi
+elif [ ${exa} = "create_package.onx" -o ${exa} = "./create_package.onx" ] ; then
+  # Darwin : must not be loaded with open because of the "Run" button callback.
+  osc-gui-viewer ${exa}
+else
+  if [ `uname` = "Darwin" ] ; then
+    osc_home=`printenv OSC_HOME_DIR`
+    if [ -e ${osc_home}/darwin_app/osc-gui-viewer.app ] ; then
+      OSC_GUI_FILE="`pwd`/${exa}"
+      export OSC_GUI_FILE
+      unset OSC_HOME_DIR
+      unset DYLD_LIBRARY_PATH
+      open -W ${osc_home}/darwin_app/osc-gui-viewer.app
+    else
+      echo "osc-gui-viewer.app not found. Using terminal version..."
+      osc-gui-viewer ${exa}
+    fi  
+  else
+    osc-gui-viewer ${exa}
+  fi
+fi
+
+
+

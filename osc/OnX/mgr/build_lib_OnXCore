@@ -1,0 +1,65 @@
+#!/bin/sh -f
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+inlib_mgr=../../../inexlib/inlib/mgr
+exlib_mgr=../../../inexlib/exlib/mgr
+ourex_mgr=../../../inexlib/ourex/mgr
+
+build_pack=OnXCore
+
+. ${ourex_mgr}/build_header
+
+if [ ${build_compile} = "yes" ] ; then
+
+ccflags="${ccflags} -I../include"
+
+cppflags="${cppflags} -I${inlib_mgr}/.."
+cppflags="${cppflags} -I${exlib_mgr}/.."
+
+cppflags="${cppflags} -I../include"
+cppflags="${cppflags} -I../../Slash"
+cppflags="${cppflags} -I../../Lib/include"
+
+cxxfiles=
+cxxfiles="${cxxfiles} ../source/Core/Printer.cxx"
+cxxfiles="${cxxfiles} ../source/Core/UI_Manager.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Session.cxx"
+cxxfiles="${cxxfiles} ../source/Core/WidgetClass.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Widget.cxx"
+cxxfiles="${cxxfiles} ../source/Core/WidgetFactory.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Action.cxx"
+cxxfiles="${cxxfiles} ../source/Core/atat.cxx"
+cxxfiles="${cxxfiles} ../source/Core/BaseUI.cxx"
+cxxfiles="${cxxfiles} ../source/Core/BaseCyclic.cxx"
+cxxfiles="${cxxfiles} ../source/Core/Main.cxx"
+
+cxxfiles="${cxxfiles} ../source/Core/Term.cxx"
+
+cfiles="${cfiles} ../source/Core/Getline.c"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+use_expat=yes
+use_zlib=yes
+
+expat_home=${ourex_mgr}/../expat
+zlib_home=${ourex_mgr}/../zlib
+
+. ${exlib_mgr}/use_expat
+. ${exlib_mgr}/use_zlib
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+libname=libOnXCore
+. ${inlib_mgr}/build_compile
+
+fi # end build_compile
+ 
+if [ ${build_archive} = "yes" ] ; then . ${inlib_mgr}/build_archive; fi
+
+. ${inlib_mgr}/build_clean

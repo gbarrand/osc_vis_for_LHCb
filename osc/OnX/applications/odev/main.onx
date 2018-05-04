@@ -1,0 +1,472 @@
+<OnX>
+
+  <reference file="$ONXROOT/scripts/OnX/aliases.onx"/>
+
+<!--
+  <create exec="DLD">OnX session_set_output UI</create> 
+-->
+
+  <variable name="odev_os_tmp_dir">
+    Linux\n/tmp/\n
+    Darwin\n/tmp/\n
+    Windows_NT\nC:\WINDOWS\TEMP\\n
+  </variable>
+
+  <variable name="odev_os_build">
+    Linux\nsh/build\n
+    Darwin\nsh/build\n
+    Windows_NT\nDOS\build\n
+  </variable>
+
+  <create exec="DLD">OnX set tmp @os@</create>
+  <create exec="DLD">OnX set odev_tmp_dir @next@{tmp}@{odev_os_tmp_dir}@strip_key@</create>
+  <create exec="DLD">OnX set odev_build @next@{tmp}@{odev_os_build}@strip_key@</create>
+  <create exec="DLD">OnX set onxroot " @cat@ @path@$ONXROOT@ @cat@ "</create>
+
+  <variable name="odev_project">none</variable>
+  <variable name="odev_version">none</variable>
+  <variable name="odev_home">none</variable>
+
+  <variable name="build_verbose"></variable>
+  <variable name="build_debug"></variable>
+
+  <variable name="package_directory">none</variable>
+  <variable name="current_package">none</variable>
+
+  <variable name="odev_open">
+    OnX set odev_home_quote " @cat@ @{odev_home}@ @cat@ "\n
+    OnX set odev_project_dir @{odev_home_quote}@ @cat@ @sep@ @cat@ @{odev_project}@ @cat@ @sep@ @cat@ @{odev_version}@\n
+    OnX set odev_release_dir /usr/local/ @cat@ @{odev_project}@ @cat@ @sep@ @cat@ @{odev_version}@\n
+    OnX set odev_release_app_dir /usr/local/ @cat@ @{odev_project}@ @cat@ @sep@ @cat@ @{odev_version}@ @cat@ /app\n
+    OnX ui_set_parameter odev_project_label.label @{odev_project}@ @{odev_version}@\n
+    OnX dld_exec_text @{get_packs}@
+  </variable>
+
+  <variable name="get_libs">
+    OnX set tmp_name @tmpname@{odev_tmp_dir}@OnX_@@\n
+    OnX sys_execute cd @{package_directory}@ @sep@cmd@ cd obuild @sep@cmd@ obuild -q=libs &gt; @{tmp_name}@\n
+    OnX ui_set_parameter odev_libs.items @file@{tmp_name}@\n
+    OnX sys_remove @{tmp_name}@
+  </variable>
+
+  <variable name="get_dlls">
+    OnX set tmp_name @tmpname@{odev_tmp_dir}@OnX_@@\n
+    OnX sys_execute cd @{package_directory}@ @sep@cmd@ cd obuild @sep@cmd@ obuild -q=dlls &gt; @{tmp_name}@\n
+    OnX ui_set_parameter odev_dlls.items @file@{tmp_name}@\n
+    OnX sys_remove @{tmp_name}@
+  </variable>
+
+  <variable name="get_apps">
+    OnX set tmp_name @tmpname@{odev_tmp_dir}@OnX_@@\n
+    OnX sys_execute cd @{package_directory}@ @sep@cmd@ cd obuild @sep@cmd@ obuild -q=apps &gt; @{tmp_name}@\n
+    OnX ui_set_parameter odev_apps.items @file@{tmp_name}@\n
+    OnX sys_remove @{tmp_name}@
+  </variable>
+
+  <variable name="get_darwin_apps">
+    OnX set tmp_name @tmpname@{odev_tmp_dir}@OnX_@@\n
+    OnX sys_execute cd @{package_directory}@ @sep@cmd@ cd obuild @sep@cmd@ obuild -q=darwin_apps &gt; @{tmp_name}@\n
+    OnX ui_set_parameter odev_darwin_apps.items @file@{tmp_name}@\n
+    OnX sys_remove @{tmp_name}@
+  </variable>
+
+  <variable name="get_packs">
+    OnX set tmp_name @tmpname@{odev_tmp_dir}@OnX_@@\n
+    OnX sys_execute cd @{odev_home_quote}@ @cat@ @sep@ @cat@ @{odev_project}@ @cat@ @sep@ @cat@ @{odev_version}@ @cat@ @sep@ @cat@ obuild @sep@cmd@ obuild -q=packs &gt; @{tmp_name}@\n
+    OnX ui_set_parameter odev_packages.items @file@{tmp_name}@\n
+    OnX sys_remove @{tmp_name}@
+  </variable>
+
+  <variable name="get_files_of_what">none</variable>
+  <variable name="get_files">
+    OnX set tmp_name @tmpname@{odev_tmp_dir}@OnX_@@\n
+    OnX sys_execute cd @{package_directory}@ @sep@cmd@ cd obuild @sep@cmd@ obuild -q=files: @cat@ @{get_files_of_what}@ &gt; @{tmp_name}@\n
+    OnX ui_set_parameter odev_files.items @file@{tmp_name}@\n
+    OnX sys_remove @{tmp_name}@
+  </variable>
+
+  <!-- for Darwin .app startup to unsetup osc_vis and OnX.
+       FIXME : how to start from fresh in a general way
+               and then avoid the below ? -->
+  <variable name="darwin_app_unsetup"> 
+unset OBUILD_PATH;unset MACOSX_DEPLOYMENT_TARGET;unset DYLD_LIBRARY_PATH;unset LIBROOT;unset SLASHROOT;unset COIN_DONT_INFORM_INDIRECT_RENDERING;unset PYTHONPATH;unset HEPVISROOT;unset TTFPATH;unset ONXROOT;unset ONX_HAS_PYTHON;unset CLASSPATH
+  </variable>
+
+  <variable name="odev_editor">xemacs</variable>
+<!--
+  <variable name="odev_editor">open -a Xcode</variable>
+-->
+
+  <widget class="Window">
+    <geometry>400x650</geometry>
+    <title>odev</title>
+    <show>yes</show> 
+    <destroy exec="DLD">OnX ui_exit</destroy>
+
+    <widget class="MenuBar" name="menuBar">
+      <!-- A File pull down menu (PDM).  -->
+      <widget class="CascadeButton">
+        <label>File</label>
+        <widget class="Menu">
+<!--
+          <widget class="MenuItem">
+            <label>Restart odev</label>
+            <activate exec="DLD">OnX sys_execute onx_dev &amp;</activate>
+            <activate exec="DLD">OnX ui_exit</activate>
+          </widget>    
+-->
+          <widget class="MenuItem">
+            <label>Exit</label>
+            <accelerator>Ctrl+q</accelerator>
+            <activate exec="DLD">OnX ui_exit</activate>
+          </widget>
+        </widget>
+      </widget>
+
+      <!-- odev PDM.  -->
+      <widget class="CascadeButton">
+        <label>odev</label>
+        <widget class="Menu">
+
+          <widget class="MenuItem">
+            <label>open project</label>
+            <activate exec="DLD">OnX ui_show_dialog $ONXROOT/applications/odev/odev_project.onx odev_project_dialog</activate>
+          </widget>
+
+          <widget class="MenuItem">
+            <label>build project</label>
+            <activate exec="DLD">OnX ui_set_parameter odev_project_label.background red</activate>
+            <activate exec="DLD">OnX ui_echo /// start build project @{odev_project}@</activate>
+            <activate exec="DLD">OnX ui_echo /// options : @{build_verbose}@ @{build_debug}@ @[build_group.value]@</activate>
+            <activate exec="DLD">OnX ui_synchronize</activate>
+            <activate exec="DLD">OnX sys_execute cd @{odev_project_dir}@ @sep@cmd@ cd obuild @sep@cmd@ @{odev_build}@ @{build_verbose}@ @{build_debug}@ @[build_group.value]@</activate>
+            <activate exec="DLD">OnX ui_set_parameter odev_project_label.background grey</activate>
+          </widget>
+
+          <widget class="MenuItem">
+            <label>obuild</label>
+            <activate exec="DLD">OnX sys_execute cd @{odev_project_dir}@ @sep@cmd@ cd obuild @sep@cmd@ obuild</activate>
+          </widget>
+
+          <widget class="MenuItem">
+            <label>build release</label>
+            <activate exec="DLD">OnX ui_set_parameter odev_project_label.background red</activate>
+            <activate exec="DLD">OnX ui_echo /// start build release of @{odev_project}@</activate>
+            <activate exec="DLD">OnX ui_synchronize</activate>
+            <activate exec="DLD">OnX sys_execute cd @{odev_project_dir}@ @sep@cmd@ cd obuild @sep@cmd@ @{odev_build}@ @cat@ _release</activate>
+            <activate exec="DLD">OnX ui_set_parameter odev_project_label.background grey</activate>
+          </widget>
+
+          <widget class="MenuItem">
+            <label>install release</label>
+            <activate exec="DLD">OnX ui_set_parameter odev_project_label.background red</activate>
+            <activate exec="DLD">OnX ui_synchronize</activate>
+
+            <activate exec="DLD">OnX sys_execute cd /usr/local;/bin/rm -R -f @{odev_project}@ @cat@ / @cat@ @{odev_version}@ ; find @{odev_project_dir}@ @cat@ /bin_obuild -name '*.zip' -exec unzip -q {} \; </activate>
+            <activate exec="DLD">OnX sys_execute cd @{odev_release_dir}@ ; ./install</activate>
+            <activate exec="DLD">OnX ui_set_parameter odev_project_label.background grey</activate>
+          </widget>
+
+          <widget class="MenuSeparator"/>
+          <widget class="MenuItem">
+            <label>debug off</label>
+            <activate exec="DLD">OnX set build_debug @empty@</activate>
+          </widget>
+          <widget class="MenuItem">
+            <label>debug on</label>
+            <activate exec="DLD">OnX set build_debug -g</activate>
+          </widget>
+
+          <widget class="MenuSeparator"/>
+          <widget class="MenuItem">
+            <label>verbose off</label>
+            <activate exec="DLD">OnX set build_verbose @empty@</activate>
+          </widget>
+          <widget class="MenuItem">
+            <label>verbose on</label>
+            <activate exec="DLD">OnX set build_verbose -v</activate>
+          </widget>
+
+          <widget class="MenuSeparator"/>
+          <widget class="MenuItem">
+            <label>editor xemacs</label>
+            <activate exec="DLD">OnX set odev_editor xemacs</activate>
+          </widget>
+          <widget class="MenuItem">
+            <label>editor Xcode</label>
+            <activate exec="DLD">OnX set odev_editor open -a Xcode</activate>
+          </widget>
+          <widget class="MenuItem">
+            <label>start editor</label>
+            <activate exec="DLD">OnX sys_execute @{odev_editor}@  &amp;</activate>
+          </widget>
+
+        </widget>
+      </widget>
+
+      <reference file="$HOME/my_odev.onx" optional="yes"/>
+
+    </widget> <!-- end MenuBar -->
+
+    <widget class="VPaned">
+    <splitPosition>300</splitPosition>
+
+    <widget class="VBox">
+      <expand>second</expand>
+      <sizeOfFixed>90</sizeOfFixed>
+
+      <widget class="VContainer">
+        <widget class="Label" name="odev_project_label">
+          <label>no project opened</label>
+        </widget>
+  
+        <widget class="Label" name="odev_package">
+          <label>no package selected</label>
+        </widget>
+  
+        <widget class="OptionMenu" name="build_group">
+          <label>group</label>
+          <items>\n-group Zebra\n-group SDL\n-group Qt\n-group gtk\n-group Python\n-group Geant4\n-group Geant3</items>
+        </widget>
+    
+      </widget>
+
+      <widget class="TabStack">
+        <widget class="VBox">
+          <tabLabel>package</tabLabel>
+          <expand>first</expand>
+          <sizeOfFixed>30</sizeOfFixed>
+          <widget class="ScrolledList" name="odev_packages">
+            <select exec="DLD">OnX set current_package @this.value@</select>
+            <select exec="DLD">OnX set package_directory @{odev_home_quote}@ @cat@ @sep@ @cat@ @this.value@</select>
+            <select exec="DLD">OnX ui_set_parameter odev_package.label @this.value@</select>
+            <select exec="DLD">OnX dld_exec_text @{get_libs}@</select>
+            <select exec="DLD">OnX dld_exec_text @{get_dlls}@</select>
+            <select exec="DLD">OnX dld_exec_text @{get_apps}@</select>
+            <select exec="DLD">OnX dld_exec_text @{get_darwin_apps}@</select>
+          </widget>
+
+          <variable name="package_build_build">
+            OnX ui_echo /// start build package @{current_package}@\n
+            OnX ui_echo /// options : @{build_verbose}@ @{build_debug}@ @[build_group.value]@\n
+            OnX ui_synchronize\n
+            OnX sys_execute cd @{package_directory}@ @sep@cmd@ cd obuild @sep@cmd@ @{odev_build}@ @{build_verbose}@ @{build_debug}@ @[build_group.value]@
+          </variable>
+          <variable name="package_build_erase">
+            OnX sys_execute cd @{package_directory}@ @sep@cmd@ cd obuild @sep@cmd@ @{odev_build}@ -e
+          </variable>
+          <variable name="package_build_obuild">
+            OnX sys_execute cd @{package_directory}@ @sep@cmd@ cd obuild @sep@cmd@ obuild
+          </variable>
+          <variable name="package_build_clean">
+            OnX sys_execute cd @{package_directory}@ @sep@cmd@ @{onxroot}@ @cat@ @sep@ @cat@ applications @cat@ @sep@ @cat@ odev @cat@ @sep@ @cat@ odev_clean
+          </variable>
+          <variable name="package_build_rm_apps">
+            OnX sys_execute cd @{package_directory}@ ;/bin/rm -R -f bin_obuild/*.app
+          </variable>
+          <variable name="package_build_find">
+            OnX ui_show find_window
+          </variable>
+
+
+          <variable name="package_build_option_to_script">
+            build\npackage_build_build\n
+            erase binaries\npackage_build_erase\n
+            obuild\npackage_build_obuild\n
+            clean\npackage_build_clean\n
+            remove .app\npackage_build_rm_apps\n
+            find\npackage_build_find\n
+          </variable>
+
+          <widget class="OptionMenu">
+            <items>build\nerase binaries\nobuild\nclean\nremove .app\nfind</items>
+            <valueChanged exec="DLD">OnX set tmp @next@this.value@{package_build_option_to_script}@strip_key@</valueChanged>
+            <valueChanged exec="DLD">OnX ui_set_parameter odev_package.background red</valueChanged>
+            <valueChanged exec="DLD">OnX ui_synchronize</valueChanged>
+            <valueChanged exec="DLD">OnX dld_exec_text @{{tmp}}@</valueChanged>
+            <valueChanged exec="DLD">OnX ui_set_parameter odev_package.background grey</valueChanged>
+          </widget>
+        </widget>
+
+        <widget class="VBox">
+          <tabLabel>libs</tabLabel>
+          <expand>first</expand>
+          <sizeOfFixed>30</sizeOfFixed>
+          <widget class="ScrolledList" name="odev_libs">
+            <select exec="DLD">OnX set get_files_of_what @this.value@</select>
+            <select exec="DLD">OnX dld_exec_text @{get_files}@</select>
+          </widget>
+          <widget class="HContainer">
+            <widget class="PushButton">
+              <label>build</label>
+              <activate exec="DLD">OnX ui_set_parameter odev_package.background red</activate>
+              <activate exec="DLD">OnX ui_set_parameter @this@ @cat@ .background red</activate>
+              <activate exec="DLD">OnX ui_echo /// start build library @[odev_libs.selection]@</activate>
+              <activate exec="DLD">OnX ui_echo /// options : @{build_verbose}@ @{build_debug}@</activate>
+              <activate exec="DLD">OnX ui_synchronize</activate>
+              <activate exec="DLD">OnX sys_execute cd @{package_directory}@ @sep@cmd@ cd obuild @sep@cmd@ @{odev_build}@ @cat@ _lib_ @cat@ @[odev_libs.selection]@ @{build_verbose}@ @{build_debug}@ </activate>
+              <activate exec="DLD">OnX ui_set_parameter odev_package.background grey</activate>
+              <activate exec="DLD">OnX ui_set_parameter @this@ @cat@ .background grey</activate>
+            </widget>
+            <widget class="PushButton">
+              <label>to release area</label>
+              <activate exec="DLD">OnX sys_execute cp @{package_directory}@ @cat@ /bin_obuild/lib @cat@ @[odev_libs.selection]@ @cat@ .dylib @{odev_release_dir}@ @cat@ /lib</activate>
+            </widget>
+          </widget>
+        </widget>
+  
+        <widget class="VBox">
+          <tabLabel>dlls</tabLabel>
+          <expand>first</expand>
+          <sizeOfFixed>30</sizeOfFixed>
+          <widget class="ScrolledList" name="odev_dlls">
+            <select exec="DLD">OnX set get_files_of_what @this.value@</select>
+            <select exec="DLD">OnX dld_exec_text @{get_files}@</select>
+          </widget>
+          <widget class="HContainer">
+            <widget class="PushButton">
+              <label>build</label>
+              <activate exec="DLD">OnX ui_set_parameter odev_package.background red</activate>
+              <activate exec="DLD">OnX ui_set_parameter @this@ @cat@ .background red</activate>
+              <activate exec="DLD">OnX ui_echo /// start build dll @[odev_dlls.selection]@</activate>
+              <activate exec="DLD">OnX ui_echo /// options : @{build_verbose}@ @{build_debug}@</activate>
+              <activate exec="DLD">OnX ui_synchronize</activate>
+              <activate exec="DLD">OnX sys_execute cd @{package_directory}@ @sep@cmd@ cd obuild @sep@cmd@ @{odev_build}@ @cat@ _dll_ @cat@ @[odev_dlls.selection]@ @{build_verbose}@ @{build_debug}@ </activate>
+              <activate exec="DLD">OnX ui_set_parameter odev_package.background grey</activate>
+              <activate exec="DLD">OnX ui_set_parameter @this@ @cat@ .background grey</activate>
+            </widget>
+            <widget class="PushButton">
+              <label>to release area</label>
+              <activate exec="DLD">OnX sys_execute cp @{package_directory}@ @cat@ /bin_obuild/ @cat@ @[odev_dlls.selection]@ @cat@ .bundle @{odev_release_dir}@ @cat@ /bin</activate>
+            </widget>
+          </widget>
+        </widget>
+
+        <widget class="VBox">
+          <tabLabel>apps</tabLabel>
+          <expand>first</expand>
+          <sizeOfFixed>30</sizeOfFixed>
+          <widget class="ScrolledList" name="odev_apps">
+            <select exec="DLD">OnX set get_files_of_what @this.value@</select>
+            <select exec="DLD">OnX dld_exec_text @{get_files}@</select>
+          </widget> 
+          <widget class="HBox">
+            <widget class="PushButton">
+              <label>build</label>
+              <activate exec="DLD">OnX ui_set_parameter odev_package.background red</activate>
+              <activate exec="DLD">OnX ui_set_parameter @this@ @cat@ .background red</activate>
+              <activate exec="DLD">OnX ui_echo /// start build application @[odev_apps.selection]@</activate>
+              <activate exec="DLD">OnX ui_echo /// options : @{build_verbose}@ @{build_debug}@</activate>
+              <activate exec="DLD">OnX ui_synchronize</activate>
+              <activate exec="DLD">OnX sys_execute cd @{package_directory}@ @sep@cmd@ cd obuild @sep@cmd@ @{odev_build}@ @cat@ _app_ @cat@ @[odev_apps.selection]@ @{build_verbose}@ @{build_debug}@ </activate>
+              <activate exec="DLD">OnX ui_set_parameter odev_package.background grey</activate>
+              <activate exec="DLD">OnX ui_set_parameter @this@ @cat@ .background grey</activate>
+            </widget>
+            <widget class="PushButton">
+              <label>to release area</label>
+              <activate exec="DLD">OnX sys_execute cp @{package_directory}@ @cat@ /bin_obuild/ @cat@ @[odev_apps.selection]@ @{odev_release_dir}@ @cat@ /bin</activate>
+            </widget>
+          </widget>
+        </widget>
+
+        <widget class="VBox">
+          <tabLabel>darwin_apps</tabLabel>
+          <expand>first</expand>
+          <sizeOfFixed>30</sizeOfFixed>
+          <widget class="ScrolledList" name="odev_darwin_apps"/>
+          <widget class="HContainer">
+            <widget class="PushButton">
+              <label>build</label>
+              <activate exec="DLD">OnX ui_set_parameter odev_package.background red</activate>
+              <activate exec="DLD">OnX ui_set_parameter @this@ @cat@ .background red</activate>
+              <activate exec="DLD">OnX ui_echo /// start build darwin application @[odev_darwin_apps.selection]@</activate>
+              <activate exec="DLD">OnX ui_echo /// options : @{build_verbose}@</activate>
+              <activate exec="DLD">OnX ui_synchronize</activate>
+              <activate exec="DLD">OnX sys_execute cd @{package_directory}@ @sep@cmd@ cd obuild @sep@cmd@ @{odev_build}@ @cat@ _darwin_app_ @cat@ @[odev_darwin_apps.selection]@ @{build_verbose}@</activate>
+              <activate exec="DLD">OnX ui_set_parameter odev_package.background grey</activate>
+              <activate exec="DLD">OnX ui_set_parameter @this@ @cat@ .background grey</activate>
+            </widget>
+            <widget class="PushButton">
+              <label>to release area</label>
+              <activate exec="DLD">OnX sys_execute mkdir -p @{odev_release_app_dir}@</activate>
+              <activate exec="DLD">OnX sys_execute cp -R @{package_directory}@ @cat@ /bin_obuild/ @cat@ @[odev_darwin_apps.selection]@ @cat@ .app @{odev_release_app_dir}@</activate>
+            </widget>
+            <widget class="PushButton">
+              <label>open .app</label>
+              <activate exec="DLD">OnX sys_execute @{darwin_app_unsetup}@ ; open @{package_directory}@ @cat@ /bin_obuild @cat@ / @cat@ @[odev_darwin_apps.selection]@ @cat@ .app</activate>
+            </widget>
+          </widget>
+        </widget>
+
+        <widget class="VBox">
+          <tabLabel>files</tabLabel>
+          <expand>first</expand>
+          <sizeOfFixed>30</sizeOfFixed>
+          <widget class="ScrolledList" name="odev_files"/>
+          <widget class="HContainer">
+            <widget class="PushButton">
+              <label>edit</label>
+              <activate exec="DLD">OnX sys_execute @{odev_editor}@ @{package_directory}@ @cat@ /obuild/ @cat@ @[odev_files.selection]@ &amp;</activate>
+            </widget>
+            <widget class="PushButton">
+              <label>cvs diff</label>
+              <activate exec="DLD">OnX ui_set_parameter @this@ @cat@ .background red</activate>
+              <activate exec="DLD">OnX ui_synchronize</activate>
+              <activate exec="DLD">OnX sys_execute cd @{package_directory}@ @cat@ /obuild ; cvs diff @[odev_files.selection]@</activate>
+              <activate exec="DLD">OnX ui_set_parameter @this@ @cat@ .background grey</activate>
+            </widget>
+            <widget class="PushButton">
+              <label>cvs commit</label>
+              <activate exec="DLD">OnX ui_set_parameter @this@ @cat@ .background red</activate>
+              <activate exec="DLD">OnX ui_synchronize</activate>
+              <activate exec="DLD">OnX sys_execute cd @{package_directory}@ @cat@ /obuild ; cvs commit -m "" @[odev_files.selection]@</activate>
+              <activate exec="DLD">OnX ui_set_parameter @this@ @cat@ .background grey</activate>
+            </widget>
+          </widget>
+        </widget>
+
+      </widget>  <!-- end of TabStack -->
+
+    </widget>
+
+    <widget class="ScrolledText" name="consoleText"/>
+
+    </widget>  <!-- end of VPaned -->
+
+<!--
+    <reference file="$ONXROOT/scripts/OnX/Dialogs.onx"/>
+-->
+
+  </widget>
+
+  <widget class="Window" name="find_window">
+    <geometry>200x60+0+0</geometry>
+    <title>Find</title>   
+    <show>no</show>
+    <decoration>no_close_button</decoration>
+    <widget class="VBox"> 
+      <widget class="HBox"> 
+        <expand>second</expand>
+        <sizeOfFixed>80</sizeOfFixed>
+        <widget class="Label" name="find_label">
+          <label>Find</label>
+        </widget>
+        <widget class="CommandLine" name="find_command_line">
+          <activate exec="DLD">OnX ui_set_parameter odev_package.background red</activate>
+          <activate exec="DLD">OnX ui_set_parameter find_label.background red</activate>
+          <activate exec="DLD">OnX ui_synchronize</activate>
+          <activate exec="DLD">OnX sys_execute cd @{package_directory}@ @sep@cmd@ @{onxroot}@ @cat@ @sep@ @cat@ applications @cat@ @sep@ @cat@ odev @cat@ @sep@ @cat@ odev_find " @cat@ @this.value@ @cat@ "</activate>
+          <activate exec="DLD">OnX ui_set_parameter odev_package.background grey</activate>
+          <activate exec="DLD">OnX ui_set_parameter find_label.background grey</activate>
+        </widget>
+      </widget>
+      <widget class="PushButton">
+        <label>Hide</label>
+        <activate exec="DLD">OnX ui_hide @shell@this@</activate>
+      </widget>
+    </widget>
+
+  </widget>
+    
+
+</OnX>

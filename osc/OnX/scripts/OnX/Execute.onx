@@ -1,0 +1,64 @@
+<widget class="CascadeButton" name="OnX_menu_Execute">
+  <label>Execute file</label>
+  <widget class="Menu">
+    <widget class="MenuItem">
+      <label>Edit and execute...</label>
+      <activate exec="DLD">OnX ui_show_dialog $ONXROOT/scripts/OnX/EditExec.onx OnX_EditExec_main</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>import...</label>
+      <variable name="OnX_menu_File_import.script">OnX ui_execute_file Python @this.value@</variable>
+      <activate exec="DLD">OnX ui_set_fileChooser $ONXROOT/examples/Python *.py open DLD @{OnX_menu_File_import.script}@</activate>
+      <activate exec="DLD">OnX ui_show fileChooser</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Exec tcl...</label>
+      <variable name="OnX_menu_File_Tcl.script">OnX ui_execute_file Tcl @this.value@</variable>
+      <activate exec="DLD">OnX ui_set_fileChooser $ONXROOT/examples/Tcl *.tcl open DLD @{OnX_menu_File_Tcl.script}@</activate>
+      <activate exec="DLD">OnX ui_show fileChooser</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>Exec kumac...</label>
+      <variable name="OnX_menu_File_KUIP.script">OnX ui_execute_file KUIP @this.value@</variable>
+      <activate exec="DLD">OnX ui_set_fileChooser $ONXROOT/examples/KUIP *.kumac open DLD @{OnX_menu_File_KUIP.script}@</activate>
+      <activate exec="DLD">OnX ui_show fileChooser</activate>
+    </widget>
+    <widget class="MenuSeparator" if="exec.Python"/>
+    <widget class="MenuItem">
+      <label>Load a style file...</label>
+      <variable name="OnX_menu_File_Styles.script">OnX ui_execute_file Styles @this.value@</variable>
+      <activate exec="DLD">OnX ui_set_fileChooser $ONXROOT/scripts/Styles *.styles open DLD @{OnX_menu_File_Styles.script}@</activate>
+      <activate exec="DLD">OnX ui_show fileChooser</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>View .ps...</label>
+      <variable name="OnX_menu_File_view_ps.script">OnX ui_execute_file view_ps @this.value@</variable>
+      <activate exec="DLD">OnX ui_set_fileChooser . *.ps open DLD @{OnX_menu_File_view_ps.script}@</activate>
+      <activate exec="DLD">OnX ui_show fileChooser</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>View .gif...</label>
+      <variable name="OnX_menu_File_view_gif.script">OnX ui_execute_file view_gif @this.value@</variable>
+      <activate exec="DLD">OnX ui_set_fileChooser . *.gif open DLD @{OnX_menu_File_view_gif.script}@</activate>
+      <activate exec="DLD">OnX ui_show fileChooser</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>View .jpg...</label>
+      <variable name="OnX_menu_File_view_jpeg.script">OnX ui_execute_file view_jpeg @this.value@</variable>
+      <activate exec="DLD">OnX ui_set_fileChooser . *.jpg;*.jpeg open DLD @{OnX_menu_File_view_jpeg.script}@</activate>
+      <activate exec="DLD">OnX ui_show fileChooser</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>View .pdf...</label>
+      <variable name="OnX_menu_File_view_pdf.script">OnX ui_execute_file view_pdf @this.value@</variable>
+      <activate exec="DLD">OnX ui_set_fileChooser . *.pdf open DLD @{OnX_menu_File_view_pdf.script}@</activate>
+      <activate exec="DLD">OnX ui_show fileChooser</activate>
+    </widget>
+    <widget class="MenuItem">
+      <label>View .iv...</label>
+      <variable name="OnX_menu_File_view_iv.script">OnX ui_execute_file view_iv @this.value@</variable>
+      <activate exec="DLD">OnX ui_set_fileChooser . *.iv open DLD @{OnX_menu_File_view_iv.script}@</activate>
+      <activate exec="DLD">OnX ui_show fileChooser</activate>
+    </widget>
+  </widget>
+</widget>

@@ -1,0 +1,53 @@
+#!/bin/sh -f
+
+#set -x
+
+build_args=
+while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
+
+. ../mgr/build_header
+
+#  mmflags="${mmflags} -fobjc-abi-version=2 -fobjc-legacy-dispatch"
+
+cppflags="${cppflags} -I../CoinGL/include"
+
+# libs for apps :
+libs="${build_path}/${libname}.a ${libs}"
+libs=" ${libs} ../CoinGL/${build_dir}/libourex_CoinGL.a"
+
+use_GL=yes
+use_Cocoa=yes
+
+. ${exlib_mgr}/use_GL
+. ${exlib_mgr}/use_Cocoa
+
+if [ ${build_compile} = "yes" ] ; then
+
+find ./source -name '*.mm' >> mm_tmp
+
+. ${inlib_mgr}/build_compile
+
+fi # end build_compile
+
+if [ ${build_archive} = "yes" ] ; then . ${inlib_mgr}/build_archive; fi
+
+if [ ${build_app} = "yes" ] ; then
+
+  cppflags="${cppflags} -I./source/framework"
+
+  objs=
+  app_exe=test_cube
+  app_src=./tests/CoinNextStep_cube.mm
+  . ${inlib_mgr}/build_app
+
+  # Mac .app packaging :
+  /bin/rm -R -f ${build_path}/${app_exe}.app
+  head=${build_path}/${app_exe}.app/Contents
+  /bin/mkdir -p ${head}/MacOS
+  /bin/mkdir -p ${head}/Resources
+  /bin/cp ${build_path}/${app_exe} ${head}/MacOS
+  /bin/cp -R ./tests/nib.nib ${head}/Resources/${app_exe}.nib
+
+fi
+
+. ${inlib_mgr}/build_clean

@@ -1,0 +1,19 @@
+
+from=..
+to=/Users/barrand/private/dev/OpenScientist/head_dev/BatchLab
+
+/bin/cp ${from}/BatchLab/Core/BaseFitter.h ${to}/BatchLab/Core/BaseFitter.h
+/bin/cp ${from}/BatchLab/Core/Function.icc ${to}/BatchLab/Core/Function.icc
+/bin/cp ${from}/BatchLab/Core/MidnightFitter.h ${to}/BatchLab/Core/MidnightFitter.h
+/bin/cp ${from}/BatchLab/FS/Tree.h ${to}/BatchLab/FS/Tree.h
+/bin/cp ${from}/BatchLab/HDF5/HDF5O.h ${to}/BatchLab/HDF5/HDF5O.h
+/bin/cp ${from}/BatchLab/HDF5/MemberInserter.h ${to}/BatchLab/HDF5/MemberInserter.h
+/bin/cp ${from}/BatchLab/HDF5/ReadContext.h ${to}/BatchLab/HDF5/ReadContext.h
+/bin/cp ${from}/BatchLab/HDF5/Tree.h ${to}/BatchLab/HDF5/Tree.h
+/bin/cp ${from}/BatchLab/HDF5/Writer.h ${to}/BatchLab/HDF5/Writer.h
+/bin/cp ${from}/BatchLab/XML/AIDA_ML.h ${to}/BatchLab/XML/AIDA_ML.h
+/bin/cp ${from}/BatchLab/XML/AIDA_ML.icc ${to}/BatchLab/XML/AIDA_ML.icc
+/bin/cp ${from}/BatchLab/XML/Tree.h ${to}/BatchLab/XML/Tree.h
+/bin/cp ${from}/BatchLab/Zip/Tree.h ${to}/BatchLab/Zip/Tree.h
+/bin/cp ${from}/source/Zebra/Zebra_Tree.cxx ${to}/source/Zebra/Zebra_Tree.cxx
+/bin/cp ${from}/tests/BatchLab_test_tuple.cxx ${to}/tests/BatchLab_test_tuple.cxx
