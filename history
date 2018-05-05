@@ -1,0 +1,13 @@
+
+build on macOS :
+- inexlib/inlib/inlib/histo/c1d : #define inlib_histo_cld inlib_histo_c1d.
+- Lib/source/ProcessorLexer.cxx, ColumnsLexer.cxx, FortranFormatLexer.cxx : 
+    #ifdef _WIN32
+    #include <io.h>
+    #define isatty _isatty
+    #else
+    #include <unistd.h> //isatty
+    #endif
+
+05/Mai : import code from last build on lxplus for centos7.
+
