@@ -5,7 +5,7 @@
 /* Author:           Peter Hamel                                             */
 /*                                                                           */
 /*---------------------------------------------------------------------------*/
-#ifndef __SoSiStripWedgeDetKit_hh_
+#ifndef __SoSiStripWedgeDetKit_hh__
 #define __SoSiStripWedgeDetKit_hh__
 
 // Inheritance :

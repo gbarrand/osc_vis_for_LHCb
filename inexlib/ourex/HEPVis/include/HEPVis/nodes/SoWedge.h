@@ -5,7 +5,7 @@
 /* Author:           Peter Hamel                                             */
 /*                                                                           */
 /*---------------------------------------------------------------------------*/
-#ifndef __SoWedge_hh_
+#ifndef __SoWedge_hh__
 #define __SoWedge_hh__
 #include <Inventor/fields/SoSFNode.h>
 #include <Inventor/fields/SoSFShort.h>

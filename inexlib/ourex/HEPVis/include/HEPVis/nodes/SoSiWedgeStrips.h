@@ -1,4 +1,4 @@
-#ifndef __SoSiWedgeStrips_hh_
+#ifndef __SoSiWedgeStrips_hh__
 #define __SoSiWedgeStrips_hh__
 #include <Inventor/fields/SoSFNode.h>
 #include <Inventor/fields/SoSFShort.h>
