@@ -153,6 +153,8 @@ if [ ${build_visual} = "yes" ] ; then
 
   ccflags="${ccflags} /nologo /DWIN32 /MD /O2 /W3" 
 
+  ccflags="${ccflags} /wd4996 /wd4267 /wd4244"
+
 else
 
   if [ ${build_debug} = "yes" ] ; then
