@@ -1,5 +1,6 @@
 
 build on macOS :
+- inexlib/outex/CoinGtk/build : -I/opt/X11/include to find glu.h.
 - inexlib/exlib/mgr/use_X11 : -L/usr/X11R6/lib => -L/opt/local/lib.
 - inexlib/ourex/CoinGL/include/Inventor/fields/SoMFColorRGBA.h : correct #define header guard.
 - inexlib/exlib/mgr/use_Python : handle Python 2.7 under /opt/local from MacPorts.
