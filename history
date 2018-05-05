@@ -4,6 +4,9 @@ build on ubuntu :
 - ourex/HEPVis/source/SbSystem.cxx : Lib_strdup : do not check for NULL to avoid a warning on putenv().
 - [osc_vis,OnX,OnXLab]/mgr/build : avoid ${var:<operation>} which is not portable.
 
+build on centos7 :
+- nothing to declare.
+
 build on macOS :
 - ourex/HEPVis/include/HEPVis/SbTessContour.h : use inlib/glutess. gluTess is now deprecated on macOS OpenGL.
 - ourex/HEPVis/build : -I../../inlib : to find inlib/glutess.
