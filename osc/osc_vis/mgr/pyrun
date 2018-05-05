@@ -1,6 +1,6 @@
 #!/bin/sh -f
 
-version=17.0
+version="`./version`"
 
 run_what=
 run_gui=

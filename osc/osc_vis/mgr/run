@@ -1,6 +1,6 @@
 #!/bin/sh -f
 
-version=17.0
+version="`./version`"
 
 run_gdb=no
 run_args=
