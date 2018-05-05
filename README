@@ -71,17 +71,26 @@
  (csh> source Qt-setup.csh)
    sh> osc-plot -Qt
 
+ ///////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////
  To test the graphics with osc-plot :
   - Choose the Viewer3D tab to have the Inventor decorations.
   - Help => Examples => Examples/AIDA/DLD => Histogram2D/lego plot
   - Play with the thumb wheels.
 
- If using Python or Qt, you may have to source setup them :
+ ///////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////
+ If using Python, you may have to source setup them :
    sh> . ./py-setup.sh   # to find the python program of the
                          # Python installation used at build time.
  (csh> source py-setup.csh)
    sh> . ./Python-setup.sh   # to set PYTHONPATH to find osc_vis plugins.
  (csh> source Python-setup.csh)
+   sh> cd Resources/AIDA/examples/Python
+   sh> python aida_0.py
+   sh> OSC_GUI_TOOLKIT=Qt;export OSC_GUI_TOOLKIT
+ (csh> setenv OSC_GUI_TOOLKIT Qt)
+   sh> python aida_1.py
 
  ///////////////////////////////////////////////////////////////
  //// Qt, Python on lxplus /////////////////////////////////////
