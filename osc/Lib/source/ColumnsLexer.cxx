@@ -555,8 +555,11 @@ char *ColumnsLexer_text;
 
 #include <string.h>
 
-#ifndef __APPLE__
-extern "C" {extern int isatty (int ) throw();}
+#ifdef _WIN32
+#include <io.h>
+#define isatty _isatty
+#else
+#include <unistd.h> //isatty
 #endif
 
 static  int ColumnsLexer__get_next_buffer(Lib::ColumnsLexer&);

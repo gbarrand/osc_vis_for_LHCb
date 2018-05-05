@@ -469,8 +469,11 @@ char *FortranFormatLexer_text;
 
 #include <inlib/sout>
 
-#ifndef __APPLE__
-extern "C" {extern int isatty (int ) throw();}
+#ifdef _WIN32
+#include <io.h>
+#define isatty _isatty
+#else
+#include <unistd.h> //isatty
 #endif
 
 static  int FortranFormatLexer__get_next_buffer(Lib::FortranFormatLexer&);
