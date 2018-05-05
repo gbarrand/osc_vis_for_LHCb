@@ -36,7 +36,7 @@ unset bin_curr
 unset bin_path
 
 else
-  echo "directory ${Python_home} not found.'
+  echo "directory ${Python_home} not found."
 fi
 
 unset Python_home

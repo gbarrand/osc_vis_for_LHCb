@@ -59,7 +59,7 @@ fi
 unset bin_path
 
 else
-  echo "directory ${Qt_home} not found.'
+  echo "directory ${Qt_home} not found."
 fi
 
 unset Qt_home

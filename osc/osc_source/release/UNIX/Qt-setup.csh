@@ -53,7 +53,7 @@ unset bin_curr
 unset bin_path
 
 else
-  echo "directory ${Qt_home} not found.'
+  echo "directory ${Qt_home} not found."
 endif
 
 unset Qt_home
