@@ -23,15 +23,8 @@ fi
 
 . ${inlib_mgr}/build_compile
 	  
-suffix=none
-if   [ "${app_src:(-4)}" = ".cpp"  ] ; then  suffix=cpp
-elif [ "${app_src:(-4)}" = ".cxx"  ] ; then  suffix=cxx
-elif [ "${app_src:(-3)}" = ".cc"   ] ; then  suffix=cc
-elif [ "${app_src:(-3)}" = ".mm"   ] ; then  suffix=mm
-elif [ "${app_src:(-2)}" = ".c"    ] ; then  suffix=c
-elif [ "${app_src:(-2)}" = ".m"    ] ; then  suffix=m
-elif [ "${app_src:(-4)}" = "java"  ] ; then  suffix=java
-fi
+suffix=`echo ${app_src} | sed 's:.*\.::'`
+if [ "${suffix}" = "${app_src}" ] ; then suffix=none;fi
 
 obj="${build_path}/main.o"
 
