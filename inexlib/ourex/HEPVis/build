@@ -10,6 +10,7 @@ while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
 #////////////////////////////////////
 #////////////////////////////////////
 #////////////////////////////////////
+cppflags="${cppflags} -I../../inlib"  # for inlib/glutess used in SbTessContour.h used in SoPlotter.cxx.
 
 ccflags="${ccflags} -DGL2PS_HAVE_ZLIB"
 ccflags="${ccflags} -DGL2PS_HAVE_LIBPNG"
