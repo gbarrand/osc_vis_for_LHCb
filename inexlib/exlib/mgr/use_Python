@@ -7,13 +7,8 @@ if [ "${use_Python}" = "yes" ] ; then
   #/////////////////////////////////////////////////////////////
   lcg_area=
   if [ "`uname -n | grep lxplus`" != "" ] ; then
-   #lcg_area=/afs/cern.ch/sw/lcg/external
-   #lcg_area=/afs/cern.ch/sw/lcg/releases
     lcg_area=/cvmfs/lhcb.cern.ch/lib/lcg/releases
   fi
-  #if [ "${MYSITEROOT}" != "" ] ; then
-  #  lcg_area="${MYSITEROOT}/lcg/external"
-  #fi
   #/////////////////////////////////////////////////////////////
   #/////////////////////////////////////////////////////////////
   #/////////////////////////////////////////////////////////////
