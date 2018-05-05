@@ -8,12 +8,13 @@ run_gui=
 build_args=
 while test $# -ge 1 ; do
   case $1 in
-    -gtk)  run_gui=Gtk;;  
-    -Qt)   run_gui=Qt;;  
-    -Xt)   run_gui=Xt;;  
-    -gui*) run_gui=${1:5};;
-    -*) build_args="${build_args} $1";;  
-     *) run_what=$1;;  
+        -gtk) run_gui=Gtk;;  
+         -Qt) run_gui=Qt;;  
+         -Xt) run_gui=Xt;;  
+         -Xm) run_gui=Xt;;  
+   -NextStep) run_gui=NextStep;;
+          -*) build_args="${build_args} $1";;  
+           *) run_what=$1;;  
   esac
   shift
 done
