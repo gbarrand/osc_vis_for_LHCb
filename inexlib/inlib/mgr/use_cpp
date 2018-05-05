@@ -179,6 +179,9 @@ if [ ${build_visual} = "yes" ] ; then
 
   cppflags="${cppflags} /nologo /DWIN32 /MD /O2 /W3 /EHsc /GR" 
 
+  # rm painfull warnings about API strcpy, etc... deprecated.
+  cppflags="${cppflags} /wd4996 /wd4267"
+
   if [ ${build_mem} = "yes" ] ; then cppflags="${cppflags} /DINLIB_MEM"; fi
 
   cppflags="${cppflags} /I.."
