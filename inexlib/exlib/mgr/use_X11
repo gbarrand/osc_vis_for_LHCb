@@ -7,7 +7,8 @@ if [ "${use_GLX}" = "yes" ] ; then
   if [ `uname` = Darwin ] ; then
     cppflags="${cppflags} -I/usr/X11R6/include"
     # glX functions are in the below GL lib !
-    libs="${libs} -L/usr/X11R6/${lib} -lGL"
+   #libs="${libs} -L/usr/X11R6/${lib} -lGL"
+    libs="${libs} -L/opt/local/lib -lGL"
   fi
 fi
 
@@ -18,7 +19,8 @@ if [ "${use_X11}" = "yes" ] ; then
   fi
   if [ `uname` = Darwin ] ; then
     cppflags="${cppflags} -I/usr/X11R6/include"
-    libs="${libs} -L/usr/X11R6/lib -lXi -lXext -lXpm -lX11"
+   #libs="${libs} -L/usr/X11R6/lib -lXi -lXext -lXpm -lX11"
+    libs="${libs} -L/opt/local/lib -lXi -lXext -lXpm -lX11"
   else
     cppflags="${cppflags} -I/usr/X11R6/include"
     libs="${libs} -L/usr/X11R6/${lib} -lXi -lXext -lXpm -lX11"
