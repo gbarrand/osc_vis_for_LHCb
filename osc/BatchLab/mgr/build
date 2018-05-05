@@ -12,7 +12,7 @@ while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
 ./build_plugin_BatchLabHDF5     ${build_args}
 ./build_plugin_BatchLabRio      ${build_args}
 ./build_plugin_BatchLabXML      ${build_args}
-./build_plugin_BatchLabZebra    ${build_args}
+#./build_plugin_BatchLabZebra    ${build_args}
 ./build_plugin_BatchLabZip      ${build_args}
 
 ./build_app_aida_config ${build_args}
