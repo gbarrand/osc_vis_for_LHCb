@@ -1,5 +1,9 @@
 
 build on macOS :
+- inexlib/ourex/CoinQt : rm the moc_*.icc files from the repository. (They are produced by Qt at each build and depend
+  of the Qt version, and are then not portable).
+- inexlib/exlib/mgr/use_Qt : handle Qt under /opt/local/libexec/qt4/include/Qt installed with MacPorts.
+- inexlib/ourex/freetype/src/truetype/ttgxvar.c : fix empty-body warning. See /*G.Barrand*/ comments in the code.
 - inexlib/ourex/png/source/pngwutil.c, png.c : fix tautological-pointer-compare warings. See /*G.Barrand*/ comments in the code.
 - inexlib/ourex/zip/source/unzip.c : fix dangling-else warnings. See /*G.Barrand*/ comments in the code.
 - inexlib/ourex/HEPVis : SoDblSiStripWedgeDetKit.h, SoSiStripWedgeDetKit.h, SoSiWedgeStrips.h, SoWedge.h :
