@@ -8,9 +8,9 @@
 
 Qt_home=none
 
-if [ -d "${Qt_home}" ]; then
+if [ -d "${Qt_home}" ] ; then
 
-if [ `uname` = "Linux" ]; then
+if [ `uname` = "Linux" ] ; then
   lib_path="${Qt_home}/lib"
   if [ -z "${LD_LIBRARY_PATH}" ] ; then
     LD_LIBRARY_PATH="${lib_path}"
@@ -26,7 +26,7 @@ if [ `uname` = "Linux" ]; then
   unset lib_path
 fi
 
-if [ `uname` = "Darwin" ]; then
+if [ `uname` = "Darwin" ] ; then
 
   lib_path="${Qt_home}/Qt3Support.framework:${Qt_home}/QtCore.framework:${Qt_home}/QtGui.framework:${Qt_home}/QtOpenGL.framework:${Qt_home}/QtNetWork.framework:${Qt_home}/QtAssistant.framework:${Qt_home}/QtDBus.framework:${Qt_home}/QtDesigner.framework:${Qt_home}/QtDesignerComponents.framework:${Qt_home}/QtHelp.framework:${Qt_home}/QtScript.framework:${Qt_home}/QtScriptTools.framework:${Qt_home}/QtSql.framework:${Qt_home}/QtSvg.framework:${Qt_home}/QtTest.framework:${Qt_home}/QtWebKit.framework:${Qt_home}/QtXml.framework:${Qt_home}/QtXmlPatterns.framework"
 

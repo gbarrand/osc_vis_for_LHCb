@@ -1,15 +1,17 @@
 
 #
 #  Usage :
-#    sh> . <osc_vis_path>/Qt-setup.sh
+#    sh> . <osc_vis_path>/py-setup.sh
 #
 
 #set -x
 
-Qt_home="/cvmfs/lhcb.cern.ch/lib/lcg/releases/Python/2.7.13-597a5/x86_64-centos7-gcc7-opt"
+Python_home=none
 
-if [ `uname` = "Linux" ]; then
-  lib_path="${Qt_home}/lib"
+if [ -d "${Python_home}" ] ; then
+    
+if [ `uname` = "Linux" ] ; then
+  lib_path="${Python_home}/lib"
   if [ -z "${LD_LIBRARY_PATH}" ] ; then
     LD_LIBRARY_PATH="${lib_path}"
     export LD_LIBRARY_PATH
@@ -24,7 +26,7 @@ if [ `uname` = "Linux" ]; then
   unset lib_path
 fi
 
-bin_path="${Qt_home}/bin"
+bin_path="${Python_home}/bin"
 if [ -z "${PATH}" ] ; then
   PATH="${bin_path}"
   export PATH
@@ -38,5 +40,9 @@ else
 fi
 unset bin_path
 
-unset Qt_home
+else
+  echo "directory ${Python_home} not found.'
+fi
+
+unset Python_home
 

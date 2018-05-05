@@ -1,14 +1,16 @@
 
 #
 #  Usage :
-#    csh> source <osc_vis_path>/Qt-setup.csh
+#    csh> source <osc_vis_path>/py-setup.csh
 #
 
 #set verbose
-set Qt_home="/cvmfs/lhcb.cern.ch/lib/lcg/releases/Python/2.7.13-597a5/x86_64-centos7-gcc7-opt"
+set Python_home=none
+
+if ( -d "${Python_home}" ) then
 
 if ( `uname` == "Linux" ) then
-  set lib_path="${Qt_home}/lib"
+  set lib_path="${Python_home}/lib"
   set lib_curr=`printenv LD_LIBRARY_PATH`
   if ( "${lib_curr}" == "" ) then
     setenv LD_LIBRARY_PATH "${lib_path}"
@@ -21,7 +23,7 @@ if ( `uname` == "Linux" ) then
   unset lib_path
 endif
 
-set bin_path="${Qt_home}/bin"
+set bin_path="${Python_home}/bin"
 set bin_curr=`printenv PATH`
 if ( "${bin_curr}" == "" ) then
  setenv PATH "${bin_path}"
@@ -33,4 +35,8 @@ endif
 unset bin_curr
 unset bin_path
 
-unset Qt_home
+else
+  echo "directory ${Python_home} not found.'
+fi
+
+unset Python_home
