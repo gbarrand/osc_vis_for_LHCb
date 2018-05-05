@@ -59,6 +59,8 @@
    sh> . <installation_path>/osc_vis/<version>/setup.sh
    sh> osc-plot
   (sh> osc-plot -Qt)
+  (sh> osc-plot -gtk)
+  (sh> osc-plot -Xt)
 
  If you have a csh flavoured shell :
    csh> source <installation_path>/osc_vis/<version>/setup.csh
@@ -73,6 +75,11 @@
    sh> Qt-setup.sh       # to find the Qt shared libs of the
                          # Qt installation used at build time.
  (csh> Qt-setup.csh)
+
+ To test the graphics with osc-plot :
+  - Choose the Viewer3D tab to have the Inventor decorations.
+  - Help => Examples => Examples/AIDA/DLD => Histogram2D/lego plot
+  - Play with the thumb wheels.
 
  ///////////////////////////////////////////////////////////////
  //// Qt, Python on lxplus /////////////////////////////////////
