@@ -1,7 +1,9 @@
 
 build on macOS :
+- osc/OnX/souce/Core/Getline.c : 
+- inexlib/inlib/inlib/f2cmn : void fitter::mnset : f_inqu() => //f_inqu().
 - inexlib/inlib/inlib/histo/c1d : #define inlib_histo_cld inlib_histo_c1d.
-- Lib/source/ProcessorLexer.cxx, ColumnsLexer.cxx, FortranFormatLexer.cxx : 
+- osc/Lib/source/ProcessorLexer.cxx, ColumnsLexer.cxx, FortranFormatLexer.cxx : 
     #ifdef _WIN32
     #include <io.h>
     #define isatty _isatty
