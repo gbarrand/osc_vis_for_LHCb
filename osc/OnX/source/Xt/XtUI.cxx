@@ -2601,7 +2601,9 @@ std::string OnX::XtUI::widgetName(inlib::xml::tree& aItemML){
 #include <Xm/DialogS.h>
 #include <Xm/DragOverS.h>
 #include <Xm/GrabShell.h>
+#ifdef PRINTING_SUPPORTED
 #include <Xm/Print.h>
+#endif
 #include <X11/IntrinsicP.h>
 static void ResetVendorField(WidgetClass);
 
@@ -2642,7 +2644,9 @@ void LookDSM_Problem(std::ostream& a_out){
   ResetVendorField(xmDialogShellWidgetClass);
   ResetVendorField(xmDragOverShellWidgetClass);
   ResetVendorField(xmGrabShellWidgetClass);
+#ifdef PRINTING_SUPPORTED
   ResetVendorField(xmPrintShellWidgetClass);
+#endif
 }
 
 void ResetVendorField(WidgetClass aWidgetClass){
