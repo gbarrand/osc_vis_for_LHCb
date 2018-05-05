@@ -73,7 +73,7 @@ elif [ "${build_group}" = Python ] ; then
 
   for pack in ${packs} ; do
     cd ../../${pack}/mgr
-    ./build ${build_args} -group="${build_group}"
+    ./build ${build_args} -"${build_group}"
     cd ${save_dir}
   done
 
@@ -83,7 +83,7 @@ else # NextStep,Xt,gtk,Qt
 
   for pack in ${packs} ; do
     cd ../../${pack}/mgr
-    ./build ${build_args} -group="${build_group}"
+    ./build ${build_args} -"${build_group}"
     cd ${save_dir}
   done
 
