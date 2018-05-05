@@ -1,5 +1,8 @@
 
 build on macOS :
+- ourex/HEPVis/include/HEPVis/SbTessContour.h : use inlib/glutess. gluTess is now deprecated on macOS OpenGL.
+- ourex/HEPVis/build : -I../../inlib : to find inlib/glutess.
+- Have inlib/inlib/glutess used in HEPVis/include/HEPVis/SbTessContour.h used in SoPlotter.cxx.
 - osc/BatchLab/mgr/build : comment out ./build_plugin_BatchLabZebra.
 - inexlib/outex/CoinGtk/build : -I/opt/X11/include to find glu.h.
 - inexlib/exlib/mgr/use_X11 : -L/usr/X11R6/lib => -L/opt/local/lib.
