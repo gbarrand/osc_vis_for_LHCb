@@ -6606,7 +6606,7 @@ void fitter::mnset()
       "MNCONT: MNCONTOUR PLOT (MNCROS SEARCH) "};
 
     /* System generated locals */
-    int f_inqu();
+    //G.Barrand int f_inqu();
 
     /* Local variables */
     /*static*/ double val;
