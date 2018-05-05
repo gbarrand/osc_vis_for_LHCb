@@ -1,4 +1,11 @@
 
+  This package is the version of the OpenScientist osc_vis used
+ by the LHCb/Panoramix event display. Below are instructions to
+ build on a local Linux or macOS machine, but also to build on
+ lxplus by using the Qt and Python packages used by LHCb which are
+ now under:
+    /cvmfs/lhcb.cern.ch/lib/lcg/releases/[Python,qt]
+
  ///////////////////////////////////////////////////////////////
  //// build osc_vis : //////////////////////////////////////////
  ///////////////////////////////////////////////////////////////
@@ -95,4 +102,10 @@
  Under the configs directory some scripts can be found to
  setup both the compiler and BUILD_CONFIG for the configs
  already known by exlib/mgr/use_[Qt,Python].
+
+  Note that on lxplus, someone can build the Qt driver (./build -Qt),
+ but also the gtk2 (./build -gtk) and the Motif (./build -Xt) ones since
+ gtk2 and Motif are installed on the system. (And put all together, if displaying
+ on a remote machine, Motif is still the fastest!)
+
 
