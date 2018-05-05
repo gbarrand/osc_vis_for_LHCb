@@ -51,15 +51,20 @@
  script. If you have a sh flavoured shell :
    sh> . <installation_path>/osc_vis/<version>/setup.sh
    sh> osc-plot
+  (sh> osc-plot -Qt)
 
  If you have a csh flavoured shell :
    csh> source <installation_path>/osc_vis/<version>/setup.csh
    csh> osc-plot
 
  If using Python or Qt, you may have to source setup them :
-   sh> py-setup.sh
+   sh> py-setup.sh       # to find the python program of the
+                         # Python installation used at build time.
  (csh> py-setup.csh)
-   sh> Qt-setup.sh
+   sh> Python-setup.sh   # to set PYTHONPATH to find osc_vis plugins.
+ (csh> Python-setup.csh)
+   sh> Qt-setup.sh       # to find the Qt shared libs of the
+                         # Qt installation used at build time.
  (csh> Qt-setup.csh)
 
  ///////////////////////////////////////////////////////////////
