@@ -7,6 +7,11 @@ while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
 
 . ../mgr/build_header
 
+if [ `uname` = Darwin ] ; then
+  cppflags="${cppflags} -I/opt/X11/include"  # to find glu.h
+#  libs="${libs} -L/usr/X11R6/${lib} -lGLU -lGL"
+fi
+
 cppflags="${cppflags} -I../CoinGL/include"
 
 # libs for the apps :
