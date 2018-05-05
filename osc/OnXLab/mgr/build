@@ -3,8 +3,15 @@
 build_args=
 while test $# -ge 1 ; do
   case $1 in
-    -group*) build_group="${1:7}";;
-          *) build_args="${build_args} $1";;
+        -gtk) build_group=gtk;;
+         -Xt) build_group=Xt;;
+         -Xm) build_group=Xt;;
+        -Win) build_group=Win;;
+         -Qt) build_group=Qt;;
+   -NextStep) build_group=NextStep;;
+     -Python) build_group=Python;;
+         -py) build_group=Python;;
+           *) build_args="${build_args} $1";;
   esac
   shift
 done
