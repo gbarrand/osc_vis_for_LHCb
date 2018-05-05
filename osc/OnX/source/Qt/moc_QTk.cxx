@@ -91,15 +91,15 @@ static const uint qt_meta_data_OnX_QOpenGLArea[] = {
        2,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      17,   16,   16,   16, 0x05,
-      39,   16,   16,   16, 0x05,
+      16,   38,   38,   38, 0x05,
+      39,   38,   38,   38, 0x05,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_OnX_QOpenGLArea[] = {
-    "OnX_QOpenGLArea\0\0paint(QCallbackData&)\0"
-    "eventHandler(QCallbackData&)\0"
+    "OnX_QOpenGLArea\0paint(QCallbackData&)\0"
+    "\0eventHandler(QCallbackData&)\0"
 };
 
 void OnX_QOpenGLArea::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -242,16 +242,16 @@ static const uint qt_meta_data_OnX_QColorDialog[] = {
        1,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      18,   17,   17,   17, 0x05,
+      17,   22,   22,   22, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      23,   17,   17,   17, 0x08,
+      23,   22,   22,   22, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_OnX_QColorDialog[] = {
-    "OnX_QColorDialog\0\0ok()\0color_selected()\0"
+    "OnX_QColorDialog\0ok()\0\0color_selected()\0"
 };
 
 void OnX_QColorDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -326,13 +326,13 @@ static const uint qt_meta_data_OnX_QFileDialog[] = {
        1,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      17,   16,   16,   16, 0x05,
+      16,   21,   21,   21, 0x05,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_OnX_QFileDialog[] = {
-    "OnX_QFileDialog\0\0ok()\0"
+    "OnX_QFileDialog\0ok()\0\0"
 };
 
 void OnX_QFileDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -467,16 +467,16 @@ static const uint qt_meta_data_OnX_QMenuItem[] = {
        1,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      15,   14,   14,   14, 0x05,
+      14,   26,   26,   26, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      27,   14,   14,   14, 0x0a,
+      27,   26,   26,   26, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_OnX_QMenuItem[] = {
-    "OnX_QMenuItem\0\0activated()\0execute()\0"
+    "OnX_QMenuItem\0activated()\0\0execute()\0"
 };
 
 void OnX_QMenuItem::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -673,13 +673,13 @@ static const uint qt_meta_data_OnX_QMainWindow[] = {
        1,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      17,   16,   16,   16, 0x05,
+      16,   31,   31,   31, 0x05,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_OnX_QMainWindow[] = {
-    "OnX_QMainWindow\0\0close_window()\0"
+    "OnX_QMainWindow\0close_window()\0\0"
 };
 
 void OnX_QMainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

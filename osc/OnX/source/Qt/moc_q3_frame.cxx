@@ -30,14 +30,14 @@ static const uint qt_meta_data_Q3Frame[] = {
        0,       // signalCount
 
  // properties: name, type, flags
-      12,    8, 0x02095103,
-      25,   19, 0x13095001,
+       8,   15, 0x02095103,
+      19,   32, 0x13095001,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_Q3Frame[] = {
-    "Q3Frame\0int\0margin\0QRect\0contentsRect\0"
+    "Q3Frame\0margin\0int\0contentsRect\0QRect\0"
 };
 
 void Q3Frame::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

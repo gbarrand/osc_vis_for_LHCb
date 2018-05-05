@@ -30,16 +30,16 @@ static const uint qt_meta_data_OnX__QPageViewer[] = {
        3,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      18,   17,   17,   17, 0x05,
-      53,   17,   17,   17, 0x05,
-      77,   17,   17,   17, 0x05,
+      17,   52,   52,   52, 0x05,
+      53,   52,   52,   52, 0x05,
+      77,   52,   52,   52, 0x05,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_OnX__QPageViewer[] = {
-    "OnX::QPageViewer\0\0rectangularCollect(QCallbackData&)\0"
-    "collect(QCallbackData&)\0popup(QCallbackData&)\0"
+    "OnX::QPageViewer\0rectangularCollect(QCallbackData&)\0"
+    "\0collect(QCallbackData&)\0popup(QCallbackData&)\0"
 };
 
 void OnX::QPageViewer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -129,13 +129,14 @@ static const uint qt_meta_data_OnX__QPageViewerPopupCallback[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      31,   30,   30,   30, 0x0a,
+      30,   40,   40,   40, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_OnX__QPageViewerPopupCallback[] = {
-    "OnX::QPageViewerPopupCallback\0\0execute()\0"
+    "OnX::QPageViewerPopupCallback\0execute()\0"
+    "\0"
 };
 
 void OnX::QPageViewerPopupCallback::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

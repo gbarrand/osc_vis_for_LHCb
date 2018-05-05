@@ -30,15 +30,15 @@ static const uint qt_meta_data_QtCallback[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      12,   11,   11,   11, 0x0a,
-      22,   11,   11,   11, 0x0a,
-      47,   11,   11,   11, 0x0a,
+      11,   21,   21,   21, 0x0a,
+      22,   21,   21,   21, 0x0a,
+      47,   21,   21,   21, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_QtCallback[] = {
-    "QtCallback\0\0execute()\0execute2(QCallbackData&)\0"
+    "QtCallback\0execute()\0\0execute2(QCallbackData&)\0"
     "execute3(QTreeWidgetItem*)\0"
 };
 
@@ -110,13 +110,13 @@ static const uint qt_meta_data_OnX__CloseCallback[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      20,   19,   19,   19, 0x0a,
+      19,   29,   29,   29, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_OnX__CloseCallback[] = {
-    "OnX::CloseCallback\0\0execute()\0"
+    "OnX::CloseCallback\0execute()\0\0"
 };
 
 void OnX::CloseCallback::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

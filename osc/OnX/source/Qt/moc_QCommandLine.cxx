@@ -30,16 +30,16 @@ static const uint qt_meta_data_OnX__QCommandLine[] = {
        1,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      19,   18,   18,   18, 0x05,
+      18,   29,   29,   29, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      30,   18,   18,   18, 0x0a,
+      30,   29,   29,   29, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_OnX__QCommandLine[] = {
-    "OnX::QCommandLine\0\0complete()\0execute()\0"
+    "OnX::QCommandLine\0complete()\0\0execute()\0"
 };
 
 void OnX::QCommandLine::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
