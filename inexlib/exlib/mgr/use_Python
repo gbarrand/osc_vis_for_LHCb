@@ -30,11 +30,9 @@ if [ "${use_Python}" = "yes" ] ; then
 
   elif [ `uname` = Darwin ] ; then
 
-    if [ ${build_sdk_mac} = "yes" ] ; then
-      Python_home=${macosx_sdk}/System/Library/Frameworks/Python.framework
-    else
-      Python_home=/System/Library/Frameworks/Python.framework
-    fi
+    #NOTE : since 10.9 (Mavericks) Python is no more in the SDK.
+    
+    Python_home=/opt/local/Library/Frameworks/Python.framework/Versions/2.7
   
     if [ ! -d "${Python_home}" ] ; then
       echo "exlib/mgr/use_Python : WARNING : not found under ${Python_home}"
@@ -43,10 +41,9 @@ if [ "${use_Python}" = "yes" ] ; then
 
     ccflags="${ccflags}   -I${Python_home}/Headers"
     cppflags="${cppflags} -I${Python_home}/Headers"
+    libs="${libs} ${Python_home}/Python"
 
-    libs="${libs} -framework Python"
-
-    py_exe="${Python_home}/Versions/Current/bin/pythonw"
+    py_exe="${Python_home}/bin/pythonw"
 
   elif [ "${lcg_area}" != "" ] ; then
 
@@ -127,9 +124,7 @@ if [ "${use_Python}" = "yes" ] ; then
 
     libs="${libs} -L${Python_home}/${lib} -lpython${Python_vers}"
 
-    #libs="${libs} -L/usr/${lib} -lpthread -lutil"
-
-    py_exe=python
+    py_exe="${Python_home}/bin/python"
 
   fi
 
