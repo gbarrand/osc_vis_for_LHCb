@@ -5,4 +5,11 @@ while test $# -ge 1 ; do build_args="${build_args} $1";shift; done
 
 . ../mgr/build_header
 
+if [ ${build_clang} = "yes" -o ${build_sdk_mac} = "yes" -o ${build_sdk_ios} = "yes" ] ; then
+  # quiet warnings on ./source/jdphuff.c
+  ccflags="${ccflags} -Wno-shift-negative-value"
+  # quiet old clang (for exa 3.4) that does not have the upper warning.
+  ccflags="${ccflags} -Wno-unknown-warning-option"
+fi
+
 . ../mgr/build_generic
