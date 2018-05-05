@@ -1424,7 +1424,17 @@ Gl_histadd(char *buf)
                   char line[BUFSIZ];
 
                   fp = fopen(gl_histfile, "r");
+/*G.Barrand : begin : */
+#ifdef _WIN32
                   if(tmpnam(tname)) {} /*G.Barrand : g++-4.4.1 : if() */
+#else
+                  /*G.Barrand : not tested ! */
+                  strcpy(tname,"/tmp/Getline_XXXXXX");
+                 {int err = mkstemp(tname);
+                  if(err!=-1) close(err); /*success*/
+                  else {/*error*/}}
+#endif
+/*G.Barrand : end */
                   ftmp = fopen(tname, "w");
                   if (fp && ftmp) {
                      int nline = 0;
