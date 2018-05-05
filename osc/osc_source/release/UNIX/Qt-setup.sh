@@ -6,20 +6,9 @@
 
 #set -x
 
-Qt_home="none"
-if [ "`uname -n | grep lxplus`" != "" ] ; then
-  if [ `uname -m` = "x86_64" ] ; then
-    Qt_home="/afs/cern.ch/sw/lcg/external/qt/4.4.2/slc4_amd64_gcc34"
-  else
-    Qt_home="/afs/cern.ch/sw/lcg/external/qt/4.4.2/slc4_ia32_gcc34"
-  fi
-else
-  if [ `uname` = Darwin ] ; then
-    Qt_home=/Library/Frameworks
-  fi
-fi
+Qt_home=none
 
-if [ "${Qt_home}" != "none" ]; then
+if [ -d "${Qt_home}" ]; then
 
 if [ `uname` = "Linux" ]; then
   lib_path="${Qt_home}/lib"
@@ -69,6 +58,8 @@ else
 fi
 unset bin_path
 
+else
+  echo "directory ${Qt_home} not found.'
 fi
 
 unset Qt_home

@@ -7,19 +7,8 @@
 #set verbose
 
 set Qt_home=none
-if ( "`uname -n | grep lxplus`" != "" ) then
-  if ( `uname -m` == "x86_64" ) then
-    set Qt_home="/afs/cern.ch/sw/lcg/external/qt/4.4.2/slc4_amd64_gcc34"
-  else
-    set Qt_home="/afs/cern.ch/sw/lcg/external/qt/4.4.2/slc4_ia32_gcc34"
-  endif
-else
-  if ( `uname` == Darwin ) then
-    set Qt_home=/Library/Frameworks
-  endif
-endif
 
-if ( "${Qt_home}" != "none" ) then
+if ( -d "${Qt_home}" ) then
 
 if ( `uname` == "Linux" ) then
   set lib_path="${Qt_home}/lib"
@@ -63,6 +52,8 @@ endif
 unset bin_curr
 unset bin_path
 
+else
+  echo "directory ${Qt_home} not found.'
 endif
 
 unset Qt_home
