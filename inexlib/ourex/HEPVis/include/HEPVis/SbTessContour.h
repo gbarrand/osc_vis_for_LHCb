@@ -3,6 +3,8 @@
 
 #include <HEPVis/SbGL.h>
 
+#include <inlib/glutess/glutess>
+
 #include <Inventor/SbVec3f.h>
 #include <cstdio> //fprintf
 #include <vector>
@@ -15,12 +17,12 @@ typedef struct {
 
 class SbTessContour {  
 public:
-  inline SbTessContour()
+  SbTessContour()
   :fVertexNumber(0),fBeginType(GL_TRIANGLES),fError(false){}
   virtual ~SbTessContour(){}
 protected:
-  inline SbTessContour(const SbTessContour&){}
-  inline SbTessContour& operator=(const SbTessContour&){return *this;}
+  SbTessContour(const SbTessContour&){}
+  SbTessContour& operator=(const SbTessContour&){return *this;}
 public:
   std::vector<SbTessTriangle> getFilledArea(const std::vector<std::vector<SbVec3f> > aContour) {
     fTriangles.clear();
@@ -31,7 +33,7 @@ public:
 
     ::gluTessCallback(tobj,(GLenum)GLU_TESS_VERTEX_DATA, (Func)vertexCallback);
     ::gluTessCallback(tobj,(GLenum)GLU_TESS_BEGIN_DATA,  (Func)beginCallback);
-    ::gluTessCallback(tobj,(GLenum)GLU_TESS_END,         (Func)endCallback);
+    ::gluTessCallback(tobj,(GLenum)GLU_TESS_END_DATA,    (Func)endCallback);
     ::gluTessCallback(tobj,(GLenum)GLU_TESS_ERROR_DATA,  (Func)errorCallback);
     ::gluTessCallback(tobj,(GLenum)GLU_TESS_COMBINE_DATA,(Func)combineCallback);  
     ::gluTessProperty(tobj,(GLenum)GLU_TESS_WINDING_RULE,GLU_TESS_WINDING_ODD);
@@ -73,12 +75,12 @@ public:
   }
 
 private:  
-  inline void resetVertex() {fVertexNumber = 0;}
-  inline void setBeginType(int aType) {fBeginType = aType;}
-  inline void setError(bool aError) {fError = aError;}
-  inline std::vector<double*>& combineTmps(){return fCombineTmps;}
+  void resetVertex() {fVertexNumber = 0;}
+  void setBeginType(int aType) {fBeginType = aType;}
+  void setError(bool aError) {fError = aError;}
+  std::vector<double*>& combineTmps(){return fCombineTmps;}
 
-  inline void addVertex(const double* vertex) {
+  void addVertex(const double* vertex) {
     // GL_TRIANGLE_STRIP
     // Draws a connected group of triangles. One triangle is defined for each
     // vertex presented after the first two vertices. For odd n, vertices n,
@@ -159,14 +161,14 @@ private:
     }
   }
 private:
-#ifdef WIN32
+#ifdef HEPVIS_USE_STDCALL
   typedef GLvoid(__stdcall *Func)();
 #else
   typedef GLvoid(*Func)();
 #endif
 
-  inline static void 
-#ifdef WIN32
+  static void 
+#ifdef HEPVIS_USE_STDCALL
   __stdcall  
 #endif
   beginCallback(GLenum aWhich,GLvoid * aThis) {
@@ -175,25 +177,27 @@ private:
     This->resetVertex();
   }
 
-  inline static void 
-#ifdef WIN32
+  static void 
+#ifdef HEPVIS_USE_STDCALL
   __stdcall  
 #endif
   errorCallback(GLenum aErrorCode,GLvoid * aThis) {
+#ifdef HEPVIS_USE_NATIVE_GLUTESS
     const GLubyte* estring = gluErrorString(aErrorCode);
     ::fprintf(stderr, "Tessellation Error: %s\n", estring);
     SbTessContour* This = (SbTessContour*)aThis;
     This->setError(true);
+#endif
   }
 
-  inline static void 
-#ifdef WIN32
+  static void 
+#ifdef HEPVIS_USE_STDCALL
   __stdcall  
 #endif
   endCallback(){}
 
-  inline static void 
-#ifdef WIN32
+  static void 
+#ifdef HEPVIS_USE_STDCALL
   __stdcall  
 #endif
   vertexCallback(GLvoid *vertex,GLvoid* aThis) {
@@ -201,8 +205,8 @@ private:
     This->addVertex((double*)vertex);
   }
 
-  inline static void 
-#ifdef WIN32
+  static void 
+#ifdef HEPVIS_USE_STDCALL
   __stdcall  
 #endif
   combineCallback(GLdouble coords[3],
