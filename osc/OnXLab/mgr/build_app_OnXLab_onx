@@ -153,8 +153,8 @@ if [ ${build_app} = "yes" ] ; then
     done    
     /bin/rm -f tmp_0
 
-  else
-    echo "build_app_OnXLab_onx : not build_sdk_mac."
+ #else
+ #  echo "build_app_OnXLab_onx : not build_sdk_mac."
   fi
   fi
 
