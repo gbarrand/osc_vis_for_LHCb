@@ -5,24 +5,14 @@ if [ "${use_Qt}" = "yes" ] ; then
     exit
   fi
 
-  on_lxplus=no
-  if [ "`uname -n | grep lxplus`" != "" ] ; then on_lxplus=yes;  fi
-
-# on_lal_lx=no
-# if [ "`uname -n | grep lal.in2p3.fr | grep lx`" != "" ] ; then
-#   on_lal_lx=yes
-# fi
-# if [ "`uname -n | grep lal.in2p3.fr | grep nemo`" != "" ] ; then
-#   on_lal_lx=yes
-# fi
-
-# on_lal_pc_pano=no
-# if [ "`uname -n`" = pc-89182.lal.in2p3.fr ] ; then on_lal_pc_pano=yes;fi
-
-# on_lal_ubuntu_VirtualBox=no
-# if [ "`uname -n`" = ubuntu-VirtualBox ] ; then
-#   on_lal_ubuntu_VirtualBox=yes
-# fi
+  #/////////////////////////////////////////////////////////////
+  #/// use an lcg installation ? (lxplus or local) /////////////
+  #/// If so, it coworks with the env variable BUILD_CONFIG ////
+  #/////////////////////////////////////////////////////////////
+  lcg_area=
+  if [ "`uname -n | grep lxplus`" != "" ] ; then
+    lcg_area=/cvmfs/lhcb.cern.ch/lib/lcg/releases
+  fi
 
   moc_exe=
    
@@ -69,11 +59,7 @@ if [ "${use_Qt}" = "yes" ] ; then
 
     fi
 
-  elif [ ${on_lxplus} = "yes" ] ; then
-
-   #lcg_area=/afs/cern.ch/sw/lcg/external
-   #lcg_area=/afs/cern.ch/sw/lcg/releases
-    lcg_area=/cvmfs/lhcb.cern.ch/lib/lcg/releases
+  elif [ "${lcg_area}" != "" ] ; then
 
     if   [ "${BUILD_CONFIG}" = "x86_64-slc5-gcc43-opt" ] ; then
       Qt_home="${lcg_area}/qt/4.4.2/x86_64-slc5-gcc43-opt"
