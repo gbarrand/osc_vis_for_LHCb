@@ -58,25 +58,25 @@
  ///////////////////////////////////////////////////////////////
  The exlib/mgr/use_Qt, use_Python are tuned to find Qt
  and Python on the "lcg area" under :
-   /afs/cern.ch/sw/lcg/external/[Python,qt]
+   /cvmfs/lhcb.cern.ch/lib/lcg/releases/[Python,qt]
 
  If "being on lxplus" is detected (by using `uname -n`), then
  the version of Python, Qt used is choosen from a BUILD_CONFIG
  variable that you have to define before launching the build
  for Python, Qt. For example :
-   sh> export BUILD_CONFIG=x86_64-slc5-gcc46-opt
+   sh> export BUILD_CONFIG=x86_64-centos7-gcc62-opt
 
  Obviously you must take care to be on the correct kind of machine,
- then here a 64 bits machine under SLC5, and be sure to use the   
+ then here a 64 bits machine under centos7, and be sure to use the   
  right compiler. Here typing :
    sh> g++ --version
 
- should return you a 4.6.x version. Various version of g++ can
+ should return you a 6.2.x version. Various version of g++ can
  be found under :
-   /afs/cern.ch/sw/lcg/contrib/gcc
+   /cvmfs/sft.cern.ch/lcg/contrib/gcc
 
- For example to setup a 4.6 one under a csh shell, type :
-   csh source /afs/cern.ch/sw/lcg/contrib/gcc/4.6/x86_64-slc5-gcc46-opt/setup.csh
+ For example to setup a 6.2 one under a csh shell, type :
+   csh source /cvmfs/lhcb.cern.ch/lib/lcg/releases/gcc/6.2.0/x86_64-centos7/setup.csh
 
  Under the configs directory some scripts can be found to
  setup both the compiler and BUILD_CONFIG for the configs
