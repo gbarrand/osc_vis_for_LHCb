@@ -41,7 +41,9 @@ SbBool SbSystemIsMacApp(
 #include <string.h> /* strcpy */
 #include <stdlib.h> /* malloc,free */
 
-#define Lib_strdup(str)  ((str) != NULL ? (::strcpy((char*)::malloc((unsigned)::strlen(str) + 1), str)) : (char*)NULL)
+//#define Lib_strdup(str)  ((str) != NULL ? (::strcpy((char*)::malloc((unsigned)::strlen(str) + 1), str)) : (char*)NULL)
+//Linux (ubuntu) : avoid a warning with putenv :
+#define Lib_strdup(str)  (::strcpy((char*)::malloc((unsigned)::strlen(str) + 1), str))
 
 //////////////////////////////////////////////////////////////////////////////
 SbBool SbSystemPutenv(
