@@ -63,6 +63,13 @@ ccflags="${ccflags} -I./include"
 ccflags="${ccflags} -I./include/freetype"
 ccflags="${ccflags} -I./src/builds"
 
+if [ ${build_clang} = "yes" -o ${build_sdk_mac} = "yes" -o ${build_sdk_ios} = "yes" ] ; then
+  # quiet warnings on ./src/cff/cffload.c line 1986 :
+  ccflags="${ccflags} -Wno-shift-negative-value"
+  # quiet old clang (for exa 3.4) that does not have the upper warning.
+  ccflags="${ccflags} -Wno-unknown-warning-option"
+fi
+
 . ${inlib_mgr}/build_compile
 
 fi # end build_compile
