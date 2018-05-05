@@ -154,9 +154,7 @@ if [ "${build_distrib}" = "yes" ] ; then
   packs="${packs} CoinGL HEPVis KUIP"
   packs="${packs} CoinXt gtkglarea CoinGtk CoinQt"
   packs="${packs} freetype expat jpeg png zip zlib"
-  if [ `uname` = Darwin ] ; then
-    packs="${packs} CoinNextStep"
-  fi
+ #if [ `uname` = Darwin ] ; then packs="${packs} CoinNextStep"; fi
   for pack in ${packs} ; do
     sh_lib=${ourex_mgr}/../${pack}/${build_dir}/libourex_${pack}.${shex}
     if [ -f ${sh_lib} ] ; then
@@ -191,12 +189,11 @@ if [ "${build_distrib}" = "yes" ] ; then
   #/////////////////////////////////////////////
   #/// darwin .app : ///////////////////////////
   #/////////////////////////////////////////////
-  if [ `uname` = Darwin ] ; then
-    to="${head}/darwin_app"
-    /bin/mkdir -p ${to}
-    /bin/cp -R ${ourex_mgr}/../CoinNextStep/${build_dir}/test_cube.app ${to}/.
-
-  fi
+ #if [ `uname` = Darwin ] ; then
+ #  to="${head}/darwin_app"
+ #  /bin/mkdir -p ${to}
+ #  /bin/cp -R ${ourex_mgr}/../CoinNextStep/${build_dir}/test_cube.app ${to}/.
+ #fi
 
   #/////////////////////////////////////////////
   #/// save files : ////////////////////////////
