@@ -56,6 +56,12 @@
    csh> source <installation_path>/osc_vis/<version>/setup.csh
    csh> osc-plot
 
+ If using Python or Qt, you may have to source setup them :
+   sh> py-setup.sh
+ (csh> py-setup.csh)
+   sh> Qt-setup.sh
+ (csh> Qt-setup.csh)
+
  ///////////////////////////////////////////////////////////////
  //// Qt, Python on lxplus /////////////////////////////////////
  ///////////////////////////////////////////////////////////////
