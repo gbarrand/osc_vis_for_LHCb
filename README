@@ -6,11 +6,11 @@
    ./build
 
  To build [gtk,Qt,OpenMotif,Python] related code, you may have to customize :  
-   ../../../inexlib/exlib/mgr/use_[gtk,Qt,Xt,Python]
+   ./inexlib/exlib/mgr/use_[gtk,Qt,Xt,Python]
  and then :
    ./build -[gtk,Qt,Xt,Python]
 
- For Qt, Python on lxplus see the special note below.
+ For Qt and Python, on lxplus for a build for LHCb, see the special note below.
 
  To build the release :
    ./build -release
@@ -21,7 +21,7 @@
  To have a trace of what happens (what is compiled, linked), you can type :
    ./build -v
 
- and to be full verbose :
+ and to be fully verbose :
    ./build -x
 
  ///////////////////////////////////////////////////////////////
