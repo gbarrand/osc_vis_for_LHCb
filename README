@@ -1,22 +1,24 @@
 
  ///////////////////////////////////////////////////////////////
- //// build ////////////////////////////////////////////////////
+ //// build osc_vis : //////////////////////////////////////////
  ///////////////////////////////////////////////////////////////
+   cd osc/osc_vis/mgr
+   
  To build code over C lib, STL and OpenGL only :    
    ./build
 
  To build [gtk,Qt,OpenMotif,Python] related code, you may have to customize :  
-   ./inexlib/exlib/mgr/use_[gtk,Qt,Xt,Python]
+   ../../..//inexlib/exlib/mgr/use_[gtk,Qt,Xt,Python]
  and then :
    ./build -[gtk,Qt,Xt,Python]
 
  For Qt and Python, on lxplus for a build for LHCb, see the special note below.
 
  To build the release :
-   ./build -release
+   ./build_release
 
  It produces the zip distribution binary file :
-   ./osc/osc_vis/mgr/bin_[gnu,clang]/distrib/osc_vis-<version>-<platform>-<compiler>.zip
+   ./bin_[gnu,clang]/distrib/osc_vis-<version>-<platform>-<compiler>.zip
 
  To have a trace of what happens (what is compiled, linked), you can type :
    ./build -v
