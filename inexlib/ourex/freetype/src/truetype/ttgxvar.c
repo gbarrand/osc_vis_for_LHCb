@@ -895,7 +895,7 @@
     {
       for ( i = 0;
             i < num_coords && blend->normalizedcoords[i] == coords[i];
-            ++i );
+            ++i ){} /*G.Barrand : replace ';' with {} */
         if ( i == num_coords )
           manageCvt = mcvt_retain;
         else
