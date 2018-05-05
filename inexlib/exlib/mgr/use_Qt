@@ -55,6 +55,18 @@ if [ "${use_Qt}" = "yes" ] ; then
 
       Qt_ld_library_path=none
 
+    elif [ -d /opt/local/libexec/qt4/include/Qt ] ; then
+
+      Qt_home=/opt/local/libexec/qt4
+
+      cppflags="${cppflags} -I${Qt_home}/include"
+
+      libs="${libs} -L${Qt_home}/lib -lQtOpenGL -lQtGUI -lQtCore"
+
+      moc_exe="${Qt_home}/bin/moc"
+
+      #Qt_ld_library_path="${Qt_home}/lib"
+
     fi
 
   elif [ ${on_lxplus} = "yes" ] ; then
@@ -108,6 +120,17 @@ if [ "${use_Qt}" = "yes" ] ; then
     moc_exe="${Qt_home}/bin/moc"
 
     Qt_ld_library_path="${Qt_home}/lib"
+
+  elif [ -d /usr/include/Qt ] ; then
+    Qt_home=/usr
+
+    cppflags="${cppflags} -I${Qt_home}/include/Qt"
+
+    libs="${libs} -L${Qt_home}/lib -lQtOpenGL -lQtGui -lQtCore"
+
+    Qt_ld_library_path="${Qt_home}/lib"
+
+    moc_exe="${Qt_home}/bin/moc-qt4"
 
   fi
 
