@@ -1,5 +1,6 @@
 
 build on ubuntu :
+- ourex/hdf5/src/H5R.c : correct a memset warning.
 - ourex/HEPVis/source/SbSystem.cxx : Lib_strdup : do not check for NULL to avoid a warning on putenv().
 - [osc_vis,OnX,OnXLab]/mgr/build : avoid ${var:<operation>} which is not portable.
 
