@@ -105,7 +105,7 @@
 
   Note that on lxplus, someone can build the Qt driver (./build -Qt),
  but also the gtk2 (./build -gtk) and the Motif (./build -Xt) ones since
- gtk2 and Motif are installed on the system. (And put all together, if displaying
- on a remote machine, Motif is still the fastest!)
+ gtk2 and Motif are installed on the system. (And put all together,
+ if displaying on a remote machine, Motif is still the fastest!)
 
 
