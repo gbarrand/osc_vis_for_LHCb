@@ -1,5 +1,7 @@
 
 build on macOS :
+- inexlib/ourex/HEPVis : SoDblSiStripWedgeDetKit.h, SoSiStripWedgeDetKit.h, SoSiWedgeStrips.h, SoWedge.h :
+  in the header ifndef/define guard, an ending underscore is lacking at end of the ifndef for these files.
 - osc/OnX/souce/Core/Getline.c : see modifs around around tmpnam().
 - inexlib/inlib/inlib/f2cmn : void fitter::mnset : f_inqu() => //f_inqu().
 - inexlib/inlib/inlib/histo/c1d : #define inlib_histo_cld inlib_histo_c1d.
