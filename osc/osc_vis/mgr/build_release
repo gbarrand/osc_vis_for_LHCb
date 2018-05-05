@@ -42,6 +42,26 @@ if [ "${build_distrib}" = "yes" ] ; then
   /bin/cp ../../osc_source/release/UNIX/run_osc_plot ${head}/.
   /bin/cp -R ${exlib_mgr}/configs ${head}/.
 
+  /bin/cp ../../osc_source/release/UNIX/py-setup.csh ${head}/.
+  /bin/cp ../../osc_source/release/UNIX/py-setup.sh  ${head}/.
+  use_Python=yes;. ${exlib_mgr}/use_Python
+  if [ ! -d ${Python_home} ] ; then
+    echo "build_release : variable Python_home points to a non existing directory ${Python_home}."
+  else
+    sed -e "s:none:${Python_home}:g" ${head}/py-setup.csh > ./tmp_0;/bin/mv ./tmp_0 ${head}/py-setup.csh
+    sed -e "s:none:${Python_home}:g" ${head}/py-setup.sh  > ./tmp_0;/bin/mv ./tmp_0 ${head}/py-setup.sh
+  fi
+
+  /bin/cp ../../osc_source/release/UNIX/Qt-setup.csh ${head}/.
+  /bin/cp ../../osc_source/release/UNIX/Qt-setup.sh  ${head}/.
+  use_Qt=yes;. ${exlib_mgr}/use_Qt
+  if [ ! -d ${Qt_home} ] ; then
+    echo "build_release : variable Qt_home points to a non existing directory ${Qt_home}."
+  else
+    sed -e "s:none:${Qt_home}:g" ${head}/Qt-setup.csh > ./tmp_0;/bin/mv ./tmp_0 ${head}/Qt-setup.csh
+    sed -e "s:none:${Qt_home}:g" ${head}/Qt-setup.sh  > ./tmp_0;/bin/mv ./tmp_0 ${head}/Qt-setup.sh
+  fi
+
   #/////////////////////////////////////////////
   #/// Resources : /////////////////////////////
   #/////////////////////////////////////////////
