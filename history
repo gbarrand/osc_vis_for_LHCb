@@ -1,5 +1,6 @@
 
 build on macOS :
+- inexlib/ourex/png/source/pngwutil.c, png.c : fix tautological-pointer-compare warings. See /*G.Barrand*/ comments in the code.
 - inexlib/ourex/zip/source/unzip.c : fix dangling-else warnings. See /*G.Barrand*/ comments in the code.
 - inexlib/ourex/HEPVis : SoDblSiStripWedgeDetKit.h, SoSiStripWedgeDetKit.h, SoSiWedgeStrips.h, SoWedge.h :
   in the header ifndef/define guard, an ending underscore is lacking at end of the ifndef for these files.
