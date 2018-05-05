@@ -2,7 +2,7 @@
 // See the file inlib.license for terms.
 
 #ifndef inlib_histo_c1d
-#define inlib_histo_cld
+#define inlib_histo_c1d
 
 #include "base_cloud"
 
