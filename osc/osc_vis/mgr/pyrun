@@ -1,5 +1,12 @@
 #!/bin/sh -f
 
+#
+# WARNING : the python program must be the one coming from the Python installation
+#           used to build the plugins ([Coin,HEPVis,OnX,OnXLab]_SWIG_Python.so).
+#           You must be aware that multiple python programs may exist on your machine.
+#           On macOS, you must use the "pythonw" program.
+#
+
 version="`./version`"
 
 run_what=
