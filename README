@@ -2,7 +2,7 @@
   This package is the version of the OpenScientist osc_vis used
  by the LHCb/Panoramix event display. Below are instructions to
  build on a local Linux or macOS machine, but also to build on
- lxplus by using the Qt and Python packages used by LHCb which are
+ lxplus by using the Qt and Python packages used by LHCb, which are
  now under:
     /cvmfs/lhcb.cern.ch/lib/lcg/releases/[Python,qt]
 
@@ -39,7 +39,7 @@
  ///////////////////////////////////////////////////////////////
  //// install //////////////////////////////////////////////////
  ///////////////////////////////////////////////////////////////
- To install a binary kit, for example under you home directory,
+  To install a binary kit, for example under you home directory,
  in an existing writable "local" directory :
    cd ~/local
    <get a zip binary kit>
@@ -47,13 +47,13 @@
    cd osc_vis/<version>
    ./install
 
- The ./install script enforces the installation path in the
+  The ./install script enforces the installation path in the
  [aida-]setup.[csh,sh] scripts. You have to execute it once.
 
  ///////////////////////////////////////////////////////////////
  //// use //////////////////////////////////////////////////////
  ///////////////////////////////////////////////////////////////
- After installation, to use the kit you have to "source setup" it
+  After installation, to use the kit you have to "source setup" it
  by sourcing, according your shell, or the setup.sh or the setup.csh
  script. If you have a sh flavoured shell :
    sh> . <installation_path>/osc_vis/<version>/setup.sh
@@ -61,11 +61,11 @@
   (sh> osc-plot -gtk)
   (sh> osc-plot -Xt)
 
- If you have a csh flavoured shell :
+  If you have a csh flavoured shell :
    csh> source <installation_path>/osc_vis/<version>/setup.csh
    csh> osc-plot
 
- If using Qt, you may have to source setup it :
+  If using Qt, you may have to source setup it :
    sh> . ./Qt-setup.sh  # to find the Qt shared libs of the
                         # Qt installation used at build time.
  (csh> source Qt-setup.csh)
@@ -73,14 +73,14 @@
 
  ///////////////////////////////////////////////////////////////
  ///////////////////////////////////////////////////////////////
- To test the graphics with osc-plot :
+  To test the graphics with osc-plot :
   - Choose the Viewer3D tab to have the Inventor decorations.
   - Help => Examples => Examples/AIDA/DLD => Histogram2D/lego plot
   - Play with the thumb wheels.
 
  ///////////////////////////////////////////////////////////////
  ///////////////////////////////////////////////////////////////
- If using Python, you may have to source setup them :
+ If using Python, you may have to source setup it :
    sh> . ./py-setup.sh   # to find the python program of the
                          # Python installation used at build time.
  (csh> source py-setup.csh)
@@ -92,20 +92,25 @@
  (csh> setenv OSC_GUI_TOOLKIT Qt)
    sh> python aida_1.py
 
+ WARNING : the python program must be the one coming from the Python installation
+           used to build the plugins ([Coin,HEPVis,OnX,OnXLab]_SWIG_Python.so).
+           You must be aware that multiple python programs may exist on your machine.
+           On macOS, you must use the "pythonw" program.
+
  ///////////////////////////////////////////////////////////////
  //// Qt, Python on lxplus /////////////////////////////////////
  ///////////////////////////////////////////////////////////////
- The exlib/mgr/use_Qt, use_Python are tuned to find Qt
+  The exlib/mgr/use_Qt, use_Python are tuned to find Qt
  and Python on the "lcg area" under :
    /cvmfs/lhcb.cern.ch/lib/lcg/releases/[Python,qt]
 
- If "being on lxplus" is detected (by using `uname -n`), then
+  If "being on lxplus" is detected (by using `uname -n`), then
  the version of Python, Qt used is choosen from a BUILD_CONFIG
  variable that you have to define before launching the build
  for Python, Qt. For example :
    sh> export BUILD_CONFIG=x86_64-centos7-gcc62-opt
 
- Obviously you must take care to be on the correct kind of machine,
+  Obviously you must take care to be on the correct kind of machine,
  then here a 64 bits machine under centos7, and be sure to use the   
  right compiler. Here typing :
    sh> g++ --version
@@ -114,16 +119,15 @@
  be found under :
    /cvmfs/sft.cern.ch/lcg/contrib/gcc
 
- For example to setup a 6.2 one under a csh shell, type :
+  For example to setup a 6.2 one under a csh shell, type :
    csh source /cvmfs/lhcb.cern.ch/lib/lcg/releases/gcc/6.2.0/x86_64-centos7/setup.csh
 
- Under the configs directory some scripts can be found to
+  Under the configs directory some scripts can be found to
  setup both the compiler and BUILD_CONFIG for the configs
  already known by exlib/mgr/use_[Qt,Python].
 
   Note that on lxplus, someone can build the Qt driver (./build -Qt),
- but also the gtk2 (./build -gtk) and the Motif (./build -Xt) ones since
- gtk2 and Motif are installed on the system. (And put all together,
- if displaying on a remote machine, Motif is still the fastest!)
-
+ but also the gtk2 (./build -gtk) and the OpenMotif (./build -Xt) ones since
+ gtk2 and OpenMotif are installed on the system. (And put all together,
+ if displaying on a remote machine, OpenMotif is still the most effective!)
 
