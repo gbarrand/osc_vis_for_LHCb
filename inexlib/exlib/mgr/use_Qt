@@ -86,6 +86,7 @@ if [ "${use_Qt}" = "yes" ] ; then
       build_use_qt5=yes
     elif [ "${BUILD_CONFIG}" = "LCG_95_gcc7" ] ; then
       Qt_home="${lcg_area}/qt5/5.11.1-88bfc/x86_64-centos7-gcc7-opt"
+      build_use_qt5=yes
     else
       echo 'exlib/mgr/use_Qt : lxplus :'
       echo '  you have to define the BUILD_CONFIG variable, for example :'
