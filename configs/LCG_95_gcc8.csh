@@ -1,2 +1,2 @@
-source /cvmfs/lhcb.cern.ch/lib/lcg/releases/gcc/7.1.0/x86_64-centos7/setup.csh
-setenv BUILD_CONFIG x86_64-centos7-gcc7-opt
+source /cvmfs/lhcb.cern.ch/lib/lcg/releases/gcc/8.2.0-3fa06/x86_64-centos7
+setenv BUILD_CONFIG LCG_95_gcc8
