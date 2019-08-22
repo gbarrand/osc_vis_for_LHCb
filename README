@@ -2,20 +2,22 @@
   This package is the version of the OpenScientist osc_vis used
  by the LHCb/Panoramix event display. Below are instructions to
  build on a local Linux or macOS machine, but also to build on
- lxplus by using the Qt and Python packages used by LHCb, which are
+ lxplus by using the gcc, Qt and Python packages used by LHCb, which are
  now under:
-    /cvmfs/lhcb.cern.ch/lib/lcg/releases/[Python,qt]
+    /cvmfs/lhcb.cern.ch/lib/lcg/releases/[gcc,Python,qt]
 
  ///////////////////////////////////////////////////////////////
  //// build osc_vis : //////////////////////////////////////////
  ///////////////////////////////////////////////////////////////
+   <source setup the desired compiler>
+
    cd osc/osc_vis/mgr
    
  To build code over C lib, STL and OpenGL only :    
    ./build
 
  To build [gtk,Qt,OpenMotif,Python] related code, you may have to customize :  
-   ../../..//inexlib/exlib/mgr/use_[gtk,Qt,Xt,Python]
+   ../../../inexlib/exlib/mgr/use_[gtk,Qt,Xt,Python]
  and then :
    ./build -[gtk,Qt,Xt,Python]
 
