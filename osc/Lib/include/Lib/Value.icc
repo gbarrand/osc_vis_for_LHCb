@@ -3268,6 +3268,7 @@ inline std::string Lib::Value::toString(
     return inlib::tos<bool>(aThis.u.f_array_bool->vector());
   case Slash::Core::IValue::ARRAY_STRING:
     return inlib::tos<std::string>(aThis.u.f_array_string->vector());
-
+  default:
+    return "unknow"; //it should not happen.
   }
 }
