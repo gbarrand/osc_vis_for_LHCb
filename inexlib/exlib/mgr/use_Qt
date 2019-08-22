@@ -15,6 +15,7 @@ if [ "${use_Qt}" = "yes" ] ; then
   fi
 
   moc_exe=
+  build_use_qt5=no
    
   if [ `uname` = Darwin ] ; then
 
@@ -79,6 +80,7 @@ if [ "${use_Qt}" = "yes" ] ; then
       Qt_home="${lcg_area}/qt/4.8.7-0b84e/x86_64-centos7-gcc7-opt"
     elif [ "${BUILD_CONFIG}" = "LCG_95_gcc8" ] ; then
       Qt_home="${lcg_area}/qt5/5.11.1-88bfc/x86_64-centos7-gcc8-opt"
+      build_use_qt5=yes
     else
       echo 'exlib/mgr/use_Qt : lxplus :'
       echo '  you have to define the BUILD_CONFIG variable, for example :'
@@ -92,7 +94,11 @@ if [ "${use_Qt}" = "yes" ] ; then
 
     cppflags="${cppflags} -I${Qt_home}/include"
 
-    libs="${libs} -L${Qt_home}/lib -lQtOpenGL -lQtGui -lQtCore"
+    if [ "${build_use_qt5}" = "yes" ] ; then
+      libs="${libs} -L${Qt_home}/lib64 -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core"
+    else
+      libs="${libs} -L${Qt_home}/lib -lQtOpenGL -lQtGui -lQtCore"
+    fi
 
     moc_exe="${Qt_home}/bin/moc"
 
