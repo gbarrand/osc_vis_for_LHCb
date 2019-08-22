@@ -95,7 +95,7 @@ if [ "${use_Qt}" = "yes" ] ; then
     cppflags="${cppflags} -I${Qt_home}/include"
 
     if [ "${build_use_qt5}" = "yes" ] ; then
-      libs="${libs} -L${Qt_home}/lib64 -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core"
+      libs="${libs} -L${Qt_home}/lib -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core"
     else
       libs="${libs} -L${Qt_home}/lib -lQtOpenGL -lQtGui -lQtCore"
     fi
