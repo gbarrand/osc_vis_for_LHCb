@@ -66,6 +66,9 @@ if [ "${use_Python}" = "yes" ] ; then
     elif [ "${BUILD_CONFIG}" = "x86_64-centos7-gcc7-opt" ] ; then
       Python_vers=2.7
       Python_home="${lcg_area}/Python/2.7.13-597a5/x86_64-centos7-gcc7-opt"
+    elif [ "${BUILD_CONFIG}" = "LCG_95_gcc8" ] ; then
+      Python_vers=2.7
+      Python_home="${lcg_area}/Python/2.7.15-c333c/x86_64-centos7-gcc8-opt"
     else
       echo 'exlib/mgr/use_Python : use an lcg installation :'
       echo '  you have to define the BUILD_CONFIG variable, for example :'
