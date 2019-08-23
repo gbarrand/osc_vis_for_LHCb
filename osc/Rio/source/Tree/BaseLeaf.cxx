@@ -167,7 +167,7 @@ bool Rio::BaseLeaf::stream(
       return false;
     }
 
-    fLeafCount = Rio::cast<BaseLeaf>(*obj);
+    fLeafCount = obj?Rio::cast<BaseLeaf>(*obj):0;
 
     if(!aBuffer.checkByteCount(s,c,fClass.inStoreName())) return false;
     //====end of old versions
