@@ -267,6 +267,13 @@ if [ "${build_distrib}" = "yes" ] ; then
     save_dir=`pwd`
     cd ${build_path}/distrib
     zip -qr ${build_pack}-${version}-${platform}.zip ./${build_pack}
+    
+    if [ "`uname -n | grep lxplus`" != "" ] ; then
+      if [ "${BUILD_CONFIG}" != "" ] ; then
+        zip -qr ${build_pack}-${version}-${BUILD_CONFIG}.zip ./${build_pack}
+      fi
+    fi
+
     cd ${save_dir}
 
   fi
