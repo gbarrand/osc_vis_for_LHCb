@@ -43,7 +43,6 @@ if [ "${use_Qt}" = "yes" ] ; then
       moc_exe="${Qt_home}/bin/moc"
 
       #Qt_ld_library_path="${Qt_home}/lib"
-
       Qt_ld_library_path=none
 
     elif [ -d /opt/local/libexec/qt4/include/Qt ] ; then
@@ -110,6 +109,8 @@ if [ "${use_Qt}" = "yes" ] ; then
 
     Qt_ld_library_path="${Qt_home}/lib"
 
+    Qt_plugin_path="${Qt_home}/plugins"
+   
   elif [ -d /usr/include/qt4 ] ; then
     Qt_home=/usr
 
