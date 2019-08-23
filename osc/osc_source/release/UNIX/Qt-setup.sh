@@ -58,6 +58,13 @@ else
 fi
 unset bin_path
 
+setenv QT_PLUGIN_PATH "${Qt_home}/plugins"
+setenv QT_GRAPHICSSYSTEM_CHECKED 1
+setenv QT_GRAPHICSSYSTEM native
+setenv QTDIR "${Qt_home}"
+setenv QTINC "${Qt_home}/include"
+setenv QTLIB "${Qt_home}/lib"
+
 else
   echo "directory ${Qt_home} not found."
 fi
