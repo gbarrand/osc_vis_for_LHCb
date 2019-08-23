@@ -62,6 +62,21 @@ if [ "${build_distrib}" = "yes" ] ; then
     sed -e "s:none:${Qt_home}:g" ${head}/Qt-setup.sh  > ./tmp_0;/bin/mv ./tmp_0 ${head}/Qt-setup.sh
   fi
 
+  if [ "`uname -n | grep lxplus`" != "" ] ; then
+    if [ "${COMPILER_PATH}" = "" ] ; then
+	echo "build_release : variable COMPILER_PATH not defined. You have to source setup gcc."
+    else	
+      if [ ! -d "${COMPILER_PATH}" ] ; then
+  	echo "build_release : variable COMPILER_PATH points to a non existing directory ${COMPILER_PATH}."
+      else	
+        /bin/cp ../../osc_source/release/UNIX/gcc-setup.csh ${head}/.
+        /bin/cp ../../osc_source/release/UNIX/gcc-setup.sh  ${head}/.
+        sed -e "s:none:${COMPILER_PATH}:g" ${head}/gcc-setup.csh > ./tmp_0;/bin/mv ./tmp_0 ${head}/gcc-setup.csh
+        sed -e "s:none:${COMPILER_PATH}:g" ${head}/gcc-setup.sh  > ./tmp_0;/bin/mv ./tmp_0 ${head}/gcc-setup.sh
+      fi
+    fi
+  fi
+
   #/////////////////////////////////////////////
   #/// Resources : /////////////////////////////
   #/////////////////////////////////////////////
