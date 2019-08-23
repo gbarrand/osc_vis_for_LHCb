@@ -114,7 +114,7 @@ bool Rio::StreamerInfo::stream(
       return false;
     } 
 
-    fElements = Rio::cast<ObjArray>(*obj);
+    fElements = obj?Rio::cast<ObjArray>(*obj):0;
 
     if(!aBuffer.checkByteCount(s,c,fClass.inStoreName())) return false;
   } else {
