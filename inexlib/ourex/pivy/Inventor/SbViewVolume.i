@@ -1,4 +1,5 @@
 %typemap(in) (const SbVec2f& pt, SbVec3f& line0, SbVec3f& line1) {
+  PyObject * obj1 = $input; /*G.Barrand : not checked : add this to pass CoinPython with python3.*/
   if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_SbVec2f,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
   if (arg2 == NULL) {
     PyErr_SetString(PyExc_TypeError,"null reference"); SWIG_fail; 
@@ -18,6 +19,7 @@
 }
 
 %typemap(in) (const SbVec3f& src, SbVec3f& dst) {
+  PyObject * obj1 = $input;  /*G.Barrand : not checked : add this to pass CoinPython with python3.*/
   if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_SbVec3f,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
   if (arg2 == NULL) {
     PyErr_SetString(PyExc_TypeError,"null reference"); SWIG_fail; 
