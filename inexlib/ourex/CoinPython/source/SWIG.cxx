@@ -38,4 +38,14 @@ typedef SoGLLazyElement::GLState GLState;
 #define PyString_AsStringAndSize osc_PyString_AsStringAndSize
 #endif
 
+#if PY_VERSION_HEX >= 0x03000000
+inline PyAPI_FUNC(PyObject *) PyString_FromStringAndSize(const char* a_buffer,Py_ssize_t a_size) {
+#if PY_VERSION_HEX >= 0x03010000
+  return PyUnicode_DecodeUTF8(a_buffer, static_cast< int >(a_size), "surrogateescape");
+#else
+  return PyUnicode_FromStringAndSize(a_buffer, static_cast< int >(a_size));
+#endif
+}
+#endif
+
 #include "SWIG.ic"
