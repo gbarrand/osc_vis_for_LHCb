@@ -3,6 +3,9 @@ export BUILD_CONFIG=LCG97apython3_gcc9
 # gcc :
 .  /cvmfs/sft.cern.ch/lcg/views/LCG_97apython3/x86_64-centos7-gcc9-opt/setup.sh
 
+# gtk :
+export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/usr/lib64/pkgconfig"
+
 # Qt and Python for building are defined for this BUILD_CONFIG in :
 #   inexlib/exlib/mgr/use_Python
 #   inexlib/exlib/mgr/use_Qt
