@@ -46,6 +46,9 @@ inline PyAPI_FUNC(PyObject *) PyString_FromStringAndSize(const char* a_buffer,Py
   return PyUnicode_FromStringAndSize(a_buffer, static_cast< int >(a_size));
 #endif
 }
+//FIXME : what is PyFile_Check and PyFile_AsFile for Python3 ?
+#define PyFile_Check(op) false
+#define PyFile_AsFile(op) 0
 #endif
 
 #include "SWIG.ic"
