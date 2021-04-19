@@ -53,4 +53,26 @@ extern "C" {
 //If wrapping full Inventor too.
 typedef SoGLLazyElement::GLState GLState;
 
+#if PY_VERSION_HEX >= 0x03000000
+//FIXME : what is PyFile_Check and PyFile_AsFile for Python3 ?
+#define PyFile_Check(op) false
+#define PyFile_AsFile(op) 0
+#endif
+
+static void
+convert_SbVec3d_array(PyObject *input, double temp[3])
+{
+  if (PySequence_Check(input) && (PySequence_Size(input) == 3) &&
+      PyNumber_Check(PySequence_GetItem(input, 0)) && 
+      PyNumber_Check(PySequence_GetItem(input, 1)) && 
+      PyNumber_Check(PySequence_GetItem(input, 2))) {
+    temp[0] = PyFloat_AsDouble(PySequence_GetItem(input, 0));
+    temp[1] = PyFloat_AsDouble(PySequence_GetItem(input, 1));
+    temp[2] = PyFloat_AsDouble(PySequence_GetItem(input, 2));
+  } else {
+    PyErr_SetString(PyExc_TypeError, "expected a sequence with 3 doubles");
+    PyErr_Print();
+  } 
+}
+
 #include "HEPVis_SWIG_Python.ic"

@@ -57,6 +57,10 @@ convert_SoMFFloat_array(PyObject *input, int len, float *temp)
 }
 %}
 
+// do not wrap HEPVis_SbTessContout.h because the wrapping code does not compile
+// on the wrapping of inlib/glutess/_tess/GLUtesselator jmp_buf env member.
+#define HEPVis_SbTessContour_h
+
 %include HEPVis_all.i
 
 // Put helpers as extensions :
