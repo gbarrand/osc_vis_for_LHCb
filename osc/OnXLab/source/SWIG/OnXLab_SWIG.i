@@ -311,10 +311,10 @@ AIDA::IAnalysisFactory* find_aida(Slash::Core::ISession& aSession){
   }
 #ifdef SWIGPYTHON
   // From Marcus Mendenhall :
-  %pythoncode {
+  %pythoncode %{
     def smartFind(self, *args, **kwargs):
       return self.find(*args, **kwargs).smartCast()
-  }
+  %}
 #endif
 }
 
@@ -326,8 +326,9 @@ AIDA::IAnalysisFactory* find_aida(Slash::Core::ISession& aSession){
 */
 
 #ifdef SWIGPYTHON
-%pythoncode {
-#print 'debug : OnXLab_SWIG.i'
+%pythoncode %{
+
+#  print 'debug : OnXLab_SWIG.i'
 
 #
 # Script execution context :
@@ -358,19 +359,19 @@ AIDA::IAnalysisFactory* find_aida(Slash::Core::ISession& aSession){
 
 def createAnalysisFactory():
   import OnX
-  #FIXME : OnX could have been started, but the
-  # OnX Python plugin may be not yet activated, so
-  # the below OnX.session is still None...
+  comment = 0 # FIXME : OnX could have been started, but the
+  comment = 0 # OnX Python plugin may be not yet activated, so
+  comment = 0 # the below OnX.session is still None...
   if OnX.session() == None:  # Start from scratch :
     OnX.set_env(OnX.Slash_cout())
-    #FIXME : case of OnX started without OnXPython loaded ?
+    comment = 0 # FIXME : case of OnX started without OnXPython loaded ?
     import OnXLab
     import sys
     args = sys.argv
-    #args.append('-verbose')  
-    # 0 = do not create UI now. 
-    # The UI creation,if needed, is delegated to the plotter factory.
-    # The plotter factory will use the OnXLab/scripts/OnX/Plotter.onx GUI.
+    comment = 0 # args.append('-verbose')  
+    comment = 0 # 0 = do not create UI now. 
+    comment = 0 # The UI creation,if needed, is delegated to the plotter factory.
+    comment = 0 # The plotter factory will use the OnXLab/scripts/OnX/Plotter.onx GUI.
     onxlab_main = OnXLab.Main(args) 
     onxlab_main.loadInterpreter('Python');
     return onxlab_main
@@ -382,7 +383,7 @@ def createAnalysisFactory():
       print 'Found OnX, but there is no AnalysisFactory manager !'
       return None
     
-}
+%}
 #endif
 
 #ifdef SWIGJAVA
