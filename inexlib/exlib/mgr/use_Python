@@ -27,18 +27,36 @@ if [ "${use_Python}" = "yes" ] ; then
 
     #NOTE : since 10.9 (Mavericks) Python is no more in the SDK.
     
-    Python_home=/opt/local/Library/Frameworks/Python.framework/Versions/2.7
+    use_Python3=yes
+   #use_Python3=no
+    if [ "${use_Python3}" = "yes" ] ; then
+      Python3_home=/opt/local/Library/Frameworks/Python.framework/Versions/3.6
+
+      if [ ! -d "${Python3_home}" ] ; then
+        echo "bush/use/Python3 : WARNING : not found under ${Python3_home}"
+        exit
+      fi
+
+      ccflags="${ccflags}   -I${Python3_home}/include/python3.6m"
+      cppflags="${cppflags} -I${Python3_home}/include/python3.6m"
+      libs="${libs} -L${Python3_home}/lib -lpython3.6m"
+
+      py_exe="${Python3_home}/bin/python3.6"
+
+    else
+      Python_home=/opt/local/Library/Frameworks/Python.framework/Versions/2.7
   
-    if [ ! -d "${Python_home}" ] ; then
-      echo "exlib/mgr/use_Python : WARNING : not found under ${Python_home}"
-      exit
+      if [ ! -d "${Python_home}" ] ; then
+        echo "exlib/mgr/use_Python : WARNING : not found under ${Python_home}"
+        exit
+      fi
+
+      ccflags="${ccflags}   -I${Python_home}/Headers"
+      cppflags="${cppflags} -I${Python_home}/Headers"
+      libs="${libs} ${Python_home}/Python"
+
+      py_exe="${Python_home}/bin/pythonw"
     fi
-
-    ccflags="${ccflags}   -I${Python_home}/Headers"
-    cppflags="${cppflags} -I${Python_home}/Headers"
-    libs="${libs} ${Python_home}/Python"
-
-    py_exe="${Python_home}/bin/pythonw"
 
   elif [ "${on_lxplus}" = "yes" ] ; then
 
@@ -121,6 +139,11 @@ if [ "${use_Python}" = "yes" ] ; then
 
   else
 
+    if [ "${use_Python3}" = "yes" ] ; then
+      echo "exlib/mgr/use_Python : Python3 not yet handled on this platform."
+      exit
+    fi
+    
     if [ -f /usr/include/python2.7/Python.h ] ; then
       Python_vers=2.7
       Python_home=/usr
