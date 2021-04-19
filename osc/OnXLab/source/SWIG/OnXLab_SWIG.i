@@ -432,7 +432,7 @@ def createAnalysisFactory():
   AIDA_CAST(IFunction);
 #ifdef SWIGPYTHON
   // From Marcus Mendenhall :
-  %pythoncode {
+  %pythoncode %{
     def smartCast(self):
       for convertor in (
         self.cast_IHistogram1D,
@@ -449,7 +449,7 @@ def createAnalysisFactory():
         a = convertor()
         if a: 
           return a #a non-null value means it worked
-  }
+  %}
 #endif
 }
 
