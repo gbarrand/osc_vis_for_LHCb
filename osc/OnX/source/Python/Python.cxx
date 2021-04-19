@@ -284,7 +284,7 @@ PyObject* sessionPointer(
 
 #if PY_VERSION_HEX >= 0x03000000
   return PyUnicode_FromString(s.c_str());
-#else  
+#else
   return PyString_FromString(s.c_str());
 #endif
 }
