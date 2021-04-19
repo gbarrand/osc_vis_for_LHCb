@@ -129,4 +129,10 @@ static int OnX_PyOS_InputHook(void) {
 #undef DELETE
 #endif
 
+#if PY_VERSION_HEX >= 0x03000000
+//FIXME : what is PyFile_Check and PyFile_AsFile for Python3 ?
+#define PyFile_Check(op) false
+#define PyFile_AsFile(op) 0
+#endif
+
 #include "OnX_SWIG_Python.ic"

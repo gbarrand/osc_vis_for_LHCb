@@ -32,6 +32,7 @@ incs="${incs} -I${ourex_mgr}/../HEPVis/source/SWIG"
 incs="${incs} -I${inlib_mgr}/.."
 incs="${incs} -I${inlib_mgr}/../inlib/histo"
 incs="${incs} -I${inlib_mgr}/../inlib"
+incs="${incs} -I${inlib_mgr}/../inlib/glutess"
 
 incs="${incs} -I../source/SWIG"
 
