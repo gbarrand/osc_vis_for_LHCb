@@ -212,13 +212,13 @@
 }
 
 #ifdef SWIGPYTHON
-%pythoncode {
+%pythoncode %{
 def create_session(a_args = []):
   set_env(Slash_cout())
   session = Slash_create_session(a_args)
   session.loadInterpreter('Python');
   return session
-}
+%}
 #endif
 
 %inline {

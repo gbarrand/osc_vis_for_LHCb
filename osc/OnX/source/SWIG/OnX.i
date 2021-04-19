@@ -65,8 +65,8 @@ void reset_PyOS_InputHook() {
 }
 
 
-%pythoncode {
-#print 'debug : OnX_SWIG_OnX.i'
+%pythoncode %{
+# print 'debug : OnX_SWIG_OnX.i'
 
 def sys_import(aModule):
   import sys
@@ -86,11 +86,11 @@ def xn(aModule,aCount):
     OnX.x(aModule)
 
 def import_py(a_dir,a_name):
-  # Example : OnX.import_py('$ONXROOT/examples/Python','OnX_exa_detector')
+  comment = 0 # Example : OnX.import_py('$ONXROOT/examples/Python','OnX_exa_detector')
   if fmanip.exists(a_name+'.pyc') == 0 : 
-    # Have a local copy of the .py file. 
-    # Else the .pyc may be attempted to be created on a 
-    # non-writable area (for example the one of the release area).
+    comment = 0 # Have a local copy of the .py file. 
+    comment = 0 # Else the .pyc may be attempted to be created on a 
+    comment = 0 # non-writable area (for example the one of the release area).
     if fmanip.exists(a_name+'.py') == 0 : 
       if fmanip.exists(a_dir+'/'+a_name+'.py') == 0 : 
         print 'File '+a_dir+'/'+a_name+'.py does not exist.'
@@ -105,7 +105,7 @@ def import_py(a_dir,a_name):
     else :
       import compiler
       compiler.compileFile(a_name+'.py')
-  sys.path.append('') #THE trick to load from current directory.
+  sys.path.append('') # THE trick to load from current directory.
   sys_import(a_name)
   del sys.path[-1]
 
@@ -124,12 +124,12 @@ def exists(name):
     return 0
 
 def sys2onx():
-  # Use this function to redirect properly the output to the "UI console".  
-  # On some platform (Darwin,Windows), if the OnX::Session redirect 
-  # std[out,err] to session.printer (by using the OnX::Session::stdoutToOnX()
-  # method), the Python output does not follow. Doing a :
-  #   import OnX;OnX.sys2onx() 
-  # on a callback, redirect the Python output properly.
+  comment = 0 # Use this function to redirect properly the output to the "UI console".  
+  comment = 0 # On some platform (Darwin,Windows), if the OnX::Session redirect 
+  comment = 0 # std[out,err] to session.printer (by using the OnX::Session::stdoutToOnX()
+  comment = 0 # method), the Python output does not follow. Doing a :
+  comment = 0 #   import OnX;OnX.sys2onx() 
+  comment = 0 # on a callback, redirect the Python output properly.
   import sys
   sys.stdout = session().printer() 
   sys.stderr = session().printer()
@@ -148,21 +148,21 @@ def session():
   import sys
   try:
     import OnX_PythonManager # could fail if the OnX Python driver not loaded.
-    # The below could fail even if the OnX_PythonManager module exists.
-    # This happens when OnX is deleted. This induces the
-    # destruction of the OnX::PythonManager
-    # that will remove the "sessionPointer" function from
-    # the OnX_PythonManager module dictionary.
+    comment = 0 # The below could fail even if the OnX_PythonManager module exists.
+    comment = 0 # This happens when OnX is deleted. This induces the
+    comment = 0 # destruction of the OnX::PythonManager
+    comment = 0 # that will remove the "sessionPointer" function from
+    comment = 0 # the OnX_PythonManager module dictionary.
     string_session = OnX_PythonManager.sessionPointer()
-    #print string_session
+    comment = 0 #print string_session
     return OnX_cast_ISession(string_session)
   except: # case of OnX having not yet loaded the Python interpreter.
     return None
     
 def ui_parameterValue(aWhat):
-  # Used by palettes that uses Python on their ok callback.
-  # See : OnX::BaseUI::createInputDialog(
+  comment = 0 # Used by palettes that uses Python on their ok callback.
+  comment = 0 # See : OnX::BaseUI::createInputDialog(
   return session().ui().parameterValue(aWhat)
 
-}
+%}
 #endif

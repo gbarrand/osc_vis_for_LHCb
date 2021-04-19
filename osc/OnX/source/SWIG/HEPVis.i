@@ -905,7 +905,7 @@ class SoShell : public SoNode {protected: virtual ~SoShell();public: SoShell();v
 //////////////////////////////////////////////////////////////
 
 #ifdef SWIGPYTHON
-%pythoncode {
+%pythoncode %{
 
 def Utils_initClasses():
   SoLineStyle.initClass()
@@ -944,6 +944,6 @@ def Utils_initClasses():
   #SoCounterAction.initClass()
   SoAlternateRepAction.initClass()
 
-}
+%}
 #endif
 
