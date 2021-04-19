@@ -30,15 +30,13 @@
 
 typedef SoGLLazyElement::GLState GLState;
 
-// G.Barrand : to pass a cast mess with SWIG-1.3.33 and Python-2.5 :
-#if PY_VERSION_HEX > 0x02010000
-# ifndef osc_PyString_AsStringAndSize
-#  define osc_PyString_AsStringAndSize(obj, s, len) {*s = PyString_AsString(obj); *len = *s ? strlen(*s) : 0;}
-# endif
-#define PyString_AsStringAndSize osc_PyString_AsStringAndSize
-#endif
-
 #if PY_VERSION_HEX >= 0x03000000
+inline int PyString_AsStringAndSize(PyObject* obj,char** s,int* len) {
+  Py_ssize_t llen;
+  int status = PyBytes_AsStringAndSize(obj,s,&llen);
+  *len = (int)llen;
+  return status;
+}
 inline PyAPI_FUNC(PyObject *) PyString_FromStringAndSize(const char* a_buffer,Py_ssize_t a_size) {
 #if PY_VERSION_HEX >= 0x03010000
   return PyUnicode_DecodeUTF8(a_buffer, static_cast< int >(a_size), "surrogateescape");
@@ -49,6 +47,13 @@ inline PyAPI_FUNC(PyObject *) PyString_FromStringAndSize(const char* a_buffer,Py
 //FIXME : what is PyFile_Check and PyFile_AsFile for Python3 ?
 #define PyFile_Check(op) false
 #define PyFile_AsFile(op) 0
+#else
+inline int PyString_AsStringAndSize(PyObject* obj,char** s,int* len) {
+  Py_ssize_t llen;
+  int status = PyString_AsStringAndSize(obj,s,&llen);
+  *len = (int)llen;
+  return status;
+}
 #endif
 
 #include "SWIG.ic"
