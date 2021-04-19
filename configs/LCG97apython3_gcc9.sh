@@ -1,4 +1,4 @@
-setenv BUILD_CONFIG LCG97apython3_gcc9
+export BUILD_CONFIG=LCG97apython3_gcc9
 
 # gcc :
 .  /cvmfs/sft.cern.ch/lcg/views/LCG_97apython3/x86_64-centos7-gcc9-opt/setup.sh
