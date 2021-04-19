@@ -70,7 +70,11 @@ public:
     }
     PyEval_InitThreads();
 
+#if PY_VERSION_HEX >= 0x03000000
+    fModuleTag = PyLong_FromVoidPtr(&fSession); 
+#else
     fModuleTag = PyCObject_FromVoidPtr(&fSession,NULL); 
+#endif
     //fModuleTag->ob_refcnt = 1
 
     // See Include/modsupport.h Python/modsupport.c :
@@ -275,9 +279,12 @@ PyObject* sessionPointer(
 {
   //aTag is the PythonManager::fModuleTag object.
 
-  Slash::Core::ISession* session = 
-    (Slash::Core::ISession*)(void*)PyCObject_AsVoidPtr(aTag);
-
+#if PY_VERSION_HEX >= 0x03000000
+  Slash::Core::ISession* session = (Slash::Core::ISession*)(void*)PyLong_AsVoidPtr(aTag);
+#else  
+  Slash::Core::ISession* session = (Slash::Core::ISession*)(void*)PyCObject_AsVoidPtr(aTag);
+#endif
+  
   // The format must be the same than the 
   // OnX.i/OnX_cast_ISession function.
   std::string s = inlib::p2sx(session);
