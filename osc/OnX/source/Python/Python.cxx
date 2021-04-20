@@ -43,7 +43,7 @@ static PyObject* sessionPointer(PyObject*,PyObject*);
 struct module_state {
   PyObject* m_error;
 };
-#define GETSTATE(a__module) ((struct module_state*)PyModule_GetState(a__module))
+#define GETSTATE(a__module) ((struct module_state*)::PyModule_GetState(a__module))
 
 static PyMethodDef module_methods[] = {
   {"sessionPointer", (PyCFunction)sessionPointer, METH_NOARGS, NULL},
