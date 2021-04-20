@@ -48,7 +48,6 @@ cd ${build_path}/distrib/osc_vis/${version}
 #. ./Resources/exlib/mgr/use_Python   # to get py_exe.
 
 . ./py-setup.sh
-py_exe=python
 
 . ./Python-setup.sh
 
@@ -88,7 +87,7 @@ cd ./Resources/AIDA/examples/Python
 options=
 #options=-i
 
-${py_exe} ${options} ${run_what}.py
+${Python_exe} ${options} ${run_what}.py
 
 cd ${OSC_HOME_DIR}
 

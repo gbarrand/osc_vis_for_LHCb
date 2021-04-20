@@ -48,9 +48,13 @@ if [ "${build_distrib}" = "yes" ] ; then
   . ${exlib_mgr}/use_Python
   if [ ! -d ${Python_home} ] ; then
     echo "build_release : variable Python_home points to a non existing directory ${Python_home}."
+  elif [ ! -x ${py_exe} ] ; then
+    echo "build_release : variable py_exe does not point to a python program. py_exe is ${py_exe}"
   else
     sed -e "s:none:${Python_home}:g" ${head}/py-setup.csh > ./tmp_0;/bin/mv ./tmp_0 ${head}/py-setup.csh
     sed -e "s:none:${Python_home}:g" ${head}/py-setup.sh  > ./tmp_0;/bin/mv ./tmp_0 ${head}/py-setup.sh
+    sed -e "s:py_exe:${py_exe}:g" ${head}/py-setup.csh > ./tmp_0;/bin/mv ./tmp_0 ${head}/py-setup.csh
+    sed -e "s:py_exe:${py_exe}:g" ${head}/py-setup.sh  > ./tmp_0;/bin/mv ./tmp_0 ${head}/py-setup.sh
   fi
 
   /bin/cp ../../osc_source/release/UNIX/Qt-setup.csh ${head}/.
