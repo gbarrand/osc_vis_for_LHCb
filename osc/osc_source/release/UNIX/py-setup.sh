@@ -7,6 +7,7 @@
 #set -x
 
 Python_home=none
+Python_exe=py_exe
 
 if [ -d "${Python_home}" ] ; then
     

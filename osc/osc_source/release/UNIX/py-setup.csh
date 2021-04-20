@@ -6,6 +6,7 @@
 
 #set verbose
 set Python_home=none
+set Python_exe=py_exe
 
 if ( -d "${Python_home}" ) then
 
