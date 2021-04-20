@@ -167,12 +167,12 @@ public:
                      << std::endl;
       return;
     }
-#endif    
     //fModule->ob_refcnt = 1 // the first time. 
                              // But may be more if having done 
                              // a "import <moduleName>"
                              // and passed here again.
     //fModuleTag->ob_refcnt = 2
+#endif    
 
     //enableThread();
   }
@@ -343,7 +343,7 @@ PyObject* sessionPointer(
   //aTag is the PythonManager::fModuleTag object.
 
 #if PY_VERSION_HEX >= 0x03000000
-  Slash::Core::ISession* session = (Slash::Core::ISession*)(void*)PyLong_AsVoidPtr(aTag);
+  Slash::Core::ISession* session = (Slash::Core::ISession*)(void*)::PyLong_AsVoidPtr(aTag);
 #else  
   Slash::Core::ISession* session = (Slash::Core::ISession*)(void*)PyCObject_AsVoidPtr(aTag);
 #endif
