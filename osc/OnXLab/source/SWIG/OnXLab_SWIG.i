@@ -380,7 +380,7 @@ def createAnalysisFactory():
       import OnXLab
       return OnXLab.find_aida(OnX.session())
     else:
-      print 'Found OnX, but there is no AnalysisFactory manager !'
+      print('Found OnX, but there is no AnalysisFactory manager !')
       return None
     
 %}
