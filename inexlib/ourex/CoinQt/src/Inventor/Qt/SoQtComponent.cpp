@@ -694,8 +694,11 @@ SoQtComponent::getTitle(void) const
   return
     PRIVATE(this)->captiontext.isNull() ? nullstring : (const char *) PRIVATE(this)->captiontext;
 #else
-  return
-    PRIVATE(this)->captiontext.isNull() ? nullstring : (const char *) PRIVATE(this)->captiontext.toStdString().c_str();
+//G.Barrand : the below line induces a temporary std::string :
+//return PRIVATE(this)->captiontext.isNull() ? nullstring : (const char *) PRIVATE(this)->captiontext.toStdString().c_str();
+  if(PRIVATE(this)->captiontext.isNull()) return nullstring;
+  static std::string _s = PRIVATE(this)->captiontext.toStdString();
+  return _s.c_str();
 #endif
 }
 
@@ -722,7 +725,11 @@ SoQtComponent::getIconTitle(void) const
 #ifdef QT3_SUPPORT //G.Barrand_Qt4 
   return PRIVATE(this)->icontext.isNull() ? nullstring : (const char *)PRIVATE(this)->icontext;
 #else
-  return PRIVATE(this)->icontext.isNull() ? nullstring : (const char *)PRIVATE(this)->icontext.toStdString().c_str();
+//G.Barrand : the below line induces a temporary std::string :
+//return PRIVATE(this)->icontext.isNull() ? nullstring : (const char *)PRIVATE(this)->icontext.toStdString().c_str();
+  if(PRIVATE(this)->icontext.isNull()) return nullstring;
+  static std::string _s = PRIVATE(this)->icontext.toStdString();
+  return _s.c_str();
 #endif
 }
 
@@ -734,8 +741,11 @@ SoQtComponent::getWidgetName(void) const
   return
     PRIVATE(this)->widgetname.isNull() ? nullstring : (const char *)PRIVATE(this)->widgetname;
 #else
-  return
-    PRIVATE(this)->widgetname.isNull() ? nullstring : (const char *)PRIVATE(this)->widgetname.toStdString().c_str();
+//G.Barrand : the below line induces a temporary std::string :
+//return PRIVATE(this)->widgetname.isNull() ? nullstring : (const char *)PRIVATE(this)->widgetname.toStdString().c_str();
+  if(PRIVATE(this)->widgetname.isNull()) return nullstring;
+  static std::string _s = PRIVATE(this)->widgetname.toStdString();
+  return _s.c_str();
 #endif
 }
 
@@ -746,7 +756,10 @@ SoQtComponent::getClassName(void) const
 #ifdef QT3_SUPPORT //G.Barrand_Qt4 
   return (const char *)PRIVATE(this)->classname;
 #else
-  return (const char *)PRIVATE(this)->classname.toStdString().c_str();
+//G.Barrand : the below line induces a temporary std::string :
+//return (const char *)PRIVATE(this)->classname.toStdString().c_str();
+  static std::string _s = PRIVATE(this)->classname.toStdString();
+  return _s.c_str();
 #endif
 }
 
