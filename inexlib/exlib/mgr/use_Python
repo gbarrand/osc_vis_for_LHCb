@@ -33,7 +33,7 @@ if [ "${use_Python}" = "yes" ] ; then
       Python_home=/opt/local/Library/Frameworks/Python.framework/Versions/3.6
 
       if [ ! -d "${Python_home}" ] ; then
-        echo "bush/use/Python3 : WARNING : not found under ${Python_home}"
+        echo "exlib/mgr/use_Python : WARNING : not found under ${Python_home}"
         exit
       fi
 
@@ -169,9 +169,9 @@ if [ "${use_Python}" = "yes" ] ; then
         exit
       fi
 
-      ccflags="${ccflags}   -I${Python3_home}/include/${Python3_version}"
-      cppflags="${cppflags} -I${Python3_home}/include/${Python3_version}"
-      libs="${libs} ${Python3_lib}"
+      ccflags="${ccflags}   -I${Python_home}/include/${Python_version}"
+      cppflags="${cppflags} -I${Python_home}/include/${Python_version}"
+      libs="${libs} ${Python_lib}"
     
     else 
       if [ -f /usr/include/python2.7/Python.h ] ; then
