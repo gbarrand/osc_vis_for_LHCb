@@ -350,7 +350,11 @@ static bool do_child(QTreeWidget& a_tree,QTreeWidgetItem& a_item,const std::vect
     QTreeWidgetItem* item = a_item.child(index);
     if(item->text(0).toStdString()!=slevel) continue;
     if(a_level==(a_sel.size()-1)) { //leaf
+#if QT_VERSION < 0x050000
       a_tree.setItemSelected(item,true);
+#else
+      item->setSelected(true);
+#endif
       return true;
     }
     if(!item->childCount()) return false;
