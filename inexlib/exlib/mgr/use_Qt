@@ -116,6 +116,22 @@ if [ "${use_Qt}" = "yes" ] ; then
 
     Qt_plugin_path="${Qt_home}/plugins"
    
+  elif [ -d /usr/include/qt5 ] ; then  #ostackc
+    Qt_home=/usr
+
+    Qt_inc="${Qt_home}/include/qt5"
+
+    cppflags="${cppflags} -I${Qt_inc}"
+
+    libs="${libs} -L${Qt_home}/lib64 -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core"
+
+    Qt_ld_library_path="${Qt_home}/lib64"
+
+    moc_exe="${Qt_home}/lib64/qt5/bin/moc"
+
+    # run time : may have to :
+    #   UNIX> setenv QT_XKB_CONFIG_ROOT /usr/lib/kbd/keymaps/xkb
+
   elif [ -d /usr/include/x86_64-linux-gnu/qt5 ] ; then  #ostackess.
     Qt_home=/usr
 
@@ -123,11 +139,6 @@ if [ "${use_Qt}" = "yes" ] ; then
     Qt_lib="${Qt_home}/lib/x86_64-linux-gnu"
 
     cppflags="${cppflags} -I${Qt_inc}"
-
-    items="Qt53DCore Qt53DRenderer Qt53DExtras"
-    for item in ${items} ; do
-      if [ -f ${Qt_lib}/lib${item}.so ] ; then libs="${libs} ${Qt_lib}/lib${item}.so";fi
-    done
 
     libs="${libs} ${Qt_lib}/libQt5OpenGL.so"
     libs="${libs} ${Qt_lib}/libQt5Widgets.so"
