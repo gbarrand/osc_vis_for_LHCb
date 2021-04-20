@@ -376,7 +376,7 @@ int exec_single_cmd( const char *cmd_line,
 
   if( (p = strchr( line, '=' )) != NULL ) {
     /* variable assignment */
-    char *name = strtrim( strndup( line, p - line ) );
+    char *name = strtrim( kuip_strndup( line, p - line ) );
 
     if( khash_lookup( kc_alias.global_value, name, NULL ) != NULL ) {
       char *value = ku_expr( p + 1 );
@@ -775,7 +775,7 @@ int valid_option( KmParameter *par,
   int valid = 1;
 
   if( par->range_count > 0 ) {  /* accept everything if no range defined */
-    char *options = strupper( strndup( opt_string, len_opt_string ) );
+    char *options = strupper( kuip_strndup( opt_string, len_opt_string ) );
     int maxlen = mstrlen( par->range_value, par->range_count );
     int n;
 
@@ -1113,7 +1113,7 @@ int fill_arg_list( KmCommand *cmd,
       }
 
       if( argv != NULL )
-        alloced_argv = clean_word( strndup( argv, len_argv ) );
+        alloced_argv = clean_word( kuip_strndup( argv, len_argv ) );
       else
         alloced_argv = NULL;
 

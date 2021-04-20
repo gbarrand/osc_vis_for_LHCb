@@ -674,7 +674,7 @@ char *extract_word( const char *line,
         n++;
     }
   }
-  return strndup( p, n );
+  return kuip_strndup( p, n );
 }
 
 
@@ -1129,9 +1129,9 @@ char *repl_exec( const char *line )
     else if( !quoted && strncasecmp( p, "$EXEC(", 6 ) == 0
             && (n = match_paren( p )) > 0 ) {
 
-      char *args = clean_word( strndup( p + 6, n - 7 ) );
+      char *args = clean_word( kuip_strndup( p + 6, n - 7 ) );
       char *cmd = str2dup( "EXEC ", args );
-      char *new_line = strndup( line, p - line );
+      char *new_line = kuip_strndup( line, p - line );
       char *old_value = strdup(khash_lookup( kc_alias.var_table, "@", NULL ) );
       char *value;
 
@@ -1352,7 +1352,7 @@ int kmathlex()
       if( pline[n] == '\'' ) {
         quoted = !quoted;
         if( !quoted && pline[n+1] != '\'' ) {
-          str = strndup( &pline[kline+1], n - kline - 1 );
+          str = kuip_strndup( &pline[kline+1], n - kline - 1 );
           break;
         }
       }
@@ -1384,7 +1384,7 @@ int kmathlex()
 
         if( --paren == 0 ) {
           int len = p - &pline[kline] + 1;
-          char *name = strndup( &pline[kline], len );
+          char *name = kuip_strndup( &pline[kline], len );
           char *value = var_value( name );
           free( name );
 
@@ -1460,7 +1460,7 @@ int kmathlex()
   /* alias names */
   n = len_alias( pline + kline, (kline > 0) ? pline[kline-1] : '\0' );
   if( n > 0 ) {
-    char *name = strndup( &pline[kline], n );
+    char *name = kuip_strndup( &pline[kline], n );
     if( (p = subst_arg_alias( name )) != NULL ) {
       free( name );
       kline += n;
@@ -1482,7 +1482,7 @@ int kmathlex()
   if( !nonum ) {
     n = len_vector( pline + kline );
     if( n > 0 ) {
-      char *name = strndup( &pline[kline], n );
+      char *name = kuip_strndup( &pline[kline], n );
       if( ku_vtype( name ) != 0 ) {
         /*
          * test if name is followed by '('
@@ -1554,7 +1554,7 @@ int kmathlex()
           int len = match_paren( pline + k );
 
           if( len > 0 ) {
-            char *expr = strndup( pline + k + 1, len - 2 );
+            char *expr = kuip_strndup( pline + k + 1, len - 2 );
 
             if( (p = subst_arg_alias( expr )) != NULL ) {
               free( expr );
@@ -1570,7 +1570,7 @@ int kmathlex()
             }
 
             if( fun[i].val == INLINE ) {
-              p = strndup( pline, kline );
+              p = kuip_strndup( pline, kline );
               p = mstrcat( p, expr );
               free( expr );
               p = mstrcat( p, pline + k + len );
@@ -1615,7 +1615,7 @@ int kmathlex()
   /* system functions without arguments */
   if( c == '$' ) {
     if( (n = len_sysfun( pline + kline + 1 )) > 0 ) {
-      char *name = strndup( pline + kline, n + 1 );
+      char *name = kuip_strndup( pline + kline, n + 1 );
       char *value = repl_sysfun( name, 0 );
       free( name );
       if( value != NULL ) {
@@ -1639,7 +1639,7 @@ int kmathlex()
   while( strchr( " =,)[", pline[kline+n] ) == NULL )
     n++;
 
-  str = strupper( strndup( pline + kline, n ) );
+  str = strupper( kuip_strndup( pline + kline, n ) );
 
   /* check that there is no operator before the end of the string */
   for( i = 0; i < (sizeof op) / sizeof( struct tokens ); i++ ) {
@@ -1650,7 +1650,7 @@ int kmathlex()
   n = strlen( str );
   free( str );
 
-  kmathlval.sval = strndup( &pline[kline], n );
+  kmathlval.sval = kuip_strndup( &pline[kline], n );
   kline += n;
   return STRING;
 }

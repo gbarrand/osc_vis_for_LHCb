@@ -98,7 +98,7 @@ size_t fstrlen( const char *str,
 char *fstrdup( const char *str,
               size_t len )
 {
-  return strndup( str, fstrlen( str, len ) );
+  return kuip_strndup( str, fstrlen( str, len ) );
 }
 
 
@@ -111,7 +111,7 @@ char *fstr0dup( const char *str,
   size_t n = fstrlen( str, len );
   if( n == 0 )
     return NULL;
-  return strndup( str, n );
+  return kuip_strndup( str, n );
 }
 
 
@@ -564,7 +564,7 @@ char *str0dup( const char *str )
 /*
  * like strdup() but string is n characters long and not terminated
  */
-char *strndup( const char *str,
+char *kuip_strndup( const char *str,
               size_t len )
 {
   size_t bytes = len + 1;
@@ -860,7 +860,7 @@ char *struntab( char *line )
 
   while( (p = strchr( line, '\t' )) != NULL ) {
     int n = p - line;
-    char *newline = strndup( line, n );
+    char *newline = kuip_strndup( line, n );
     newline = mstrccat( newline, ' ', 8 - n % 8 );
     newline = mstrcat( newline, p + 1 );
     free( line );

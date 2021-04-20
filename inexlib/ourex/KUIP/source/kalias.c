@@ -309,7 +309,7 @@ char *repl_alias( const char *line )
 
     /* isolate the possible alias name */
     if( len > 0 ) {
-      char *name = strndup( p, len );
+      char *name = kuip_strndup( p, len );
       char *value = khash_lookup( kc_alias.arg_table, name, NULL );
 
       free( name );
@@ -322,7 +322,7 @@ char *repl_alias( const char *line )
            && p[-3] != '\'' && p[-3] != ' ' )
           lhead -= 2;
 
-        return mstr2cat( strndup( line, lhead ), value, p + len );
+        return mstr2cat( kuip_strndup( line, lhead ), value, p + len );
       }
       p += len - 1;
     }
@@ -344,7 +344,7 @@ char *repl_alias( const char *line )
 char *var_value( const char *var )
 {
   int n = strlen( var );
-  char *name = strndup( var + 1, n - 2 );
+  char *name = kuip_strndup( var + 1, n - 2 );
   char *value;
   char *p;
 
@@ -431,11 +431,11 @@ char *repl_variable( line )
 
           if( --paren == 0 ) {
             int len = name_end - p + 1;
-            char *name = strndup( p, len );
+            char *name = kuip_strndup( p, len );
             char *value = var_value( name );
 
             if( strcmp( name, value ) != 0 ) {
-              char *new_line = strndup( line, p - line );
+              char *new_line = kuip_strndup( line, p - line );
               value = quote_string( value, 0 );
               new_line = mstr2cat( new_line, value, p + len );
               free( name );
@@ -684,7 +684,7 @@ char *repl_sysfun( line, eval )
           int arglen = match_paren( p );
 
           if( arglen > 0 ) {
-            char *expr = strndup( p, arglen );
+            char *expr = kuip_strndup( p, arglen );
             int is_eval = (strncasecmp( p + 1, "EVAL", len ) == 0);
             int is_unquote = (strncasecmp( p + 1, "UNQUOTE", len ) == 0);
 
@@ -704,7 +704,7 @@ char *repl_sysfun( line, eval )
 
         if( value == NULL && kc_flags.try_getenv ) {
           /* try $var as environment variable */
-          char *name = strndup( p + 1, len );
+          char *name = kuip_strndup( p + 1, len );
           char *env = getenv( name );
           /*
            * Note that on VMS getenv searches uppercase names first in the
@@ -723,7 +723,7 @@ char *repl_sysfun( line, eval )
 #endif
         }
         if( value != NULL ) {
-          char *new_line = strndup( line, p - line );
+          char *new_line = kuip_strndup( line, p - line );
           new_line = mstr2cat( new_line, value, p + len + 1 );
           free( value );
           return new_line;

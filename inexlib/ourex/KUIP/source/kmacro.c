@@ -556,7 +556,7 @@ char *arg_value( value, in_parm  )
           i++;
         }
         else {
-          char *nvalue = strndup( value, i + 1 );
+          char *nvalue = kuip_strndup( value, i + 1 );
           nvalue = mstr2cat( nvalue, "'", value + i + 1 );
           free( value );
           value = nvalue;
@@ -1200,7 +1200,7 @@ KumacStatement parse_statement( line )
 
     p = strchr( line, '=' );
     stmt = ASSIGNMENT_Statement;
-    stmt_arg1 = strtrim( strndup( line, p - line ) );
+    stmt_arg1 = strtrim( kuip_strndup( line, p - line ) );
     stmt_arg2 = strtrim( strdup( p + 1 ) );
   }
 
@@ -1210,7 +1210,7 @@ KumacStatement parse_statement( line )
 
     if( strcasecmp( line + n - 5, " THEN" ) == 0 ) {
 
-      stmt_arg1 = strtrim( strndup( line + len1 + 1, n - len1 - 6 ) );
+      stmt_arg1 = strtrim( kuip_strndup( line + len1 + 1, n - len1 - 6 ) );
 
       if( stmt_arg1[0] == '\0' ) {
         print_error( "IF-THEN statement without expression", NULL );
@@ -1285,7 +1285,7 @@ KumacStatement parse_statement( line )
       stmt_arg1 = strtrim( strdup( line + len1 + 1 ) );
     }
     else {
-      stmt_arg1 = strtrim( strndup( line + len1 + 1, n - len1 - 6 ) );
+      stmt_arg1 = strtrim( kuip_strndup( line + len1 + 1, n - len1 - 6 ) );
     }
 
     if( stmt_arg1[0] == '\0' ) {
@@ -1323,7 +1323,7 @@ KumacStatement parse_statement( line )
       stmt_arg1 = strtrim( strdup( line + len1 + 1 ) );
     }
     else {
-      stmt_arg1 = strtrim( strndup( line + len1 + 1, n - len1 - 4 ) );
+      stmt_arg1 = strtrim( kuip_strndup( line + len1 + 1, n - len1 - 4 ) );
     }
 
     if( stmt_arg1[0] == '\0' ) {
@@ -1379,7 +1379,7 @@ KumacStatement parse_statement( line )
       int paren = 0;
 
       stmt = DO_Statement;
-      stmt_arg1 = strtrim( strndup( line + len1 + 1, p - line - len1 - 1 ) );
+      stmt_arg1 = strtrim( kuip_strndup( line + len1 + 1, p - line - len1 - 1 ) );
 
       stmt_arg2 = strdup( p + 1 );
       for( n = 0; stmt_arg2[n] != '\0'; n++ ) {
@@ -1540,7 +1540,7 @@ KumacStatement parse_statement( line )
       else {
         n -= 3;
       }
-      stmt_arg1 = strtrim( strndup( line + len1 + 1, n - len1 - 1 ) );
+      stmt_arg1 = strtrim( kuip_strndup( line + len1 + 1, n - len1 - 1 ) );
       if( stmt_arg1[0] == '\0' ) {
         print_error( "WHILE statement with empty expression", NULL );
         stmt = SYNTAX_ERROR;
@@ -1621,7 +1621,7 @@ KumacStatement parse_statement( line )
     /* target label */
 
     stmt = GOTO_Label;
-    stmt_arg1 = strndup( tok1, len1 - 1 );
+    stmt_arg1 = kuip_strndup( tok1, len1 - 1 );
     if( tok2 != NULL )
       stmt_arg2 = strtrim( strdup( line + len1 ) );
   }
@@ -1884,7 +1884,7 @@ KumacStatement next_statement( stream, macro )
 
     if( *tail == '&' || *tail == '!' ) {
       /* flag "cmd1 ;& cmd2" or "cmd1 ;! cmd2 */
-      stmt_arg2 = strndup( tail++, 1 );
+      stmt_arg2 = kuip_strndup( tail++, 1 );
       while( *tail == ' ' )
         tail++;
     }

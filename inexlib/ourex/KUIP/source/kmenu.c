@@ -2000,7 +2000,7 @@ char *fmt_cmd_help( KmCommand *cmd,
         type = "C";
       }
 
-      pbuf = strndup( par->name, par->abbrev );
+      pbuf = kuip_strndup( par->name, par->abbrev );
       if( par->abbrev != lname ) {
         pbuf = mstr2cat( pbuf, "*", par->name + par->abbrev );
         lname++;

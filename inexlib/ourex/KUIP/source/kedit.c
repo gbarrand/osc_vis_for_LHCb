@@ -904,13 +904,13 @@ int kxprint()
                             kc_value.set_print_cmds[i], "'" );
         char *p;
         while( (p = strstr( cmd, "$*" )) != NULL ) {
-          char *newcmd = strndup( cmd, p - cmd );
+          char *newcmd = kuip_strndup( cmd, p - cmd );
           newcmd = mstr2cat( newcmd, file, p + 2 );
           free( cmd );
           cmd = newcmd;
         }
         while( (p = strstr( cmd, "$-" )) != NULL ) {
-          char *newcmd = strndup( cmd, p - cmd );
+          char *newcmd = kuip_strndup( cmd, p - cmd );
           newcmd = mstrncat( newcmd, file, file_end - file - n );
           newcmd = mstrcat( newcmd, p + 2 );
           free( cmd );
@@ -1096,7 +1096,7 @@ int kxmlist()
         break;
       }
       else {
-        char *mpath = strndup( match_dsc.dsc$a_pointer,
+        char *mpath = kuip_strndup( match_dsc.dsc$a_pointer,
                               match_dsc.dsc$w_length );
         kprintf( " %s\n", mpath );
         free( mpath );
