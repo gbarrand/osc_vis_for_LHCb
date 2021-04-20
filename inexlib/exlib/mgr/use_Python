@@ -139,34 +139,66 @@ if [ "${use_Python}" = "yes" ] ; then
 
   else
 
+   #use_Python3=yes
+    use_Python3=no
     if [ "${use_Python3}" = "yes" ] ; then
-      echo "exlib/mgr/use_Python : Python3 not yet handled on this platform."
-      exit
-    fi
     
-    if [ -f /usr/include/python2.7/Python.h ] ; then
-      Python_vers=2.7
-      Python_home=/usr
-    elif [ -f /usr/include/python2.6/Python.h ] ; then
-      Python_vers=2.6
-      Python_home=/usr
-    elif [ -f /usr/include/python2.5/Python.h ] ; then
-      Python_vers=2.5
-      Python_home=/usr
-    elif [ -f /usr/include/python2.4/Python.h ] ; then
-      Python_vers=2.4
-      Python_home=/usr
-    else
-      echo "exlib/mgr/use_Python : Python 2.[7,6,5,4] not found."
-      exit
+      if [ -d /usr/local/Python/3.6.6 ] ; then  #ostackc
+        Python_home=/usr/local/Python/3.6.6
+        Python_version=python3.6m
+        Python_lib="-L${Python_home}/lib -lpython3.6m"
+        Python_ld_library_path="${Python_home}/lib"
+        py_exe="${Python_home}/bin/python3.6"
+
+      elif [ -d /usr/include/python3.4m ] ; then  #ostacku
+        Python_home=/usr
+        Python_version=python3.4m
+        Python_lib="-L${Python_home}/lib/x86_64-linux-gnu -lpython3.4m"
+        Python_ld_library_path="${Python_home}/lib/x86_64-linux-gnu"
+        py_exe="${Python_home}/bin/python3.4m"
+
+      elif [ -d /usr/include/python3.5m ] ; then  #ostackess
+        Python_home=/usr
+        Python_version=python3.5m
+        Python_lib="-L${Python_home}/lib/x86_64-linux-gnu -lpython3.5m"
+        Python_ld_library_path="${Python_home}/lib/x86_64-linux-gnu"
+        py_exe="${Python_home}/bin/python3.5m"
+
+      else      
+        echo "exlib/mgr/use_Python : Python3 not found."
+        exit
+      fi
+
+      ccflags="${ccflags}   -I${Python3_home}/include/${Python3_version}"
+      cppflags="${cppflags} -I${Python3_home}/include/${Python3_version}"
+      libs="${libs} ${Python3_lib}"
+    
+    else 
+      if [ -f /usr/include/python2.7/Python.h ] ; then
+        Python_vers=2.7
+        Python_home=/usr
+      elif [ -f /usr/include/python2.6/Python.h ] ; then
+        Python_vers=2.6
+        Python_home=/usr
+      elif [ -f /usr/include/python2.5/Python.h ] ; then
+        Python_vers=2.5
+        Python_home=/usr
+      elif [ -f /usr/include/python2.4/Python.h ] ; then
+        Python_vers=2.4
+        Python_home=/usr
+      else
+        echo "exlib/mgr/use_Python : Python 2.[7,6,5,4] not found."
+        exit
+      fi
+      
+      ccflags="${ccflags}   -I${Python_home}/include/python${Python_vers}"
+      cppflags="${cppflags} -I${Python_home}/include/python${Python_vers}"
+
+      libs="${libs} -L${Python_home}/${lib} -lpython${Python_vers}"
+
+      py_exe="${Python_home}/bin/python"
+
     fi
-
-    ccflags="${ccflags}   -I${Python_home}/include/python${Python_vers}"
-    cppflags="${cppflags} -I${Python_home}/include/python${Python_vers}"
-
-    libs="${libs} -L${Python_home}/${lib} -lpython${Python_vers}"
-
-    py_exe="${Python_home}/bin/python"
 
   fi
 
