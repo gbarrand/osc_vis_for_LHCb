@@ -139,8 +139,8 @@ if [ "${use_Python}" = "yes" ] ; then
 
   else
 
-   #use_Python3=yes
-    use_Python3=no
+    use_Python3=yes
+   #use_Python3=no
     if [ "${use_Python3}" = "yes" ] ; then
     
       if [ -d /usr/local/Python/3.6.6 ] ; then  #ostackc
