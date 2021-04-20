@@ -116,6 +116,28 @@ if [ "${use_Qt}" = "yes" ] ; then
 
     Qt_plugin_path="${Qt_home}/plugins"
    
+  elif [ -d /usr/include/x86_64-linux-gnu/qt5 ] ; then  #ostackess.
+    Qt_home=/usr
+
+    Qt_inc="${Qt_home}/include/x86_64-linux-gnu/qt5"
+    Qt_lib="${Qt_home}/lib/x86_64-linux-gnu"
+
+    cppflags="${cppflags} -I${Qt_inc}"
+
+    items="Qt53DCore Qt53DRenderer Qt53DExtras"
+    for item in ${items} ; do
+      if [ -f ${Qt_lib}/lib${item}.so ] ; then libs="${libs} ${Qt_lib}/lib${item}.so";fi
+    done
+
+    libs="${libs} ${Qt_lib}/libQt5OpenGL.so"
+    libs="${libs} ${Qt_lib}/libQt5Widgets.so"
+    libs="${libs} ${Qt_lib}/libQt5Gui.so"
+    libs="${libs} ${Qt_lib}/libQt5Core.so"
+
+    Qt_ld_library_path="${Qt_lib}"
+
+    moc_exe="${Qt_home}/lib/x86_64-linux-gnu/qt5/bin/moc"
+
   elif [ -d /usr/include/qt4 ] ; then
     Qt_home=/usr
 
