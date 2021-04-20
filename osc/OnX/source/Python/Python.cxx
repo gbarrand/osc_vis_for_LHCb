@@ -32,12 +32,56 @@ void OnXPythonFinalize(Slash::Core::ISession&);
 
 #include <Python.h>
 
-// WARNING : take care that the below functions be no more
-//  used when the DLL will be closed.
-static bool python_Function(const std::string&,const Slash::UI::IInterpreter::Options&,const Slash::UI::IInterpreter::Aliases&,void*);
 extern "C" {
 static PyObject* sessionPointer(PyObject*,PyObject*);
 }
+
+//////////////////////////////////////////////////////////////////////////////
+/// python3 : ////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+#if PY_VERSION_HEX >= 0x03000000
+struct module_state {
+  PyObject* m_error;
+};
+#define GETSTATE(a__module) ((struct module_state*)PyModule_GetState(a__module))
+
+static PyMethodDef module_methods[] = {
+  {"sessionPointer", (PyCFunction)sessionPointer, METH_NOARGS, NULL},
+  {NULL,NULL,METH_NOARGS,NULL}
+};
+
+static int module_traverse(PyObject* a_module,visitproc visit,void* arg) {
+  Py_VISIT(GETSTATE(a_module)->m_error);
+  return 0;
+}
+
+static int module_clear(PyObject* a_module) {
+  Py_CLEAR(GETSTATE(a_module)->m_error);
+  return 0;
+}
+
+
+static struct PyModuleDef module_def = {
+  PyModuleDef_HEAD_INIT,
+  "OnX_PythonManager",
+  NULL,
+  sizeof(struct module_state),
+  module_methods,
+  NULL,
+  module_traverse,
+  module_clear,
+  NULL
+};
+
+#endif
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+
+// WARNING : take care that the below functions be no more
+//  used when the DLL will be closed.
+static bool python_Function(const std::string&,const Slash::UI::IInterpreter::Options&,const Slash::UI::IInterpreter::Aliases&,void*);
 
 namespace OnX {
 
@@ -54,7 +98,9 @@ public:
   :fName("PythonManager")
   ,fSession(aSession)
   ,fInitedByOnX(false)
+#if PY_VERSION_HEX < 0x03000000
   ,fMethods(0)
+#endif   
   ,fModuleTag(0)
   ,fModule(0)
   //,fThreadState(0)
@@ -71,12 +117,25 @@ public:
     PyEval_InitThreads();
 
 #if PY_VERSION_HEX >= 0x03000000
-    fModuleTag = PyLong_FromVoidPtr(&fSession); 
-#else
-    fModuleTag = PyCObject_FromVoidPtr(&fSession,NULL); 
-#endif
+    fModuleTag = ::PyLong_FromVoidPtr(&fSession);
+    
+    fModule = ::PyModule_Create(&module_def);
+    if(fModule==NULL) {
+      fSession.out() << "OnX::PythonManager::PythonManager :"
+                     << " PyModule_Create() failed." 
+                     << std::endl;
+      return;
+    }
+   {struct module_state* state = GETSTATE(fModule);
+    state->m_error = ::PyErr_NewException("OnX_PythonManager.Error", NULL, NULL);
+    if (state->m_error == NULL) {
+      Py_DECREF(fModule);
+      return;
+    }}
+#else    
+    fModuleTag = PyCObject_FromVoidPtr(&fSession,NULL);
     //fModuleTag->ob_refcnt = 1
-
+    
     // See Include/modsupport.h Python/modsupport.c :
     //FIXME : module should be suffixed by some Slash::Core::ISession::name().
     std::string moduleName("OnX_PythonManager");     
@@ -108,6 +167,7 @@ public:
                      << std::endl;
       return;
     }
+#endif    
     //fModule->ob_refcnt = 1 // the first time. 
                              // But may be more if having done 
                              // a "import <moduleName>"
@@ -128,7 +188,9 @@ public:
       if(fModule) {
         PyObject* d = PyModule_GetDict(fModule);
         if(d) {
+#if PY_VERSION_HEX < 0x03000000
           PyDict_DelItemString(d,fMethods[0].ml_name);
+#endif
         }
         //Py_DECREF(fModule); //We are not the creator.
         fModule = 0;
@@ -137,9 +199,11 @@ public:
         Py_Finalize();
       }
     }
+#if PY_VERSION_HEX < 0x03000000
     char* c_str = (char*)fMethods[0].ml_name;
     inlib::str_del(c_str);
     delete [] fMethods;
+#endif    
   }
   bool isValid() const {
     //return fPyLoaded?true:false;
@@ -158,7 +222,9 @@ private:
   std::string fName;
   Slash::Core::ISession& fSession;
   bool fInitedByOnX;
+#if PY_VERSION_HEX < 0x03000000
   PyMethodDef* fMethods;
+#endif
   PyObject* fModuleTag;
   PyObject* fModule;
   //PyThreadState* fThreadState;
@@ -167,9 +233,7 @@ private:
 }
 
 //////////////////////////////////////////////////////////////////////////////
-void OnXPythonInitialize(
- Slash::Core::ISession& aSession
-) 
+void OnXPythonInitialize(Slash::Core::ISession& aSession) 
 //////////////////////////////////////////////////////////////////////////////
 // Executed, by Interpreters, at first Python>... command
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
@@ -191,9 +255,7 @@ void OnXPythonInitialize(
   }
 }
 //////////////////////////////////////////////////////////////////////////////
-void OnXPythonFinalize(
- Slash::Core::ISession& aSession
-) 
+void OnXPythonFinalize(Slash::Core::ISession& aSession) 
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
@@ -269,6 +331,7 @@ bool python_Function(
 
   return true;
 }
+
 //////////////////////////////////////////////////////////////////////////////
 PyObject* sessionPointer(
  PyObject* aTag
