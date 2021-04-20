@@ -2599,7 +2599,7 @@ def find_aida(aSession):
     return OnXLab_SWIG_Python.find_aida(aSession)
 
 
-#  print 'debug : OnXLab_SWIG.i'
+#  print('debug : OnXLab_SWIG.i')
 
 #
 # Script execution context :
@@ -2651,7 +2651,7 @@ def createAnalysisFactory():
       import OnXLab
       return OnXLab.find_aida(OnX.session())
     else:
-      print 'Found OnX, but there is no AnalysisFactory manager !'
+      print('Found OnX, but there is no AnalysisFactory manager !')
       return None
 
 
