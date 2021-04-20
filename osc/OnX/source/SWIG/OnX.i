@@ -66,7 +66,7 @@ void reset_PyOS_InputHook() {
 
 
 %pythoncode %{
-# print 'debug : OnX_SWIG_OnX.i'
+# print('debug : OnX_SWIG_OnX.i')
 
 def sys_import(aModule):
   import sys
@@ -93,12 +93,12 @@ def import_py(a_dir,a_name):
     comment = 0 # non-writable area (for example the one of the release area).
     if fmanip.exists(a_name+'.py') == 0 : 
       if fmanip.exists(a_dir+'/'+a_name+'.py') == 0 : 
-        print 'File '+a_dir+'/'+a_name+'.py does not exist.'
+        print('File '+a_dir+'/'+a_name+'.py does not exist.')
         return
       else :
         import compiler
         if fmanip.copy(fmanip.name(a_dir+'/'+a_name+'.py'),'.') == 0 :
-          print 'Copy of file '+a_dir+'/'+a_name+'.py failed.'
+          print('Copy of file '+a_dir+'/'+a_name+'.py failed.')
           return
         compiler.compileFile(a_name+'.py')
         fmanip.remove(a_name+'.py')
@@ -114,7 +114,7 @@ def x_exa(a_name):
 
 def dumpMain():
   import sys
-  print dir(sys.modules['__main__'])
+  print(dir(sys.modules['__main__']))
 
 def exists(name):
   try:
@@ -154,7 +154,7 @@ def session():
     comment = 0 # that will remove the "sessionPointer" function from
     comment = 0 # the OnX_PythonManager module dictionary.
     string_session = OnX_PythonManager.sessionPointer()
-    comment = 0 #print string_session
+    comment = 0 # print(string_session)
     return OnX_cast_ISession(string_session)
   except: # case of OnX having not yet loaded the Python interpreter.
     return None

@@ -328,7 +328,7 @@ AIDA::IAnalysisFactory* find_aida(Slash::Core::ISession& aSession){
 #ifdef SWIGPYTHON
 %pythoncode %{
 
-#  print 'debug : OnXLab_SWIG.i'
+#  print('debug : OnXLab_SWIG.i')
 
 #
 # Script execution context :
