@@ -132,7 +132,8 @@ if [ "${use_Qt}" = "yes" ] ; then
     moc_exe="${Qt_home}/lib64/qt5/bin/moc"
 
     # run time : may have to :
-    #   UNIX> setenv QT_XKB_CONFIG_ROOT /usr/lib/kbd/keymaps/xkb
+    #   csh> setenv QT_XKB_CONFIG_ROOT /usr/lib/kbd/keymaps/xkb
+    #    sh> export QT_XKB_CONFIG_ROOT=/usr/lib/kbd/keymaps/xkb
 
   elif [ -d /usr/include/x86_64-linux-gnu/qt5 ] ; then  #ostackess.
     Qt_home=/usr
