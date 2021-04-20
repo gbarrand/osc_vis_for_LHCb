@@ -15,35 +15,23 @@ if [ "${use_Qt}" = "yes" ] ; then
   fi
 
   moc_exe=
-  build_use_qt5=no
    
   if [ `uname` = Darwin ] ; then
 
-    if [ -d /Library/Frameworks/QtCore.framework ] ; then
+    if [ -d /opt/local/libexec/qt5/include/QtUiTools ] ; then
 
-      cppflags="${cppflags} -F/Library/Frameworks"
+      Qt_home=/opt/local/libexec/qt5
 
-      libs="${libs} -F/Library/Frameworks -framework QtOpenGL"
+      Qt_frameworks="${Qt_home}/lib"
+      cppflags="${cppflags} -F${Qt_frameworks}"
+
+      libs="${libs} -F${Qt_frameworks} -framework QtOpenGL"
       libs="${libs} -framework QtGui -framework QtCore"
-
-      moc_exe=/usr/bin/moc
-   
-      Qt_ld_library_path=none
-
-    elif [ -d /usr/local/Qt/5.0.1 ] ; then
-
-      Qt_home=/usr/local/Qt/5.0.1/5.0.1/clang_64
-
-      cppflags="${cppflags} -F${Qt_home}/lib"
-
-      libs="${libs} -F${Qt_home}/lib -framework QtWidgets"
-      libs="${libs} -framework QtWidgets -framework QtOpenGL"
-      libs="${libs} -framework QtGui -framework QtCore"
+      libs="${libs} -framework QtWidgets"
 
       moc_exe="${Qt_home}/bin/moc"
-
-      #Qt_ld_library_path="${Qt_home}/lib"
-      Qt_ld_library_path=none
+      
+      cppflags="${cppflags} -std=c++11"
 
     elif [ -d /opt/local/libexec/qt4/include/Qt ] ; then
 
@@ -60,6 +48,8 @@ if [ "${use_Qt}" = "yes" ] ; then
     fi
 
   elif [ "${on_lxplus}" = "yes" ] ; then
+
+    build_use_qt5=no
 
     if   [ "${BUILD_CONFIG}" = "x86_64-slc5-gcc43-opt" ] ; then
       lcg_area=/cvmfs/lhcb.cern.ch/lib/lcg/releases
