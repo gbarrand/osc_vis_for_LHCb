@@ -139,7 +139,7 @@ SoQt::init(const char * appname, const char * classname)
   // Fake argc and argv setup, forward to real init routine.
   static char *array[1]; // use static array to avoid memory corruption in Qt
   array[0] = buf;
-  int argc = (buf != NULL) ? 1 : 0;
+  static int argc = (buf != NULL) ? 1 : 0;
   return SoQt::init(argc, array, appname, classname);
 }
 
