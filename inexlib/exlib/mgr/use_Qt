@@ -122,6 +122,8 @@ if [ "${use_Qt}" = "yes" ] ; then
     Qt_inc="${Qt_home}/include/qt5"
 
     cppflags="${cppflags} -I${Qt_inc}"
+    
+    cppflags="${cppflags} -std=c++11"
 
     libs="${libs} -L${Qt_home}/lib64 -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core"
 
