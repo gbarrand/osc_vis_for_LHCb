@@ -44,7 +44,8 @@ if [ "${build_distrib}" = "yes" ] ; then
 
   /bin/cp ../../osc_source/release/UNIX/py-setup.csh ${head}/.
   /bin/cp ../../osc_source/release/UNIX/py-setup.sh  ${head}/.
-  use_Python=yes;. ${exlib_mgr}/use_Python
+  use_Python=yes
+  . ${exlib_mgr}/use_Python
   if [ ! -d ${Python_home} ] ; then
     echo "build_release : variable Python_home points to a non existing directory ${Python_home}."
   else
@@ -54,7 +55,8 @@ if [ "${build_distrib}" = "yes" ] ; then
 
   /bin/cp ../../osc_source/release/UNIX/Qt-setup.csh ${head}/.
   /bin/cp ../../osc_source/release/UNIX/Qt-setup.sh  ${head}/.
-  use_Qt=yes;. ${exlib_mgr}/use_Qt
+  use_Qt=yes
+  . ${exlib_mgr}/use_Qt
   if [ ! -d ${Qt_home} ] ; then
     echo "build_release : variable Qt_home points to a non existing directory ${Qt_home}."
   else
