@@ -46,7 +46,7 @@ struct module_state {
 #define GETSTATE(a__module) ((struct module_state*)::PyModule_GetState(a__module))
 
 static PyMethodDef module_methods[] = {
-  {"sessionPointer", (PyCFunction)sessionPointer, METH_NOARGS, NULL},
+  {"sessionPointer", sessionPointer, METH_NOARGS, NULL},
   {NULL,NULL,METH_NOARGS,NULL}
 };
 
