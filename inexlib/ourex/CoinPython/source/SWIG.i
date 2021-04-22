@@ -49,7 +49,7 @@ import Coin_SWIG_Python as _coin
 %pythoncode %{
     def __getattr__(self,name):
       try: return object.__getattr__(self, name)
-      except AttributeError, e: raise e
+      except AttributeError as e: raise e
 %}
 }
 

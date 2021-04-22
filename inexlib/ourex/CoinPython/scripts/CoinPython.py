@@ -1360,7 +1360,7 @@ class SoBase(object):
 
     def __getattr__(self,name):
       try: return object.__getattr__(self, name)
-      except AttributeError, e: raise e
+      except AttributeError as e: raise e
 
 
 # Register SoBase in Coin_SWIG_Python:
