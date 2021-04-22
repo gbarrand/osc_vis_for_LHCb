@@ -55,7 +55,8 @@ cast(PyObject * self, PyObject * args)
   if (ptr_type == NULL) return NULL;
 
   memset(ptr_type, 0, type_len+3);
-  strncpy(ptr_type, type_name, type_len);
+/*strncpy(ptr_type, type_name, type_len);*/ /*G.Barrand : avoid a gcc-9 warning : -Wstringop-overflow= */
+  strcpy(ptr_type, type_name);
   strcat(ptr_type, " *");
 
   if ((swig_type = SWIG_TypeQuery(ptr_type)) == 0) {
