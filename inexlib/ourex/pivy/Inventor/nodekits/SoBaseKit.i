@@ -4,7 +4,7 @@
     def __getattr__(self,name):
         try:
             return SoNode.__getattr__(self, name)
-        except AttributeError, e:
+        except AttributeError as e:
             c = _coin.SoBaseKit_getNodekitCatalog(self)
             if c.getPartNumber(name) >= 0:
                 part = self.getPart(name,1)

@@ -20,7 +20,7 @@
         try:
             #G.Barrand : return SoBase.__getattribute__(self, name)
             return SoBase.__getattr__(self, name)  #G.Barrand
-        except AttributeError, e:
+        except AttributeError as e:
             field = self.getField(SbName(name))
             if field is None:
                 raise e
