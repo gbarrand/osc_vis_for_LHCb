@@ -11,6 +11,7 @@ version="`./version`"
 
 run_what=
 run_gui=
+run_gdb=no
 
 build_args=
 while test $# -ge 1 ; do
@@ -20,6 +21,7 @@ while test $# -ge 1 ; do
          -Xt) run_gui=Xt;;  
          -Xm) run_gui=Xt;;  
    -NextStep) run_gui=NextStep;;
+        -gdb) run_gdb=yes;;
           -*) build_args="${build_args} $1";;  
            *) run_what=$1;;  
   esac
@@ -87,7 +89,12 @@ cd ./Resources/AIDA/examples/Python
 options=
 #options=-i
 
-${Python_exe} ${options} ${run_what}.py
+if [ ${run_gdb} = yes ] ; then
+  echo "gdb> r ${options} ${run_what}.py"
+  gdb ${Python_exe}
+else    
+  ${Python_exe} ${options} ${run_what}.py
+fi
 
 cd ${OSC_HOME_DIR}
 
