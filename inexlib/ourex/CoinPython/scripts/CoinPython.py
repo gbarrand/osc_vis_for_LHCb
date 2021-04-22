@@ -40889,9 +40889,9 @@ def SoVRMLWorldInfo_initClass():
     return Coin_SWIG_Python.SoVRMLWorldInfo_initClass()
 
 
-for x in locals().values():
+for x in list(locals().values()):  #G.Barrand : 3.6 : have list()
   if isinstance(x, type) and issubclass(x, SoFieldContainer):
-    for name, thing in x.__dict__.items():
+    for name, thing in list(x.__dict__.items()):  #G.Barrand : 3.6 : have list()
       if isinstance(thing, property):
         delattr(x, name)
 
