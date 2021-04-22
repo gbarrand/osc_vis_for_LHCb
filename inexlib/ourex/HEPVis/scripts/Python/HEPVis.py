@@ -11137,9 +11137,9 @@ def cast_SoPage(aNode):
     return HEPVis_SWIG_Python.cast_SoPage(aNode)
 
 import CoinPython as Inventor
-for x in locals().values():
+for x in list(locals().values()):  #G.Barrand : python3.6 : list()
   if isinstance(x, type) and issubclass(x, Inventor.SoFieldContainer):
-    for name, thing in x.__dict__.items():
+    for name, thing in list(x.__dict__.items()):  #G.Barrand : python3.6 : list()
       if isinstance(thing, property):
         delattr(x, name)
 
