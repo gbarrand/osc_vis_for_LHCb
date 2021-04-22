@@ -58,24 +58,9 @@ cd ${build_path}/distrib/osc_vis/${version}
 ./install
 . ./setup.sh
 
-#use_Python=yes
-#. ./Resources/exlib/mgr/use_Python   # to get py_exe.
-
 . ./py-setup.sh
 
 . ./Python-setup.sh
-
-#printenv PYTHONPATH
-# if using the Qt driver :
-#use_Qt=yes
-#. ./Resources/exlib/mgr/use_Qt
-#if [ "${Qt_ld_library_path}" != "" ] ; then
-#  ld_path="${Qt_ld_library_path}"
-#  . ./Resources/inlib/mgr/build_ld_library_path
-#fi
-#if [ "${Qt_plugin_path}" != "" ] ; then
-#  setenv QT_PLUGIN_PATH "${Qt_plugin_path}"
-#fi
 
 . ./Qt-setup.sh
 
