@@ -22,6 +22,7 @@ while test $# -ge 1 ; do
   case $1 in
         -gtk) run_gui=Gtk;;  
          -Qt) run_gui=Qt;;  
+         -qt) run_gui=Qt;;  
          -Xt) run_gui=Xt;;  
          -Xm) run_gui=Xt;;  
    -NextStep) run_gui=NextStep;;
