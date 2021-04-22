@@ -2469,7 +2469,7 @@ class SoFieldContainer(SoBase):
         try:
     #G.Barrand : return SoBase.__getattribute__(self, name)
             return SoBase.__getattr__(self, name)  #G.Barrand
-        except AttributeError, e:
+        except AttributeError as e:
             field = self.getField(SbName(name))
             if field is None:
                 raise e
@@ -10361,7 +10361,7 @@ class SoBaseKit(SoNode):
     def __getattr__(self,name):
         try:
             return SoNode.__getattr__(self, name)
-        except AttributeError, e:
+        except AttributeError as e:
             c = _coin.SoBaseKit_getNodekitCatalog(self)
             if c.getPartNumber(name) >= 0:
                 part = self.getPart(name,1)
@@ -19605,7 +19605,7 @@ class SoEngine(SoFieldContainer):
     def __getattr__(self, name):
         try:
             return SoFieldContainer.__getattr__(self, name)
-        except AttributeError, e:
+        except AttributeError as e:
             out = self.getOutput(SbName(name))
             if out is None:
                 raise e
