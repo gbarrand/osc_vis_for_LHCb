@@ -1506,7 +1506,7 @@ SoOffscreenRendererP::setCameraViewvolForTile(SoCamera * cam)
   if (renderaction->getNumPasses() > 1) {
     SbVec3f jittervec;
     SbMatrix m;
-    const int vpsize[2] = { this->glcanvassize[0], this->glcanvassize[1] };
+    const int vpsize[2] = { (int)this->glcanvassize[0], (int)this->glcanvassize[1] }; //G.Barrand : (int)
     coin_viewvolume_jitter(renderaction->getNumPasses(), renderaction->getCurPass(),
                            vpsize, (float *)jittervec.getValue());
     m.setTranslate(jittervec);
