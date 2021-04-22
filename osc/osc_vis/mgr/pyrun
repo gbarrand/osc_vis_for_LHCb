@@ -93,14 +93,16 @@ if [ "${run_gui}" != "" ] ; then
   #fi
 fi
 
-if [ "${run_what}" = "" ] ; then run_what=AIDA/examples/Python/aida_0; fi
+if [ "${run_what}" = "" ] ; then run_what=AIDA/examples/Python/aida_0.py; fi
 
 what_dir="`dirname ${run_what}`"
 what_name="`basename ${run_what}`"
 cd ./Resources/${what_dir}
 
 if [ ${do_ls} = yes ] ; then
+  pwd
   ls
+  exit
 fi
 
 if [ ${run_expat_debug} = yes ] ; then
@@ -112,10 +114,10 @@ options=
 #options=-i
 
 if [ ${run_gdb} = yes ] ; then
-  echo "gdb> r ${options} ${what_name}.py"
+  echo "gdb> r ${options} ${what_name}"
   gdb ${Python_exe}
 else    
-  ${Python_exe} ${options} ${what_name}.py
+  ${Python_exe} ${options} ${what_name}
 fi
 
 cd ${OSC_HOME_DIR}
