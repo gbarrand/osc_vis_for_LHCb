@@ -134,9 +134,9 @@ public:
 // WARNING : if x instead of xxx, then clash with OnX.x('<module>')
 %pythoncode %{        
 import CoinPython as Inventor
-for xxx in locals().values():
+for xxx in list(locals().values()):  # python3.6 : add list().
   if isinstance(xxx, type) and issubclass(xxx, Inventor.SoFieldContainer):
-    for name, thing in xxx.__dict__.items():
+    for name, thing in list(xxx.__dict__.items()):  # python3.6 : add list().
       if isinstance(thing, property):
         delattr(xxx, name)
 %}
