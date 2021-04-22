@@ -1,17 +1,9 @@
 
 if [ "${use_Python}" = "yes" ] ; then
 
-  #/////////////////////////////////////////////////////////////
-  #/// use an lcg installation ? (lxplus or local) /////////////
-  #/// If so, it coworks with the env variable BUILD_CONFIG ////
-  #/////////////////////////////////////////////////////////////
-  on_lxplus=no
-  if [ "`uname -n | grep lxplus`" != "" ] ; then
-    on_lxplus=yes
-  fi
-  #/////////////////////////////////////////////////////////////
-  #/////////////////////////////////////////////////////////////
-  #/////////////////////////////////////////////////////////////
+  #///////////////////////////////////////////////////////////////////////////////
+  #/// Usage of a lcg installation coworks with the env variable BUILD_CONFIG ////
+  #///////////////////////////////////////////////////////////////////////////////
 
   Python_ld_library_path=
   py_exe=
@@ -58,7 +50,7 @@ if [ "${use_Python}" = "yes" ] ; then
       py_exe="${Python_home}/bin/pythonw"
     fi
 
-  elif [ "${on_lxplus}" = "yes" ] ; then
+  elif [ "${BUILD_CONFIG}" != "" ] ; then
 
     if   [ "${BUILD_CONFIG}" = "x86_64-slc5-gcc43-opt" ] ; then
       lcg_area=/cvmfs/lhcb.cern.ch/lib/lcg/releases

@@ -5,14 +5,9 @@ if [ "${use_Qt}" = "yes" ] ; then
     exit
   fi
 
-  #/////////////////////////////////////////////////////////////
-  #/// use an lcg installation ? (lxplus or local) /////////////
-  #/// If so, it coworks with the env variable BUILD_CONFIG ////
-  #/////////////////////////////////////////////////////////////
-  on_lxplus=no
-  if [ "`uname -n | grep lxplus`" != "" ] ; then
-    on_lxplus=yes
-  fi
+  #///////////////////////////////////////////////////////////////////////////////
+  #/// Usage of a lcg installation coworks with the env variable BUILD_CONFIG ////
+  #///////////////////////////////////////////////////////////////////////////////
 
   moc_exe=
    
@@ -47,7 +42,7 @@ if [ "${use_Qt}" = "yes" ] ; then
 
     fi
 
-  elif [ "${on_lxplus}" = "yes" ] ; then
+  elif [ "${BUILD_CONFIG}" != "" ] ; then
 
     build_use_qt5=no
 
