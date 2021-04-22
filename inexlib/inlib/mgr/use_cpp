@@ -24,8 +24,7 @@ elif [ ${build_sdk_mac} = "yes" ] ; then
   cpp_compiler=clang++
   cpp_linker=clang++
 
-  macosx_vers=10.6
-  macosx_sdk="/Developer/SDKs/MacOSX${macosx_vers}.sdk"
+  macosx_sdk="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
   if [ ! -d "${macosx_sdk}" ] ; then
     echo 'MacOSX sdk not found.'
     exit
