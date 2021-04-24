@@ -1406,7 +1406,7 @@ elif [ ${is_swig_py} = "yes" ] ; then
 
   swig_incs="-I${pivy_home} -I${pivy_home}/fake_headers ${swig_incs}"
 
-  swig_flags="-includeall -modern"
+  swig_flags="-includeall"
   swig_flags="${swig_flags} -D__PIVY__"
   swig_flags="${swig_flags} -w302,306,307,312,389,361,362,467,503,509,510"
   swig_flags="${swig_flags} -fcompact"
