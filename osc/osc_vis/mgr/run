@@ -2,6 +2,7 @@
 
 version="`./version`"
 
+run_gui=
 run_gdb=no
 run_args=
 build_args=
@@ -15,6 +16,19 @@ while test $# -ge 1 ; do
     -clang)   build_args="${build_args} $1";;
     -visual)  build_args="${build_args} $1";;
     -sdk_mac) build_args="${build_args} $1";;
+
+    -gtk)     run_gui=Gtk;;  
+    -Qt)      run_gui=Qt;;  
+    -qt)      run_gui=Qt;;  
+    -Xt)      run_gui=Xt;;  
+    -xt)      run_gui=Xt;;  
+    -Xm)      run_gui=Xt;;  
+    -xm)      run_gui=Xt;;  
+   -Win)      run_gui=Win;;  
+   -win)      run_gui=Win;;  
+   -NextStep) run_gui=NextStep;;  
+   -ns)       run_gui=NextStep;;  
+   -SDL)      run_gui=SDL;;
 
     # local options : 
     -gdb)    run_gdb=yes;;
@@ -43,17 +57,15 @@ cd ${build_path}/distrib/osc_vis/${version}
 
 . ./setup.sh
 
-# if using the Qt driver :
-#use_Qt=yes
-#. ./Resources/exlib/mgr/use_Qt
-#if [ "${Qt_ld_library_path}" != "" ] ; then
-#  ld_path="${Qt_ld_library_path}"
-#  . ./Resources/inlib/mgr/build_ld_library_path
-#fi
-#if [ "${Qt_plugin_path}" != "" ] ; then
-#  setenv QT_PLUGIN_PATH "${Qt_plugin_path}"
-#fi
-. ./Qt-setup.sh
+if [ "${run_gui}" = "Qt" ] ; then
+  . ./Qt-setup.sh    
+fi
+
+if [ "${run_gui}" = "Gtk" ] ; then
+  if [ "`printenv LANG`" = "" ] ; then
+    LANG=en_US.US-ASCII;export LANG
+  fi
+fi
 
 #//////////////////////////////////////////
 #//////////////////////////////////////////
@@ -62,12 +74,12 @@ cd ${build_path}/distrib/osc_vis/${version}
 LC_CTYPE=C;export LC_CTYPE
 
 if [ ${run_viewer} = yes ] ; then
-  osc-gui-viewer ${run_args} ${OSC_HOME_DIR}/Resources/OnX/examples/OnX/progress.onx
+  osc-gui-viewer -${run_gui} ${run_args} ${OSC_HOME_DIR}/Resources/OnX/examples/OnX/progress.onx
 else
   if [ ${run_gdb} = yes ] ; then
     gdb osc-plot
   else
-    osc-plot ${run_args}
+    osc-plot -${run_gui} ${run_args}
   fi
 fi
 
