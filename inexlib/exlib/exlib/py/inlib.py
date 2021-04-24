@@ -3641,7 +3641,34 @@ def s_node_end():
 
 def s_clear_scene():
     return inlib_swig_py.s_clear_scene()
-class style_color(object):
+class std_pair_std_string_inlib_colorf(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        inlib_swig_py.std_pair_std_string_inlib_colorf_swiginit(self, inlib_swig_py.new_std_pair_std_string_inlib_colorf(*args))
+    first = property(inlib_swig_py.std_pair_std_string_inlib_colorf_first_get, inlib_swig_py.std_pair_std_string_inlib_colorf_first_set)
+    second = property(inlib_swig_py.std_pair_std_string_inlib_colorf_second_get, inlib_swig_py.std_pair_std_string_inlib_colorf_second_set)
+    def __len__(self):
+        return 2
+    def __repr__(self):
+        return str((self.first, self.second))
+    def __getitem__(self, index): 
+        if not (index % 2):
+            return self.first
+        else:
+            return self.second
+    def __setitem__(self, index, val):
+        if not (index % 2):
+            self.first = val
+        else:
+            self.second = val
+    __swig_destroy__ = inlib_swig_py.delete_std_pair_std_string_inlib_colorf
+
+# Register std_pair_std_string_inlib_colorf in inlib_swig_py:
+inlib_swig_py.std_pair_std_string_inlib_colorf_swigregister(std_pair_std_string_inlib_colorf)
+
+class style_color(std_pair_std_string_inlib_colorf):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
     __swig_destroy__ = inlib_swig_py.delete_style_color
@@ -3652,7 +3679,115 @@ class style_color(object):
 # Register style_color in inlib_swig_py:
 inlib_swig_py.style_color_swigregister(style_color)
 
-class style_colormap(object):
+class std_map_unsigned_int_inlib_sg_style_color(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def iterator(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_iterator(self)
+    def __iter__(self):
+        return self.iterator()
+
+    def __nonzero__(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color___nonzero__(self)
+
+    def __bool__(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color___bool__(self)
+
+    def __len__(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color___len__(self)
+    def __iter__(self):
+        return self.key_iterator()
+    def iterkeys(self):
+        return self.key_iterator()
+    def itervalues(self):
+        return self.value_iterator()
+    def iteritems(self):
+        return self.iterator()
+
+    def __getitem__(self, key):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color___getitem__(self, key)
+
+    def __delitem__(self, key):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color___delitem__(self, key)
+
+    def has_key(self, key):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_has_key(self, key)
+
+    def keys(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_keys(self)
+
+    def values(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_values(self)
+
+    def items(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_items(self)
+
+    def __contains__(self, key):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color___contains__(self, key)
+
+    def key_iterator(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_key_iterator(self)
+
+    def value_iterator(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_value_iterator(self)
+
+    def __setitem__(self, *args):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color___setitem__(self, *args)
+
+    def asdict(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_asdict(self)
+
+    def __init__(self, *args):
+        inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_swiginit(self, inlib_swig_py.new_std_map_unsigned_int_inlib_sg_style_color(*args))
+
+    def empty(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_empty(self)
+
+    def size(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_size(self)
+
+    def swap(self, v):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_swap(self, v)
+
+    def begin(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_begin(self)
+
+    def end(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_end(self)
+
+    def rbegin(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_rbegin(self)
+
+    def rend(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_rend(self)
+
+    def clear(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_clear(self)
+
+    def get_allocator(self):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_get_allocator(self)
+
+    def count(self, x):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_count(self, x)
+
+    def erase(self, *args):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_erase(self, *args)
+
+    def find(self, x):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_find(self, x)
+
+    def lower_bound(self, x):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_lower_bound(self, x)
+
+    def upper_bound(self, x):
+        return inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_upper_bound(self, x)
+    __swig_destroy__ = inlib_swig_py.delete_std_map_unsigned_int_inlib_sg_style_color
+
+# Register std_map_unsigned_int_inlib_sg_style_color in inlib_swig_py:
+inlib_swig_py.std_map_unsigned_int_inlib_sg_style_color_swigregister(std_map_unsigned_int_inlib_sg_style_color)
+
+class style_colormap(std_map_unsigned_int_inlib_sg_style_color):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 

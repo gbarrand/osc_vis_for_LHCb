@@ -2870,52 +2870,56 @@ SWIGINTERN PyObject *SWIG_PyStaticMethod_New(PyObject *SWIGUNUSEDPARM(self), PyO
 #define SWIGTYPE_p_size_type swig_types[175]
 #define SWIGTYPE_p_state_type swig_types[176]
 #define SWIGTYPE_p_std__allocatorT_double_t swig_types[177]
-#define SWIGTYPE_p_std__basic_iosT_char_std__char_traitsT_char_t_t swig_types[178]
-#define SWIGTYPE_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t swig_types[179]
-#define SWIGTYPE_p_std__basic_istreamT_char_std__char_traitsT_char_t_t swig_types[180]
-#define SWIGTYPE_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t swig_types[181]
-#define SWIGTYPE_p_std__basic_streambufT_char_std__char_traitsT_char_t_t swig_types[182]
-#define SWIGTYPE_p_std__basic_stringT_char_std__char_traitsT_char_t_std__allocatorT_char_t_t swig_types[183]
-#define SWIGTYPE_p_std__invalid_argument swig_types[184]
-#define SWIGTYPE_p_std__ios_base swig_types[185]
-#define SWIGTYPE_p_std__locale swig_types[186]
-#define SWIGTYPE_p_std__mapT_std__string_inlib__sg__style_colormap_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_inlib__sg__style_colormap_t_t_t swig_types[187]
-#define SWIGTYPE_p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t swig_types[188]
-#define SWIGTYPE_p_std__ofstream swig_types[189]
-#define SWIGTYPE_p_std__string swig_types[190]
-#define SWIGTYPE_p_std__string__size_type swig_types[191]
-#define SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t swig_types[192]
-#define SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t swig_types[193]
-#define SWIGTYPE_p_std__vectorT_inlib__sg__field_p_std__allocatorT_inlib__sg__field_p_t_t swig_types[194]
-#define SWIGTYPE_p_std__vectorT_inlib__sg__node_p_std__allocatorT_inlib__sg__node_p_t_t swig_types[195]
-#define SWIGTYPE_p_std__vectorT_inlib__sg__pick_element_std__allocatorT_inlib__sg__pick_element_t_t swig_types[196]
-#define SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t swig_types[197]
-#define SWIGTYPE_p_std__vectorT_std__string_std__allocatorT_std__string_t_t swig_types[198]
-#define SWIGTYPE_p_std__vectorT_std__string_std__allocatorT_std__string_t_t__iterator swig_types[199]
-#define SWIGTYPE_p_std__vectorT_std__string_std__allocatorT_std__string_t_t__size_type swig_types[200]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t swig_types[201]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t swig_types[202]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_inlib__sg__node_p_std__allocatorT_inlib__sg__node_p_t_t_std__allocatorT_std__vectorT_inlib__sg__node_p_std__allocatorT_inlib__sg__node_p_t_t_t_t swig_types[203]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_std__string_std__allocatorT_std__string_t_t_std__allocatorT_std__vectorT_std__string_std__allocatorT_std__string_t_t_t_t swig_types[204]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_unsigned_int_std__allocatorT_unsigned_int_t_t_std__allocatorT_std__vectorT_unsigned_int_std__allocatorT_unsigned_int_t_t_t_t swig_types[205]
-#define SWIGTYPE_p_std__vectorT_unsigned_int_std__allocatorT_unsigned_int_t_t swig_types[206]
-#define SWIGTYPE_p_std__vectorT_void_p_std__allocatorT_void_p_t_t swig_types[207]
-#define SWIGTYPE_p_std_vec_vec_float_t swig_types[208]
-#define SWIGTYPE_p_std_vec_vec_string_t swig_types[209]
-#define SWIGTYPE_p_std_vec_vec_uint_t swig_types[210]
-#define SWIGTYPE_p_streamoff swig_types[211]
-#define SWIGTYPE_p_streampos swig_types[212]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[213]
-#define SWIGTYPE_p_traits_type swig_types[214]
-#define SWIGTYPE_p_unsigned_char swig_types[215]
-#define SWIGTYPE_p_unsigned_int swig_types[216]
-#define SWIGTYPE_p_unsigned_long swig_types[217]
-#define SWIGTYPE_p_unsigned_long_long swig_types[218]
-#define SWIGTYPE_p_unsigned_short swig_types[219]
-#define SWIGTYPE_p_value_type swig_types[220]
-#define SWIGTYPE_p_void swig_types[221]
-static swig_type_info *swig_types[223];
-static swig_module_info swig_module = {swig_types, 222, 0, 0, 0, 0};
+#define SWIGTYPE_p_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t swig_types[178]
+#define SWIGTYPE_p_std__basic_iosT_char_std__char_traitsT_char_t_t swig_types[179]
+#define SWIGTYPE_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t swig_types[180]
+#define SWIGTYPE_p_std__basic_istreamT_char_std__char_traitsT_char_t_t swig_types[181]
+#define SWIGTYPE_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t swig_types[182]
+#define SWIGTYPE_p_std__basic_streambufT_char_std__char_traitsT_char_t_t swig_types[183]
+#define SWIGTYPE_p_std__basic_stringT_char_std__char_traitsT_char_t_std__allocatorT_char_t_t swig_types[184]
+#define SWIGTYPE_p_std__invalid_argument swig_types[185]
+#define SWIGTYPE_p_std__ios_base swig_types[186]
+#define SWIGTYPE_p_std__lessT_unsigned_int_t swig_types[187]
+#define SWIGTYPE_p_std__locale swig_types[188]
+#define SWIGTYPE_p_std__mapT_std__string_inlib__sg__style_colormap_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_inlib__sg__style_colormap_t_t_t swig_types[189]
+#define SWIGTYPE_p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t swig_types[190]
+#define SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t swig_types[191]
+#define SWIGTYPE_p_std__ofstream swig_types[192]
+#define SWIGTYPE_p_std__pairT_std__string_inlib__colorf_t swig_types[193]
+#define SWIGTYPE_p_std__string swig_types[194]
+#define SWIGTYPE_p_std__string__size_type swig_types[195]
+#define SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t swig_types[196]
+#define SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t swig_types[197]
+#define SWIGTYPE_p_std__vectorT_inlib__sg__field_p_std__allocatorT_inlib__sg__field_p_t_t swig_types[198]
+#define SWIGTYPE_p_std__vectorT_inlib__sg__node_p_std__allocatorT_inlib__sg__node_p_t_t swig_types[199]
+#define SWIGTYPE_p_std__vectorT_inlib__sg__pick_element_std__allocatorT_inlib__sg__pick_element_t_t swig_types[200]
+#define SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t swig_types[201]
+#define SWIGTYPE_p_std__vectorT_std__string_std__allocatorT_std__string_t_t swig_types[202]
+#define SWIGTYPE_p_std__vectorT_std__string_std__allocatorT_std__string_t_t__iterator swig_types[203]
+#define SWIGTYPE_p_std__vectorT_std__string_std__allocatorT_std__string_t_t__size_type swig_types[204]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t swig_types[205]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t swig_types[206]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_inlib__sg__node_p_std__allocatorT_inlib__sg__node_p_t_t_std__allocatorT_std__vectorT_inlib__sg__node_p_std__allocatorT_inlib__sg__node_p_t_t_t_t swig_types[207]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_std__string_std__allocatorT_std__string_t_t_std__allocatorT_std__vectorT_std__string_std__allocatorT_std__string_t_t_t_t swig_types[208]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_unsigned_int_std__allocatorT_unsigned_int_t_t_std__allocatorT_std__vectorT_unsigned_int_std__allocatorT_unsigned_int_t_t_t_t swig_types[209]
+#define SWIGTYPE_p_std__vectorT_unsigned_int_std__allocatorT_unsigned_int_t_t swig_types[210]
+#define SWIGTYPE_p_std__vectorT_void_p_std__allocatorT_void_p_t_t swig_types[211]
+#define SWIGTYPE_p_std_vec_vec_float_t swig_types[212]
+#define SWIGTYPE_p_std_vec_vec_string_t swig_types[213]
+#define SWIGTYPE_p_std_vec_vec_uint_t swig_types[214]
+#define SWIGTYPE_p_streamoff swig_types[215]
+#define SWIGTYPE_p_streampos swig_types[216]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[217]
+#define SWIGTYPE_p_traits_type swig_types[218]
+#define SWIGTYPE_p_unsigned_char swig_types[219]
+#define SWIGTYPE_p_unsigned_int swig_types[220]
+#define SWIGTYPE_p_unsigned_long swig_types[221]
+#define SWIGTYPE_p_unsigned_long_long swig_types[222]
+#define SWIGTYPE_p_unsigned_short swig_types[223]
+#define SWIGTYPE_p_value_type swig_types[224]
+#define SWIGTYPE_p_void swig_types[225]
+static swig_type_info *swig_types[227];
+static swig_module_info swig_module = {swig_types, 226, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -5352,6 +5356,508 @@ SWIG_From_float  (float value)
   return SWIG_From_double  (value);
 }
 
+
+SWIGINTERN int
+SWIG_AsVal_std_string (PyObject * obj, std::string *val)
+{
+  std::string* v = (std::string *) 0;
+  int res = SWIG_AsPtr_std_string (obj, &v);
+  if (!SWIG_IsOK(res)) return res;
+  if (v) {
+    if (val) *val = *v;
+    if (SWIG_IsNewObj(res)) {
+      delete v;
+      res = SWIG_DelNewMask(res);
+    }
+    return res;
+  }
+  return SWIG_ERROR;
+}
+
+
+namespace swig {
+  template <> struct traits< std::string > {
+    typedef value_category category;
+    static const char* type_name() { return"std::string"; }
+  };
+  template <>  struct traits_asval< std::string > {
+    typedef std::string value_type;
+    static int asval(PyObject *obj, value_type *val) {
+      return SWIG_AsVal_std_string (obj, val);
+    }
+  };
+  template <>  struct traits_from< std::string > {
+    typedef std::string value_type;
+    static PyObject *from(const value_type& val) {
+      return SWIG_From_std_string  (val);
+    }
+  };
+}
+
+
+  namespace swig {
+    template <>  struct traits< inlib::colorf > {
+      typedef pointer_category category;
+      static const char* type_name() { return"inlib::colorf"; }
+    };
+  }
+
+
+  namespace swig {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    template <class T, class U >
+    struct traits_asptr<std::pair<T,U> >  {
+      typedef std::pair<T,U> value_type;
+
+      static int get_pair(PyObject* first, PyObject* second,
+			  std::pair<T,U> **val) 
+      {
+	if (val) {
+	  value_type *vp = (new std::pair<T,U>());
+	  T *pfirst = &(vp->first);
+	  int res1 = swig::asval((PyObject*)first, pfirst);
+	  if (!SWIG_IsOK(res1)) {
+	    delete vp;
+	    return res1;
+	  }
+	  U *psecond = &(vp->second);
+	  int res2 = swig::asval((PyObject*)second, psecond);
+	  if (!SWIG_IsOK(res2)) {
+	    delete vp;
+	    return res2;
+	  }
+	  *val = vp;
+	  return SWIG_AddNewMask(res1 > res2 ? res1 : res2);
+	} else {
+	  T *pfirst = 0;
+	  int res1 = swig::asval((PyObject*)first, pfirst);
+	  if (!SWIG_IsOK(res1)) return res1;
+	  U *psecond = 0;
+	  int res2 = swig::asval((PyObject*)second, psecond);
+	  if (!SWIG_IsOK(res2)) return res2;
+	  return res1 > res2 ? res1 : res2;
+	}
+      }
+
+      static int asptr(PyObject *obj, std::pair<T,U> **val) {
+	int res = SWIG_ERROR;
+	if (PyTuple_Check(obj)) {
+	  if (PyTuple_GET_SIZE(obj) == 2) {
+	    res = get_pair(PyTuple_GET_ITEM(obj,0),PyTuple_GET_ITEM(obj,1), val);
+	  }
+	} else if (PySequence_Check(obj)) {
+	  if (PySequence_Size(obj) == 2) {
+	    swig::SwigVar_PyObject first = PySequence_GetItem(obj,0);
+	    swig::SwigVar_PyObject second = PySequence_GetItem(obj,1);
+	    res = get_pair(first, second, val);
+	  }
+	} else {
+	  value_type *p = 0;
+	  swig_type_info *descriptor = swig::type_info<value_type>();
+	  res = descriptor ? SWIG_ConvertPtr(obj, (void **)&p, descriptor, 0) : SWIG_ERROR;
+	  if (SWIG_IsOK(res) && val)  *val = p;
+	}
+	return res;
+      }
+    };
+
+
+    template <class T, class U >
+    struct traits_from<std::pair<T,U> >   {
+      static PyObject *from(const std::pair<T,U>& val) {
+	PyObject* obj = PyTuple_New(2);
+	PyTuple_SetItem(obj,0,swig::from(val.first));
+	PyTuple_SetItem(obj,1,swig::from(val.second));
+	return obj;
+      }
+    };
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      namespace swig {
+	template <>  struct traits<std::pair< std::string, inlib::colorf > > {
+	  typedef pointer_category category;
+	  static const char* type_name() {
+	    return "std::pair<" "std::string" "," "inlib::colorf" " >";
+	  }
+	};
+      }
+    
+
+namespace swig {
+  template <> struct traits< unsigned int > {
+    typedef value_category category;
+    static const char* type_name() { return"unsigned int"; }
+  };
+  template <>  struct traits_asval< unsigned int > {
+    typedef unsigned int value_type;
+    static int asval(PyObject *obj, value_type *val) {
+      return SWIG_AsVal_unsigned_SS_int (obj, val);
+    }
+  };
+  template <>  struct traits_from< unsigned int > {
+    typedef unsigned int value_type;
+    static PyObject *from(const value_type& val) {
+      return SWIG_From_unsigned_SS_int  (val);
+    }
+  };
+}
+
+
+  namespace swig {
+    template <>  struct traits< inlib::sg::style_color > {
+      typedef pointer_category category;
+      static const char* type_name() { return"inlib::sg::style_color"; }
+    };
+  }
+
+
+      namespace swig {
+	template <>  struct traits<std::pair< unsigned int, inlib::sg::style_color > > {
+	  typedef pointer_category category;
+	  static const char* type_name() {
+	    return "std::pair<" "unsigned int" "," "inlib::sg::style_color" " >";
+	  }
+	};
+      }
+    
+
+  namespace swig {
+    template <class ValueType>
+    struct from_key_oper 
+    {
+      typedef const ValueType& argument_type;
+      typedef  PyObject *result_type;
+      result_type operator()(argument_type v) const
+      {
+	return swig::from(v.first);
+      }
+    };
+
+    template <class ValueType>
+    struct from_value_oper 
+    {
+      typedef const ValueType& argument_type;
+      typedef  PyObject *result_type;
+      result_type operator()(argument_type v) const
+      {
+	return swig::from(v.second);
+      }
+    };
+
+    template<class OutIterator, class FromOper, class ValueType = typename OutIterator::value_type>
+    struct SwigPyMapIterator_T : SwigPyIteratorClosed_T<OutIterator, ValueType, FromOper>
+    {
+      SwigPyMapIterator_T(OutIterator curr, OutIterator first, OutIterator last, PyObject *seq)
+	: SwigPyIteratorClosed_T<OutIterator,ValueType,FromOper>(curr, first, last, seq)
+      {
+      }
+    };
+
+
+    template<class OutIterator,
+	     class FromOper = from_key_oper<typename OutIterator::value_type> >
+    struct SwigPyMapKeyIterator_T : SwigPyMapIterator_T<OutIterator, FromOper>
+    {
+      SwigPyMapKeyIterator_T(OutIterator curr, OutIterator first, OutIterator last, PyObject *seq)
+	: SwigPyMapIterator_T<OutIterator, FromOper>(curr, first, last, seq)
+      {
+      }
+    };
+
+    template<typename OutIter>
+    inline SwigPyIterator*
+    make_output_key_iterator(const OutIter& current, const OutIter& begin, const OutIter& end, PyObject *seq = 0)
+    {
+      return new SwigPyMapKeyIterator_T<OutIter>(current, begin, end, seq);
+    }
+
+    template<class OutIterator,
+	     class FromOper = from_value_oper<typename OutIterator::value_type> >
+    struct SwigPyMapValueIterator_T : SwigPyMapIterator_T<OutIterator, FromOper>
+    {
+      SwigPyMapValueIterator_T(OutIterator curr, OutIterator first, OutIterator last, PyObject *seq)
+	: SwigPyMapIterator_T<OutIterator, FromOper>(curr, first, last, seq)
+      {
+      }
+    };
+    
+
+    template<typename OutIter>
+    inline SwigPyIterator*
+    make_output_value_iterator(const OutIter& current, const OutIter& begin, const OutIter& end, PyObject *seq = 0)
+    {
+      return new SwigPyMapValueIterator_T<OutIter>(current, begin, end, seq);
+    }
+  }
+
+
+  namespace swig {
+    template <class SwigPySeq, class K, class T, class Compare, class Alloc >
+    inline void
+    assign(const SwigPySeq& swigpyseq, std::map<K,T,Compare,Alloc > *map) {
+      typedef typename std::map<K,T,Compare,Alloc >::value_type value_type;
+      typename SwigPySeq::const_iterator it = swigpyseq.begin();
+      for (;it != swigpyseq.end(); ++it) {
+	map->insert(value_type(it->first, it->second));
+      }
+    }
+
+    template <class K, class T, class Compare, class Alloc>
+    struct traits_asptr<std::map<K,T,Compare,Alloc > >  {
+      typedef std::map<K,T,Compare,Alloc > map_type;
+      static int asptr(PyObject *obj, map_type **val) {
+	int res = SWIG_ERROR;
+	SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+	if (PyDict_Check(obj)) {
+	  SwigVar_PyObject items = PyObject_CallMethod(obj,(char *)"items",NULL);
+#if PY_VERSION_HEX >= 0x03000000
+          /* In Python 3.x the ".items()" method returns a dict_items object */
+          items = PySequence_Fast(items, ".items() didn't return a sequence!");
+#endif
+	  res = traits_asptr_stdseq<map_type, std::pair<K, T> >::asptr(items, val);
+	} else {
+	  map_type *p = 0;
+	  swig_type_info *descriptor = swig::type_info<map_type>();
+	  res = descriptor ? SWIG_ConvertPtr(obj, (void **)&p, descriptor, 0) : SWIG_ERROR;
+	  if (SWIG_IsOK(res) && val)  *val = p;
+	}
+	SWIG_PYTHON_THREAD_END_BLOCK;
+	return res;
+      }      
+    };
+      
+    template <class K, class T, class Compare, class Alloc >
+    struct traits_from<std::map<K,T,Compare,Alloc > >  {
+      typedef std::map<K,T,Compare,Alloc > map_type;
+      typedef typename map_type::const_iterator const_iterator;
+      typedef typename map_type::size_type size_type;
+
+      static PyObject *asdict(const map_type& map) {
+	SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+	size_type size = map.size();
+	Py_ssize_t pysize = (size <= (size_type) INT_MAX) ? (Py_ssize_t) size : -1;
+	if (pysize < 0) {
+	  PyErr_SetString(PyExc_OverflowError, "map size not valid in python");
+	  SWIG_PYTHON_THREAD_END_BLOCK;
+	  return NULL;
+	}
+	PyObject *obj = PyDict_New();
+	for (const_iterator i= map.begin(); i!= map.end(); ++i) {
+	  swig::SwigVar_PyObject key = swig::from(i->first);
+	  swig::SwigVar_PyObject val = swig::from(i->second);
+	  PyDict_SetItem(obj, key, val);
+	}
+	SWIG_PYTHON_THREAD_END_BLOCK;
+	return obj;
+      }
+                
+      static PyObject *from(const map_type& map) {
+	swig_type_info *desc = swig::type_info<map_type>();
+	if (desc && desc->clientdata) {
+	  return SWIG_InternalNewPointerObj(new map_type(map), desc, SWIG_POINTER_OWN);
+	} else {
+	  return asdict(map);
+	}
+      }
+    };
+  }
+
+
+      namespace swig {
+	template <>  struct traits<std::map< unsigned int, inlib::sg::style_color, std::less< unsigned int >, std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > > > {
+	  typedef pointer_category category;
+	  static const char* type_name() {
+	    return "std::map<" "unsigned int" "," "inlib::sg::style_color" "," "std::less< unsigned int >" "," "std::allocator< std::pair< unsigned int const,inlib::sg::style_color > >" " >";
+	  }
+	};
+      }
+    
+SWIGINTERN swig::SwigPyIterator *std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__iterator(std::map< unsigned int,inlib::sg::style_color > *self,PyObject **PYTHON_SELF){
+      return swig::make_output_iterator(self->begin(), self->begin(), self->end(), *PYTHON_SELF);
+    }
+SWIGINTERN bool std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____nonzero__(std::map< unsigned int,inlib::sg::style_color > const *self){
+      return !(self->empty());
+    }
+SWIGINTERN bool std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____bool__(std::map< unsigned int,inlib::sg::style_color > const *self){
+      return !(self->empty());
+    }
+SWIGINTERN std::map< unsigned int,inlib::sg::style_color >::size_type std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____len__(std::map< unsigned int,inlib::sg::style_color > const *self){
+      return self->size();
+    }
+SWIGINTERN std::map< unsigned int,inlib::sg::style_color >::mapped_type const &std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____getitem__(std::map< unsigned int,inlib::sg::style_color > *self,std::map< unsigned int,inlib::sg::style_color >::key_type const &key){
+      std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >::const_iterator i = self->find(key);
+      if (i != self->end())
+	return i->second;
+      else
+	throw std::out_of_range("key not found");
+    }
+SWIGINTERN void std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____delitem__(std::map< unsigned int,inlib::sg::style_color > *self,std::map< unsigned int,inlib::sg::style_color >::key_type const &key){
+      std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >::iterator i = self->find(key);
+      if (i != self->end())
+	self->erase(i);
+      else
+	throw std::out_of_range("key not found");
+    }
+SWIGINTERN bool std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__has_key(std::map< unsigned int,inlib::sg::style_color > const *self,std::map< unsigned int,inlib::sg::style_color >::key_type const &key){
+      std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >::const_iterator i = self->find(key);
+      return i != self->end();
+    }
+SWIGINTERN PyObject *std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__keys(std::map< unsigned int,inlib::sg::style_color > *self){
+      std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >::size_type size = self->size();
+      Py_ssize_t pysize = (size <= (std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >::size_type) INT_MAX) ? (Py_ssize_t) size : -1;
+      SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+      if (pysize < 0) {
+	PyErr_SetString(PyExc_OverflowError, "map size not valid in python");
+	SWIG_PYTHON_THREAD_END_BLOCK;
+	return NULL;
+      }
+      PyObject* keyList = PyList_New(pysize);
+      std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >::const_iterator i = self->begin();
+      for (Py_ssize_t j = 0; j < pysize; ++i, ++j) {
+	PyList_SET_ITEM(keyList, j, swig::from(i->first));
+      }
+      SWIG_PYTHON_THREAD_END_BLOCK;
+      return keyList;
+    }
+SWIGINTERN PyObject *std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__values(std::map< unsigned int,inlib::sg::style_color > *self){
+      std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >::size_type size = self->size();
+      Py_ssize_t pysize = (size <= (std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >::size_type) INT_MAX) ? (Py_ssize_t) size : -1;
+      SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+      if (pysize < 0) {
+	PyErr_SetString(PyExc_OverflowError, "map size not valid in python");
+	SWIG_PYTHON_THREAD_END_BLOCK;
+	return NULL;
+      }
+      PyObject* valList = PyList_New(pysize);
+      std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >::const_iterator i = self->begin();
+      for (Py_ssize_t j = 0; j < pysize; ++i, ++j) {
+	PyList_SET_ITEM(valList, j, swig::from(i->second));
+      }
+      SWIG_PYTHON_THREAD_END_BLOCK;
+      return valList;
+    }
+SWIGINTERN PyObject *std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__items(std::map< unsigned int,inlib::sg::style_color > *self){
+      std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >::size_type size = self->size();
+      Py_ssize_t pysize = (size <= (std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >::size_type) INT_MAX) ? (Py_ssize_t) size : -1;
+      SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+      if (pysize < 0) {
+	PyErr_SetString(PyExc_OverflowError, "map size not valid in python");
+	SWIG_PYTHON_THREAD_END_BLOCK;
+	return NULL;
+      }    
+      PyObject* itemList = PyList_New(pysize);
+      std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >::const_iterator i = self->begin();
+      for (Py_ssize_t j = 0; j < pysize; ++i, ++j) {
+	PyList_SET_ITEM(itemList, j, swig::from(*i));
+      }
+      SWIG_PYTHON_THREAD_END_BLOCK;
+      return itemList;
+    }
+SWIGINTERN bool std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____contains__(std::map< unsigned int,inlib::sg::style_color > *self,std::map< unsigned int,inlib::sg::style_color >::key_type const &key){
+      return self->find(key) != self->end();
+    }
+SWIGINTERN swig::SwigPyIterator *std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__key_iterator(std::map< unsigned int,inlib::sg::style_color > *self,PyObject **PYTHON_SELF){
+      return swig::make_output_key_iterator(self->begin(), self->begin(), self->end(), *PYTHON_SELF);
+    }
+SWIGINTERN swig::SwigPyIterator *std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__value_iterator(std::map< unsigned int,inlib::sg::style_color > *self,PyObject **PYTHON_SELF){
+      return swig::make_output_value_iterator(self->begin(), self->begin(), self->end(), *PYTHON_SELF);
+    }
+SWIGINTERN void std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____setitem____SWIG_0(std::map< unsigned int,inlib::sg::style_color > *self,std::map< unsigned int,inlib::sg::style_color >::key_type const &key){
+      self->erase(key);
+    }
+SWIGINTERN void std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____setitem____SWIG_1(std::map< unsigned int,inlib::sg::style_color > *self,std::map< unsigned int,inlib::sg::style_color >::key_type const &key,std::map< unsigned int,inlib::sg::style_color >::mapped_type const &x){
+      (*self)[key] = x;
+    }
+SWIGINTERN PyObject *std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__asdict(std::map< unsigned int,inlib::sg::style_color > *self){
+      return swig::traits_from< std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > > >::asdict(*self);
+    }
+SWIGINTERN void std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__erase__SWIG_1(std::map< unsigned int,inlib::sg::style_color > *self,std::map< unsigned int,inlib::sg::style_color >::iterator position){ self->erase(position); }
+SWIGINTERN void std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__erase__SWIG_2(std::map< unsigned int,inlib::sg::style_color > *self,std::map< unsigned int,inlib::sg::style_color >::iterator first,std::map< unsigned int,inlib::sg::style_color >::iterator last){ self->erase(first, last); }
 
 SWIGINTERNINLINE PyObject *
 SWIG_From_unsigned_SS_short  (unsigned short value)
@@ -23890,6 +24396,114 @@ SWIGINTERN PyObject *_wrap_s_clear_scene(PyObject *SWIGUNUSEDPARM(self), PyObjec
   std::string *result = 0 ; if (!SWIG_Python_UnpackTuple(args, "s_clear_scene", 0, 0, 0)) SWIG_fail;
   result = (std::string *) &inlib::sg::s_clear_scene(); resultobj = SWIG_From_std_string(static_cast< std::string >(*result));
   return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_new_std_pair_std_string_inlib_colorf__SWIG_0(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
+  PyObject *resultobj = 0; std::pair< std::string,inlib::colorf > *result = 0 ; if ((nobjs < 0) || (nobjs > 0)) SWIG_fail;
+  result = (std::pair< std::string,inlib::colorf > *)new std::pair< std::string,inlib::colorf >();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__pairT_std__string_inlib__colorf_t, SWIG_POINTER_NEW |  0 );
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_new_std_pair_std_string_inlib_colorf__SWIG_1(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0; std::string arg1 ; inlib::colorf arg2 ; void *argp2 ; int res2 = 0 ;
+  std::pair< std::string,inlib::colorf > *result = 0 ; if ((nobjs < 2) || (nobjs > 2)) SWIG_fail; {
+    std::string *ptr = (std::string *)0; int res = SWIG_AsPtr_std_string(swig_obj[0], &ptr); if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "new_std_pair_std_string_inlib_colorf" "', argument " "1"" of type '" "std::string""'");  }
+     arg1 = *ptr; if (SWIG_IsNewObj(res)) delete ptr; }  {
+    res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_inlib__colorf,  0  | 0); if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_std_pair_std_string_inlib_colorf" "', argument " "2"" of type '" "inlib::colorf""'");  }
+       if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_std_pair_std_string_inlib_colorf" "', argument " "2"" of type '" "inlib::colorf""'"); }
+     else { inlib::colorf * temp = reinterpret_cast< inlib::colorf * >(argp2); arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp; }  } 
+  result = (std::pair< std::string,inlib::colorf > *)new std::pair< std::string,inlib::colorf >(arg1,arg2);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__pairT_std__string_inlib__colorf_t, SWIG_POINTER_NEW |  0 );
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_new_std_pair_std_string_inlib_colorf__SWIG_2(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0; std::pair< std::string,inlib::colorf > *arg1 = 0 ; int res1 = SWIG_OLDOBJ ;
+  std::pair< std::string,inlib::colorf > *result = 0 ; if ((nobjs < 1) || (nobjs > 1)) SWIG_fail; {
+    std::pair< std::string,inlib::colorf > *ptr = (std::pair< std::string,inlib::colorf > *)0;
+    res1 = swig::asptr(swig_obj[0], &ptr); if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_std_pair_std_string_inlib_colorf" "', argument " "1"" of type '" "std::pair< std::string,inlib::colorf > const &""'"); }
+     if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_std_pair_std_string_inlib_colorf" "', argument " "1"" of type '" "std::pair< std::string,inlib::colorf > const &""'"); }
+     arg1 = ptr; } 
+  result = (std::pair< std::string,inlib::colorf > *)new std::pair< std::string,inlib::colorf >((std::pair< std::string,inlib::colorf > const &)*arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__pairT_std__string_inlib__colorf_t, SWIG_POINTER_NEW |  0 );
+  if (SWIG_IsNewObj(res1)) delete arg1; return resultobj; fail: if (SWIG_IsNewObj(res1)) delete arg1; return NULL; }
+SWIGINTERN PyObject *_wrap_new_std_pair_std_string_inlib_colorf(PyObject *self, PyObject *args) { Py_ssize_t argc;
+  PyObject *argv[3] = { 0} ;
+  if (!(argc = SWIG_Python_UnpackTuple(args, "new_std_pair_std_string_inlib_colorf", 0, 2, argv))) SWIG_fail; --argc;
+  if (argc == 0) { return _wrap_new_std_pair_std_string_inlib_colorf__SWIG_0(self, argc, argv);}  if (argc == 1) { int _v;
+    int res = swig::asptr(argv[0], (std::pair< std::string,inlib::colorf >**)(0)); _v = SWIG_CheckState(res); if (_v) {
+      return _wrap_new_std_pair_std_string_inlib_colorf__SWIG_2(self, argc, argv);}  }  if (argc == 2) { int _v;
+    int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0)); _v = SWIG_CheckState(res); if (_v) {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_inlib__colorf, SWIG_POINTER_NO_NULL | 0); _v = SWIG_CheckState(res);
+      if (_v) { return _wrap_new_std_pair_std_string_inlib_colorf__SWIG_1(self, argc, argv);}  }  }  fail:
+  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'new_std_pair_std_string_inlib_colorf'.\n"
+  "  Possible C/C++ prototypes are:\n" "    std::pair< std::string,inlib::colorf >::pair()\n"
+  "    std::pair< std::string,inlib::colorf >::pair(std::string,inlib::colorf)\n"
+  "    std::pair< std::string,inlib::colorf >::pair(std::pair< std::string,inlib::colorf > const &)\n"); return 0; }
+SWIGINTERN PyObject *_wrap_std_pair_std_string_inlib_colorf_first_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0; std::pair< std::string,inlib::colorf > *arg1 = (std::pair< std::string,inlib::colorf > *) 0 ;
+  std::string *arg2 = 0 ; void *argp1 = 0 ; int res1 = 0 ; int res2 = SWIG_OLDOBJ ; PyObject *swig_obj[2] ;
+  if (!SWIG_Python_UnpackTuple(args, "std_pair_std_string_inlib_colorf_first_set", 2, 2, swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__pairT_std__string_inlib__colorf_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_pair_std_string_inlib_colorf_first_set" "', argument " "1"" of type '" "std::pair< std::string,inlib::colorf > *""'");  }
+   arg1 = reinterpret_cast< std::pair< std::string,inlib::colorf > * >(argp1); { std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(swig_obj[1], &ptr); if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "std_pair_std_string_inlib_colorf_first_set" "', argument " "2"" of type '" "std::string const &""'"); }
+     if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "std_pair_std_string_inlib_colorf_first_set" "', argument " "2"" of type '" "std::string const &""'"); }
+     arg2 = ptr; }  if (arg1) (arg1)->first = *arg2; resultobj = SWIG_Py_Void(); if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj; fail: if (SWIG_IsNewObj(res2)) delete arg2; return NULL; }
+SWIGINTERN PyObject *_wrap_std_pair_std_string_inlib_colorf_first_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0; std::pair< std::string,inlib::colorf > *arg1 = (std::pair< std::string,inlib::colorf > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; std::string *result = 0 ; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__pairT_std__string_inlib__colorf_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_pair_std_string_inlib_colorf_first_get" "', argument " "1"" of type '" "std::pair< std::string,inlib::colorf > *""'");  }
+   arg1 = reinterpret_cast< std::pair< std::string,inlib::colorf > * >(argp1); result = (std::string *) & ((arg1)->first);
+  resultobj = SWIG_From_std_string(static_cast< std::string >(*result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_pair_std_string_inlib_colorf_second_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0; std::pair< std::string,inlib::colorf > *arg1 = (std::pair< std::string,inlib::colorf > *) 0 ;
+  inlib::colorf *arg2 = (inlib::colorf *) 0 ; void *argp1 = 0 ; int res1 = 0 ; void *argp2 = 0 ; int res2 = 0 ;
+  PyObject *swig_obj[2] ;
+  if (!SWIG_Python_UnpackTuple(args, "std_pair_std_string_inlib_colorf_second_set", 2, 2, swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__pairT_std__string_inlib__colorf_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_pair_std_string_inlib_colorf_second_set" "', argument " "1"" of type '" "std::pair< std::string,inlib::colorf > *""'");  }
+   arg1 = reinterpret_cast< std::pair< std::string,inlib::colorf > * >(argp1);
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2,SWIGTYPE_p_inlib__colorf, 0 |  0 ); if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "std_pair_std_string_inlib_colorf_second_set" "', argument " "2"" of type '" "inlib::colorf *""'");  }
+   arg2 = reinterpret_cast< inlib::colorf * >(argp2); if (arg1) (arg1)->second = *arg2; resultobj = SWIG_Py_Void();
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_pair_std_string_inlib_colorf_second_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0; std::pair< std::string,inlib::colorf > *arg1 = (std::pair< std::string,inlib::colorf > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; inlib::colorf *result = 0 ; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__pairT_std__string_inlib__colorf_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_pair_std_string_inlib_colorf_second_get" "', argument " "1"" of type '" "std::pair< std::string,inlib::colorf > *""'");  }
+   arg1 = reinterpret_cast< std::pair< std::string,inlib::colorf > * >(argp1); result = (inlib::colorf *)& ((arg1)->second);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_inlib__colorf, 0 |  0 ); return resultobj; fail:
+  return NULL; }
+SWIGINTERN PyObject *_wrap_delete_std_pair_std_string_inlib_colorf(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0; std::pair< std::string,inlib::colorf > *arg1 = (std::pair< std::string,inlib::colorf > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__pairT_std__string_inlib__colorf_t, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_std_pair_std_string_inlib_colorf" "', argument " "1"" of type '" "std::pair< std::string,inlib::colorf > *""'");  }
+   arg1 = reinterpret_cast< std::pair< std::string,inlib::colorf > * >(argp1); delete arg1; resultobj = SWIG_Py_Void();
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *std_pair_std_string_inlib_colorf_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!SWIG_Python_UnpackTuple(args, "swigregister", 1, 1, &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_std__pairT_std__string_inlib__colorf_t, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *std_pair_std_string_inlib_colorf_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  return SWIG_Python_InitShadowInstance(args);
+}
+
 SWIGINTERN PyObject *_wrap_new_style_color__SWIG_0(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0; inlib::sg::style_color *result = 0 ; if ((nobjs < 0) || (nobjs > 0)) SWIG_fail;
   result = (inlib::sg::style_color *)new inlib::sg::style_color();
@@ -23973,6 +24587,558 @@ SWIGINTERN PyObject *style_color_swigregister(PyObject *SWIGUNUSEDPARM(self), Py
 }
 
 SWIGINTERN PyObject *style_color_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  return SWIG_Python_InitShadowInstance(args);
+}
+
+SWIGINTERN PyObject *_wrap_new_std_map_unsigned_int_inlib_sg_style_color__SWIG_0(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0; std::less< unsigned int > *arg1 = 0 ; void *argp1 = 0 ; int res1 = 0 ;
+  std::map< unsigned int,inlib::sg::style_color > *result = 0 ; if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_std__lessT_unsigned_int_t,  0  | 0); if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_std_map_unsigned_int_inlib_sg_style_color" "', argument " "1"" of type '" "std::less< unsigned int > const &""'");  }
+   if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_std_map_unsigned_int_inlib_sg_style_color" "', argument " "1"" of type '" "std::less< unsigned int > const &""'"); }
+   arg1 = reinterpret_cast< std::less< unsigned int > * >(argp1);
+  result = (std::map< unsigned int,inlib::sg::style_color > *)new std::map< unsigned int,inlib::sg::style_color >((std::less< unsigned int > const &)*arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, SWIG_POINTER_NEW |  0 );
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_iterator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  PyObject **arg2 = (PyObject **) 0 ; void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ;
+  swig::SwigPyIterator *result = 0 ; arg2 = &swig_obj[0]; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_iterator" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  result = (swig::SwigPyIterator *)std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__iterator(arg1,arg2);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_swig__SwigPyIterator, SWIG_POINTER_OWN |  0 );
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color___nonzero__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; bool result; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color___nonzero__" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > const *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  result = (bool)std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____nonzero__((std::map< unsigned int,inlib::sg::style_color > const *)arg1);
+  resultobj = SWIG_From_bool(static_cast< bool >(result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color___bool__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; bool result; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color___bool__" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > const *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  result = (bool)std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____bool__((std::map< unsigned int,inlib::sg::style_color > const *)arg1);
+  resultobj = SWIG_From_bool(static_cast< bool >(result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color___len__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; std::map< unsigned int,inlib::sg::style_color >::size_type result;
+  if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color___len__" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > const *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  result = std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____len__((std::map< unsigned int,inlib::sg::style_color > const *)arg1);
+  resultobj = SWIG_From_size_t(static_cast< size_t >(result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color___getitem__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type *arg2 = 0 ; void *argp1 = 0 ; int res1 = 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type temp2 ; unsigned int val2 ; int ecode2 = 0 ; PyObject *swig_obj[2] ;
+  std::map< unsigned int,inlib::sg::style_color >::mapped_type *result = 0 ;
+  if (!SWIG_Python_UnpackTuple(args, "std_map_unsigned_int_inlib_sg_style_color___getitem__", 2, 2, swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color___getitem__" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[1], &val2); if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "std_map_unsigned_int_inlib_sg_style_color___getitem__" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::key_type""'"); }
+    temp2 = static_cast< std::map< unsigned int,inlib::sg::style_color >::key_type >(val2); arg2 = &temp2; try {
+    result = (std::map< unsigned int,inlib::sg::style_color >::mapped_type *) &std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____getitem__(arg1,(unsigned int const &)*arg2);}
+   catch(std::out_of_range &_e) { SWIG_exception_fail(SWIG_IndexError, (&_e)->what()); } 
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_inlib__sg__style_color, 0 |  0 ); return resultobj; fail:
+  return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color___delitem__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type *arg2 = 0 ; void *argp1 = 0 ; int res1 = 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type temp2 ; unsigned int val2 ; int ecode2 = 0 ; PyObject *swig_obj[2] ;
+  if (!SWIG_Python_UnpackTuple(args, "std_map_unsigned_int_inlib_sg_style_color___delitem__", 2, 2, swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color___delitem__" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[1], &val2); if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "std_map_unsigned_int_inlib_sg_style_color___delitem__" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::key_type""'"); }
+    temp2 = static_cast< std::map< unsigned int,inlib::sg::style_color >::key_type >(val2); arg2 = &temp2; try {
+    std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____delitem__(arg1,(unsigned int const &)*arg2);}
+   catch(std::out_of_range &_e) { SWIG_exception_fail(SWIG_IndexError, (&_e)->what()); }  resultobj = SWIG_Py_Void();
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_has_key(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type *arg2 = 0 ; void *argp1 = 0 ; int res1 = 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type temp2 ; unsigned int val2 ; int ecode2 = 0 ; PyObject *swig_obj[2] ;
+  bool result;
+  if (!SWIG_Python_UnpackTuple(args, "std_map_unsigned_int_inlib_sg_style_color_has_key", 2, 2, swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_has_key" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > const *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[1], &val2); if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "std_map_unsigned_int_inlib_sg_style_color_has_key" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::key_type""'"); }
+    temp2 = static_cast< std::map< unsigned int,inlib::sg::style_color >::key_type >(val2); arg2 = &temp2;
+  result = (bool)std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__has_key((std::map< unsigned int,inlib::sg::style_color > const *)arg1,(unsigned int const &)*arg2);
+  resultobj = SWIG_From_bool(static_cast< bool >(result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_keys(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; PyObject *result = 0 ; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_keys" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  result = (PyObject *)std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__keys(arg1); resultobj = result; return resultobj;
+  fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_values(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; PyObject *result = 0 ; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_values" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  result = (PyObject *)std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__values(arg1); resultobj = result;
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_items(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; PyObject *result = 0 ; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_items" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  result = (PyObject *)std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__items(arg1); resultobj = result; return resultobj;
+  fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color___contains__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type *arg2 = 0 ; void *argp1 = 0 ; int res1 = 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type temp2 ; unsigned int val2 ; int ecode2 = 0 ; PyObject *swig_obj[2] ;
+  bool result;
+  if (!SWIG_Python_UnpackTuple(args, "std_map_unsigned_int_inlib_sg_style_color___contains__", 2, 2, swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color___contains__" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[1], &val2); if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "std_map_unsigned_int_inlib_sg_style_color___contains__" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::key_type""'"); }
+    temp2 = static_cast< std::map< unsigned int,inlib::sg::style_color >::key_type >(val2); arg2 = &temp2;
+  result = (bool)std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____contains__(arg1,(unsigned int const &)*arg2);
+  resultobj = SWIG_From_bool(static_cast< bool >(result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_key_iterator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  PyObject **arg2 = (PyObject **) 0 ; void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ;
+  swig::SwigPyIterator *result = 0 ; arg2 = &swig_obj[0]; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_key_iterator" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  result = (swig::SwigPyIterator *)std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__key_iterator(arg1,arg2);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_swig__SwigPyIterator, SWIG_POINTER_OWN |  0 );
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_value_iterator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  PyObject **arg2 = (PyObject **) 0 ; void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ;
+  swig::SwigPyIterator *result = 0 ; arg2 = &swig_obj[0]; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_value_iterator" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  result = (swig::SwigPyIterator *)std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__value_iterator(arg1,arg2);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_swig__SwigPyIterator, SWIG_POINTER_OWN |  0 );
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color___setitem____SWIG_0(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type *arg2 = 0 ; void *argp1 = 0 ; int res1 = 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type temp2 ; unsigned int val2 ; int ecode2 = 0 ;
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color___setitem__" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[1], &val2); if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "std_map_unsigned_int_inlib_sg_style_color___setitem__" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::key_type""'"); }
+    temp2 = static_cast< std::map< unsigned int,inlib::sg::style_color >::key_type >(val2); arg2 = &temp2;
+  std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____setitem____SWIG_0(arg1,(unsigned int const &)*arg2);
+  resultobj = SWIG_Py_Void(); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color___setitem____SWIG_1(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type *arg2 = 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::mapped_type *arg3 = 0 ; void *argp1 = 0 ; int res1 = 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type temp2 ; unsigned int val2 ; int ecode2 = 0 ; void *argp3 = 0 ;
+  int res3 = 0 ; if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color___setitem__" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[1], &val2); if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "std_map_unsigned_int_inlib_sg_style_color___setitem__" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::key_type""'"); }
+    temp2 = static_cast< std::map< unsigned int,inlib::sg::style_color >::key_type >(val2); arg2 = &temp2;
+  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3, SWIGTYPE_p_inlib__sg__style_color,  0  | 0); if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "std_map_unsigned_int_inlib_sg_style_color___setitem__" "', argument " "3"" of type '" "std::map< unsigned int,inlib::sg::style_color >::mapped_type const &""'");  }
+   if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "std_map_unsigned_int_inlib_sg_style_color___setitem__" "', argument " "3"" of type '" "std::map< unsigned int,inlib::sg::style_color >::mapped_type const &""'"); }
+   arg3 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color >::mapped_type * >(argp3); try {
+    std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg____setitem____SWIG_1(arg1,(unsigned int const &)*arg2,(inlib::sg::style_color const &)*arg3);}
+   catch(std::out_of_range &_e) { SWIG_exception_fail(SWIG_IndexError, (&_e)->what()); }  resultobj = SWIG_Py_Void();
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color___setitem__(PyObject *self, PyObject *args) {
+  Py_ssize_t argc; PyObject *argv[4] = { 0} ;
+  if (!(argc = SWIG_Python_UnpackTuple(args, "std_map_unsigned_int_inlib_sg_style_color___setitem__", 0, 3, argv))) SWIG_fail;
+  --argc; if (argc == 2) { int _v;
+    int res = swig::asptr(argv[0], (std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >**)(0));
+    _v = SWIG_CheckState(res); if (_v) { { int res = SWIG_AsVal_unsigned_SS_int(argv[1], NULL); _v = SWIG_CheckState(res); } 
+      if (_v) { return _wrap_std_map_unsigned_int_inlib_sg_style_color___setitem____SWIG_0(self, argc, argv);}  }  } 
+  if (argc == 3) { int _v;
+    int res = swig::asptr(argv[0], (std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >**)(0));
+    _v = SWIG_CheckState(res); if (_v) { { int res = SWIG_AsVal_unsigned_SS_int(argv[1], NULL); _v = SWIG_CheckState(res); } 
+      if (_v) { int res = SWIG_ConvertPtr(argv[2], 0, SWIGTYPE_p_inlib__sg__style_color, SWIG_POINTER_NO_NULL | 0);
+        _v = SWIG_CheckState(res); if (_v) {
+          return _wrap_std_map_unsigned_int_inlib_sg_style_color___setitem____SWIG_1(self, argc, argv);}  }  }  }  fail:
+  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'std_map_unsigned_int_inlib_sg_style_color___setitem__'.\n"
+  "  Possible C/C++ prototypes are:\n"
+  "    std::map< unsigned int,inlib::sg::style_color >::__setitem__(std::map< unsigned int,inlib::sg::style_color >::key_type const &)\n"
+  "    std::map< unsigned int,inlib::sg::style_color >::__setitem__(std::map< unsigned int,inlib::sg::style_color >::key_type const &,std::map< unsigned int,inlib::sg::style_color >::mapped_type const &)\n");
+  return 0; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_asdict(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; PyObject *result = 0 ; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_asdict" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  result = (PyObject *)std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__asdict(arg1); resultobj = result;
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_new_std_map_unsigned_int_inlib_sg_style_color__SWIG_1(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
+  PyObject *resultobj = 0; std::map< unsigned int,inlib::sg::style_color > *result = 0 ;
+  if ((nobjs < 0) || (nobjs > 0)) SWIG_fail;
+  result = (std::map< unsigned int,inlib::sg::style_color > *)new std::map< unsigned int,inlib::sg::style_color >();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, SWIG_POINTER_NEW |  0 );
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_new_std_map_unsigned_int_inlib_sg_style_color__SWIG_2(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0; std::map< unsigned int,inlib::sg::style_color > *arg1 = 0 ; int res1 = SWIG_OLDOBJ ;
+  std::map< unsigned int,inlib::sg::style_color > *result = 0 ; if ((nobjs < 1) || (nobjs > 1)) SWIG_fail; {
+    std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > > *ptr = (std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > > *)0;
+    res1 = swig::asptr(swig_obj[0], &ptr); if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_std_map_unsigned_int_inlib_sg_style_color" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > const &""'"); }
+     if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_std_map_unsigned_int_inlib_sg_style_color" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > const &""'"); }
+     arg1 = ptr; } 
+  result = (std::map< unsigned int,inlib::sg::style_color > *)new std::map< unsigned int,inlib::sg::style_color >((std::map< unsigned int,inlib::sg::style_color > const &)*arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, SWIG_POINTER_NEW |  0 );
+  if (SWIG_IsNewObj(res1)) delete arg1; return resultobj; fail: if (SWIG_IsNewObj(res1)) delete arg1; return NULL; }
+SWIGINTERN PyObject *_wrap_new_std_map_unsigned_int_inlib_sg_style_color(PyObject *self, PyObject *args) { Py_ssize_t argc;
+  PyObject *argv[2] = { 0} ;
+  if (!(argc = SWIG_Python_UnpackTuple(args, "new_std_map_unsigned_int_inlib_sg_style_color", 0, 1, argv))) SWIG_fail; --argc;
+  if (argc == 0) { return _wrap_new_std_map_unsigned_int_inlib_sg_style_color__SWIG_1(self, argc, argv);}  if (argc == 1) {
+    int _v; int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_std__lessT_unsigned_int_t, SWIG_POINTER_NO_NULL | 0);
+    _v = SWIG_CheckState(res); if (_v) { return _wrap_new_std_map_unsigned_int_inlib_sg_style_color__SWIG_0(self, argc, argv);}
+     }  if (argc == 1) { int _v;
+    int res = swig::asptr(argv[0], (std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >**)(0));
+    _v = SWIG_CheckState(res); if (_v) { return _wrap_new_std_map_unsigned_int_inlib_sg_style_color__SWIG_2(self, argc, argv);}
+     }  fail:
+  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'new_std_map_unsigned_int_inlib_sg_style_color'.\n"
+  "  Possible C/C++ prototypes are:\n"
+  "    std::map< unsigned int,inlib::sg::style_color >::map(std::less< unsigned int > const &)\n"
+  "    std::map< unsigned int,inlib::sg::style_color >::map()\n"
+  "    std::map< unsigned int,inlib::sg::style_color >::map(std::map< unsigned int,inlib::sg::style_color > const &)\n");
+  return 0; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_empty(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; bool result; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_empty" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > const *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  result = (bool)((std::map< unsigned int,inlib::sg::style_color > const *)arg1)->empty();
+  resultobj = SWIG_From_bool(static_cast< bool >(result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_size(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; std::map< unsigned int,inlib::sg::style_color >::size_type result;
+  if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_size" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > const *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  result = ((std::map< unsigned int,inlib::sg::style_color > const *)arg1)->size();
+  resultobj = SWIG_From_size_t(static_cast< size_t >(result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_swap(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  std::map< unsigned int,inlib::sg::style_color > *arg2 = 0 ; void *argp1 = 0 ; int res1 = 0 ; void *argp2 = 0 ; int res2 = 0 ;
+  PyObject *swig_obj[2] ;
+  if (!SWIG_Python_UnpackTuple(args, "std_map_unsigned_int_inlib_sg_style_color_swap", 2, 2, swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_swap" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "std_map_unsigned_int_inlib_sg_style_color_swap" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color > &""'");  }
+   if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "std_map_unsigned_int_inlib_sg_style_color_swap" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color > &""'"); }
+   arg2 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp2); (arg1)->swap(*arg2);
+  resultobj = SWIG_Py_Void(); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_begin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; std::map< unsigned int,inlib::sg::style_color >::iterator result;
+  if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_begin" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1); result = (arg1)->begin();
+  resultobj = SWIG_NewPointerObj(swig::make_output_iterator(static_cast< const std::map< unsigned int,inlib::sg::style_color >::iterator & >(result)),
+  swig::SwigPyIterator::descriptor(),SWIG_POINTER_OWN); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_end(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; std::map< unsigned int,inlib::sg::style_color >::iterator result;
+  if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_end" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1); result = (arg1)->end();
+  resultobj = SWIG_NewPointerObj(swig::make_output_iterator(static_cast< const std::map< unsigned int,inlib::sg::style_color >::iterator & >(result)),
+  swig::SwigPyIterator::descriptor(),SWIG_POINTER_OWN); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_rbegin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ;
+  std::map< unsigned int,inlib::sg::style_color >::reverse_iterator result; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_rbegin" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1); result = (arg1)->rbegin();
+  resultobj = SWIG_NewPointerObj(swig::make_output_iterator(static_cast< const std::map< unsigned int,inlib::sg::style_color >::reverse_iterator & >(result)),
+  swig::SwigPyIterator::descriptor(),SWIG_POINTER_OWN); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_rend(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ;
+  std::map< unsigned int,inlib::sg::style_color >::reverse_iterator result; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_rend" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1); result = (arg1)->rend();
+  resultobj = SWIG_NewPointerObj(swig::make_output_iterator(static_cast< const std::map< unsigned int,inlib::sg::style_color >::reverse_iterator & >(result)),
+  swig::SwigPyIterator::descriptor(),SWIG_POINTER_OWN); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_clear(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_clear" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1); (arg1)->clear();
+  resultobj = SWIG_Py_Void(); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_get_allocator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ;
+  SwigValueWrapper< std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > > result; if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_get_allocator" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > const *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  result = ((std::map< unsigned int,inlib::sg::style_color > const *)arg1)->get_allocator();
+  resultobj = SWIG_NewPointerObj((new std::map< unsigned int,inlib::sg::style_color >::allocator_type(static_cast< const std::map< unsigned int,inlib::sg::style_color >::allocator_type& >(result))), SWIGTYPE_p_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t, SWIG_POINTER_OWN |  0 );
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_erase__SWIG_0(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type *arg2 = 0 ; void *argp1 = 0 ; int res1 = 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type temp2 ; unsigned int val2 ; int ecode2 = 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::size_type result; if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_erase" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[1], &val2); if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "std_map_unsigned_int_inlib_sg_style_color_erase" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::key_type""'"); }
+    temp2 = static_cast< std::map< unsigned int,inlib::sg::style_color >::key_type >(val2); arg2 = &temp2;
+  result = (arg1)->erase((std::map< unsigned int,inlib::sg::style_color >::key_type const &)*arg2);
+  resultobj = SWIG_From_size_t(static_cast< size_t >(result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_count(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type *arg2 = 0 ; void *argp1 = 0 ; int res1 = 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type temp2 ; unsigned int val2 ; int ecode2 = 0 ; PyObject *swig_obj[2] ;
+  std::map< unsigned int,inlib::sg::style_color >::size_type result;
+  if (!SWIG_Python_UnpackTuple(args, "std_map_unsigned_int_inlib_sg_style_color_count", 2, 2, swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_count" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > const *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[1], &val2); if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "std_map_unsigned_int_inlib_sg_style_color_count" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::key_type""'"); }
+    temp2 = static_cast< std::map< unsigned int,inlib::sg::style_color >::key_type >(val2); arg2 = &temp2;
+  result = ((std::map< unsigned int,inlib::sg::style_color > const *)arg1)->count((std::map< unsigned int,inlib::sg::style_color >::key_type const &)*arg2);
+  resultobj = SWIG_From_size_t(static_cast< size_t >(result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_erase__SWIG_1(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::iterator arg2 ; void *argp1 = 0 ; int res1 = 0 ;
+  swig::SwigPyIterator *iter2 = 0 ; int res2 ; if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_erase" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  res2 = SWIG_ConvertPtr(swig_obj[1], SWIG_as_voidptrptr(&iter2), swig::SwigPyIterator::descriptor(), 0);
+  if (!SWIG_IsOK(res2) || !iter2) {
+    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "std_map_unsigned_int_inlib_sg_style_color_erase" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::iterator""'"); }
+   else {
+    swig::SwigPyIterator_T<std::map< unsigned int,inlib::sg::style_color >::iterator > *iter_t = dynamic_cast<swig::SwigPyIterator_T<std::map< unsigned int,inlib::sg::style_color >::iterator > *>(iter2);
+    if (iter_t) { arg2 = iter_t->get_current(); }  else {
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "std_map_unsigned_int_inlib_sg_style_color_erase" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::iterator""'"); }
+     }  std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__erase__SWIG_1(arg1,arg2); resultobj = SWIG_Py_Void();
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_erase__SWIG_2(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::iterator arg2 ;
+  std::map< unsigned int,inlib::sg::style_color >::iterator arg3 ; void *argp1 = 0 ; int res1 = 0 ;
+  swig::SwigPyIterator *iter2 = 0 ; int res2 ; swig::SwigPyIterator *iter3 = 0 ; int res3 ;
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_erase" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  res2 = SWIG_ConvertPtr(swig_obj[1], SWIG_as_voidptrptr(&iter2), swig::SwigPyIterator::descriptor(), 0);
+  if (!SWIG_IsOK(res2) || !iter2) {
+    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "std_map_unsigned_int_inlib_sg_style_color_erase" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::iterator""'"); }
+   else {
+    swig::SwigPyIterator_T<std::map< unsigned int,inlib::sg::style_color >::iterator > *iter_t = dynamic_cast<swig::SwigPyIterator_T<std::map< unsigned int,inlib::sg::style_color >::iterator > *>(iter2);
+    if (iter_t) { arg2 = iter_t->get_current(); }  else {
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "std_map_unsigned_int_inlib_sg_style_color_erase" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::iterator""'"); }
+     }  res3 = SWIG_ConvertPtr(swig_obj[2], SWIG_as_voidptrptr(&iter3), swig::SwigPyIterator::descriptor(), 0);
+  if (!SWIG_IsOK(res3) || !iter3) {
+    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "std_map_unsigned_int_inlib_sg_style_color_erase" "', argument " "3"" of type '" "std::map< unsigned int,inlib::sg::style_color >::iterator""'"); }
+   else {
+    swig::SwigPyIterator_T<std::map< unsigned int,inlib::sg::style_color >::iterator > *iter_t = dynamic_cast<swig::SwigPyIterator_T<std::map< unsigned int,inlib::sg::style_color >::iterator > *>(iter3);
+    if (iter_t) { arg3 = iter_t->get_current(); }  else {
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "std_map_unsigned_int_inlib_sg_style_color_erase" "', argument " "3"" of type '" "std::map< unsigned int,inlib::sg::style_color >::iterator""'"); }
+     }  std_map_Sl_unsigned_SS_int_Sc_inlib_sg_style_color_Sg__erase__SWIG_2(arg1,arg2,arg3); resultobj = SWIG_Py_Void();
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_erase(PyObject *self, PyObject *args) { Py_ssize_t argc;
+  PyObject *argv[4] = { 0} ;
+  if (!(argc = SWIG_Python_UnpackTuple(args, "std_map_unsigned_int_inlib_sg_style_color_erase", 0, 3, argv))) SWIG_fail; --argc;
+  if (argc == 2) { int _v;
+    int res = swig::asptr(argv[0], (std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >**)(0));
+    _v = SWIG_CheckState(res); if (_v) { swig::SwigPyIterator *iter = 0;
+      int res = SWIG_ConvertPtr(argv[1], SWIG_as_voidptrptr(&iter), swig::SwigPyIterator::descriptor(), 0);
+      _v = (SWIG_IsOK(res) && iter && (dynamic_cast<swig::SwigPyIterator_T<std::map< unsigned int,inlib::sg::style_color >::iterator > *>(iter) != 0));
+      if (_v) { return _wrap_std_map_unsigned_int_inlib_sg_style_color_erase__SWIG_1(self, argc, argv);}  }  }  if (argc == 2) {
+    int _v;
+    int res = swig::asptr(argv[0], (std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >**)(0));
+    _v = SWIG_CheckState(res); if (_v) { { int res = SWIG_AsVal_unsigned_SS_int(argv[1], NULL); _v = SWIG_CheckState(res); } 
+      if (_v) { return _wrap_std_map_unsigned_int_inlib_sg_style_color_erase__SWIG_0(self, argc, argv);}  }  }  if (argc == 3) {
+    int _v;
+    int res = swig::asptr(argv[0], (std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > >**)(0));
+    _v = SWIG_CheckState(res); if (_v) { swig::SwigPyIterator *iter = 0;
+      int res = SWIG_ConvertPtr(argv[1], SWIG_as_voidptrptr(&iter), swig::SwigPyIterator::descriptor(), 0);
+      _v = (SWIG_IsOK(res) && iter && (dynamic_cast<swig::SwigPyIterator_T<std::map< unsigned int,inlib::sg::style_color >::iterator > *>(iter) != 0));
+      if (_v) { swig::SwigPyIterator *iter = 0;
+        int res = SWIG_ConvertPtr(argv[2], SWIG_as_voidptrptr(&iter), swig::SwigPyIterator::descriptor(), 0);
+        _v = (SWIG_IsOK(res) && iter && (dynamic_cast<swig::SwigPyIterator_T<std::map< unsigned int,inlib::sg::style_color >::iterator > *>(iter) != 0));
+        if (_v) { return _wrap_std_map_unsigned_int_inlib_sg_style_color_erase__SWIG_2(self, argc, argv);}  }  }  }  fail:
+  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'std_map_unsigned_int_inlib_sg_style_color_erase'.\n"
+  "  Possible C/C++ prototypes are:\n"
+  "    std::map< unsigned int,inlib::sg::style_color >::erase(std::map< unsigned int,inlib::sg::style_color >::key_type const &)\n"
+  "    std::map< unsigned int,inlib::sg::style_color >::erase(std::map< unsigned int,inlib::sg::style_color >::iterator)\n"
+  "    std::map< unsigned int,inlib::sg::style_color >::erase(std::map< unsigned int,inlib::sg::style_color >::iterator,std::map< unsigned int,inlib::sg::style_color >::iterator)\n");
+  return 0; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_find(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type *arg2 = 0 ; void *argp1 = 0 ; int res1 = 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type temp2 ; unsigned int val2 ; int ecode2 = 0 ; PyObject *swig_obj[2] ;
+  std::map< unsigned int,inlib::sg::style_color >::iterator result;
+  if (!SWIG_Python_UnpackTuple(args, "std_map_unsigned_int_inlib_sg_style_color_find", 2, 2, swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_find" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[1], &val2); if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "std_map_unsigned_int_inlib_sg_style_color_find" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::key_type""'"); }
+    temp2 = static_cast< std::map< unsigned int,inlib::sg::style_color >::key_type >(val2); arg2 = &temp2;
+  result = (arg1)->find((std::map< unsigned int,inlib::sg::style_color >::key_type const &)*arg2);
+  resultobj = SWIG_NewPointerObj(swig::make_output_iterator(static_cast< const std::map< unsigned int,inlib::sg::style_color >::iterator & >(result)),
+  swig::SwigPyIterator::descriptor(),SWIG_POINTER_OWN); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_lower_bound(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type *arg2 = 0 ; void *argp1 = 0 ; int res1 = 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type temp2 ; unsigned int val2 ; int ecode2 = 0 ; PyObject *swig_obj[2] ;
+  std::map< unsigned int,inlib::sg::style_color >::iterator result;
+  if (!SWIG_Python_UnpackTuple(args, "std_map_unsigned_int_inlib_sg_style_color_lower_bound", 2, 2, swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_lower_bound" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[1], &val2); if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "std_map_unsigned_int_inlib_sg_style_color_lower_bound" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::key_type""'"); }
+    temp2 = static_cast< std::map< unsigned int,inlib::sg::style_color >::key_type >(val2); arg2 = &temp2;
+  result = (arg1)->lower_bound((std::map< unsigned int,inlib::sg::style_color >::key_type const &)*arg2);
+  resultobj = SWIG_NewPointerObj(swig::make_output_iterator(static_cast< const std::map< unsigned int,inlib::sg::style_color >::iterator & >(result)),
+  swig::SwigPyIterator::descriptor(),SWIG_POINTER_OWN); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_std_map_unsigned_int_inlib_sg_style_color_upper_bound(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type *arg2 = 0 ; void *argp1 = 0 ; int res1 = 0 ;
+  std::map< unsigned int,inlib::sg::style_color >::key_type temp2 ; unsigned int val2 ; int ecode2 = 0 ; PyObject *swig_obj[2] ;
+  std::map< unsigned int,inlib::sg::style_color >::iterator result;
+  if (!SWIG_Python_UnpackTuple(args, "std_map_unsigned_int_inlib_sg_style_color_upper_bound", 2, 2, swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "std_map_unsigned_int_inlib_sg_style_color_upper_bound" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[1], &val2); if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "std_map_unsigned_int_inlib_sg_style_color_upper_bound" "', argument " "2"" of type '" "std::map< unsigned int,inlib::sg::style_color >::key_type""'"); }
+    temp2 = static_cast< std::map< unsigned int,inlib::sg::style_color >::key_type >(val2); arg2 = &temp2;
+  result = (arg1)->upper_bound((std::map< unsigned int,inlib::sg::style_color >::key_type const &)*arg2);
+  resultobj = SWIG_NewPointerObj(swig::make_output_iterator(static_cast< const std::map< unsigned int,inlib::sg::style_color >::iterator & >(result)),
+  swig::SwigPyIterator::descriptor(),SWIG_POINTER_OWN); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_delete_std_map_unsigned_int_inlib_sg_style_color(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::map< unsigned int,inlib::sg::style_color > *arg1 = (std::map< unsigned int,inlib::sg::style_color > *) 0 ;
+  void *argp1 = 0 ; int res1 = 0 ; PyObject *swig_obj[1] ; if (!args) SWIG_fail; swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_std_map_unsigned_int_inlib_sg_style_color" "', argument " "1"" of type '" "std::map< unsigned int,inlib::sg::style_color > *""'");  }
+   arg1 = reinterpret_cast< std::map< unsigned int,inlib::sg::style_color > * >(argp1); delete arg1; resultobj = SWIG_Py_Void();
+  return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *std_map_unsigned_int_inlib_sg_style_color_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!SWIG_Python_UnpackTuple(args, "swigregister", 1, 1, &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *std_map_unsigned_int_inlib_sg_style_color_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   return SWIG_Python_InitShadowInstance(args);
 }
 
@@ -34232,10 +35398,51 @@ static PyMethodDef SwigMethods[] = {
 	 { "font_ROOT_62", _wrap_font_ROOT_62, METH_NOARGS, NULL},
 	 { "s_node_end", _wrap_s_node_end, METH_NOARGS, NULL},
 	 { "s_clear_scene", _wrap_s_clear_scene, METH_NOARGS, NULL},
+	 { "new_std_pair_std_string_inlib_colorf", _wrap_new_std_pair_std_string_inlib_colorf, METH_VARARGS, NULL},
+	 { "std_pair_std_string_inlib_colorf_first_set", _wrap_std_pair_std_string_inlib_colorf_first_set, METH_VARARGS, NULL},
+	 { "std_pair_std_string_inlib_colorf_first_get", _wrap_std_pair_std_string_inlib_colorf_first_get, METH_O, NULL},
+	 { "std_pair_std_string_inlib_colorf_second_set", _wrap_std_pair_std_string_inlib_colorf_second_set, METH_VARARGS, NULL},
+	 { "std_pair_std_string_inlib_colorf_second_get", _wrap_std_pair_std_string_inlib_colorf_second_get, METH_O, NULL},
+	 { "delete_std_pair_std_string_inlib_colorf", _wrap_delete_std_pair_std_string_inlib_colorf, METH_O, NULL},
+	 { "std_pair_std_string_inlib_colorf_swigregister", std_pair_std_string_inlib_colorf_swigregister, METH_O, NULL},
+	 { "std_pair_std_string_inlib_colorf_swiginit", std_pair_std_string_inlib_colorf_swiginit, METH_VARARGS, NULL},
 	 { "delete_style_color", _wrap_delete_style_color, METH_O, NULL},
 	 { "new_style_color", _wrap_new_style_color, METH_VARARGS, NULL},
 	 { "style_color_swigregister", style_color_swigregister, METH_O, NULL},
 	 { "style_color_swiginit", style_color_swiginit, METH_VARARGS, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_iterator", _wrap_std_map_unsigned_int_inlib_sg_style_color_iterator, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color___nonzero__", _wrap_std_map_unsigned_int_inlib_sg_style_color___nonzero__, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color___bool__", _wrap_std_map_unsigned_int_inlib_sg_style_color___bool__, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color___len__", _wrap_std_map_unsigned_int_inlib_sg_style_color___len__, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color___getitem__", _wrap_std_map_unsigned_int_inlib_sg_style_color___getitem__, METH_VARARGS, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color___delitem__", _wrap_std_map_unsigned_int_inlib_sg_style_color___delitem__, METH_VARARGS, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_has_key", _wrap_std_map_unsigned_int_inlib_sg_style_color_has_key, METH_VARARGS, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_keys", _wrap_std_map_unsigned_int_inlib_sg_style_color_keys, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_values", _wrap_std_map_unsigned_int_inlib_sg_style_color_values, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_items", _wrap_std_map_unsigned_int_inlib_sg_style_color_items, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color___contains__", _wrap_std_map_unsigned_int_inlib_sg_style_color___contains__, METH_VARARGS, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_key_iterator", _wrap_std_map_unsigned_int_inlib_sg_style_color_key_iterator, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_value_iterator", _wrap_std_map_unsigned_int_inlib_sg_style_color_value_iterator, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color___setitem__", _wrap_std_map_unsigned_int_inlib_sg_style_color___setitem__, METH_VARARGS, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_asdict", _wrap_std_map_unsigned_int_inlib_sg_style_color_asdict, METH_O, NULL},
+	 { "new_std_map_unsigned_int_inlib_sg_style_color", _wrap_new_std_map_unsigned_int_inlib_sg_style_color, METH_VARARGS, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_empty", _wrap_std_map_unsigned_int_inlib_sg_style_color_empty, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_size", _wrap_std_map_unsigned_int_inlib_sg_style_color_size, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_swap", _wrap_std_map_unsigned_int_inlib_sg_style_color_swap, METH_VARARGS, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_begin", _wrap_std_map_unsigned_int_inlib_sg_style_color_begin, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_end", _wrap_std_map_unsigned_int_inlib_sg_style_color_end, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_rbegin", _wrap_std_map_unsigned_int_inlib_sg_style_color_rbegin, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_rend", _wrap_std_map_unsigned_int_inlib_sg_style_color_rend, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_clear", _wrap_std_map_unsigned_int_inlib_sg_style_color_clear, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_get_allocator", _wrap_std_map_unsigned_int_inlib_sg_style_color_get_allocator, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_count", _wrap_std_map_unsigned_int_inlib_sg_style_color_count, METH_VARARGS, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_erase", _wrap_std_map_unsigned_int_inlib_sg_style_color_erase, METH_VARARGS, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_find", _wrap_std_map_unsigned_int_inlib_sg_style_color_find, METH_VARARGS, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_lower_bound", _wrap_std_map_unsigned_int_inlib_sg_style_color_lower_bound, METH_VARARGS, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_upper_bound", _wrap_std_map_unsigned_int_inlib_sg_style_color_upper_bound, METH_VARARGS, NULL},
+	 { "delete_std_map_unsigned_int_inlib_sg_style_color", _wrap_delete_std_map_unsigned_int_inlib_sg_style_color, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_swigregister", std_map_unsigned_int_inlib_sg_style_color_swigregister, METH_O, NULL},
+	 { "std_map_unsigned_int_inlib_sg_style_color_swiginit", std_map_unsigned_int_inlib_sg_style_color_swiginit, METH_VARARGS, NULL},
 	 { "style_colormap_s_class", _wrap_style_colormap_s_class, METH_NOARGS, NULL},
 	 { "style_colormap_check_class_name", _wrap_style_colormap_check_class_name, METH_NOARGS, NULL},
 	 { "delete_style_colormap", _wrap_delete_style_colormap, METH_O, NULL},
@@ -34857,18 +36064,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 static void *_p_inlib__sg__sfT_bool_tTo_p_inlib__sg__bsfT_bool_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((inlib::sg::bsf< bool > *)  ((inlib::sg::sf< bool > *) x));
 }
-static void *_p_f_r_std__ios_base__r_std__basic_ostreamT_char_std__char_traitsT_char_t_tTo_p_f_r_std__ios_base__r_std__ios_base(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((std::ios_base &(*)(std::ios_base &)) (std::basic_ios< char > *) ((std::basic_ostream< char,std::char_traits< char > > &(*)(std::ios_base &)) x));
-}
-static void *_p_f_r_std__ios_base__r_std__basic_istreamT_char_std__char_traitsT_char_t_tTo_p_f_r_std__ios_base__r_std__ios_base(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((std::ios_base &(*)(std::ios_base &)) (std::basic_ios< char > *) ((std::basic_istream< char,std::char_traits< char > > &(*)(std::ios_base &)) x));
-}
-static void *_p_f_r_std__ios_base__r_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_f_r_std__ios_base__r_std__ios_base(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((std::ios_base &(*)(std::ios_base &)) (std::basic_ios< char > *)(std::basic_istream< char > *) ((std::basic_iostream< char,std::char_traits< char > > &(*)(std::ios_base &)) x));
-}
-static void *_p_f_r_std__ios_base__r_std__basic_iosT_char_std__char_traitsT_char_t_tTo_p_f_r_std__ios_base__r_std__ios_base(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((std::ios_base &(*)(std::ios_base &))  ((std::basic_ios< char,std::char_traits< char > > &(*)(std::ios_base &)) x));
-}
 static void *_p_std__basic_ostreamT_char_std__char_traitsT_char_t_tTo_p_std__ios_base(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((std::ios_base *) (std::basic_ios< char > *) ((std::basic_ostream< char,std::char_traits< char > > *) x));
 }
@@ -34880,6 +36075,18 @@ static void *_p_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_std__io
 }
 static void *_p_std__basic_iosT_char_std__char_traitsT_char_t_tTo_p_std__ios_base(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((std::ios_base *)  ((std::basic_ios< char,std::char_traits< char > > *) x));
+}
+static void *_p_f_r_std__ios_base__r_std__basic_ostreamT_char_std__char_traitsT_char_t_tTo_p_f_r_std__ios_base__r_std__ios_base(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::ios_base &(*)(std::ios_base &)) (std::basic_ios< char > *) ((std::basic_ostream< char,std::char_traits< char > > &(*)(std::ios_base &)) x));
+}
+static void *_p_f_r_std__ios_base__r_std__basic_istreamT_char_std__char_traitsT_char_t_tTo_p_f_r_std__ios_base__r_std__ios_base(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::ios_base &(*)(std::ios_base &)) (std::basic_ios< char > *) ((std::basic_istream< char,std::char_traits< char > > &(*)(std::ios_base &)) x));
+}
+static void *_p_f_r_std__ios_base__r_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_f_r_std__ios_base__r_std__ios_base(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::ios_base &(*)(std::ios_base &)) (std::basic_ios< char > *)(std::basic_istream< char > *) ((std::basic_iostream< char,std::char_traits< char > > &(*)(std::ios_base &)) x));
+}
+static void *_p_f_r_std__ios_base__r_std__basic_iosT_char_std__char_traitsT_char_t_tTo_p_f_r_std__ios_base__r_std__ios_base(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::ios_base &(*)(std::ios_base &))  ((std::basic_ios< char,std::char_traits< char > > &(*)(std::ios_base &)) x));
 }
 static void *_p_inlib__histo__h3dTo_p_inlib__histo__base_histoT_double_unsigned_int_double_double_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((inlib::histo::base_histo< double,unsigned int,double,double > *) (inlib::histo::b3< double,unsigned int,double,double > *)(inlib::histo::h3< double,unsigned int,double,double > *) ((inlib::histo::h3d *) x));
@@ -34925,6 +36132,18 @@ static void *_p_f_r_std__basic_ostream__char_std__char_traits__char______r_std__
 }
 static void *_p_f_r_std__basic_istream__char_std__char_traits__char______r_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_f_r_std__basic_istream__char_std__char_traits__char______r_std__basic_istreamT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((std::basic_istream< char,std::char_traits< char > > &(*)(std::basic_istream< char,std::char_traits< char > > &))  ((std::basic_iostream< char,std::char_traits< char > > &(*)(std::basic_istream< char,std::char_traits< char > > &)) x));
+}
+static void *_p_inlib__sg__style_colormapTo_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > > *)  ((inlib::sg::style_colormap *) x));
+}
+static void *_p_inlib__sg__style_default_colormapTo_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > > *) (inlib::sg::style_colormap *) ((inlib::sg::style_default_colormap *) x));
+}
+static void *_p_inlib__sg__style_ROOT_colormapTo_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > > *) (inlib::sg::style_colormap *) ((inlib::sg::style_ROOT_colormap *) x));
+}
+static void *_p_inlib__sg__style_povama_colormapTo_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > > *) (inlib::sg::style_colormap *) ((inlib::sg::style_povama_colormap *) x));
 }
 static void *_p_inlib__histo__p2dTo_p_inlib__histo__p2T_double_unsigned_int_double_double_double_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((inlib::histo::p2< double,unsigned int,double,double,double > *)  ((inlib::histo::p2d *) x));
@@ -34977,6 +36196,9 @@ static void *_p_inlib__colorfTo_p_inlib__vec4f(void *x, int *SWIGUNUSEDPARM(newm
 static void *_p_inlib__sg__sf_vecT_inlib__colorf_float_tTo_p_inlib__sg__bsfT_inlib__colorf_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((inlib::sg::bsf< inlib::colorf > *)  ((inlib::sg::sf_vec< inlib::colorf,float > *) x));
 }
+static void *_p_inlib__sg__style_colorTo_p_std__pairT_std__string_inlib__colorf_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::pair< std::string,inlib::colorf > *)  ((inlib::sg::style_color *) x));
+}
 static void *_p_inlib__mat4fTo_p_inlib__matT_float_4_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((inlib::mat< float,4 > *) (inlib::mat4< float > *) ((inlib::mat4f *) x));
 }
@@ -35025,6 +36247,12 @@ static void *_p_inlib__sg__sf_stringTo_p_inlib__sg__field(void *x, int *SWIGUNUS
 static void *_p_inlib__sg__sf_rotfTo_p_inlib__sg__field(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((inlib::sg::field *) (inlib::sg::bsf< inlib::rotf > *) ((inlib::sg::sf_rotf *) x));
 }
+static void *_p_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::basic_ostream< char,std::char_traits< char > > *)  ((std::basic_iostream< char,std::char_traits< char > > *) x));
+}
+static void *_p_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_istreamT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::basic_istream< char,std::char_traits< char > > *)  ((std::basic_iostream< char,std::char_traits< char > > *) x));
+}
 static void *_p_f_r_std__basic_ios__char_std__char_traits__char______r_std__basic_ostreamT_char_std__char_traitsT_char_t_tTo_p_f_r_std__basic_ios__char_std__char_traits__char______r_std__basic_iosT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((std::basic_ios< char,std::char_traits< char > > &(*)(std::basic_ios< char,std::char_traits< char > > &))  ((std::basic_ostream< char,std::char_traits< char > > &(*)(std::basic_ios< char,std::char_traits< char > > &)) x));
 }
@@ -35033,12 +36261,6 @@ static void *_p_f_r_std__basic_ios__char_std__char_traits__char______r_std__basi
 }
 static void *_p_f_r_std__basic_ios__char_std__char_traits__char______r_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_f_r_std__basic_ios__char_std__char_traits__char______r_std__basic_iosT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((std::basic_ios< char,std::char_traits< char > > &(*)(std::basic_ios< char,std::char_traits< char > > &)) (std::basic_istream< char > *) ((std::basic_iostream< char,std::char_traits< char > > &(*)(std::basic_ios< char,std::char_traits< char > > &)) x));
-}
-static void *_p_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((std::basic_ostream< char,std::char_traits< char > > *)  ((std::basic_iostream< char,std::char_traits< char > > *) x));
-}
-static void *_p_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_istreamT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((std::basic_istream< char,std::char_traits< char > > *)  ((std::basic_iostream< char,std::char_traits< char > > *) x));
 }
 static void *_p_inlib__sg__mf_stringTo_p_inlib__sg__bmfT_std__string_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((inlib::sg::bmf< std::string > *)  ((inlib::sg::mf_string *) x));
@@ -35316,7 +36538,7 @@ static swig_type_info _swigt__p_inlib__sg__state = {"_p_inlib__sg__state", "inli
 static swig_type_info _swigt__p_inlib__sg__states = {"_p_inlib__sg__states", "inlib::sg::states *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_inlib__sg__style = {"_p_inlib__sg__style", "inlib::sg::style *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_inlib__sg__style_ROOT_colormap = {"_p_inlib__sg__style_ROOT_colormap", "inlib::sg::style_ROOT_colormap *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_inlib__sg__style_color = {"_p_inlib__sg__style_color", "inlib::sg::style_color *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_inlib__sg__style_color = {"_p_inlib__sg__style_color", "std::map< unsigned int,inlib::sg::style_color >::mapped_type *|inlib::sg::style_color *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_inlib__sg__style_colormap = {"_p_inlib__sg__style_colormap", "inlib::sg::style_colormap *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_inlib__sg__style_default_colormap = {"_p_inlib__sg__style_default_colormap", "inlib::sg::style_default_colormap *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_inlib__sg__style_parser = {"_p_inlib__sg__style_parser", "inlib::sg::style_parser *", 0, 0, (void*)0, 0};
@@ -35371,6 +36593,7 @@ static swig_type_info _swigt__p_size_t = {"_p_size_t", "std::streamsize *|size_t
 static swig_type_info _swigt__p_size_type = {"_p_size_type", "size_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_state_type = {"_p_state_type", "state_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__allocatorT_double_t = {"_p_std__allocatorT_double_t", "std::vector< double >::allocator_type *|std::allocator< double > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t = {"_p_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t", "std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > *|std::map< unsigned int,inlib::sg::style_color >::allocator_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__basic_iosT_char_std__char_traitsT_char_t_t = {"_p_std__basic_iosT_char_std__char_traitsT_char_t_t", "std::basic_ios< char > *|std::basic_ios< char,std::char_traits< char > > *|std::ios *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__basic_iostreamT_char_std__char_traitsT_char_t_t = {"_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t", "std::basic_iostream< char,std::char_traits< char > > *|std::basic_iostream< char > *|std::iostream *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__basic_istreamT_char_std__char_traitsT_char_t_t = {"_p_std__basic_istreamT_char_std__char_traitsT_char_t_t", "std::basic_istream< char > *|std::basic_istream< char,std::char_traits< char > > *|std::istream *", 0, 0, (void*)0, 0};
@@ -35379,10 +36602,13 @@ static swig_type_info _swigt__p_std__basic_streambufT_char_std__char_traitsT_cha
 static swig_type_info _swigt__p_std__basic_stringT_char_std__char_traitsT_char_t_std__allocatorT_char_t_t = {"_p_std__basic_stringT_char_std__char_traitsT_char_t_std__allocatorT_char_t_t", "std::basic_string< char,std::char_traits< char >,std::allocator< char > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__invalid_argument = {"_p_std__invalid_argument", "std::invalid_argument *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__ios_base = {"_p_std__ios_base", "std::ios_base *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__lessT_unsigned_int_t = {"_p_std__lessT_unsigned_int_t", "std::less< unsigned int > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__locale = {"_p_std__locale", "std::locale *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__mapT_std__string_inlib__sg__style_colormap_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_inlib__sg__style_colormap_t_t_t = {"_p_std__mapT_std__string_inlib__sg__style_colormap_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_inlib__sg__style_colormap_t_t_t", "std::map< std::string,inlib::sg::style_colormap,std::less< std::string >,std::allocator< std::pair< std::string const,inlib::sg::style_colormap > > > *|inlib::sg::cmaps_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t = {"_p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t", "std::map< std::string,std::string,std::less< std::string >,std::allocator< std::pair< std::string const,std::string > > > *|inlib::waxml::annotations_t *|inlib::histo::base_histo< double,unsigned int,double,double >::annotations_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t = {"_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t", "std::map< unsigned int,inlib::sg::style_color > *|std::map< unsigned int,inlib::sg::style_color,std::less< unsigned int >,std::allocator< std::pair< unsigned int const,inlib::sg::style_color > > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__ofstream = {"_p_std__ofstream", "std::ofstream *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__pairT_std__string_inlib__colorf_t = {"_p_std__pairT_std__string_inlib__colorf_t", "std::pair< std::string,inlib::colorf > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__string = {"_p_std__string", "std::string *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__string__size_type = {"_p_std__string__size_type", "std::string::size_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_double_std__allocatorT_double_t_t = {"_p_std__vectorT_double_std__allocatorT_double_t_t", "std::vector< double,std::allocator< double > > *|std::vector< double > *", 0, 0, (void*)0, 0};
@@ -35595,6 +36821,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_size_type,
   &_swigt__p_state_type,
   &_swigt__p_std__allocatorT_double_t,
+  &_swigt__p_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t,
   &_swigt__p_std__basic_iosT_char_std__char_traitsT_char_t_t,
   &_swigt__p_std__basic_iostreamT_char_std__char_traitsT_char_t_t,
   &_swigt__p_std__basic_istreamT_char_std__char_traitsT_char_t_t,
@@ -35603,10 +36830,13 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_std__basic_stringT_char_std__char_traitsT_char_t_std__allocatorT_char_t_t,
   &_swigt__p_std__invalid_argument,
   &_swigt__p_std__ios_base,
+  &_swigt__p_std__lessT_unsigned_int_t,
   &_swigt__p_std__locale,
   &_swigt__p_std__mapT_std__string_inlib__sg__style_colormap_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_inlib__sg__style_colormap_t_t_t,
   &_swigt__p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t,
+  &_swigt__p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t,
   &_swigt__p_std__ofstream,
+  &_swigt__p_std__pairT_std__string_inlib__colorf_t,
   &_swigt__p_std__string,
   &_swigt__p_std__string__size_type,
   &_swigt__p_std__vectorT_double_std__allocatorT_double_t_t,
@@ -35819,6 +37049,7 @@ static swig_cast_info _swigc__p_size_t[] = {  {&_swigt__p_size_t, 0, 0, 0},{0, 0
 static swig_cast_info _swigc__p_size_type[] = {  {&_swigt__p_size_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_state_type[] = {  {&_swigt__p_state_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__allocatorT_double_t[] = {  {&_swigt__p_std__allocatorT_double_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t[] = {  {&_swigt__p_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__basic_iosT_char_std__char_traitsT_char_t_t[] = {  {&_swigt__p_std__basic_iosT_char_std__char_traitsT_char_t_t, 0, 0, 0},  {&_swigt__p_std__basic_ostreamT_char_std__char_traitsT_char_t_t, _p_std__basic_ostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_iosT_char_std__char_traitsT_char_t_t, 0, 0},  {&_swigt__p_std__basic_iostreamT_char_std__char_traitsT_char_t_t, _p_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_iosT_char_std__char_traitsT_char_t_t, 0, 0},  {&_swigt__p_std__basic_istreamT_char_std__char_traitsT_char_t_t, _p_std__basic_istreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_iosT_char_std__char_traitsT_char_t_t, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__basic_iostreamT_char_std__char_traitsT_char_t_t[] = {  {&_swigt__p_std__basic_iostreamT_char_std__char_traitsT_char_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__basic_istreamT_char_std__char_traitsT_char_t_t[] = {  {&_swigt__p_std__basic_istreamT_char_std__char_traitsT_char_t_t, 0, 0, 0},  {&_swigt__p_std__basic_iostreamT_char_std__char_traitsT_char_t_t, _p_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_istreamT_char_std__char_traitsT_char_t_t, 0, 0},{0, 0, 0, 0}};
@@ -35827,10 +37058,13 @@ static swig_cast_info _swigc__p_std__basic_streambufT_char_std__char_traitsT_cha
 static swig_cast_info _swigc__p_std__basic_stringT_char_std__char_traitsT_char_t_std__allocatorT_char_t_t[] = {  {&_swigt__p_std__basic_stringT_char_std__char_traitsT_char_t_std__allocatorT_char_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__invalid_argument[] = {  {&_swigt__p_std__invalid_argument, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__ios_base[] = {  {&_swigt__p_std__basic_iosT_char_std__char_traitsT_char_t_t, _p_std__basic_iosT_char_std__char_traitsT_char_t_tTo_p_std__ios_base, 0, 0},  {&_swigt__p_std__ios_base, 0, 0, 0},  {&_swigt__p_std__basic_ostreamT_char_std__char_traitsT_char_t_t, _p_std__basic_ostreamT_char_std__char_traitsT_char_t_tTo_p_std__ios_base, 0, 0},  {&_swigt__p_std__basic_iostreamT_char_std__char_traitsT_char_t_t, _p_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_std__ios_base, 0, 0},  {&_swigt__p_std__basic_istreamT_char_std__char_traitsT_char_t_t, _p_std__basic_istreamT_char_std__char_traitsT_char_t_tTo_p_std__ios_base, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__lessT_unsigned_int_t[] = {  {&_swigt__p_std__lessT_unsigned_int_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__locale[] = {  {&_swigt__p_std__locale, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__mapT_std__string_inlib__sg__style_colormap_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_inlib__sg__style_colormap_t_t_t[] = {  {&_swigt__p_std__mapT_std__string_inlib__sg__style_colormap_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_inlib__sg__style_colormap_t_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t[] = {  {&_swigt__p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t[] = {  {&_swigt__p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0, 0, 0},  {&_swigt__p_inlib__sg__style_colormap, _p_inlib__sg__style_colormapTo_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0, 0},  {&_swigt__p_inlib__sg__style_default_colormap, _p_inlib__sg__style_default_colormapTo_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0, 0},  {&_swigt__p_inlib__sg__style_ROOT_colormap, _p_inlib__sg__style_ROOT_colormapTo_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0, 0},  {&_swigt__p_inlib__sg__style_povama_colormap, _p_inlib__sg__style_povama_colormapTo_p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__ofstream[] = {  {&_swigt__p_std__ofstream, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__pairT_std__string_inlib__colorf_t[] = {  {&_swigt__p_std__pairT_std__string_inlib__colorf_t, 0, 0, 0},  {&_swigt__p_inlib__sg__style_color, _p_inlib__sg__style_colorTo_p_std__pairT_std__string_inlib__colorf_t, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__string__size_type[] = {  {&_swigt__p_std__string__size_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_double_std__allocatorT_double_t_t[] = {  {&_swigt__p_std__vectorT_double_std__allocatorT_double_t_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -36043,6 +37277,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_size_type,
   _swigc__p_state_type,
   _swigc__p_std__allocatorT_double_t,
+  _swigc__p_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t,
   _swigc__p_std__basic_iosT_char_std__char_traitsT_char_t_t,
   _swigc__p_std__basic_iostreamT_char_std__char_traitsT_char_t_t,
   _swigc__p_std__basic_istreamT_char_std__char_traitsT_char_t_t,
@@ -36051,10 +37286,13 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_std__basic_stringT_char_std__char_traitsT_char_t_std__allocatorT_char_t_t,
   _swigc__p_std__invalid_argument,
   _swigc__p_std__ios_base,
+  _swigc__p_std__lessT_unsigned_int_t,
   _swigc__p_std__locale,
   _swigc__p_std__mapT_std__string_inlib__sg__style_colormap_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_inlib__sg__style_colormap_t_t_t,
   _swigc__p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t,
+  _swigc__p_std__mapT_unsigned_int_inlib__sg__style_color_std__lessT_unsigned_int_t_std__allocatorT_std__pairT_unsigned_int_const_inlib__sg__style_color_t_t_t,
   _swigc__p_std__ofstream,
+  _swigc__p_std__pairT_std__string_inlib__colorf_t,
   _swigc__p_std__string,
   _swigc__p_std__string__size_type,
   _swigc__p_std__vectorT_double_std__allocatorT_double_t_t,
