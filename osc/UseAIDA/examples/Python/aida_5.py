@@ -142,7 +142,7 @@ region.plot(hgauss_pol2)
 
 fitResult = fitter.fit(hgauss_pol2,func) #FIXME : it fails !
 if not fitResult:
-  print 'aida_5 : Gauss+pol2 : fit failed.'
+  print('aida_5 : Gauss+pol2 : fit failed.')
 else:
   fit = fitResult.fittedFunction()
   region.plot(fit)

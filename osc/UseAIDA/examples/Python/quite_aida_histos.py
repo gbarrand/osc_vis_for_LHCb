@@ -61,9 +61,9 @@ for I in range(0,10000):
 
 inlib_h1D = h1D.inlib_object()
 Sw = inlib_h1D.bins_sum_w() # std::vector transformed in python tuple.
-print Sw
+print(Sw)
 Sxw = inlib_h1D.bins_sum_xw() # std::vector transformed in python tuple.
-print Sxw
+print(Sxw)
   
 # for a profile 1D when doing a :
 #   fill(x,v,w)
@@ -79,11 +79,11 @@ print Sxw
 
 inlib_p1D = p1D.inlib_object()
 Sw = inlib_p1D.bins_sum_w()   # std::vector transformed in python tuple.
-#print Sw
+#print(Sw)
 Svw = inlib_p1D.bins_sum_vw() # std::vector transformed in python tuple.
-#print Svw
+#print(Svw)
 for i in range(0,len(Sw)):
-  print Sw[i],Svw[i]
+  print(Sw[i],Svw[i])
   
 del rg,rbw
 del aida

@@ -59,7 +59,7 @@ plotter.next().plot(h)
 # paper output :
 plotter.show()
 
-print 'After exiting the GUI, ps and gif files are going to be produced.'
+print('After exiting the GUI, ps and gif files are going to be produced.')
 plotter.interact()
 
 plotter.writeToFile('aida_6.ps')

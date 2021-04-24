@@ -27,17 +27,17 @@ tree = aida.create_tree(file,'root',1,0)
 assert tree
 
 tuple = tree.find('SplGlb')
-if tuple == None: print 'SplGlb not found.'
+if tuple == None: print('SplGlb not found.')
 tuple = tuple.cast_ITuple()
-if tuple == None: print 'SplGlb not an ITuple.'
+if tuple == None: print('SplGlb not an ITuple.')
 
 # dump columns name and type :
 coln = tuple.columns()
 rows = tuple.rows()
-print coln,rows
+print(coln,rows)
 for coli in range(0,coln):
-  print tuple.columnName(coli)
-  print tuple.columnType(coli)
+  print(tuple.columnName(coli))
+  print(tuple.columnType(coli))
 
 
 # loop on entries :
@@ -45,7 +45,7 @@ ichi2 = tuple.findColumn('chi2')
 tuple.start()
 while tuple.next() == 1:
   chi2 = tuple.getDouble(ichi2)
-  print chi2
+  print(chi2)
 
 del tuple
 del tree

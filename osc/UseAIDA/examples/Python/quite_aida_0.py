@@ -26,7 +26,7 @@ memoryTree.rmdir('/')
 import os
 osc_home_dir = os.getenv("OSC_HOME_DIR")
 fileName = osc_home_dir+'/Resources/AIDA/examples/data/analysis.root'
-print fileName
+print(fileName)
 
 # If already loaded close (not delete) the file :
 #FIXME : session.destroyManager(fileName)
@@ -49,13 +49,13 @@ rioTree.ls()
 # cast_xxx is a OnXLab SWIG extension.
 BW = rioTree.find('BW').cast_IHistogram1D()
 if BW == None:
- print "BW not found or is not an histogram."
+ print("BW not found or is not an histogram.")
 else :
  region.plot(BW)
 
 gauss = rioTree.find('gauss').cast_IHistogram1D()
 if gauss == None:
- print "gauss not found or is not an histogram."
+ print("gauss not found or is not an histogram.")
 else :
  # Plot histos in the same region :
  region.plot(gauss)
@@ -84,7 +84,7 @@ del gauss
 region = plotter.next()
 gauss_BW = rioTree.find('gauss_BW').cast_IHistogram2D()
 if gauss_BW == None:
- print "gauss_BW not found or is not an histogram."
+ print("gauss_BW not found or is not an histogram.")
 else :
  region.plot(gauss_BW)
 

@@ -16,7 +16,7 @@ plotter.setTitle('Store an histo')
 
 #/////////////////////////////////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////////////////
-print 'Create a Rio tree associated to a store.root file'
+print('Create a Rio tree associated to a store.root file')
 
 # 0 = read only false
 # 1 = create new
@@ -42,7 +42,7 @@ del h
 #/////////////////////////////////////////////////////////////////////////////
 # Reopen the file read mode, get the histo and plot :
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-print 'Reopen the store.root file...'
+print('Reopen the store.root file...')
 
 # 1 = read only
 # 0 = create new false

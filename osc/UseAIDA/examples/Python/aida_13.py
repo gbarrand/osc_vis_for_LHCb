@@ -25,7 +25,7 @@ for I in range(0,10000):
   h.fill(r.gauss(0,1),1)
 del r
 
-print 'mean %g, sigma %g' % (h.mean(),h.rms())
+print('mean %g, sigma %g' % (h.mean(),h.rms()))
 
 del h
 del tree

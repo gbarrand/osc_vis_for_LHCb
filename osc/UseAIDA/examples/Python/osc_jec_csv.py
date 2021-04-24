@@ -34,11 +34,11 @@ def process(aida, memTree, fileName):
        count += 1
 #        if count > 20:
 #            break
-#        print "Row[",count,"] :",len(row)
+#        print("Row[",count,"] :",len(row))
        if len(row) == 1:
            line = row[0].strip("#").replace(' ','')
            header = line.split("=")
-       #        print 'header ', header," first [",header[0],"]"
+       #        print('header ', header," first [",header[0],"]")
            if header[0] == "UTC_StartTime": # there is a blanc at the end
                timeStart = time.mktime(
                    time.strptime(header[1],"%Y-%m-%d%H:%M:%S"))
@@ -47,9 +47,9 @@ def process(aida, memTree, fileName):
                timeStamp = time.mktime(time.strptime(row[0],"%Y-%m-%d %H:%M:%S")) 
                timeStamp -= timeStart
                h.fill(timeStamp,strength)
-   #       print "Time [",timeStamp,"], strenght [",strength,"]"
+   #       print("Time [",timeStamp,"], strenght [",strength,"]")
        else:
-           print "error"
+           print("error")
            break
 # return
 
@@ -73,7 +73,7 @@ def main(*args):
 #Backup from DAQ PC
 #    wd = "/mnt/bcksolardata"
    #os.chdir(wd)
-   print "run on ",os.getcwd()
+   print("run on ",os.getcwd())
 
 
 # Process

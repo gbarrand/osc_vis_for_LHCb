@@ -51,7 +51,7 @@ region = plotter.next()
 # cast_xxx is a OnXLab SWIG extension.
 hpxpy = rioTree.find('hpxpy').cast_IHistogram2D()
 if hpxpy == None:
- print "OnXLab_ROOT : hpxpy not found or is not an TH2F."
+ print("OnXLab_ROOT : hpxpy not found or is not an TH2F.")
 else :
  region.plot(hpxpy)
 

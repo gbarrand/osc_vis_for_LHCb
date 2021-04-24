@@ -26,15 +26,15 @@ del treeFactory
 
 tupleFactory = aida.createTupleFactory(asciiTree)
 tuple = asciiTree.find('data')
-if tuple == None: print 'data tuple not found.'
+if tuple == None: print('data tuple not found.')
 tuple = tuple.cast_ITuple()
-if tuple == None: print 'data object not an ITuple.'
+if tuple == None: print('data object not an ITuple.')
 
 #coln = tuple.columns()
-#print coln,tuple.rows()
+#print(coln,tuple.rows())
 #for coli in range(0,coln):
-#  print tuple.columnName(coli)
-#  print tuple.columnType(coli)
+#  print(tuple.columnName(coli))
+#  print(tuple.columnType(coli))
 
 evaluator = tupleFactory.createEvaluator('v1')
 filter = tupleFactory.createFilter('')

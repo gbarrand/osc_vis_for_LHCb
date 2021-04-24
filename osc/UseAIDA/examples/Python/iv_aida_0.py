@@ -70,7 +70,7 @@ import HEPVis
 
 ip = plotter.cast_Slash_UI_IPlotter()
 if ip == None :
-  print 'NOTE : dynamic_cast of AIDA::IPlotter to Slash::UI::IPlotter failed.'
+  print('NOTE : dynamic_cast of AIDA::IPlotter to Slash::UI::IPlotter failed.')
   # get the SoRegion from another way.
   ui = aida.ui()
   soPage = ui.findSoPage('plotter_0')

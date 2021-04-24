@@ -50,15 +50,15 @@ data_dir = osc_home_dir+'/Resources/AIDA/examples/data/'
 f35 = aida.create_tree(data_dir+'SPLCPDisco-allsigvar-mateff-bin100-h0-o0.root','root',1,0)
 assert f35
 tree35 = f35.find('SplGlb')
-if tree35 == None: print 'SplGlb not found.'
+if tree35 == None: print('SplGlb not found.')
 tree35 = tree35.cast_ITuple()
-if tree35 == None: print 'SplGlb not an ITuple.'
+if tree35 == None: print('SplGlb not an ITuple.')
 
 #coln = tree35.columns()
-#print coln
+#print(coln)
 #for coli in range(0,coln):
-#  print tree35.columnName(coli)
-#  print tree35.columnType(coli)
+#  print(tree35.columnName(coli))
+#  print(tree35.columnType(coli))
 
 histo35 = aida.create_histogram2D(tree,
                                   'histo35',' Theta vs Delta',
@@ -70,15 +70,15 @@ w_evaluator = aida.create_evaluator(f35,'chi2')
 tree35.project(histo35,x_evaluator,y_evaluator,w_evaluator)
 del x_evaluator,y_evaluator,w_evaluator
 
-#print nLogSin22q13,logSin2EdgeMin,logSin2EdgeMax
+#print(nLogSin22q13,logSin2EdgeMin,logSin2EdgeMax)
 
-#print histo35.allEntries(),histo35.sumBinHeights()
+#print(histo35.allEntries(),histo35.sumBinHeights())
 
 f36 = aida.create_tree(data_dir+'SPLCPDisco-matbb-h0-o0.root','root',1,0)
 tree36 = f36.find('SplGlb')
-if tree36 == None: print 'SplGlb not found.'
+if tree36 == None: print('SplGlb not found.')
 tree36 = tree36.cast_ITuple()
-if tree36 == None: print 'SplGlb not an ITuple.'
+if tree36 == None: print('SplGlb not an ITuple.')
 
 histo36 = aida.create_histogram2D(tree,
                                   'histo36',' Theta vs Delta',
@@ -91,7 +91,7 @@ w_evaluator = aida.create_evaluator(f36,'chi2')
 tree36.project(histo36,x_evaluator,y_evaluator,w_evaluator)
 del x_evaluator,y_evaluator,w_evaluator
 
-#print histo36.allEntries(),histo36.sumBinHeights()
+#print(histo36.allEntries(),histo36.sumBinHeights())
 
 p = aida.create_plotter()
 p.createRegions(1,1,0)

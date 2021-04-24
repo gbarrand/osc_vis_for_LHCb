@@ -34,7 +34,7 @@ h_normalized.setTitle('Rand gauss normalized')
 hsw = h.sumBinHeights()
 h_normalized.scale(2/hsw)
 
-print h_normalized.sumBinHeights()
+print(h_normalized.sumBinHeights())
 
 # Get current plotter :
 plotterFactory = aida.createPlotterFactory()
