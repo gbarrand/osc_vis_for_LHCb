@@ -95,7 +95,9 @@ if [ ${name} = "README" ] ; then exit;fi
 #////////////////////////////////////
 #////////////////////////////////////
 exlib_mgr=.
-. ${exlib_mgr}/build_app_header
+#. ${exlib_mgr}/build_app_header
+inlib_mgr=${exlib_mgr}/../../inlib/mgr
+. ${inlib_mgr}/build_header
 
 #////////////////////////////////////
 #////////////////////////////////////
