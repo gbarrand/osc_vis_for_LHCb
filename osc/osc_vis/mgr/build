@@ -66,7 +66,7 @@ elif [ "${build_group}" = Python ] ; then
   done
 
   cd ${exlib_mgr}
-  ./build -no_screen ../exlib/py/inlib_swig_py.cpp
+  ./build ../exlib/py/inlib_swig_py.cpp
   cd ${save_dir}
 
   packs="OnX OnXLab"
