@@ -19,8 +19,8 @@ if [ "${use_Python}" = "yes" ] ; then
 
     #NOTE : since 10.9 (Mavericks) Python is no more in the SDK.
     
-   #use_Python3=yes
-    use_Python3=no
+    use_Python3=yes
+   #use_Python3=no
     if [ "${use_Python3}" = "yes" ] ; then
       Python_home=/opt/local/Library/Frameworks/Python.framework/Versions/3.6
 
