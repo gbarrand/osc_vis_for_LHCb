@@ -33,6 +33,8 @@ elif [ ${build_sdk_mac} = "yes" ] ; then
   # Xcode-8 : to avoid warning :
   #  clang: warning: libstdc++ is deprecated; move to libc++ with a minimum deployment target of OS X 10.9
  #macosx_target=10.9 
+  # to build inlib/exlib SWIG/4.0.2 on my macOS/10.15.7 with
+  # /opt/local/Library/Frameworks/Python.framework/Versions/3.6/include/python3.6m
   macosx_target=10.15
   cppflags="${cppflags} -stdlib=libc++"
   # Xcode-8 : end.
