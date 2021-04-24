@@ -5337,25 +5337,5 @@ def group_s_class():
 def group_check_class_name():
     return exlib_swig_py.group_check_class_name()
 
-class session(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-    __swig_destroy__ = exlib_swig_py.delete_session
-
-    def __init__(self, *args):
-        exlib_swig_py.session_swiginit(self, exlib_swig_py.new_session(*args))
-
-    def out(self):
-        return exlib_swig_py.session_out(self)
-
-    def is_valid(self):
-        return exlib_swig_py.session_is_valid(self)
-
-    def steer(self):
-        return exlib_swig_py.session_steer(self)
-
-# Register session in exlib_swig_py:
-exlib_swig_py.session_swigregister(session)
-
 
 
