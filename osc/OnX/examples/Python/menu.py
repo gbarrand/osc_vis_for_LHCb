@@ -22,11 +22,11 @@ def callback():
   # Create a first item in the menu :
   ui.createComponent('onx_exa_item_1','MenuItem','onx_exa_menu')
   ui.setParameter('onx_exa_item_1.label','Item 1')
-  ui.setCallback('onx_exa_item_1','activate','Python','print \'Item 1\'')  
+  ui.setCallback('onx_exa_item_1','activate','Python','print(\'Item 1\')')  
   # Create a second item in the menu :
   ui.createComponent('onx_exa_item_2','MenuItem','onx_exa_menu')
   ui.setParameter('onx_exa_item_2.label','Item 2')
-  ui.setCallback('onx_exa_item_2','activate','Python','print \'Item 2\'')
+  ui.setCallback('onx_exa_item_2','activate','Python','print(\'Item 2\')')
 
 import Slash
 session = Slash.create_session()

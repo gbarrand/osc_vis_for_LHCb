@@ -1,1 +1,1 @@
-print 'Hello OpenScientist.'
+print('Hello OpenScientist.')

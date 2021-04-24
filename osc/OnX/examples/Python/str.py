@@ -1,4 +1,4 @@
 import string 
-print string.uppercase
+print(string.uppercase)
 x = string.uppercase
-print string.lower(x)
+print(string.lower(x))

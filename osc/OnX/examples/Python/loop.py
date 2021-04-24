@@ -2,7 +2,7 @@
 stop = 0
 
 def next_event(a_ui,i):
-  #print 'next_event : %d' % i
+  #print('next_event : %d' % i)
   a_ui.executeScript("DLD","OnX ui_executeCallbacks * update")
 
 def start(a_ui):
@@ -16,7 +16,7 @@ def start(a_ui):
 
 def start_timer(a_ui):
   def timer_proc(a_ui):
-    print 'timer_proc : begin'
+    print('timer_proc : begin')
     global stop
     stop = 0
     i = 0
@@ -28,7 +28,7 @@ def start_timer(a_ui):
       time.sleep( 0.01 ) # 1 sec
       i = i + 1
 
-  print 'start_timer : begin'
+  print('start_timer : begin')
   import thread
   thread.start_new_thread(timer_proc,(a_ui,)) # non blocking.
 

@@ -1,5 +1,5 @@
 #
-# A viewer with a display region, a text region to print the "Run Event"
+# A viewer with a display region, a text region to dump the "Run Event"
 # and an image region to have the LHCb logo.
 #
 # Usage :

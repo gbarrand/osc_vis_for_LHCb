@@ -15,7 +15,7 @@ def toggle_callback():
   import Slash
   ui = Slash.session().ui()
   value = ui.parameterValue('toggle.set')
-  #print value
+  #print(value)
   if value == 'true':
     ui.setParameter('toggle.pixmap','logo_LHCb.xpm')
   else:
@@ -26,7 +26,7 @@ def button_callback():
   session = Slash.session()
   ui = session.ui()
   value = session.parameterValue('button.related_state')
-  #print value
+  #print(value)
   if value == 'off':
     ui.setParameter('button.pixmap','logo_LHCb.xpm')
     session.setParameter('button.related_state','on')

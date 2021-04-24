@@ -30,16 +30,16 @@ def callback():
   da.collect('SceneGraph(Viewer)','highlight==true')  
   da.filter('name')  
   hit = da.handlersIterator()  
-  print 'Picked objects :'  
+  print('Picked objects :')
   while 1:
     h = hit.handler()
     if h == None:break
     accessor = h.type()
     obj = h.object(); # void*
-    print 'Accessor %s object 0x%lx' % (accessor.name(),obj)
-    #print obj
+    print('Accessor %s object 0x%lx' % (accessor.name(),obj))
+    #print(obj)
     #s = OnX.smanip_p2s(obj)
-    #print s
+    #print(s)
     hit.next()
   hit.thisown = 1
   del hit

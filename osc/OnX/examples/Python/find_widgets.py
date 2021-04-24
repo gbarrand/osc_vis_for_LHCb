@@ -14,7 +14,7 @@ session = Slash.create_session()
 ui = session.createUI('find_widgets.onx')
 
 widgets = ui.findChildren('session','nameFromClass','PageViewer')
-for w in widgets : print w
+for w in widgets : print(w)
 
 ui.steer()
 

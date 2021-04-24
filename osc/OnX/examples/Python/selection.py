@@ -12,17 +12,17 @@
 #
 
 def printInfoSelectionCB(sg,selectionPath):    
-    #print void,selectionPath,selectionPath.getTail().getTypeId().getName()
+    #print(void,selectionPath,selectionPath.getTail().getTypeId().getName())
     for i in xrange(selectionPath.getLength()-1,0,-1):
-        #print selectionPath.getNode(i).getTypeId().getName()
+        #print(selectionPath.getNode(i).getTypeId().getName())
         node = selectionPath.getNode(i)
         node.touch() # to redraw        
         if node.isOfType(Inventor.SoSeparator.getClassTypeId()):
-            #print 'found SoSeparator '
+            #print('found SoSeparator ')
             for j in xrange(node.getNumChildren()):
-                #print node.getChild(j).getTypeId().getName()
+                #print(node.getChild(j).getTypeId().getName())
                 if node.getChild(j).isOfType(Inventor.SoInfo.getClassTypeId()):
-                    print node.getChild(j).string.getValue()
+                    print(node.getChild(j).string.getValue())
 
 import Slash
 session = Slash.create_session()
