@@ -25,7 +25,7 @@ r = random.Random()
 for I in range(0,10000):
   h.fill(r.gauss(0,1),1)
 
-#print h.entries(),h.mean(),h.rms()
+#print(h.entries(),h.mean(),h.rms())
 
 #/////////////////////////////////////////
 #/// create the Inventor scene graph : ///
