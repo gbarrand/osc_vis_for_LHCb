@@ -30,12 +30,21 @@ elif [ ${build_sdk_mac} = "yes" ] ; then
     exit
   fi
 
-  macosx_target=10.6
+  # Xcode-8 : to avoid warning :
+  #  clang: warning: libstdc++ is deprecated; move to libc++ with a minimum deployment target of OS X 10.9
+  macosx_target=10.9
+  cppflags="${cppflags} -stdlib=libc++"
+  # Xcode-8 : end.
 
-  cpp_compiler="${cpp_compiler} -arch x86_64 -isysroot ${macosx_sdk}"
-  cpp_compiler="${cpp_compiler} -mmacosx-version-min=${macosx_target}"
+  cppflags="${cppflags} -isysroot ${macosx_sdk}"
+  cppflags="${cppflags} -mmacosx-version-min=${macosx_target}"
 
-  cpp_linker="${cpp_linker} -arch x86_64 -isysroot ${macosx_sdk}"
+  cpp_linker_flags="${cpp_linker_flags} -isysroot ${macosx_sdk}"
+
+  if [ `uname -p` = x86_64 ] ; then
+    cppflags="${cppflags} -arch x86_64"
+    cpp_linker_flags="${cpp_linker_flags} -arch x86_64"
+  fi
 
   #LANG=en_US.US-ASCII
   #export LANG

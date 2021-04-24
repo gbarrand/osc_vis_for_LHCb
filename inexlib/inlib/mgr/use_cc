@@ -32,10 +32,15 @@ elif [ ${build_sdk_mac} = "yes" ] ; then
 
   macosx_target=10.6
 
-  cc_compiler="${cc_compiler} -arch x86_64 -isysroot ${macosx_sdk}"
-  cc_compiler="${cc_compiler} -mmacosx-version-min=${macosx_target}"
+  ccflags="${ccflags} -isysroot ${macosx_sdk}"
+  ccflags="${ccflags} -mmacosx-version-min=${macosx_target}"
 
-  cc_linker="${cc_linker} -arch x86_64 -isysroot ${macosx_sdk}"
+  cc_linker_flags="${cc_linker_flags} -isysroot ${macosx_sdk}"
+
+  if [ `uname -p` = x86_64 ] ; then
+    ccflags="${ccflags} -arch x86_64"
+    cc_linker_flags="${cc_linker_flags} -arch x86_64"
+  fi
 
   #LANG=en_US.US-ASCII
   #export LANG
