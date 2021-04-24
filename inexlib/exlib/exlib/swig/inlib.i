@@ -138,10 +138,10 @@
 
 #include <inlib/sg/strings>
 
-%template()  std::pair<std::string,inlib::colorf>;
+%template(std_pair_std_string_inlib_colorf)  std::pair<std::string,inlib::colorf>;
 #include <inlib/sg/style_color>
-%template()  std::map<unsigned int,inlib::sg::style_color>;
 
+%template(std_map_unsigned_int_inlib_sg_style_color)  std::map<unsigned int,inlib::sg::style_color>;
 #include <inlib/sg/style_colormap>
 
 %ignore inlib::sg::base_colormap::set_colors; //WIN32 : induces warnings.
