@@ -2,7 +2,7 @@ import OnX
 import sys
 
 for i in range(0,5):
-  print 'debug : create OnXMain : +++++++++++++++++++++++'
+  print('debug : create OnXMain : +++++++++++++++++++++++')
   #print sys.modules.has_key('OnX_PythonManager')
 
   onx_main = OnX.Main((),0,0)
@@ -15,6 +15,6 @@ for i in range(0,5):
   print sess
   del onx_main
   print sys.modules.has_key('OnX_PythonManager')
-  print 'debug : OnXMain deleted'
+  print('debug : OnXMain deleted')
 
 print sys.modules.has_key('OnX_PythonManager')

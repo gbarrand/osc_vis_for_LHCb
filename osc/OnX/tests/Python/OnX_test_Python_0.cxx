@@ -23,9 +23,9 @@ int main (
 
   /*
   PyRun_SimpleString((char*)"import string");
-  PyRun_SimpleString((char*)"print string.uppercase");
+  PyRun_SimpleString((char*)"print(string.uppercase)");
   PyRun_SimpleString((char*)"x = string.uppercase");
-  PyRun_SimpleString((char*)"print string.lower(x)");
+  PyRun_SimpleString((char*)"print(string.lower(x))");
 
   PyRun_SimpleString((char*)"import OnX_Hello");
 
@@ -34,7 +34,7 @@ int main (
   PyRun_SimpleString((char*)"OnX_SWIG_Hello()");
   PyRun_SimpleString((char*)"import math");
   PyRun_SimpleString((char*)"from math import cos");
-  PyRun_SimpleString((char*)"print cos(0)");
+  PyRun_SimpleString((char*)"print(cos(0))");
   */
 
   PyObject* fNewStdout = PyFile_FromString("OnX_out", "wb+");
@@ -144,7 +144,7 @@ int main (
   } while (len > 0);
   
   printf("debug : 008\n");
-  PyRun_SimpleString("print 'Hello'");
+  PyRun_SimpleString("print('Hello')");
   printf("debug : 009\n");
 
   if(file) ::fclose(file);

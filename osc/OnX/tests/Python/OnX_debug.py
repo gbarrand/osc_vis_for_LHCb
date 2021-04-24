@@ -1,4 +1,4 @@
-print 'debug : Panoramix : 013'
+print('debug : Panoramix : 013')
 
 import sys
 
@@ -11,7 +11,7 @@ else:
 print sys.platform
 
 if sys.platform == 'win32':
-  print 'debug : win32'
+  print('debug : win32')
 else:
-  print 'debug : not win32'
+  print('debug : not win32')
 
