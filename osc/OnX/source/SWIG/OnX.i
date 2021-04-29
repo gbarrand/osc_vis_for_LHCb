@@ -147,13 +147,13 @@ onx_stdout_save = sys.stdout
 def session():
   import sys
   try:
-    import OnX_PythonManager # could fail if the OnX Python driver not loaded.
-    comment = 0 # The below could fail even if the OnX_PythonManager module exists.
+    import OnXPython # could fail if the OnX Python driver not loaded.
+    comment = 0 # The below could fail even if the OnXPython module exists.
     comment = 0 # This happens when OnX is deleted. This induces the
     comment = 0 # destruction of the OnX::PythonManager
     comment = 0 # that will remove the "sessionPointer" function from
-    comment = 0 # the OnX_PythonManager module dictionary.
-    string_session = OnX_PythonManager.sessionPointer()
+    comment = 0 # the OnXPython module dictionary.
+    string_session = OnXPython.sessionPointer()
     comment = 0 # print(string_session)
     return OnX_cast_ISession(string_session)
   except: # case of OnX having not yet loaded the Python interpreter.
