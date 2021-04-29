@@ -6,8 +6,6 @@
  *   See below for examples.
  */
 
-extern "C" {double cut_func(double X);}
-
 /*function*/ double cut_func(double X) {
   const double C1 = 1.;
   const double C2 = 0.5;

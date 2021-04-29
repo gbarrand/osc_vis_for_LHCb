@@ -1,6 +1,4 @@
 
-extern "C" {double cmandel(double XP,double YP);}
-
 /*function*/ double cmandel(double XP,double YP) {
 
   double X,Y,XX,YY,TT;
