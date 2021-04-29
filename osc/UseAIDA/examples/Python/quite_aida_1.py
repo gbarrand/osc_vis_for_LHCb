@@ -20,7 +20,7 @@ print('Create a Rio tree associated to a store.root file')
 
 # 0 = read only false
 # 1 = create new
-rioTree = treeFactory.create('store.root','ROOT',0,1)
+rioTree = treeFactory.create('store.root','ROOT',False,True)
 rioTree.mkdir('histograms')
 rioTree.cd('histograms')
 
@@ -46,7 +46,7 @@ print('Reopen the store.root file...')
 
 # 1 = read only
 # 0 = create new false
-rioTree = treeFactory.create('store.root','ROOT',1,0)
+rioTree = treeFactory.create('store.root','ROOT',True,False)
 rioTree.cd('histograms')
 rioTree.ls()
 
