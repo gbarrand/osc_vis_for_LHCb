@@ -3,7 +3,7 @@ print('debug : Panoramix : 013')
 import sys
 
 # Have ROOT.py in batch mode (no ROOT GUI)
-if sys.__dict__.has_key('argv'):
+if 'argv' in sys.__dict__:
   sys.argv.append('Panoramix')
 else:
   sys.argv = ['Panoramix']

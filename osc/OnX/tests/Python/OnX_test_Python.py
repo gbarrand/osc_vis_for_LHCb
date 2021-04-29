@@ -3,18 +3,18 @@ import sys
 
 for i in range(0,5):
   print('debug : create OnXMain : +++++++++++++++++++++++')
-  #print sys.modules.has_key('OnX_PythonManager')
+  #print 'OnXPython' in sys.modules
 
   onx_main = OnX.Main((),0,0)
-  onx_main.loadInterpreter('Python')  #will create the OnX_PythonManager module
+  onx_main.loadInterpreter('Python')  #will create the OnXPython module
 
-  import OnX_PythonManager
-  ssession = OnX_PythonManager.sessionPointer()
+  import OnXPython
+  ssession = OnXPython.sessionPointer()
   print ssession
   sess = OnX.OnX_cast_ISession(ssession)
   print sess
   del onx_main
-  print sys.modules.has_key('OnX_PythonManager')
+  print 'OnXPython' in sys.modules
   print('debug : OnXMain deleted')
 
-print sys.modules.has_key('OnX_PythonManager')
+print 'OnXPython' in sys.modules
