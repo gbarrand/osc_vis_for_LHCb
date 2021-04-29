@@ -33,7 +33,7 @@ print(fileName)
 
 # 1 = read only
 # 0 = create new false
-rioTree = treeFactory.create(fileName,'ROOT',1,0)
+rioTree = treeFactory.create(fileName,'ROOT',True,False)
 rioTree.ls()
 
 #/////////////////////////////////////////////////////////////////////////////
