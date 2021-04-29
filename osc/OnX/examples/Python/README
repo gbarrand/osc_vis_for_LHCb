@@ -16,5 +16,4 @@
    >>> del session
 
  To steer the GUI but have also the hand on the Python 
- prompt, look at the prompt.py and prompt_thread.py
- examples.
+ prompt, look at the prompt.py example.

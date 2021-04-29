@@ -24,7 +24,7 @@ soPage.createRegions(Inventor.SbString('SoDisplayRegion'),1,1,0)
 soRegion = soPage.currentRegion()
 soRegion.color.setValue(Inventor.SbColor(0.8,0.8,0.8))
 
-soRegion.cast_SoDisplayRegion().readScene('osc.iv','')
+soRegion.cast_SoDisplayRegion().readScene(Inventor.SbString('osc.iv'),Inventor.SbString(''))
 
 del soRegion
 del soPage
