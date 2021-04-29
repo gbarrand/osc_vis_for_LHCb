@@ -47,7 +47,7 @@ import os
 osc_home_dir = os.getenv("OSC_HOME_DIR")
 data_dir = osc_home_dir+'/Resources/AIDA/examples/data/'
 
-f35 = aida.create_tree(data_dir+'SPLCPDisco-allsigvar-mateff-bin100-h0-o0.root','root',1,0)
+f35 = aida.create_tree(data_dir+'SPLCPDisco-allsigvar-mateff-bin100-h0-o0.root','root',True,False)
 assert f35
 tree35 = f35.find('SplGlb')
 if tree35 == None: print('SplGlb not found.')
@@ -74,7 +74,7 @@ del x_evaluator,y_evaluator,w_evaluator
 
 #print(histo35.allEntries(),histo35.sumBinHeights())
 
-f36 = aida.create_tree(data_dir+'SPLCPDisco-matbb-h0-o0.root','root',1,0)
+f36 = aida.create_tree(data_dir+'SPLCPDisco-matbb-h0-o0.root','root',True,False)
 tree36 = f36.find('SplGlb')
 if tree36 == None: print('SplGlb not found.')
 tree36 = tree36.cast_ITuple()
@@ -147,7 +147,7 @@ soPlotter.getGridStyle().visible.setValue(Inventor.TRUE)
 soPlotter.getGridStyle().color.setValue(SbColor_black)
 soPlotter.getGridStyle().linePattern.setValue(HEPVis.SbLinePattern_dotted)
 soPlotter.getTitleStyle().visible.setValue(Inventor.FALSE)
-soPlotter.setAxesModeling('hplot')
+soPlotter.setAxesModeling(Inventor.SbString('hplot'))
 soPlotter.getXAxis().divisions.setValue(510)
 soPlotter.xAxisLogScale.setValue(Inventor.TRUE)
 
@@ -175,14 +175,14 @@ soPlotter.levels.set1Value(0,9)
 # legend region :
 soPlotterRegion.legendRegionVisible.setValue(Inventor.TRUE)
 soPlotterRegion.legendRegionAttachedToInfosRegion.setValue(Inventor.FALSE)
-soPlotterRegion.legendRegionOriginUnit.setValue('AXIS')
+soPlotterRegion.legendRegionOriginUnit.setValue(HEPVis.SoPlotterRegion.AXIS)
 soPlotterRegion.legendAutomated.setValue(Inventor.FALSE)
 soPlotterRegion.legendRegionOrigin.setValue(Inventor.SbVec2f(10**(-3),0.40))
 soPlotterRegion.legendRegionSize.setValue(Inventor.SbVec2f(0.6,0.16))
 
 soLegendRegion = soPlotterRegion.getLegendRegion()
-soLegendRegion.text.set1Value(0,'matrices de migrations')
-soLegendRegion.text.set1Value(1,'matrices de migrations, [b] Beam')
+soLegendRegion.text.set1Value(0,Inventor.SbString('matrices de migrations'))
+soLegendRegion.text.set1Value(1,Inventor.SbString('matrices de migrations, [b] Beam'))
 
 soLegendRegion.textInBlack.setValue(Inventor.TRUE)
 soLegendRegion.getStyle(0).color.setValue(SbColor_red)
