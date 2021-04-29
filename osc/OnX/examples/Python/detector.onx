@@ -24,7 +24,7 @@
                           OS> python -i detector.py   -->
             <activate exec="Python">
               import sys\n\
-              if sys.modules.has_key('detector'):\n\
+              if 'detector' in sys.modules:\n\
                 sys.modules['detector'].callback()\n\
               else:\n\
                 callback()
