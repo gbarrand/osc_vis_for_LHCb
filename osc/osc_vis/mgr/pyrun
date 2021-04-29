@@ -16,6 +16,9 @@ run_expat_debug=no
 verbose_x=no
 do_ls=no
 run_all=no
+run_show_py_exe=no
+
+OSC_ARGS="-balance"
 
 build_args=
 while test $# -ge 1 ; do
@@ -30,8 +33,12 @@ while test $# -ge 1 ; do
           -x) verbose_x=yes;;
          -ls) do_ls=yes;;
    
-    -all)       run_all=yes;;
-  -expat_debug) run_expat_debug=yes;;
+         -all) run_all=yes;;
+ -expat_debug) run_expat_debug=yes;;
+      -py_exe) run_show_py_exe=yes;;
+    
+   -stdout)   OSC_ARGS="${OSC_ARGS} -stdout";;
+   -verbose)  OSC_ARGS="${OSC_ARGS} -verbose";;
 	
           -*) build_args="${build_args} $1";;  
            *) run_what=$1;;  
@@ -68,8 +75,15 @@ cd ${build_path}/distrib/osc_vis/${version}
 #////////////////////////////////////
 #/// run : //////////////////////////
 #////////////////////////////////////
+if [ ${run_show_py_exe} = yes ] ; then
+  if [ "${Python_exe}" = "" ] ; then
+    echo "Python_exe not set."
+  else
+    echo "${Python_exe}"
+  fi
+  exit
+fi
 
-OSC_ARGS="-balance"
 export OSC_ARGS
 
 if [ "${run_gui}" != "" ] ; then
