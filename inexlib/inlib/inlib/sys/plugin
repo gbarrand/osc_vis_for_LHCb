@@ -50,18 +50,14 @@ public:
   bool open() {
     m_error = "";
     std::string splg = m_name;  
-    if(m_verbose) {
-      m_out << "inlib::plugin :" 
-            << " open " 
-            << sout(splg) << "..." << std::endl;
-    }
+    if(m_verbose) m_out << "inlib::plugin : open " << sout(splg) << "..." << std::endl;
 #ifdef WIN32
     m_module = ::LoadLibrary(splg.c_str());
 #else
-   {std::string path,name,sfx;
+    std::string path,name,sfx;
     path_name_suffix(m_name,path,name,sfx);
     if(path.empty()) { //Relative path
-      sfx = suffix(splg);
+      sfx = suffix(m_name);
       if(sfx.empty()) {
         // Only the name "Xxx" had been given, we have to
 #if defined(__CYGWIN__) && defined(__GNUC__)
@@ -74,22 +70,30 @@ public:
         splg = "lib" + m_name + ".so";
 #endif
       }
-    }}
+    }
     int flags = RTLD_NOW | RTLD_GLOBAL;
     m_module = ::dlopen(splg.c_str(),flags);
 #if defined(__CYGWIN__) && defined(__GNUC__)
 #elif defined(__APPLE__)
     if(!m_module) {
+      if(path.empty()) {
+        sfx = suffix(m_name);
+        if(sfx.empty()) {
+          splg = m_name + ".so";
+          m_module = ::dlopen(splg.c_str(),flags);
+        }
+      }
+    }
+    if(!m_module) {
       std::vector<std::string> ps = paths(); 
       unsigned int pathn = ps.size();
       for(unsigned int index=0;index<pathn;index++) {
         splg = ps[index]+"/" + m_name + ".bundle";
-        if(m_verbose) {
-          m_out << "inlib::plugin::open :" 
-                << " open " 
-                << sout(splg) << "..." 
-                << std::endl;
-        }
+        if(m_verbose) m_out << "inlib::plugin::open : open " << sout(splg) << "..." << std::endl;
+        m_module = ::dlopen(splg.c_str(),flags);
+        if(m_module) break;
+        splg = ps[index]+"/" + m_name + ".so";
+        if(m_verbose) m_out << "inlib::plugin::open : open " << sout(splg) << "..." << std::endl;
         m_module = ::dlopen(splg.c_str(),flags);
         if(m_module) break;
       }
