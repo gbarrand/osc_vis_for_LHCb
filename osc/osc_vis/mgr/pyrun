@@ -15,6 +15,7 @@ run_gdb=no
 run_expat_debug=no
 verbose_x=no
 do_ls=no
+run_all=no
 
 build_args=
 while test $# -ge 1 ; do
@@ -29,6 +30,7 @@ while test $# -ge 1 ; do
           -x) verbose_x=yes;;
          -ls) do_ls=yes;;
    
+    -all)       run_all=yes;;
   -expat_debug) run_expat_debug=yes;;
 	
           -*) build_args="${build_args} $1";;  
@@ -78,11 +80,11 @@ if [ "${run_gui}" != "" ] ; then
   #fi
 fi
 
-if [ "${run_what}" = "" ] ; then run_what=AIDA/examples/Python/aida_0.py; fi
+if [ "${run_what}" = "" ] ; then run_what=Resources/AIDA/examples/Python/aida_0.py; fi
 
 what_dir="`dirname ${run_what}`"
 what_name="`basename ${run_what}`"
-cd ./Resources/${what_dir}
+cd ./${what_dir}
 
 if [ ${do_ls} = yes ] ; then
   pwd
@@ -100,7 +102,18 @@ options=
 
 if [ ${run_gdb} = yes ] ; then
   echo "gdb> r ${options} ${what_name}"
-  gdb ${Python_exe}
+  if [ `uname` = Darwin ] ; then
+    lldb ${Python_exe}
+  else
+    gdb ${Python_exe}
+  fi	
+elif [ ${run_all} = yes ] ; then
+  find . -name '*.py' -print > ./tmp_0
+  for item in $(cat ./tmp_0) ; do
+    echo "do ${item} ..."
+    ${Python_exe} ${options} ${item}
+  done
+  /bin/rm -f ./tmp_0
 else    
   ${Python_exe} ${options} ${what_name}
 fi
