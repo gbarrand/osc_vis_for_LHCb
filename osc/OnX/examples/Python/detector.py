@@ -34,8 +34,8 @@ def callback():
   
   w = ui.findWidget('Viewer')
   soViewer = w.cast_ISoViewer()
-  soViewer.setDecoration(0)
-  soViewer.setViewing(1)
+  soViewer.setDecoration(False)
+  soViewer.setViewing(True)
 
   del soDet
   del soScale
