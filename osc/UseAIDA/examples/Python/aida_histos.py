@@ -16,8 +16,8 @@
 import AIDA
 
 import inlib # for inlib::random
-rg = inlib.gauss()
-rbw = inlib.bw()
+rg = inlib.random_gauss()
+rbw = inlib.random_bw()
 
 aida = AIDA.createAnalysisFactory()
 
