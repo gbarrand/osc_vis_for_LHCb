@@ -40,40 +40,32 @@ static PyObject* sessionPointer(PyObject*,PyObject*);
 /// python3 : ////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 #if PY_VERSION_HEX >= 0x03000000
-struct module_state {
-  PyObject* m_error;
-};
-#define GETSTATE(a__module) ((struct module_state*)::PyModule_GetState(a__module))
-
 static PyMethodDef module_methods[] = {
   {"sessionPointer", sessionPointer, METH_NOARGS, NULL},
   {NULL,NULL,METH_NOARGS,NULL}
 };
 
-static int module_traverse(PyObject* a_module,visitproc visit,void* arg) {
-  Py_VISIT(GETSTATE(a_module)->m_error);
-  return 0;
-}
-
-static int module_clear(PyObject* a_module) {
-  Py_CLEAR(GETSTATE(a_module)->m_error);
-  return 0;
-}
-
-
 static struct PyModuleDef module_def = {
   PyModuleDef_HEAD_INIT,
-  "OnX_PythonManager",
+  "OnXPython",
   NULL,
-  sizeof(struct module_state),
+  -1,
   module_methods,
   NULL,
-  module_traverse,
-  module_clear,
+  NULL,
+  NULL,
   NULL
 };
 
+static Slash::Core::ISession* g_session = 0;
+
+PyMODINIT_FUNC PyInit_OnXPython(void) {
+  //::printf("debug : PyInit_OnXPython : g_session %lu\n",g_session);
+  return ::PyModule_Create(&module_def);
+}
+
 #endif
+
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -100,9 +92,9 @@ public:
   ,fInitedByOnX(false)
 #if PY_VERSION_HEX < 0x03000000
   ,fMethods(0)
-#endif   
   ,fModuleTag(0)
   ,fModule(0)
+#endif   
   //,fThreadState(0)
   {
     // We have to declare the OnX session to Python.
@@ -117,28 +109,14 @@ public:
     PyEval_InitThreads();
 
 #if PY_VERSION_HEX >= 0x03000000
-    fModuleTag = ::PyLong_FromVoidPtr(&fSession);
-    
-    fModule = ::PyModule_Create(&module_def);
-    if(fModule==NULL) {
-      fSession.out() << "OnX::PythonManager::PythonManager :"
-                     << " PyModule_Create() failed." 
-                     << std::endl;
-      return;
-    }
-   {struct module_state* state = GETSTATE(fModule);
-    state->m_error = ::PyErr_NewException("OnX_PythonManager.Error", NULL, NULL);
-    if (state->m_error == NULL) {
-      Py_DECREF(fModule);
-      return;
-    }}
+    g_session = &aSession;
 #else    
     fModuleTag = PyCObject_FromVoidPtr(&fSession,NULL);
     //fModuleTag->ob_refcnt = 1
     
     // See Include/modsupport.h Python/modsupport.c :
     //FIXME : module should be suffixed by some Slash::Core::ISession::name().
-    std::string moduleName("OnX_PythonManager");     
+    std::string moduleName("OnXPython");     
     // WARNING :
     //  The below return a singleton for the whole Python session.
     // Then passing here twice with the same moduleName will return 
@@ -181,6 +159,9 @@ public:
     //       Python is Finalized at this point.
     if(Py_IsInitialized()) {
       //disableThread();
+#if PY_VERSION_HEX >= 0x03000000
+      g_session = 0;
+#else      
       if(fModuleTag) {
         Py_DECREF(fModuleTag); //Since we are the creator.
         fModuleTag = 0;
@@ -188,13 +169,12 @@ public:
       if(fModule) {
         PyObject* d = PyModule_GetDict(fModule);
         if(d) {
-#if PY_VERSION_HEX < 0x03000000
           PyDict_DelItemString(d,fMethods[0].ml_name);
-#endif
         }
         //Py_DECREF(fModule); //We are not the creator.
         fModule = 0;
       }
+#endif
       if(fInitedByOnX) {
         Py_Finalize();
       }
@@ -206,8 +186,13 @@ public:
 #endif    
   }
   bool isValid() const {
+#if PY_VERSION_HEX < 0x03000000
     //return fPyLoaded?true:false;
     return fModule?true:false;
+#else
+  //return g_session?true:false;  //do we want that ?
+    return true;
+#endif    
   }
   //void disableThread() {
   //  if(!fThreadState) return; //done
@@ -224,9 +209,9 @@ private:
   bool fInitedByOnX;
 #if PY_VERSION_HEX < 0x03000000
   PyMethodDef* fMethods;
-#endif
   PyObject* fModuleTag;
   PyObject* fModule;
+#endif
   //PyThreadState* fThreadState;
 };
 
@@ -343,7 +328,11 @@ PyObject* sessionPointer(
   //aTag is the PythonManager::fModuleTag object.
 
 #if PY_VERSION_HEX >= 0x03000000
-  Slash::Core::ISession* session = (Slash::Core::ISession*)(void*)::PyLong_AsVoidPtr(aTag);
+  if(!g_session) {
+    Py_INCREF(Py_None);
+    return Py_None;
+  }
+  Slash::Core::ISession* session = g_session;
 #else  
   Slash::Core::ISession* session = (Slash::Core::ISession*)(void*)PyCObject_AsVoidPtr(aTag);
 #endif
