@@ -21,7 +21,7 @@
                           OS> python -i loop.py   -->
             <activate exec="Python">
               import sys\n\
-              if sys.modules.has_key('loop'):\n\
+              if 'loop' in sys.modules:\n\
                 sys.modules['loop'].callback()\n\
               else:\n\
                 callback()

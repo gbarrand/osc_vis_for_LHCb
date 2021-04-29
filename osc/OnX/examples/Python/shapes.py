@@ -110,7 +110,7 @@ widget = ui.findWidget('Viewer')
 if widget != None:
   soViewer = widget.cast_ISoViewer()
   if soViewer != None:
-    soViewer.setFeedbackVisibility(1)
+    soViewer.setFeedbackVisibility(True)
   
 # so that the "Dump picked" works :
 ui.executeScript('DLD','OnX OnX_declare_accessors')

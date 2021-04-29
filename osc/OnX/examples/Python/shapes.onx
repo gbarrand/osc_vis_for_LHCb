@@ -21,7 +21,7 @@
                           OS> python -i shapes.py   -->
             <activate exec="Python">
               import sys\n\
-              if sys.modules.has_key('shapes'):\n\
+              if 'shapes' in sys.modules:\n\
                 sys.modules['shapes'].callback()\n\
               else:\n\
                 callback()

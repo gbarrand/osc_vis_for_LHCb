@@ -22,7 +22,7 @@
                           OS> python -i menu.py   -->
             <activate exec="Python">
               import sys\n\
-              if sys.modules.has_key('menu'):\n\
+              if 'menu' in sys.modules:\n\
                 sys.modules['menu'].callback()\n\
               else:\n\
                 callback()
