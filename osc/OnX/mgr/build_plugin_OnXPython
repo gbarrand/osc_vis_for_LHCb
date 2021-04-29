@@ -11,6 +11,7 @@ ourex_mgr=../../../inexlib/ourex/mgr
 
 build_pack=plugin_OnXPython
 plugin=OnXPython
+pyname=OnXPython
 
 #////////////////////////////////////
 #////////////////////////////////////

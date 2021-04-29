@@ -36,7 +36,7 @@ incs="${incs} -I${inlib_mgr}/../inlib/glutess"
 
 incs="${incs} -I../source/SWIG"
 
-flags="-includeall -modern -D__PIVY__"
+flags="-includeall -D__PIVY__"
 flags="${flags} -w302,306,307,312,389,361,362,467,503,509,510"
 flags="${flags} -fcompact"
 
