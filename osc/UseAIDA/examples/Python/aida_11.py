@@ -20,7 +20,7 @@ memoryTree = treeFactory.create()
 
 # 0 = read only false
 # 1 = create new
-rioTree = treeFactory.create('tmp.root','ROOT',0,1)
+rioTree = treeFactory.create('tmp.root','ROOT',False,True)
 rioTupleFactory = aida.createTupleFactory(rioTree)
 tuple = rioTupleFactory.create('tuple','tuple','float rand_gauss,float rand_flat')
 evaluator = rioTupleFactory.createEvaluator('rand_gauss')

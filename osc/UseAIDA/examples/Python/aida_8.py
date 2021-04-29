@@ -21,7 +21,7 @@ memoryTree = treeFactory.create()
 import os
 osc_home_dir = os.getenv("OSC_HOME_DIR")
 fileName = osc_home_dir+'/Resources/AIDA/examples/data/data.ascii'
-asciiTree = treeFactory.create(fileName,'ASCII',1,0)
+asciiTree = treeFactory.create(fileName,'ASCII',True,False)
 del treeFactory
 
 tupleFactory = aida.createTupleFactory(asciiTree)

@@ -23,7 +23,7 @@ osc_home_dir = os.getenv("OSC_HOME_DIR")
 data_dir = osc_home_dir+'/Resources/AIDA/examples/data/'
 
 file = data_dir+'SPLCPDisco-allsigvar-mateff-bin100-h0-o0.root'
-tree = aida.create_tree(file,'root',1,0)
+tree = aida.create_tree(file,'root',True,False)
 assert tree
 
 tuple = tree.find('SplGlb')
