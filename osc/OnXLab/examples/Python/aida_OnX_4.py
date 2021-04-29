@@ -31,13 +31,7 @@ plotter.currentRegion().plot(h_update)
 
 # WARNING : ICyclic is not AIDA
 
-# The below cast will not work in the cyclic since
-# aida is no more a OnXLab::Main but an OnXLab::AnalysisFactory.
-#session = aida.cast_Slash_Core_ISession()
-
-import Slash
-session = Slash.session() # then get session with OnX.
-ui = session.ui()
+ui = aida.ui()
 
 # Fill the histo :
 def fill():
@@ -47,7 +41,7 @@ def fill():
     h_update.fill(r.gauss(0,1),1)
   del r
 
-cyclic = ui.createCyclic('cyclic',1000,'Python','import aida_OnX_4;aida_OnX_4.fill()')
+cyclic = ui.createCyclic('cyclic',1000,'Python','fill()')
 
 # A cyclic could be changed as in the below :
 #   cyclic.setDelay(1000)
