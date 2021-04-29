@@ -26,7 +26,7 @@ soRegion = soPage.currentRegion()
 soRegion.color.setValue(Inventor.SbColor(0.4,0.4,0.4))
 soViewportRegion = soRegion.getViewportRegion()
 soViewportRegion.setSizePercent(1,0.9)
-soRegion.readScene('LHCb_magnet.hiv','','staticScene')
+soRegion.readScene(Inventor.SbString('LHCb_magnet.hiv'),Inventor.SbString(''),Inventor.SbString('staticScene'))
 
 # Text area :
 soRegion = soPage.createRegion(Inventor.SbString('SoTextRegion'),0,0.9,1,0.1)
