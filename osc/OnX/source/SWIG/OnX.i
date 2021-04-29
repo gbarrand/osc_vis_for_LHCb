@@ -70,7 +70,7 @@ void reset_PyOS_InputHook() {
 
 def sys_import(aModule):
   import sys
-  if sys.modules.has_key(aModule):
+  if aModule in sys.modules:
     reload(sys.modules[aModule])
   else:
     exec('import %s' % aModule)
