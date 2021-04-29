@@ -18,9 +18,9 @@ SET obuild_args=%*
 REM ECHO %obuild_args%
 
 REM # /GR to enable RTTI and dynamic cast.
-REM # /GX to enable exception handling (for STL).
+REM # /EHsc to enable exception handling (for STL).
 REM # /O2 optimize
-SET cppflags=/nologo /GX /GR /O2 /I .
+SET cppflags=/nologo /EHsc /GR /O2 /I .
 
 cl.exe /nologo /Foaida_example.obj /c %cppflags% %obuild_incs% %obuild_args%
 link.exe /nologo /out:aida_example.exe aida_example.obj %obuild_libs%
