@@ -15,30 +15,29 @@ def process(aida, memTree, fileName):
    numOfSec = 24 * 3600
    nBins = numOfSec/60
    h = aida.create_histogram1D(memTree,'h','Signal Strength',
-                               nBins,0.,float(numOfSec))
+                               int(nBins),0.,float(numOfSec))
    del histogramFactory
 
 
-   f_in = gzip.open(fileName, 'rb')
-   f_out = open('tmp.csv', 'wb')
+   f_in = gzip.open(fileName, 'rt')
+   f_out = open('tmp.csv', 'wt')
    f_out.writelines(f_in.read())
    f_out.close()
    f_in.close()
 
-   #cr = csv.reader(open(fileName,"rb"))
-   cr = csv.reader(open('tmp.csv',"rb"))
+   cr = csv.reader(open('tmp.csv',"rt"))
 
    count = 0
    timeStart = 0
    for row in cr:
        count += 1
-#        if count > 20:
-#            break
-#        print("Row[",count,"] :",len(row))
+       #if count > 20:
+       #  break
+       #print("Row[",count,"] :",len(row))
        if len(row) == 1:
            line = row[0].strip("#").replace(' ','')
            header = line.split("=")
-       #        print('header ', header," first [",header[0],"]")
+           #print('header ', header," first [",header[0],"]")
            if header[0] == "UTC_StartTime": # there is a blanc at the end
                timeStart = time.mktime(
                    time.strptime(header[1],"%Y-%m-%d%H:%M:%S"))
@@ -47,63 +46,54 @@ def process(aida, memTree, fileName):
                timeStamp = time.mktime(time.strptime(row[0],"%Y-%m-%d %H:%M:%S")) 
                timeStamp -= timeStart
                h.fill(timeStamp,strength)
-   #       print("Time [",timeStamp,"], strenght [",strength,"]")
+               #print("Time [",timeStamp,"], strenght [",strength,"]")
        else:
-           print("error")
+           print("osc_jec_csv.py::process : error")
            break
-# return
 
    os.remove('tmp.csv')
    return h
 
 ####################################################################
 def main(*args):
-#######
-#AIDA init
+   # AIDA init :
    aida = AIDA.createAnalysisFactory()
    memTree = aida.find_memoryTree()
-# Cleanup memTree :
+   # Cleanup memTree :
    memTree.rmdir('/')
 
-#Data location
-#wd = "E:\Presentations\BAO\SolarFlare\supersid_v1_1_1\Data"
+   #Data location
+   #wd = "E:\Presentations\BAO\SolarFlare\supersid_v1_1_1\Data"
    savewd = os.getcwd()
 
-   #wd = "/mnt/solarflare"
-#Backup from DAQ PC
-#    wd = "/mnt/bcksolardata"
-   #os.chdir(wd)
-   print("run on ",os.getcwd())
+   #print("osc_jec_csv.py : run on ",os.getcwd())
 
-
-# Process
+   # Process
    osc_home_dir = os.getenv("OSC_HOME_DIR")
    data_dir = osc_home_dir+'/Resources/AIDA/examples/data/'
    h0 = process(aida,memTree,data_dir+"jec_11.csv.gz")
    h1 = process(aida,memTree,data_dir+"jec_12.csv.gz")
 
-
-# Get current plotter :
+   # Get current plotter :
    plotterFactory = aida.createPlotterFactory()
 
    opts = ''
 
-
-# Get a plotter (pick up one in the GUI) :
+   # Get a plotter (pick up one in the GUI) :
    plotter = plotterFactory.create()
    del plotterFactory
    plotter.createRegions(1,1,0)
 
-#Set page title :
+   # Set page title :
    plotter.setTitle('Solar Flare example')
    region = plotter.currentRegion()
 
    region.plot(h0,opts)
    region.plot(h1,opts)
 
-#///////////////////////////////////////////
-#/// Inventor / HEPVis : ///////////////////
-#///////////////////////////////////////////
+   #///////////////////////////////////////////
+   #/// Inventor / HEPVis : ///////////////////
+   #///////////////////////////////////////////
 
    import CoinPython as Inventor
    import HEPVis
@@ -118,7 +108,7 @@ def main(*args):
    soRegion = soPage.currentRegion()
    soPlotterRegion = soRegion.cast_SoPlotterRegion()
 
-# global style :
+   # global style :
    soPlotterRegion.setStyleROOT_Default()
    soPlotterRegion.getTitleRegion().getStyle(0).encoding.setValue('PAW')
    soPlotterRegion.infosRegionVisible.setValue(Inventor.FALSE)
@@ -147,15 +137,15 @@ def main(*args):
    # legend region :
    soPlotterRegion.legendRegionVisible.setValue(Inventor.TRUE)
    soPlotterRegion.legendRegionAttachedToInfosRegion.setValue(Inventor.FALSE)
-   soPlotterRegion.legendRegionOriginUnit.setValue('AXIS')
+   soPlotterRegion.legendRegionOriginUnit.setValue(HEPVis.SoPlotterRegion.AXIS)
    soPlotterRegion.legendAutomated.setValue(Inventor.FALSE)
 
    soPlotterRegion.legendRegionOrigin.setValue(Inventor.SbVec2f(1.5*10**4,14*10**6))
    soPlotterRegion.legendRegionSize.setValue(Inventor.SbVec2f(0.6,0.16))
 
    soLegendRegion = soPlotterRegion.getLegendRegion()
-   soLegendRegion.text.set1Value(0,'Solar flare')
-   soLegendRegion.text.set1Value(1,'Reference')
+   soLegendRegion.text.set1Value(0,Inventor.SbString('Solar flare'))
+   soLegendRegion.text.set1Value(1,Inventor.SbString('Reference'))
 
    soLegendRegion.textInBlack.setValue(Inventor.TRUE)
    soLegendRegion.getStyle(0).color.setValue(SbColor_red)
@@ -171,13 +161,13 @@ def main(*args):
    soLegendRegion.getStyle(1).lineWidth.setValue(2)
 
 
-# histo0 contour blue :
+   # histo0 contour blue :
    #soPlotter.getBinsStyle(0).modeling.setValue('curve')
    soPlotter.getBinsStyle(0).modeling.setValue('lines')
    soPlotter.getBinsStyle(0).color.setValue(SbColor_blue)
    soPlotter.levels.set1Value(0,9)
 
-# histo1 contour red :
+   # histo1 contour red :
    #soPlotter.getBinsStyle(1).modeling.setValue('curve')
    soPlotter.getBinsStyle(1).modeling.setValue('lines')
    soPlotter.getBinsStyle(1).color.setValue(SbColor_red)
@@ -188,7 +178,7 @@ def main(*args):
    os.getcwd()
 
 
-#Show
+   # Show :
    plotter.show()
 
    #plotter.writeToFile('solarflare_bis.gif')
@@ -197,7 +187,7 @@ def main(*args):
    plotter.interact()
 
 
-#clean
+   # clean :
    del plotter
    del aida
 
