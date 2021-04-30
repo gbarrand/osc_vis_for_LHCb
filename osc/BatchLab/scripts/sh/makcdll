@@ -12,15 +12,15 @@ WRAP_NAME=$3
 
 # To find include files :
 if [ "${SLASHROOT}" = "" ] ; then
-  echo "Lib : makcdll.sh : environment variable SLASHROOT not defined."
+  echo "BatchLab : makcdll : environment variable SLASHROOT not defined."
   exit
 fi
 if [ "${INLIBROOT}" = "" ] ; then
-  echo "Lib : makcdll.sh : environment variable INLIBROOT not defined."
+  echo "BatchLab : makcdll : environment variable INLIBROOT not defined."
   exit
 fi
 if [ "${EXLIBROOT}" = "" ] ; then
-  echo "Lib : makcdll.sh : environment variable EXLIBROOT not defined."
+  echo "BatchLab : makcdll : environment variable EXLIBROOT not defined."
   exit
 fi
 if [ "${LIBROOT}" = "" ] ; then
@@ -56,46 +56,55 @@ fi
 /bin/rm -f ${bin}${FILE_NAME}.o
 /bin/rm -f ${bin}${WRAP_NAME}.o
 
+c_compiler=""
 cxx_compiler=""
 so="so"
-if test `uname` = "Linux" ; then
+if [ `uname` = "Linux" ] ; then
+  c_compiler="gcc -fPIC"
   cxx_compiler="g++ -fPIC"
-elif test `uname` = "Darwin" ; then
+elif [ `uname` = "Darwin" ] ; then
+  c_compiler=cc
   cxx_compiler=c++
   so="dylib"
 elif [ "`uname | grep CYGWIN`" != "" ] ; then
+  echo "BatchLab : makcdll : CYGWIN : not yet ready."
+  exit
   cxx_compiler=g++
   so="dll.a"
-elif test `uname` = "OSF1" ; then
-  cxx_compiler=cxx
-fi
-
-if [ "${cxx_compiler}" = "" ] ; then
-  echo "Lib : makcdll.sh : c++ compiler not found."
+else
+  echo "BatchLab : makcdll : unknow platform."
   exit
 fi
 
 incs='-I"${INLIBROOT}" -I"${EXLIBROOT}" -I"${SLASHROOT}" -I"${LIBROOT}/include" -I"${BATCHLABROOT}" -I"${BATCHLABROOT}/BatchLab/HBOOK"'
 libs='"${BATCHLABDIRLIB}"/libBatchLabHBOOK.${so} "${LIBDIRLIB}"/libLibUtils.${so}'
 
-eval ${cxx_compiler} -c ${incs} -o ${bin}${FILE_NAME}.o ${FILE_NAME}.${SUFFIX}
-if [ $? != 0 ] ; then
-  echo "Lib : makcdll.sh : compilation of ${FILE_NAME}.${SUFFIX} failed."
-  exit
+if [ "${SUFFIX}" = "c" ] ; then
+  eval ${c_compiler} -c ${incs} -o ${bin}${FILE_NAME}.o ${FILE_NAME}.${SUFFIX}
+  if [ $? != 0 ] ; then
+    echo "BatchLab : makcdll : C compilation of ${FILE_NAME}.${SUFFIX} failed."
+    exit
+  fi
+else
+  eval ${cxx_compiler} -c ${incs} -o ${bin}${FILE_NAME}.o ${FILE_NAME}.${SUFFIX}
+  if [ $? != 0 ] ; then
+    echo "BatchLab : makcdll : C++ compilation of ${FILE_NAME}.${SUFFIX} failed."
+    exit
+  fi
 fi
 
 ${cxx_compiler} -c -I"${SLASHROOT}" -o ${bin}${WRAP_NAME}.o ${WRAP_NAME}.cpp
 if [ $? != 0 ] ; then
-  echo "Lib : makcdll.sh : compilation of ${WRAP_NAME}.cpp failed."
+  echo "BatchLab : makcdll : compilation of ${WRAP_NAME}.cpp failed."
   exit
 fi
 
-if test `uname` = "Linux" ; then
+if [ `uname` = "Linux" ] ; then
 /bin/rm -f ${bin}lib${FILE_NAME}.so
 eval g++ -shared -o ${bin}lib${FILE_NAME}.so ${bin}${WRAP_NAME}.o ${bin}${FILE_NAME}.o ${libs}
 fi
 
-if test `uname` = "Darwin" ; then
+if [ `uname` = "Darwin" ] ; then
 /bin/rm -f ${bin}${FILE_NAME}.bundle
 eval c++ -bundle -twolevel_namespace -o ${bin}${FILE_NAME}.bundle ${bin}${WRAP_NAME}.o ${bin}${FILE_NAME}.o ${libs}
 fi
@@ -103,11 +112,6 @@ fi
 if [ "`uname | grep CYGWIN`" != "" ] ; then
 /bin/rm -f ${bin}${FILE_NAME}.dll
 eval g++ -shared -o ${bin}${FILE_NAME}.dll ${bin}${WRAP_NAME}.o ${bin}${FILE_NAME}.o ${libs}
-fi
-
-if test `uname` = "OSF1" ; then
-/bin/rm -f ${bin}lib${FILE_NAME}.so
-eval cxx -shared -o ${bin}lib${FILE_NAME}.so ${bin}${WRAP_NAME}.o ${bin}${FILE_NAME}.o ${libs}
 fi
 
 /bin/rm -f ${bin}${FILE_NAME}.o
