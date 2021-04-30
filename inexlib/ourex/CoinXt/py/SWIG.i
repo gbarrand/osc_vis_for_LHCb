@@ -77,9 +77,9 @@ typedef struct _WidgetRec *Widget;
 
 %pythoncode %{        
 import CoinPython as Inventor
-for x in list(locals().values()):  #G.Barrand : python3.6 : list()
+for x in list(locals().values()):  #G.Barrand : Python-3.x : list()
   if isinstance(x, type) and issubclass(x, Inventor.SoFieldContainer):
-    for name, thing in list(x.__dict__.items()):  #G.Barrand : python3.6 : list()
+    for name, thing in list(x.__dict__.items()):  #G.Barrand : Python-3.x : list()
       if isinstance(thing, property):
         delattr(x, name)
 %}
