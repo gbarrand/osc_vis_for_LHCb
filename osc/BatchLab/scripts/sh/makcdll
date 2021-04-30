@@ -100,8 +100,8 @@ if [ $? != 0 ] ; then
 fi
 
 if [ `uname` = "Linux" ] ; then
-/bin/rm -f ${bin}lib${FILE_NAME}.so
-eval g++ -shared -o ${bin}lib${FILE_NAME}.so ${bin}${WRAP_NAME}.o ${bin}${FILE_NAME}.o ${libs}
+/bin/rm -f ${bin}${FILE_NAME}.so
+eval g++ -shared -o ${bin}${FILE_NAME}.so ${bin}${WRAP_NAME}.o ${bin}${FILE_NAME}.o ${libs}
 fi
 
 if [ `uname` = "Darwin" ] ; then
