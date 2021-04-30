@@ -22,18 +22,19 @@ if [ "${use_Python}" = "yes" ] ; then
     use_Python3=yes
    #use_Python3=no
     if [ "${use_Python3}" = "yes" ] ; then
-      Python_home=/opt/local/Library/Frameworks/Python.framework/Versions/3.6
+     #Python_home=/opt/local/Library/Frameworks/Python.framework/Versions/3.6
+      Python_home=/opt/local/Library/Frameworks/Python.framework/Versions/3.8
 
       if [ ! -d "${Python_home}" ] ; then
         echo "exlib/mgr/use_Python : WARNING : not found under ${Python_home}"
         exit
       fi
 
-      ccflags="${ccflags}   -I${Python_home}/include/python3.6m"
-      cppflags="${cppflags} -I${Python_home}/include/python3.6m"
-      libs="${libs} -L${Python_home}/lib -lpython3.6m"
+      ccflags="${ccflags}   -I${Python_home}/include/python3.8"
+      cppflags="${cppflags} -I${Python_home}/include/python3.8"
+      libs="${libs} -L${Python_home}/lib -lpython3.8"
 
-      py_exe="${Python_home}/bin/python3.6"
+      py_exe="${Python_home}/bin/python3.8"
 
     else
       Python_home=/opt/local/Library/Frameworks/Python.framework/Versions/2.7
