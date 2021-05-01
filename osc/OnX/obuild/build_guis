@@ -1,5 +1,0 @@
-#!/bin/sh -f
-./sh/build -group NextStep
-./sh/build -group Xt
-./sh/build -group Qt
-./sh/build -group gtk
