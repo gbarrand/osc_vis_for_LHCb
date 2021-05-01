@@ -136,7 +136,14 @@ if [ "${use_Python}" = "yes" ] ; then
    #use_Python3=no
     if [ "${use_Python3}" = "yes" ] ; then
     
-      if [ -d /usr/local/Python/3.6.6 ] ; then  #ostackc
+      if [ -d /usr/local/Python/3.8.0 ] ; then  #ostackc, ostackess
+        Python_home=/usr/local/Python/3.8.0
+        Python_version=python3.8
+        Python_lib="-L${Python_home}/lib -lpython3.8"
+        Python_ld_library_path="${Python_home}/lib"
+        py_exe="${Python_home}/bin/python3.8"
+
+      elif [ -d /usr/local/Python/3.6.6 ] ; then  #ostackc
         Python_home=/usr/local/Python/3.6.6
         Python_version=python3.6m
         Python_lib="-L${Python_home}/lib -lpython3.6m"
