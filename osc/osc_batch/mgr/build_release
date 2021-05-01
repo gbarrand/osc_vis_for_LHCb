@@ -8,7 +8,7 @@ exlib_mgr=../../../inexlib/exlib/mgr
 ourex_mgr=../../../inexlib/ourex/mgr
 
 build_pack=osc_batch
-version=17.0
+version="`../../osc_source/version`"
 
 . ${ourex_mgr}/build_header
 
