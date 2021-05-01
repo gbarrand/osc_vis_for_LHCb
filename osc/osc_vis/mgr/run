@@ -8,6 +8,7 @@ run_args=
 build_args=
 
 run_viewer=no
+run_expat_debug=no
 
 while test $# -ge 1 ; do
   case $1 in
@@ -31,8 +32,9 @@ while test $# -ge 1 ; do
    -SDL)      run_gui=SDL;;
 
     # local options : 
-    -gdb)    run_gdb=yes;;
-    -viewer) run_viewer=yes;;
+         -gdb) run_gdb=yes;;
+      -viewer) run_viewer=yes;;
+ -expat_debug) run_expat_debug=yes;;
 
     -*) run_args="${run_args} $1";;  
      *) run_args="${run_args} $1";;  
@@ -70,6 +72,10 @@ fi
 #//////////////////////////////////////////
 #//////////////////////////////////////////
 #//////////////////////////////////////////
+if [ ${run_expat_debug} = yes ] ; then
+  export LD_LIBRARY_PATH=".:${LD_LIBRARY_PATH}"
+  cp /lib64/libexpat.so.1 .
+fi
 
 LC_CTYPE=C;export LC_CTYPE
 
