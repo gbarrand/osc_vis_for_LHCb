@@ -163,6 +163,7 @@ if [ "${build_distrib}" = "yes" ] ; then
   #/// apps : //////////////////////////////////
   #/////////////////////////////////////////////
   /bin/cp ../../OnX/mgr/${build_dir}/osc-gui-viewer ${head}/bin/.
+  /bin/cp ../../OnX/mgr/${build_dir}/osc-viewer     ${head}/bin/.
   /bin/cp ../../OnXLab/mgr/${build_dir}/aida-config ${head}/bin/.
   /bin/cp ../../OnXLab/mgr/${build_dir}/osc-plot    ${head}/bin/.
 
