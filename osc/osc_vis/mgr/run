@@ -8,6 +8,7 @@ run_args=
 build_args=
 
 run_viewer=no
+run_gui_viewer=no
 
 while test $# -ge 1 ; do
   case $1 in
@@ -33,6 +34,7 @@ while test $# -ge 1 ; do
     # local options : 
          -gdb) run_gdb=yes;;
       -viewer) run_viewer=yes;;
+  -gui_viewer) run_gui_viewer=yes;;
 
     -*) run_args="${run_args} $1";;  
      *) run_args="${run_args} $1";;  
@@ -74,6 +76,8 @@ fi
 LC_CTYPE=C;export LC_CTYPE
 
 if [ ${run_viewer} = yes ] ; then
+  osc-viewer -${run_gui} ${run_args}
+elif [ ${run_gui_viewer} = yes ] ; then
   osc-gui-viewer -${run_gui} ${run_args} ${OSC_HOME_DIR}/Resources/OnX/examples/OnX/progress.onx
 else
   if [ ${run_gdb} = yes ] ; then
