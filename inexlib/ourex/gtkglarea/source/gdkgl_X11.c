@@ -193,8 +193,9 @@ void gdk_gl_context_unref(GdkGLContext *context)
     }
   else
     {
-      if (ctx_private->glxcontext == glXGetCurrentContext())
-	glXMakeCurrent(ctx_private->xdisplay, None, NULL);
+      if (ctx_private->glxcontext == glXGetCurrentContext()) {
+	/*FIXME : G.Barrand : centos crash : glXMakeCurrent(ctx_private->xdisplay, None, NULL);*/
+      }
 
       glXDestroyContext(ctx_private->xdisplay, ctx_private->glxcontext);
 
