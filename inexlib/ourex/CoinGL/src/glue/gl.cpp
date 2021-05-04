@@ -2201,10 +2201,12 @@ cc_glglue_instance(int contextid)
     /*G.Barrand : the below had been taken from the head.*/
     glerr = glGetError();
     while (glerr != GL_NO_ERROR) {
-      cc_debugerror_postwarning("cc_glglue_instance",
-                                "Error when setting up the GL context. This can happen if "
-                                "there is no current context, or if the context has been set "
-                                "up incorrectly.");
+      if(coin_getenv("COIN_GLGLUE_GLCONTEXT_WARNING") {
+        cc_debugerror_postwarning("cc_glglue_instance",
+                                  "Error when setting up the GL context. This can happen if "
+                                  "there is no current context, or if the context has been set "
+                                  "up incorrectly.");
+      }
       glerr = glGetError();
       
       /* We might get this error if there is no current context.
