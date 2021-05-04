@@ -5,7 +5,6 @@
 #include <Slash/Tools/UI.h>
 
 #include <inlib/srep>
-#include <inlib/tos>
 #include <inlib/args>
 #include <inlib/osc_env>
 #include <inlib/app>
@@ -24,8 +23,7 @@ int main(int argc,char* argv[]) {
     home_dirs.push_back("OnX");
     home_dirs.push_back("session");
     if(!inlib::if_mouse_startup(arg0,"OSC_HOME_DIR",home_dirs,std::cout)) {
-      std::cout << "OnX_viewer :"
-                << " unable to set mouse startup." << std::endl;
+      std::cout << "OnX_viewer :" << " unable to set mouse startup." << std::endl;
       return EXIT_FAILURE;
     }
   }
@@ -35,24 +33,20 @@ int main(int argc,char* argv[]) {
   args.add("-onx_file","@empty@");
 
   if(!inlib::osc::set_env(std::cout)) {
-    std::cout << "OnX_viewer :"
-              << " unable to set OSC environment." << std::endl;
+    std::cout << "OnX_viewer :" << " unable to set OSC environment." << std::endl;
     return EXIT_FAILURE;
   }
-
-  Slash::Core::ISession* session = Slash_create_session(args.tovector());
+ 
+  std::vector<std::string> vargs = args.tovector();
+  Slash::Core::ISession* session = Slash_create_session(vargs);
   if(!session) {
-    std::cout << "OnX_viewer :"
-              << " session not found."
-              << std::endl;
+    std::cout << "OnX_viewer :" << " session not found." << std::endl;
     return 1;
   }
 
   Slash::UI::IUI* ui = Slash::find_UI(*session);     
   if(!ui) {
-    std::cout << "OnX_viewer :"
-              << "Slash::UI::IUI not found."
-              << std::endl;
+    std::cout << "OnX_viewer :" << "Slash::UI::IUI not found." << std::endl;
     return 1;
   }
 
