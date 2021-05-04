@@ -1,4 +1,10 @@
+17.1.0 :
+- use SWIG-4.0.2.
+- use Python3.
+- use Qt5.
+- built with config LCG_97apython3_gcc9.sh. exlib/mgr/use_[Qt,Python] changed to handle it.
 
+17.0.2 :
 build on ubuntu :
 - osc/OnX/source/Xt/XtUI.cxx : #ifdef PRINTING_SUPPORTED.
 - ourex/hdf5/src/H5R.c : correct a memset warning.
