@@ -37,7 +37,7 @@ inline int PyString_AsStringAndSize(PyObject* obj,char** s,int* len) {
   *len = (int)llen;
   return status;
 }
-inline PyAPI_FUNC(PyObject *) PyString_FromStringAndSize(const char* a_buffer,Py_ssize_t a_size) {
+inline PyObject* PyString_FromStringAndSize(const char* a_buffer,Py_ssize_t a_size) {
 #if PY_VERSION_HEX >= 0x03010000
   return PyUnicode_DecodeUTF8(a_buffer, static_cast< int >(a_size), "surrogateescape");
 #else
