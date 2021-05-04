@@ -48,6 +48,7 @@ else
   ./build_plugin_OnXTests    ${build_args}
 
   ./build_app_OnX_onx        ${build_args}
+  ./build_app_OnX_viewer     ${build_args}
 
 fi
 
