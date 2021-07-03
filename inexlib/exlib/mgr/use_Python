@@ -101,6 +101,10 @@ if [ "${use_Python}" = "yes" ] ; then
       lcg_area=/cvmfs/sft.cern.ch/lcg/releases
       Python_vers=3.7m
       Python_home="${lcg_area}/Python/3.7.6-b96a9/x86_64-centos7-gcc9-opt"
+   elif [ "${BUILD_CONFIG}" = "LCG_100_gcc10" ] ; then
+      lcg_area=/cvmfs/sft.cern.ch/lcg/releases
+      Python_vers=3.8
+      Python_home="${lcg_area}/Python/3.8.6-3199b/x86_64-centos7-gcc10-opt"
     else
       echo 'exlib/mgr/use_Python : use an lcg installation :'
       echo '  you have to define the BUILD_CONFIG variable, for example :'
