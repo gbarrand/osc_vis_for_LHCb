@@ -90,6 +90,14 @@ if [ "${use_Qt}" = "yes" ] ; then
       lcg_area=/cvmfs/sft.cern.ch/lcg/releases
       Qt_home="${lcg_area}/qt5/5.12.4-3d860/x86_64-centos7-gcc10-opt"
       build_use_qt5=yes
+    elif [ "${BUILD_CONFIG}" = "LCG_101_gcc10" ] ; then
+      lcg_area=/cvmfs/sft.cern.ch/lcg/releases
+      Qt_home="${lcg_area}/qt5/5.12.4-48808/x86_64-centos7-gcc10-opt"
+      build_use_qt5=yes
+    elif [ "${BUILD_CONFIG}" = "LCG_101_gcc11" ] ; then
+      lcg_area=/cvmfs/sft.cern.ch/lcg/releases
+      Qt_home="${lcg_area}/qt5/5.12.4-48808/x86_64-centos7-gcc11-opt"
+      build_use_qt5=yes
     else
       echo 'exlib/mgr/use_Qt : lxplus :'
       echo '  you have to define the BUILD_CONFIG variable, for example :'
